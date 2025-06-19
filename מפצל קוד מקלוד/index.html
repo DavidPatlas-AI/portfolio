@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>פיצול HTML לקבצים נפרדים</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 פיצול HTML לקבצים נפרדים</h1>
+            <p>הדבק את הקוד שלך והפוך אותו לקבצים נפרדים של HTML, CSS ו-JavaScript</p>
+        </div>
+
+        <div class="input-section">
+            <div class="input-label">📝 הדבק את קוד ה-HTML שלך כאן:</div>
+            <textarea id="htmlInput" class="input-box" placeholder="הדבק כאן את קוד ה-HTML המלא עם CSS ו-JavaScript מוטבעים..."></textarea>
+            
+            <div class="button-container">
+                <button id="splitBtn" class="split-btn">🚀 פצל לקבצים נפרדים</button>
+            </div>
+
+            <div id="message" class="message"></div>
+        </div>
+
+        <div id="results" class="results">
+            <div class="results-title">📁 הקבצים שלך מוכנים!</div>
+            <div id="fileGrid" class="file-grid"></div>
+            <div class="download-all">
+                <button id="downloadAllBtn" class="download-all-btn">📦 הורד את כל הקבצים</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

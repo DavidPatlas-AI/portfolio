@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdMap Live - גרסה פשוטה ופועלת</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: rtl;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 20px 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo h1 {
+            color: #2c3e50;
+            font-size: 2.2em;
+            font-weight: 700;
+        }
+
+        .logo .icon {
+            font-size: 2em;
+            color: #667eea;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            border: 2px solid #667eea;
+            background: transparent;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1em;
+        }
+
+        .nav-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .status-bar {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 5px 20px rgba(0, 184, 148, 0.3);
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hero-section {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 3.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .hero-subtitle {
+            font-size: 1.4em;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.8em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .filter-item {
+            margin-bottom: 12px;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .map-section {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .map-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 30px;
+            position: relative;
+        }
+
+        .live-indicator {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .map-title {
+            font-size: 2em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .map-description {
+            opacity: 0.9;
+            font-size: 1.2em;
+        }
+
+        .controls-panel {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-tab {
+            padding: 14px 28px;
+            border: none;
+            background: white;
+            color: #7f8c8d;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .filter-tab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        #map { 
+            height: 600px;
+            width: 100%;
+        }
+
+        .back-to-gallery {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 2000;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 20px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-decoration: none;
+            color: #667eea;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .back-to-gallery:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5em;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="../../gallery_index.html" class="back-to-gallery">
+        <i class="fas fa-arrow-right"></i> חזור לגלריה
+    </a>
+
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="icon">🗺️</span>
+                <h1>AdMap Simple</h1>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="openGuideModal()">
+                    <i class="fas fa-book"></i> מדריך
+                </button>
+                <button class="nav-btn primary">
+                    <i class="fas fa-play"></i> גרסה פשוטה
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="status-bar">
+            <div class="status-dot"></div>
+            <span><strong>גרסה פשוטה ופועלת</strong> - נתוני דמו ופונקציונליות בסיסית</span>
+        </div>
+
+        <section class="hero-section">
+            <h1 class="hero-title">מפת פרסום פשוטה</h1>
+            <p class="hero-subtitle">גרסה בסיסית ופונקציונלית לחקירת קמפיינים פרסומיים</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">1,247</div>
+                    <div class="stat-label">קמפיינים פעילים</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">89</div>
+                    <div class="stat-label">דיווחים השבוע</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8,432</div>
+                    <div class="stat-label">משתמשים פעילים</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">95%</div>
+                    <div class="stat-label">דיוק זיהוי</div>
+                </div>
+            </div>
+        </section>
+
+        <div class="dashboard">
+            <div class="sidebar">
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">סינון קמפיינים</h3>
+                    <div class="filter-item">
+                        <label>סוג קמפיין:</label>
+                        <select class="filter-select" id="filterType">
+                            <option value="">כל הסוגים</option>
+                            <option value="political">פוליטי</option>
+                            <option value="commercial">מסחרי</option>
+                            <option value="government">ממשלתי</option>
+                            <option value="suspicious">חשוד</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="map-section">
+                <div class="map-header">
+                    <div class="live-indicator">
+                        <div class="status-dot"></div>
+                        <span>נתוני דמו</span>
+                    </div>
+                    <h2 class="map-title">
+                        <i class="fas fa-map"></i>
+                        מפה פשוטה ופונקציונלית
+                    </h2>
+                    <p class="map-description">גרסה בסיסית עם נתוני דמו לצורכי הדגמה</p>
+                </div>
+                
+                <div class="controls-panel">
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" onclick="filterCampaigns('all', this)">
+                            <i class="fas fa-globe"></i> הכל
+                        </button>
+                        <button class="filter-tab" onclick="filterCampaigns('political', this)">
+                            <i class="fas fa-vote-yea"></i> פוליטי
+                        </button>
+                        <button class="filter-tab" onclick="filterCampaigns('commercial', this)">
+                            <i class="fas fa-shopping-cart"></i> מסחרי
+                        </button>
+                        <button class="filter-tab" onclick="filterCampaigns('government', this)">
+                            <i class="fas fa-university"></i> ממשלתי
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="map"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        // Global variables
+        let map;
+        let markers = [];
+        let currentFilter = 'all';
+
+        // Sample campaign data
+        const campaignData = [
+            {
+                id: 1,
+                lat: 32.0853,
+                lng: 34.7818,
+                type: 'political',
+                title: 'בחירות מקומיות תל אביב',
+                advertiser: 'מועמד דן כהן',
+                budget: '₪85,000',
+                reach: '650,000'
+            },
+            {
+                id: 2,
+                lat: 31.7683,
+                lng: 35.2137,
+                type: 'government',
+                title: 'קמפיין משרד הבריאות',
+                advertiser: 'משרד הבריאות',
+                budget: '₪150,000',
+                reach: '1,800,000'
+            },
+            {
+                id: 3,
+                lat: 32.7940,
+                lng: 34.9896,
+                type: 'commercial',
+                title: 'אפליקציית תחבורה',
+                advertiser: 'מובי-טק',
+                budget: '₪45,000',
+                reach: '280,000'
+            }
+        ];
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMap();
+            loadCampaigns();
+        });
+
+        // Initialize Leaflet map
+        function initializeMap() {
+            map = L.map('map').setView([31.7683, 35.2137], 7);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        // Load campaigns and create markers
+        function loadCampaigns() {
+            campaignData.forEach(campaign => {
+                if (shouldShowCampaign(campaign)) {
+                    createMarker(campaign);
+                }
+            });
+        }
+
+        // Check if campaign should be shown
+        function shouldShowCampaign(campaign) {
+            return currentFilter === 'all' || campaign.type === currentFilter;
+        }
+
+        // Create map marker
+        function createMarker(campaign) {
+            const colors = {
+                political: '#e74c3c',
+                commercial: '#3498db',
+                government: '#27ae60',
+                suspicious: '#f39c12'
+            };
+            
+            const markerColor = colors[campaign.type];
+            
+            const markerIcon = L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="
+                    background: ${markerColor};
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    border: 3px solid white;
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                "></div>`,
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+            
+            const marker = L.marker([campaign.lat, campaign.lng], {
+                icon: markerIcon
+            }).addTo(map);
+            
+            marker.bindPopup(`
+                <div style="direction: rtl; min-width: 250px;">
+                    <h4>${campaign.title}</h4>
+                    <p><strong>מפרסם:</strong> ${campaign.advertiser}</p>
+                    <p><strong>תקציב:</strong> ${campaign.budget}</p>
+                    <p><strong>הגעה:</strong> ${campaign.reach}</p>
+                </div>
+            `);
+            
+            markers.push(marker);
+        }
+
+        // Filter campaigns by type
+        function filterCampaigns(type, button) {
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            button.classList.add('active');
+            
+            currentFilter = type;
+            
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            // Reload campaigns with new filter
+            loadCampaigns();
+        }
+
+        function openGuideModal() {
+            alert('גרסה פשוטה ופועלת של מפת הפרסום הדיגיטלי.\n\nמתאימה למתחילים והדגמות מהירות.\nכוללת נתוני דמו וסינון בסיסי.');
+        }
+    </script>
+</body>
+</html> 

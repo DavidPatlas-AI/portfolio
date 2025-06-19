@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍕 פיצה דלוקס - הזמנה אונליין</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --pizza: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+            --success: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+            --glass: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --text-light: rgba(255, 255, 255, 0.9);
+            --text-dark: rgba(0, 0, 0, 0.8);
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Cairo', sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Pizza Animation */
+        .floating-pizza {
+            position: fixed;
+            font-size: 2rem;
+            color: #ffa726;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10%, 90% { opacity: 1; }
+            50% { transform: translateY(-10vh) rotate(180deg); }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Glassmorphism Header */
+        .header {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: rotate 8s linear infinite;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .logo {
+            font-size: 3rem;
+            background: var(--pizza);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Pizza Size Cards */
+        .pizza-section {
+            margin: 40px 0;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--pizza);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+
+        .pizza-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .pizza-card {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pizza-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .pizza-card:hover::before {
+            left: 100%;
+        }
+
+        .pizza-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .pizza-visual {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            transition: transform 0.4s ease;
+        }
+
+        .pizza-card:hover .pizza-visual {
+            transform: rotate(360deg) scale(1.1);
+        }
+
+        .pizza-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .pizza-price {
+            font-size: 1.3rem;
+            background: var(--pizza);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 10px;
+        }
+
+        .qty-btn {
+            background: var(--primary);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qty-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .qty-btn:active {
+            transform: scale(0.95);
+        }
+
+        .qty-display {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            min-width: 60px;
+        }
+
+        /* Toppings Section */
+        .toppings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .topping-card {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topping-card.selected {
+            background: rgba(255, 193, 7, 0.3);
+            border: 2px solid #ffc107;
+            transform: scale(1.05);
+        }
+
+        .topping-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        .topping-emoji {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .topping-card:hover .topping-emoji {
+            transform: scale(1.2);
+        }
+
+        .topping-name {
+            color: white;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .topping-price {
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        /* Drinks Section */
+        .drinks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .drink-card {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .drink-card.selected {
+            background: rgba(59, 130, 246, 0.3);
+            border: 2px solid #3b82f6;
+        }
+
+        .drink-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Calculate Button */
+        .calculate-btn {
+            background: var(--pizza);
+            border: none;
+            border-radius: 20px;
+            padding: 20px 40px;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: block;
+            margin: 40px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calculate-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.6s ease;
+        }
+
+        .calculate-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .calculate-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Results */
+        .result-section {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .result-section.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .total-price {
+            font-size: 3rem;
+            font-weight: bold;
+            background: var(--success);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 20px 0;
+        }
+
+        .order-summary {
+            text-align: right;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Error Messages */
+        .error-message {
+            background: rgba(244, 67, 54, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s ease;
+        }
+
+        .error-message.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Success Popup */
+        .success-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            z-index: 1000;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+            border: 2px solid var(--glass-border);
+        }
+
+        .success-popup.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Confetti Animation */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ffc107;
+            animation: confetti-fall 3s linear infinite;
+            z-index: 1001;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .pizza-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .toppings-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+            
+            .drinks-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            text-align: center;
+            color: white;
+            font-size: 1.2rem;
+            margin: 20px 0;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .pizza-spinner {
+            font-size: 3rem;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Order Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: var(--accent);
+            border: none;
+            border-radius: 15px;
+            padding: 15px 25px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+        }
+
+        .print-btn {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Pizza Elements -->
+    <div class="floating-pizza" style="left: 10%; animation-delay: 0s;">🍕</div>
+    <div class="floating-pizza" style="left: 30%; animation-delay: 2s;">🍕</div>
+    <div class="floating-pizza" style="left: 50%; animation-delay: 4s;">🍕</div>
+    <div class="floating-pizza" style="left: 70%; animation-delay: 6s;">🍕</div>
+    <div class="floating-pizza" style="left: 90%; animation-delay: 8s;">🍕</div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🍕 פיצה דלוקס</div>
+            <div class="tagline">הפיצה הכי טעימה בעיר - הזמינו עכשיו!</div>
+        </div>
+
+        <!-- Pizza Sizes Section -->
+        <div class="pizza-section">
+            <h2 class="section-title">🍕 בחרו את גודל הפיצה</h2>
+            <div class="pizza-grid">
+                <div class="pizza-card" data-size="small" data-price="20">
+                    <div class="pizza-visual">🍕</div>
+                    <div class="pizza-name">פיצה קטנה</div>
+                    <div class="pizza-price">20 ₪</div>
+                    <div class="quantity-control">
+                        <button class="qty-btn" onclick="changeQuantity('small', -1)">-</button>
+                        <input type="text" class="qty-display" id="qty-small" value="0" readonly>
+                        <button class="qty-btn" onclick="changeQuantity('small', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="pizza-card" data-size="medium" data-price="30">
+                    <div class="pizza-visual">🍕</div>
+                    <div class="pizza-name">פיצה בינונית</div>
+                    <div class="pizza-price">30 ₪</div>
+                    <div class="quantity-control">
+                        <button class="qty-btn" onclick="changeQuantity('medium', -1)">-</button>
+                        <input type="text" class="qty-display" id="qty-medium" value="0" readonly>
+                        <button class="qty-btn" onclick="changeQuantity('medium', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="pizza-card" data-size="large" data-price="40">
+                    <div class="pizza-visual">🍕</div>
+                    <div class="pizza-name">פיצה גדולה</div>
+                    <div class="pizza-price">40 ₪</div>
+                    <div class="quantity-control">
+                        <button class="qty-btn" onclick="changeQuantity('large', -1)">-</button>
+                        <input type="text" class="qty-display" id="qty-large" value="0" readonly>
+                        <button class="qty-btn" onclick="changeQuantity('large', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toppings Section -->
+        <div class="pizza-section">
+            <h2 class="section-title">🧀 תוספות (לכל פיצה)</h2>
+            <div class="toppings-grid">
+                <div class="topping-card" onclick="toggleTopping('cheese')" data-price="4">
+                    <div class="topping-emoji">🧀</div>
+                    <div class="topping-name">גבינה נוספת</div>
+                    <div class="topping-price">4 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('olives')" data-price="4">
+                    <div class="topping-emoji">🫒</div>
+                    <div class="topping-name">זיתים</div>
+                    <div class="topping-price">4 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('mushrooms')" data-price="4">
+                    <div class="topping-emoji">🍄</div>
+                    <div class="topping-name">פטריות</div>
+                    <div class="topping-price">4 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('corn')" data-price="4">
+                    <div class="topping-emoji">🌽</div>
+                    <div class="topping-name">תירס</div>
+                    <div class="topping-price">4 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('onion')" data-price="4">
+                    <div class="topping-emoji">🧅</div>
+                    <div class="topping-name">בצל</div>
+                    <div class="topping-price">4 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('tomato')" data-price="4">
+                    <div class="topping-emoji">🍅</div>
+                    <div class="topping-name">עגבניות</div>
+                    <div class="topping-price">4 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('spicy')" data-price="4">
+                    <div class="topping-emoji">🌶️</div>
+                    <div class="topping-name">פלפל חריף</div>
+                    <div class="topping-price">4 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('bulgarit')" data-price="5">
+                    <div class="topping-emoji">🥒</div>
+                    <div class="topping-name">בולגרית</div>
+                    <div class="topping-price">5 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('tuna')" data-price="6">
+                    <div class="topping-emoji">🐟</div>
+                    <div class="topping-name">טונה</div>
+                    <div class="topping-price">6 ₪</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drinks Section -->
+        <div class="pizza-section">
+            <h2 class="section-title">🥤 משקאות</h2>
+            <div class="drinks-grid">
+                <div class="drink-card selected" onclick="selectDrink(this, 0)">
+                    <div class="topping-emoji">❌</div>
+                    <div class="topping-name">ללא משקה</div>
+                    <div class="topping-price">0 ₪</div>
+                </div>
+
+                <div class="drink-card" onclick="selectDrink(this, 10)">
+                    <div class="topping-emoji">🥤</div>
+                    <div class="topping-name">קולה</div>
+                    <div class="topping-price">10 ₪</div>
+                </div>
+
+                <div class="drink-card" onclick="selectDrink(this, 9)">
+                    <div class="topping-emoji">🥤</div>
+                    <div class="topping-name">ספרייט</div>
+                    <div class="topping-price">9 ₪</div>
+                </div>
+
+                <div class="drink-card" onclick="selectDrink(this, 8)">
+                    <div class="topping-emoji">🧃</div>
+                    <div class="topping-name">פיוז-טי</div>
+                    <div class="topping-price">8 ₪</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculate Button -->
+        <button class="calculate-btn" onclick="calculateOrder()">
+            <span><i class="fas fa-calculator"></i> חשבו את ההזמנה</span>
+        </button>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="pizza-spinner">🍕</div>
+            <div>מחשב את ההזמנה...</div>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage"></div>
+
+        <!-- Results Section -->
+        <div class="result-section" id="resultSection">
+            <h3 style="color: white; font-size: 1.5rem; margin-bottom: 20px;">סיכום ההזמנה</h3>
+            <div class="order-summary" id="orderSummary"></div>
+            <div class="total-price" id="totalPrice">0 ₪</div>
+            
+            <div class="action-buttons">
+                <button class="action-btn whatsapp-btn" onclick="shareWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> שלח בוואטסאפ
+                </button>
+                <button class="action-btn print-btn" onclick="printOrder()">
+                    <i class="fas fa-print"></i> הדפס הזמנה
+                </button>
+                <button class="action-btn" onclick="resetOrder()">
+                    <i class="fas fa-refresh"></i> הזמנה חדשה
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Popup -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
+    <div class="success-popup" id="successPopup">
+        <div style="font-size: 4rem; margin-bottom: 20px;">🎉</div>
+        <h3 style="color: white; margin-bottom: 20px;">ההזמנה הושלמה בהצלחה!</h3>
+        <p style="color: rgba(255,255,255,0.8); margin-bottom: 30px;">תודה שבחרתם בפיצה דלוקס</p>
+        <button class="action-btn" onclick="closePopup()">סגור</button>
+    </div>
+
+    <script>
+        // Global Variables
+        let selectedToppings = {};
+        let selectedDrink = 0;
+        let pizzaQuantities = {
+            small: 0,
+            medium: 0,
+            large: 0
+        };
+
+        // Sound Effects (optional)
+        function playSound(type) {
+            // You can add actual sound files here
+            if (type === 'click') {
+                // Play click sound
+            } else if (type === 'success') {
+                // Play success sound
+            }
+        }
+
+        // Change Pizza Quantity
+        function changeQuantity(size, change) {
+            playSound('click');
+            const currentQty = pizzaQuantities[size];
+            const newQty = Math.max(0, currentQty + change);
+            
+            pizzaQuantities[size] = newQty;
+            document.getElementById(`qty-${size}`).value = newQty;
+            
+            // Add animation effect
+            const qtyDisplay = document.getElementById(`qty-${size}`);
+            qtyDisplay.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                qtyDisplay.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        // Toggle Topping
+        function toggleTopping(toppingId) {
+            playSound('click');
+            const toppingCard = event.target.closest('.topping-card');
+            const price = parseInt(toppingCard.dataset.price);
+            
+            if (selectedToppings[toppingId]) {
+                delete selectedToppings[toppingId];
+                toppingCard.classList.remove('selected');
+            } else {
+                selectedToppings[toppingId] = price;
+                toppingCard.classList.add('selected');
+            }
+        }
+
+        // Select Drink
+        function selectDrink(element, price) {
+            playSound('click');
+            // Remove selection from all drinks
+            document.querySelectorAll('.drink-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selection to clicked drink
+            element.classList.add('selected');
+            selectedDrink = price;
+        }
+
+        // Calculate Order
+        function calculateOrder() {
+            playSound('click');
+            
+            // Hide previous results and errors
+            document.getElementById('resultSection').classList.remove('show');
+            document.getElementById('errorMessage').classList.remove('show');
+            
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            
+            setTimeout(() => {
+                // Hide loading
+                document.getElementById('loading').classList.remove('show');
+                
+                // Check if any pizza is selected
+                const totalPizzas = pizzaQuantities.small + pizzaQuantities.medium + pizzaQuantities.large;
+                
+                if (totalPizzas === 0) {
+                    showError('אנא בחרו לפחות פיצה אחת');
+                    return;
+                }
+                
+                // Calculate prices
+                let pizzaTotal = 0;
+                let summary = [];
+                
+                // Pizza costs
+                if (pizzaQuantities.small > 0) {
+                    const cost = pizzaQuantities.small * 20;
+                    pizzaTotal += cost;
+                    summary.push({
+                        item: `פיצה קטנה x${pizzaQuantities.small}`,
+                        price: `${cost} ₪`
+                    });
+                }
+                
+                if (pizzaQuantities.medium > 0) {
+                    const cost = pizzaQuantities.medium * 30;
+                    pizzaTotal += cost;
+                    summary.push({
+                        item: `פיצה בינונית x${pizzaQuantities.medium}`,
+                        price: `${cost} ₪`
+                    });
+                }
+                
+                if (pizzaQuantities.large > 0) {
+                    const cost = pizzaQuantities.large * 40;
+                    pizzaTotal += cost;
+                    summary.push({
+                        item: `פיצה גדולה x${pizzaQuantities.large}`,
+                        price: `${cost} ₪`
+                    });
+                }
+                
+                // Toppings cost
+                let toppingsTotal = 0;
+                const toppingsNames = {
+                    cheese: 'גבינה נוספת',
+                    olives: 'זיתים',
+                    mushrooms: 'פטריות',
+                    corn: 'תירס',
+                    onion: 'בצל',
+                    tomato: 'עגבניות',
+                    spicy: 'פלפל חריף',
+                    bulgarit: 'בולגרית',
+                    tuna: 'טונה'
+                };
+                
+                for (const [topping, price] of Object.entries(selectedToppings)) {
+                    const cost = price * totalPizzas;
+                    toppingsTotal += cost;
+                    summary.push({
+                        item: `${toppingsNames[topping]} (לכל הפיצות)`,
+                        price: `${cost} ₪`
+                    });
+                }
+                
+                // Drink cost
+                let drinkTotal = selectedDrink;
+                if (selectedDrink > 0) {
+                    const drinkNames = {10: 'קולה', 9: 'ספרייט', 8: 'פיוז-טי'};
+                    summary.push({
+                        item: drinkNames[selectedDrink] || 'משקה',
+                        price: `${selectedDrink} ₪`
+                    });
+                }
+                
+                const grandTotal = pizzaTotal + toppingsTotal + drinkTotal;
+                
+                // Display results
+                displayResults(summary, grandTotal);
+                showSuccess();
+                
+            }, 1500); // Simulate loading time
+        }
+
+        // Display Results
+        function displayResults(summary, total) {
+            const summaryContainer = document.getElementById('orderSummary');
+            const totalElement = document.getElementById('totalPrice');
+            
+            // Build summary HTML
+            let summaryHTML = '';
+            summary.forEach(item => {
+                summaryHTML += `
+                    <div class="summary-item">
+                        <span>${item.item}</span>
+                        <span>${item.price}</span>
+                    </div>
+                `;
+            });
+            
+            summaryContainer.innerHTML = summaryHTML;
+            totalElement.textContent = `${total} ₪`;
+            
+            // Show results with animation
+            document.getElementById('resultSection').classList.add('show');
+        }
+
+        // Show Error
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+            
+            setTimeout(() => {
+                errorElement.classList.remove('show');
+            }, 3000);
+        }
+
+        // Show Success Popup
+        function showSuccess() {
+            playSound('success');
+            createConfetti();
+            
+            setTimeout(() => {
+                document.getElementById('popupOverlay').classList.add('show');
+                document.getElementById('successPopup').classList.add('show');
+            }, 500);
+        }
+
+        // Create Confetti Effect
+        function createConfetti() {
+            const colors = ['#ffc107', '#28a745', '#dc3545', '#007bff', '#6f42c1'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 3000);
+                }, i * 50);
+            }
+        }
+
+        // Close Popup
+        function closePopup() {
+            document.getElementById('popupOverlay').classList.remove('show');
+            document.getElementById('successPopup').classList.remove('show');
+        }
+
+        // Share on WhatsApp
+        function shareWhatsApp() {
+            const totalPizzas = pizzaQuantities.small + pizzaQuantities.medium + pizzaQuantities.large;
+            
+            if (totalPizzas === 0) {
+                showError('אנא חשבו את ההזמנה תחילה');
+                return;
+            }
+            
+            let message = '🍕 הזמנת פיצה מפיצה דלוקס:\n\n';
+            
+            // Add pizzas
+            if (pizzaQuantities.small > 0) {
+                message += `🍕 פיצה קטנה x${pizzaQuantities.small} - ${pizzaQuantities.small * 20} ₪\n`;
+            }
+            if (pizzaQuantities.medium > 0) {
+                message += `🍕 פיצה בינונית x${pizzaQuantities.medium} - ${pizzaQuantities.medium * 30} ₪\n`;
+            }
+            if (pizzaQuantities.large > 0) {
+                message += `🍕 פיצה גדולה x${pizzaQuantities.large} - ${pizzaQuantities.large * 40} ₪\n`;
+            }
+            
+            // Add toppings
+            if (Object.keys(selectedToppings).length > 0) {
+                message += '\n🧀 תוספות:\n';
+                const toppingsNames = {
+                    cheese: 'גבינה נוספת',
+                    olives: 'זיתים',
+                    mushrooms: 'פטריות',
+                    corn: 'תירס',
+                    onion: 'בצל',
+                    tomato: 'עגבניות',
+                    spicy: 'פלפל חריף',
+                    bulgarit: 'בולגרית',
+                    tuna: 'טונה'
+                };
+                
+                for (const topping of Object.keys(selectedToppings)) {
+                    message += `• ${toppingsNames[topping]}\n`;
+                }
+            }
+            
+            // Add drink
+            if (selectedDrink > 0) {
+                const drinkNames = {10: 'קולה', 9: 'ספרייט', 8: 'פיוז-טי'};
+                message += `\n🥤 משקה: ${drinkNames[selectedDrink]}\n`;
+            }
+            
+            const total = document.getElementById('totalPrice').textContent;
+            message += `\n💰 סה"כ: ${total}`;
+            
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Print Order
+        function printOrder() {
+            const totalPizzas = pizzaQuantities.small + pizzaQuantities.medium + pizzaQuantities.large;
+            
+            if (totalPizzas === 0) {
+                showError('אנא חשבו את ההזמנה תחילה');
+                return;
+            }
+            
+            const printContent = document.getElementById('resultSection').innerHTML;
+            const printWindow = window.open('', '', 'height=600,width=800');
+            
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>הזמנת פיצה - פיצה דלוקס</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; direction: rtl; padding: 20px; }
+                        .result-section { background: #f8f9fa; padding: 20px; border-radius: 10px; }
+                        .order-summary { background: #e9ecef; padding: 15px; border-radius: 8px; margin: 15px 0; }
+                        .summary-item { display: flex; justify-content: space-between; margin: 8px 0; padding: 5px 0; border-bottom: 1px solid #ccc; }
+                        .total-price { font-size: 2rem; font-weight: bold; color: #28a745; text-align: center; margin: 20px 0; }
+                        .action-buttons { display: none; }
+                        h3 { text-align: center; color: #333; }
+                    </style>
+                </head>
+                <body>
+                    <h1 style="text-align: center;">🍕 פיצה דלוקס</h1>
+                    <div class="result-section">${printContent}</div>
+                    <p style="text-align: center; margin-top: 30px; color: #666;">תודה שבחרתם בפיצה דלוקס!</p>
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 250);
+        }
+
+        // Reset Order
+        function resetOrder() {
+            // Reset quantities
+            pizzaQuantities = { small: 0, medium: 0, large: 0 };
+            document.getElementById('qty-small').value = 0;
+            document.getElementById('qty-medium').value = 0;
+            document.getElementById('qty-large').value = 0;
+            
+            // Reset toppings
+            selectedToppings = {};
+            document.querySelectorAll('.topping-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Reset drink
+            selectedDrink = 0;
+            document.querySelectorAll('.drink-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector('.drink-card').classList.add('selected'); // Select first option
+            
+            // Hide results
+            document.getElementById('resultSection').classList.remove('show');
+            document.getElementById('errorMessage').classList.remove('show');
+        }
+
+        // Initialize floating pizzas animation delay
+        document.addEventListener('DOMContentLoaded', function() {
+            const floatingPizzas = document.querySelectorAll('.floating-pizza');
+            floatingPizzas.forEach((pizza, index) => {
+                pizza.style.animationDelay = (index * 2) + 's';
+            });
+        });
+
+        // Add smooth scrolling to results
+        function scrollToResults() {
+            document.getElementById('resultSection').scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+        }
+
+        // Enhanced error handling
+        window.addEventListener('error', function(e) {
+            console.log('Error caught:', e.error);
+        });
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                calculateOrder();
+            }
+            if (e.key === 'Escape') {
+                closePopup();
+            }
+        });
+
+        // Add quantity input validation
+        function validateQuantity(input, size) {
+            let value = parseInt(input.value) || 0;
+            value = Math.max(0, Math.min(99, value)); // Limit between 0-99
+            input.value = value;
+            pizzaQuantities[size] = value;
+        }
+
+        // Add auto-save to localStorage (optional)
+        function saveOrder() {
+            const orderData = {
+                quantities: pizzaQuantities,
+                toppings: selectedToppings,
+                drink: selectedDrink
+            };
+            localStorage.setItem('pizzaOrder', JSON.stringify(orderData));
+        }
+
+        function loadOrder() {
+            const saved = localStorage.getItem('pizzaOrder');
+            if (saved) {
+                const orderData = JSON.parse(saved);
+                // Restore order data...
+            }
+        }
+    </script>
+</body>
+</html>

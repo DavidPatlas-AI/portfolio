@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Book</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .book {
+            width: 400px;
+            height: 300px;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .cover {
+            width: 200px;
+            height: 300px;
+            background: #333;
+            position: absolute;
+            left: 0;
+            border-radius: 10px 0 0 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        .page {
+            width: 200px;
+            height: 300px;
+            background: white;
+            position: absolute;
+            left: 200px;
+            border-radius: 0 10px 10px 0;
+            transform-origin: left center;
+            transition: transform 1s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        .page h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .page p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .page.flipped {
+            transform: rotateY(-180deg);
+        }
+
+        .controls {
+            position: absolute;
+            bottom: -80px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #f0f0f0;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            color: #999;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="book">
+        <div class="cover">
+            📚 BOOK
+        </div>
+        
+        <div class="page" id="page1">
+            <h2>Page 1</h2>
+            <p>This is the first page of our simple book. Click the "Next" button below to turn the page and see the next content.</p>
+            <div class="page-number">1</div>
+        </div>
+        
+        <div class="page" id="page2">
+            <h2>Page 2</h2>
+            <p>Welcome to the second page! This demonstrates how pages can flip with a simple animation. Use the Previous and Next buttons to navigate.</p>
+            <div class="page-number">2</div>
+        </div>
+        
+        <div class="page" id="page3">
+            <h2>Page 3</h2>
+            <p>This is the final page of our demo book. The page turning animation creates a realistic book reading experience.</p>
+            <div class="page-number">3</div>
+        </div>
+
+        <div class="controls">
+            <button onclick="previousPage()" id="prevBtn">← Previous</button>
+            <button onclick="nextPage()" id="nextBtn">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentPage = 1;
+        const totalPages = 3;
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                document.getElementById(`page${currentPage}`).classList.add('flipped');
+                currentPage++;
+                updateButtons();
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                document.getElementById(`page${currentPage}`).classList.remove('flipped');
+                updateButtons();
+            }
+        }
+
+        // Initialize
+        updateButtons();
+    </script>
+</body>
+</html>

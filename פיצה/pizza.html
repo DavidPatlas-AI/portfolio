@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>תפריט פיצה</title>
+  <link rel="stylesheet" href="pizza.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <h1><svg width="32" height="32" viewBox="0 0 24 24" fill="none"><path d="M2 22L22 22" stroke="#f59e42" stroke-width="2" stroke-linecap="round"/><path d="M12 2C16.4183 2 20 5.58172 20 10C20 14.4183 16.4183 18 12 18C7.58172 18 4 14.4183 4 10C4 5.58172 7.58172 2 12 2Z" fill="#fbbf24" stroke="#f59e42" stroke-width="2"/><circle cx="12" cy="10" r="3" fill="#fff"/></svg> הזמנת פיצה</h1>
+
+  <div class="cards-row">
+    <div class="pizza-card">
+      <div class="pizza-icon small">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M2 22L22 22" stroke="#f59e42" stroke-width="2" stroke-linecap="round"/><path d="M12 2C16.4183 2 20 5.58172 20 10C20 14.4183 16.4183 18 12 18C7.58172 18 4 14.4183 4 10C4 5.58172 7.58172 2 12 2Z" fill="#fde68a" stroke="#fbbf24" stroke-width="2"/><circle cx="12" cy="10" r="2" fill="#fff"/></svg>
+      </div>
+      <div class="pizza-info">
+        <div class="pizza-title">קטן</div>
+        <div class="pizza-price">20 ש"ח</div>
+        <input type="number" id="qty_small" value="0" min="0" class="qty-input">
+      </div>
+    </div>
+    <div class="pizza-card">
+      <div class="pizza-icon medium">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M2 22L22 22" stroke="#f59e42" stroke-width="2" stroke-linecap="round"/><path d="M12 2C16.4183 2 20 5.58172 20 10C20 14.4183 16.4183 18 12 18C7.58172 18 4 14.4183 4 10C4 5.58172 7.58172 2 12 2Z" fill="#fbbf24" stroke="#f59e42" stroke-width="2"/><circle cx="12" cy="10" r="2.5" fill="#fff"/></svg>
+      </div>
+      <div class="pizza-info">
+        <div class="pizza-title">בינוני</div>
+        <div class="pizza-price">30 ש"ח</div>
+        <input type="number" id="qty_medium" value="0" min="0" class="qty-input">
+      </div>
+    </div>
+    <div class="pizza-card">
+      <div class="pizza-icon large">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none"><path d="M2 22L22 22" stroke="#f59e42" stroke-width="2" stroke-linecap="round"/><path d="M12 2C16.4183 2 20 5.58172 20 10C20 14.4183 16.4183 18 12 18C7.58172 18 4 14.4183 4 10C4 5.58172 7.58172 2 12 2Z" fill="#f59e42" stroke="#ea580c" stroke-width="2"/><circle cx="12" cy="10" r="3" fill="#fff"/></svg>
+      </div>
+      <div class="pizza-info">
+        <div class="pizza-title">גדול</div>
+        <div class="pizza-price">40 ש"ח</div>
+        <input type="number" id="qty_large" value="0" min="0" class="qty-input">
+      </div>
+    </div>
+  </div>
+
+  <h2>בחר תוספות (לכל מגש):</h2>
+  <div class="toppings-row">
+    <label class="topping-label"><input type="checkbox" id="cheese"> גבינה נוספת <span class="topping-price">4 ש"ח</span></label>
+    <label class="topping-label"><input type="checkbox" id="olives"> זיתים ירוקים <span class="topping-price">4 ש"ח</span></label>
+    <label class="topping-label"><input type="checkbox" id="mushrooms"> פטריות <span class="topping-price">4 ש"ח</span></label>
+    <label class="topping-label"><input type="checkbox" id="corn"> תירס <span class="topping-price">4 ש"ח</span></label>
+    <label class="topping-label"><input type="checkbox" id="onion"> בצל <span class="topping-price">4 ש"ח</span></label>
+    <label class="topping-label"><input type="checkbox" id="tomato"> עגבניות <span class="topping-price">4 ש"ח</span></label>
+    <label class="topping-label"><input type="checkbox" id="spicy"> פלפל חריף <span class="topping-price">4 ש"ח</span></label>
+    <label class="topping-label"><input type="checkbox" id="bulgarit"> בולגרית <span class="topping-price">5 ש"ח</span></label>
+    <label class="topping-label"><input type="checkbox" id="tuna"> טונה <span class="topping-price">6 ש"ח</span></label>
+  </div>
+
+  <h2><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="4" y="8" width="16" height="8" rx="4" fill="#bae6fd" stroke="#0ea5e9" stroke-width="2"/><rect x="10" y="4" width="4" height="8" rx="2" fill="#38bdf8"/></svg> האם להוסיף שתייה? (10 ש"ח)</h2>
+  <div class="drinks-row">
+    <label><input type="radio" name="drink" value="0" checked> ללא שתייה</label>
+    <label><input type="radio" name="drink" value="10"> 🥤 קולה (10 ש"ח)</label>
+    <label><input type="radio" name="drink" value="9"> 🥤 ספרייט (9 ש"ח)</label>
+    <label><input type="radio" name="drink" value="8"> 🧃 פיוז-טי (8 ש"ח)</label>
+  </div>
+
+  <button class="main-btn" onclick="calculatePrice()"><i class="fa-solid fa-calculator"></i> חשב מחיר</button>
+
+  <div id="errorMsg" style="color:red;"></div>
+
+  <h3><svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#fef08a" stroke="#f59e42" stroke-width="2"/><text x="12" y="17" text-anchor="middle" font-size="14" fill="#f59e42" font-family="Arial">₪</text></svg> מחיר סופי: <span id="totalPrice">0</span> ש"ח</h3>
+
+  <script src="pizza.js"></script>
+</body>
+</html>

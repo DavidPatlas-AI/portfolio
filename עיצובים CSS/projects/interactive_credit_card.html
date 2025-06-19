@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Credit Card</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+            perspective: 1500px;
+        }
+
+        .card-container {
+            position: relative;
+            width: 400px;
+            height: 250px;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+        }
+
+        .card-container.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            backface-visibility: hidden;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.8),
+                0 8px 25px rgba(0, 0, 0, 0.6);
+            overflow: hidden;
+        }
+
+        .card-front {
+            background: 
+                linear-gradient(135deg, 
+                    #2a2a2a 0%, #1a1a1a 30%, #0f0f0f 70%, #1a1a1a 100%);
+            border: 2px solid #444;
+            position: relative;
+        }
+
+        .card-back {
+            background: 
+                linear-gradient(135deg, 
+                    #2a2a2a 0%, #1a1a1a 30%, #0f0f0f 70%, #1a1a1a 100%);
+            border: 2px solid #444;
+            transform: rotateY(180deg);
+            position: relative;
+        }
+
+        .card-front::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            border-radius: 20px;
+        }
+
+        .card-back::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+            border-radius: 20px;
+        }
+
+        .platinum-label {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #ccc;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .bank-name {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #888;
+        }
+
+        .chip {
+            position: absolute;
+            top: 80px;
+            left: 30px;
+            width: 45px;
+            height: 35px;
+            background: 
+                linear-gradient(145deg, #d4af37 0%, #ffd700 30%, #d4af37 100%);
+            border-radius: 8px;
+            border: 2px solid #b8860b;
+            box-shadow: 
+                inset 0 2px 5px rgba(255, 255, 255, 0.3),
+                inset 0 -2px 5px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .chip::before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.1) 2px,
+                    rgba(0, 0, 0, 0.1) 3px
+                );
+            border-radius: 4px;
+        }
+
+        .card-number {
+            position: absolute;
+            bottom: 80px;
+            left: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 3px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .card-holder {
+            position: absolute;
+            bottom: 40px;
+            left: 30px;
+            font-size: 14px;
+            color: #ccc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .expiry-cvv {
+            position: absolute;
+            bottom: 40px;
+            right: 100px;
+            font-size: 14px;
+            color: #ccc;
+            text-align: right;
+        }
+
+        .mastercard-logo {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mastercard-circle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .mastercard-red {
+            background: #eb001b;
+            left: 0;
+        }
+
+        .mastercard-yellow {
+            background: #ff5f00;
+            right: 0;
+            opacity: 0.8;
+        }
+
+        .magnetic-strip {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            right: 0;
+            height: 45px;
+            background: linear-gradient(90deg, #1a1a1a 0%, #333 50%, #1a1a1a 100%);
+            box-shadow: 
+                inset 0 2px 5px rgba(0, 0, 0, 0.8),
+                inset 0 -2px 5px rgba(255, 255, 255, 0.1);
+        }
+
+        .signature-strip {
+            position: absolute;
+            top: 110px;
+            left: 30px;
+            right: 30px;
+            height: 35px;
+            background: #f5f5f5;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .signature-strip::after {
+            content: 'Authorized Signature';
+            position: absolute;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            font-size: 10px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .back-cvv {
+            position: absolute;
+            top: 110px;
+            right: 80px;
+            background: #fff;
+            color: #000;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 14px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .back-text {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            right: 30px;
+            font-size: 10px;
+            color: #888;
+            line-height: 1.4;
+            text-align: justify;
+        }
+
+        .toggle-button {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 25px;
+            background: linear-gradient(145deg, #4488ff 0%, #2266cc 100%);
+            border: 2px solid #66aaff;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.6),
+                inset 0 2px 5px rgba(255, 255, 255, 0.2);
+        }
+
+        .toggle-button:hover {
+            background: linear-gradient(145deg, #5599dd 0%, #3377bb 100%);
+            transform: translateX(-50%) translateY(-2px);
+            box-shadow: 
+                0 12px 25px rgba(0, 0, 0, 0.8),
+                inset 0 2px 8px rgba(255, 255, 255, 0.3);
+        }
+
+        .toggle-button:active {
+            transform: translateX(-50%) translateY(0px);
+        }
+
+        .holographic-overlay {
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(45deg, 
+                    transparent 30%, 
+                    rgba(255, 255, 255, 0.1) 50%, 
+                    transparent 70%);
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .card-container:hover .holographic-overlay {
+            opacity: 1;
+            animation: holographic-sweep 2s ease-in-out infinite;
+        }
+
+        @keyframes holographic-sweep {
+            0% {
+                background: 
+                    linear-gradient(45deg, 
+                        transparent 30%, 
+                        rgba(255, 255, 255, 0.1) 50%, 
+                        transparent 70%);
+            }
+            50% {
+                background: 
+                    linear-gradient(45deg, 
+                        transparent 40%, 
+                        rgba(255, 255, 255, 0.2) 50%, 
+                        transparent 60%);
+            }
+            100% {
+                background: 
+                    linear-gradient(45deg, 
+                        transparent 30%, 
+                        rgba(255, 255, 255, 0.1) 50%, 
+                        transparent 70%);
+            }
+        }
+
+        .card-glow {
+            position: absolute;
+            inset: -10px;
+            background: 
+                radial-gradient(circle, rgba(68, 136, 255, 0.1) 0%, transparent 70%);
+            border-radius: 30px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .card-container:hover .card-glow {
+            opacity: 1;
+        }
+
+        .info-panel {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            color: #ccc;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .info-panel h3 {
+            color: #4488ff;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .info-line {
+            margin: 5px 0;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .floating-particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(68, 136, 255, 0.6);
+            border-radius: 50%;
+            animation: float-up 4s linear infinite;
+        }
+
+        @keyframes float-up {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) translateX(0px);
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) translateX(20px);
+            }
+        }
+
+        .tap-hint {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #4488ff;
+            font-size: 14px;
+            font-weight: bold;
+            animation: pulse-hint 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-hint {
+            0%, 100% { opacity: 0.7; transform: translateX(-50%) translateY(0px); }
+            50% { opacity: 1; transform: translateX(-50%) translateY(-5px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles" id="particles"></div>
+    
+    <div class="card-container" id="cardContainer">
+        <div class="tap-hint">👆 Click to flip card</div>
+        <div class="card-glow"></div>
+        
+        <!-- Front of Card -->
+        <div class="card-face card-front">
+            <div class="holographic-overlay"></div>
+            <div class="platinum-label">PLATINUM</div>
+            <div class="bank-name">Bank Name</div>
+            <div class="chip"></div>
+            <div class="card-number" id="cardNumber">1111 TCWX TCWX 1452</div>
+            <div class="card-holder">Person Name</div>
+            <div class="mastercard-logo">
+                <div class="mastercard-circle mastercard-red"></div>
+                <div class="mastercard-circle mastercard-yellow"></div>
+            </div>
+        </div>
+        
+        <!-- Back of Card -->
+        <div class="card-face card-back">
+            <div class="holographic-overlay"></div>
+            <div class="magnetic-strip"></div>
+            <div class="signature-strip"></div>
+            <div class="back-cvv">304</div>
+            <div class="card-holder" style="top: 160px;">Person Name</div>
+            <div class="expiry-cvv" style="top: 160px; right: 30px;">
+                1111 1223 1223 1452<br>
+                CVV: 304 &nbsp;&nbsp; Expiry: 02/30
+            </div>
+            <div class="back-text">
+                This card is property of Bank Name. If found, please return to any branch or call customer service. 
+                Unauthorized use is prohibited and subject to prosecution under applicable laws.
+            </div>
+        </div>
+    </div>
+    
+    <div class="info-panel">
+        <h3>💳 Card Information</h3>
+        <div class="info-line">
+            <span>Type:</span>
+            <span>Platinum</span>
+        </div>
+        <div class="info-line">
+            <span>Status:</span>
+            <span id="cardStatus">Front View</span>
+        </div>
+        <div class="info-line">
+            <span>Security:</span>
+            <span>Chip & PIN</span>
+        </div>
+        <div class="info-line">
+            <span>Network:</span>
+            <span>MasterCard</span>
+        </div>
+    </div>
+    
+    <div class="toggle-button" id="toggleBtn">🔄 View Card Details</div>
+
+    <script>
+        class InteractiveCreditCard {
+            constructor() {
+                this.isFlipped = false;
+                this.cardContainer = document.getElementById('cardContainer');
+                this.toggleBtn = document.getElementById('toggleBtn');
+                this.cardStatus = document.getElementById('cardStatus');
+                
+                this.setupEventListeners();
+                this.createParticles();
+                this.startNumberAnimation();
+            }
+
+            setupEventListeners() {
+                // Card click to flip
+                this.cardContainer.addEventListener('click', () => {
+                    this.flipCard();
+                });
+
+                // Button click
+                this.toggleBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.flipCard();
+                });
+
+                // Keyboard support
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space' || e.code === 'Enter') {
+                        e.preventDefault();
+                        this.flipCard();
+                    }
+                });
+
+                // Touch support for mobile
+                this.cardContainer.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                });
+            }
+
+            flipCard() {
+                this.isFlipped = !this.isFlipped;
+                
+                if (this.isFlipped) {
+                    this.cardContainer.classList.add('flipped');
+                    this.toggleBtn.textContent = '🔄 Hide Card Details';
+                    this.cardStatus.textContent = 'Back View';
+                } else {
+                    this.cardContainer.classList.remove('flipped');
+                    this.toggleBtn.textContent = '🔄 View Card Details';
+                    this.cardStatus.textContent = 'Front View';
+                }
+
+                // Play flip sound
+                this.playFlipSound();
+
+                // Haptic feedback
+                if (navigator.vibrate) {
+                    navigator.vibrate(100);
+                }
+            }
+
+            createParticles() {
+                const particleContainer = document.getElementById('particles');
+                for (let i = 0; i < 20; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.animationDelay = Math.random() * 4 + 's';
+                    particle.style.animationDuration = (3 + Math.random() * 3) + 's';
+                    particleContainer.appendChild(particle);
+                }
+            }
+
+            startNumberAnimation() {
+                const cardNumber = document.getElementById('cardNumber');
+                const originalNumber = '1111 TCWX TCWX 1452';
+                const hiddenNumber = '1111 •••• •••• 1452';
+                
+                let showFull = true;
+                setInterval(() => {
+                    if (!this.isFlipped) {
+                        cardNumber.textContent = showFull ? originalNumber : hiddenNumber;
+                        showFull = !showFull;
+                    }
+                }, 3000);
+            }
+
+            playFlipSound() {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    if (this.isFlipped) {
+                        // Flip to back sound
+                        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                        oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.2);
+                    } else {
+                        // Flip to front sound
+                        oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+                        oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.2);
+                    }
+                    
+                    gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                    
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 0.2);
+                } catch (err) {
+                    console.log('Audio not available');
+                }
+            }
+        }
+
+        // Initialize the card
+        window.addEventListener('load', () => {
+            new InteractiveCreditCard();
+        });
+    </script>
+</body>
+</html>

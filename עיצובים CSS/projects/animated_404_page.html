@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Connection Lost</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .error-code {
+            font-size: 120px;
+            font-weight: 900;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .scene-container {
+            width: 500px;
+            height: 200px;
+            position: relative;
+            margin: 30px 0;
+        }
+
+        /* Character */
+        .character {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .person {
+            width: 60px;
+            height: 100px;
+            position: relative;
+            animation: character-work 4s ease-in-out infinite;
+        }
+
+        @keyframes character-work {
+            0% { transform: translateX(0) scaleX(1); }
+            25% { transform: translateX(-20px) scaleX(1); }
+            50% { transform: translateX(20px) scaleX(-1); }
+            75% { transform: translateX(-10px) scaleX(1); }
+            100% { transform: translateX(0) scaleX(1); }
+        }
+
+        .head {
+            width: 30px;
+            height: 30px;
+            background: #fdbcb4;
+            border-radius: 50%;
+            position: relative;
+            margin: 0 auto;
+            animation: head-turn 2s ease-in-out infinite;
+        }
+
+        @keyframes head-turn {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            75% { transform: rotate(10deg); }
+        }
+
+        .hair {
+            position: absolute;
+            top: -3px;
+            left: 3px;
+            right: 3px;
+            height: 12px;
+            background: #8b4513;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .beard {
+            position: absolute;
+            bottom: -3px;
+            left: 6px;
+            right: 6px;
+            height: 8px;
+            background: #654321;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .eyes {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 4px;
+        }
+
+        .eye {
+            width: 3px;
+            height: 3px;
+            background: #000;
+            border-radius: 50%;
+        }
+
+        .body {
+            width: 40px;
+            height: 50px;
+            background: #ff9f43;
+            margin: 2px auto;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .arms {
+            position: absolute;
+            top: 8px;
+            width: 100%;
+        }
+
+        .arm {
+            position: absolute;
+            width: 12px;
+            height: 25px;
+            background: #fdbcb4;
+            border-radius: 6px;
+        }
+
+        .arm.left {
+            left: -8px;
+            animation: arm-left-work 3s ease-in-out infinite;
+            transform-origin: top center;
+        }
+
+        .arm.right {
+            right: -8px;
+            animation: arm-right-work 3s ease-in-out infinite;
+            transform-origin: top center;
+        }
+
+        @keyframes arm-left-work {
+            0%, 100% { transform: rotate(-20deg); }
+            33% { transform: rotate(-45deg); }
+            66% { transform: rotate(10deg); }
+        }
+
+        @keyframes arm-right-work {
+            0%, 100% { transform: rotate(20deg); }
+            33% { transform: rotate(10deg); }
+            66% { transform: rotate(45deg); }
+        }
+
+        .legs {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 2px;
+        }
+
+        .leg {
+            width: 12px;
+            height: 25px;
+            background: #fdbcb4;
+            border-radius: 6px;
+            animation: leg-walk 1s ease-in-out infinite alternate;
+        }
+
+        .leg:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes leg-walk {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(3px); }
+        }
+
+        /* Cables and plugs */
+        .cable-system {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 8px;
+            transform: translateY(-50%);
+        }
+
+        .cable {
+            position: absolute;
+            height: 6px;
+            background: #2c3e50;
+            top: 1px;
+            border-radius: 3px;
+        }
+
+        .cable-left {
+            left: 20px;
+            width: 180px;
+            animation: cable-wiggle 2s ease-in-out infinite;
+        }
+
+        .cable-right {
+            right: 20px;
+            width: 180px;
+            animation: cable-wiggle 2s ease-in-out infinite reverse;
+        }
+
+        @keyframes cable-wiggle {
+            0%, 100% { transform: translateY(0) scaleY(1); }
+            50% { transform: translateY(-2px) scaleY(1.1); }
+        }
+
+        .plug {
+            position: absolute;
+            width: 25px;
+            height: 16px;
+            background: #34495e;
+            border-radius: 4px;
+            top: -4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .plug-left {
+            left: 200px;
+            animation: plug-try-connect 4s ease-in-out infinite;
+        }
+
+        .plug-right {
+            right: 200px;
+            animation: plug-try-connect 4s ease-in-out infinite reverse;
+        }
+
+        @keyframes plug-try-connect {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(15px) rotate(5deg); }
+            50% { transform: translateX(30px) rotate(-5deg); }
+            75% { transform: translateX(15px) rotate(3deg); }
+        }
+
+        .plug::before,
+        .plug::after {
+            content: '';
+            position: absolute;
+            width: 3px;
+            height: 10px;
+            background: #2c3e50;
+            border-radius: 1px;
+            top: 3px;
+        }
+
+        .plug::before {
+            left: 4px;
+        }
+
+        .plug::after {
+            right: 4px;
+        }
+
+        .socket {
+            position: absolute;
+            width: 30px;
+            height: 20px;
+            background: #7f8c8d;
+            border-radius: 6px;
+            top: -6px;
+            border: 2px solid #95a5a6;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .socket-left {
+            left: 10px;
+        }
+
+        .socket-right {
+            right: 10px;
+        }
+
+        .socket::before,
+        .socket::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 12px;
+            background: #34495e;
+            border-radius: 2px;
+            top: 4px;
+        }
+
+        .socket::before {
+            left: 6px;
+        }
+
+        .socket::after {
+            right: 6px;
+        }
+
+        /* Green connection indicators */
+        .connection-indicator {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #27ae60;
+            border-radius: 50%;
+            opacity: 0;
+            animation: connection-blink 3s ease-in-out infinite;
+        }
+
+        .indicator-left {
+            left: 60px;
+            top: 90px;
+        }
+
+        .indicator-right {
+            right: 60px;
+            top: 90px;
+        }
+
+        @keyframes connection-blink {
+            0%, 90% { opacity: 0; transform: scale(0.8); }
+            95%, 100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* Sparks effect */
+        .sparks {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+        }
+
+        .spark {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #f39c12;
+            border-radius: 50%;
+            opacity: 0;
+            animation: spark-fly 1s ease-out infinite;
+        }
+
+        .spark:nth-child(1) { animation-delay: 0s; top: 20px; left: 25px; }
+        .spark:nth-child(2) { animation-delay: 0.2s; top: 35px; left: 35px; }
+        .spark:nth-child(3) { animation-delay: 0.4s; top: 25px; left: 15px; }
+        .spark:nth-child(4) { animation-delay: 0.6s; top: 40px; left: 20px; }
+
+        @keyframes spark-fly {
+            0% { opacity: 1; transform: translate(0, 0) scale(1); }
+            100% { opacity: 0; transform: translate(20px, -20px) scale(0.3); }
+        }
+
+        /* Message section */
+        .message {
+            text-align: center;
+            max-width: 600px;
+            margin-top: 30px;
+        }
+
+        .message h1 {
+            font-size: 32px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .message p {
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .home-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #27ae60;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .home-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.5);
+            background: #2ecc71;
+        }
+
+        /* Working animation states */
+        .working-hard {
+            animation-duration: 1.5s;
+        }
+
+        .working-hard .arm.left {
+            animation-duration: 0.8s;
+        }
+
+        .working-hard .arm.right {
+            animation-duration: 0.8s;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 80px;
+            }
+            
+            .scene-container {
+                width: 350px;
+                height: 150px;
+            }
+            
+            .message h1 {
+                font-size: 24px;
+            }
+            
+            .message p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-code">404</div>
+    
+    <div class="scene-container">
+        <!-- Left side -->
+        <div class="connection-indicator indicator-left"></div>
+        <div class="socket socket-left"></div>
+        <div class="cable cable-left"></div>
+        <div class="plug plug-left"></div>
+        
+        <!-- Sparks in the middle -->
+        <div class="sparks">
+            <div class="spark"></div>
+            <div class="spark"></div>
+            <div class="spark"></div>
+            <div class="spark"></div>
+        </div>
+        
+        <!-- Right side -->
+        <div class="connection-indicator indicator-right"></div>
+        <div class="socket socket-right"></div>
+        <div class="cable cable-right"></div>
+        <div class="plug plug-right"></div>
+        
+        <!-- Character in the middle -->
+        <div class="character">
+            <div class="person">
+                <div class="head">
+                    <div class="hair"></div>
+                    <div class="eyes">
+                        <div class="eye"></div>
+                        <div class="eye"></div>
+                    </div>
+                    <div class="beard"></div>
+                </div>
+                
+                <div class="body">
+                    <div class="arms">
+                        <div class="arm left"></div>
+                        <div class="arm right"></div>
+                    </div>
+                </div>
+                
+                <div class="legs">
+                    <div class="leg"></div>
+                    <div class="leg"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="message">
+        <h1>Look like you're lost</h1>
+        <p>The page you are looking for not available!</p>
+        <a href="#" class="home-button" onclick="goHome()">Go to Home</a>
+    </div>
+
+    <script>
+        function goHome() {
+            // Add click effect
+            const button = document.querySelector('.home-button');
+            const person = document.querySelector('.person');
+            
+            button.style.transform = 'scale(0.95)';
+            person.classList.add('working-hard');
+            
+            setTimeout(() => {
+                button.style.transform = 'scale(1)';
+                alert('🏠 Taking you home...');
+                // window.location.href = '/';  // Uncomment for real redirect
+            }, 150);
+            
+            setTimeout(() => {
+                person.classList.remove('working-hard');
+            }, 1500);
+        }
+
+        // Add some random timing variations
+        document.addEventListener('DOMContentLoaded', function() {
+            const sparks = document.querySelectorAll('.spark');
+            sparks.forEach((spark, index) => {
+                const randomDelay = (index * 0.15) + Math.random() * 0.3;
+                spark.style.animationDelay = randomDelay + 's';
+            });
+            
+            // Add click interaction to character
+            const character = document.querySelector('.character');
+            character.addEventListener('click', function() {
+                const person = this.querySelector('.person');
+                person.classList.toggle('working-hard');
+                
+                setTimeout(() => {
+                    person.classList.remove('working-hard');
+                }, 2000);
+            });
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                goHome();
+            }
+        });
+    </script>
+</body>
+</html>

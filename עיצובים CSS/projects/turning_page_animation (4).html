@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turning Page Animation - Pure CSS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        .book-container {
+            perspective: 1200px;
+            position: relative;
+        }
+
+        .book {
+            width: 400px;
+            height: 300px;
+            position: relative;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .page {
+            width: 200px;
+            height: 300px;
+            position: absolute;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            transform-style: preserve-3d;
+            transform-origin: left center;
+            transition: transform 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow: hidden;
+        }
+
+        .page-content {
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(45deg, #f0f0f0, #ffffff);
+        }
+
+        .page1 {
+            left: 200px;
+            z-index: 5;
+        }
+
+        .page2 {
+            left: 200px;
+            z-index: 4;
+        }
+
+        .page3 {
+            left: 200px;
+            z-index: 3;
+        }
+
+        .page4 {
+            left: 200px;
+            z-index: 2;
+        }
+
+        .page5 {
+            left: 200px;
+            z-index: 1;
+        }
+
+        /* Page back sides */
+        .page::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #e0e0e0, #f5f5f5);
+            border-radius: 0 8px 8px 0;
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
+        }
+
+        .page-content {
+            backface-visibility: hidden;
+        }
+
+        /* Book cover (left side) */
+        .book-cover {
+            width: 200px;
+            height: 300px;
+            position: absolute;
+            left: 0;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 8px 0 0 8px;
+            box-shadow: -5px 0 15px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Hover effects for automatic flipping */
+        .book:hover .page1 {
+            transform: rotateY(-180deg);
+            transition-delay: 0s;
+        }
+
+        .book:hover .page2 {
+            transform: rotateY(-180deg);
+            transition-delay: 0.3s;
+        }
+
+        .book:hover .page3 {
+            transform: rotateY(-180deg);
+            transition-delay: 0.6s;
+        }
+
+        .book:hover .page4 {
+            transform: rotateY(-180deg);
+            transition-delay: 0.9s;
+        }
+
+        .book:hover .page5 {
+            transform: rotateY(-180deg);
+            transition-delay: 1.2s;
+        }
+
+        /* Click effects for manual control */
+        .book.flipped .page1 {
+            transform: rotateY(-180deg);
+        }
+
+        .book.flipped .page2 {
+            transform: rotateY(-180deg);
+        }
+
+        .book.flipped .page3 {
+            transform: rotateY(-180deg);
+        }
+
+        .book.flipped .page4 {
+            transform: rotateY(-180deg);
+        }
+
+        .book.flipped .page5 {
+            transform: rotateY(-180deg);
+        }
+
+        /* Page content styling */
+        .page1 .page-content {
+            background: linear-gradient(45deg, #ff9a9e, #fecfef);
+        }
+
+        .page2 .page-content {
+            background: linear-gradient(45deg, #a8edea, #fed6e3);
+        }
+
+        .page3 .page-content {
+            background: linear-gradient(45deg, #ffecd2, #fcb69f);
+        }
+
+        .page4 .page-content {
+            background: linear-gradient(45deg, #c2e9fb, #a1c4fd);
+        }
+
+        .page5 .page-content {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            text-align: center;
+        }
+
+        .page-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            text-align: justify;
+        }
+
+        /* Instructions */
+        .instructions {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Control buttons */
+        .controls {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Spine of the book */
+        .book-spine {
+            width: 8px;
+            height: 300px;
+            position: absolute;
+            left: 192px;
+            background: linear-gradient(to bottom, #34495e, #2c3e50);
+            z-index: 10;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* Floating particles animation */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 6s infinite ease-in-out;
+        }
+
+        .particle:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
+        .particle:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 2s; }
+        .particle:nth-child(4) { bottom: 15%; right: 25%; animation-delay: 3s; }
+        .particle:nth-child(5) { top: 60%; right: 30%; animation-delay: 4s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) scale(1); opacity: 0.6; }
+            50% { transform: translateY(-20px) scale(1.2); opacity: 1; }
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .book {
+                width: 300px;
+                height: 225px;
+            }
+            
+            .page, .book-cover {
+                width: 150px;
+                height: 225px;
+            }
+            
+            .page1, .page2, .page3, .page4, .page5 {
+                left: 150px;
+            }
+            
+            .instructions {
+                font-size: 16px;
+                top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating particles -->
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+
+    <div class="instructions">
+        <h2>📖 Turning Page Animation</h2>
+        <p>Hover over the book or click the buttons to flip pages!</p>
+    </div>
+
+    <div class="book-container">
+        <div class="book" id="book">
+            <!-- Book cover -->
+            <div class="book-cover">
+                <div>
+                    📚<br>
+                    MAGIC<br>
+                    BOOK
+                </div>
+            </div>
+
+            <!-- Book spine -->
+            <div class="book-spine"></div>
+
+            <!-- Page 1 -->
+            <div class="page page1">
+                <div class="page-content">
+                    <div class="page-title">🌟 Welcome</div>
+                    <div class="page-text">
+                        Welcome to this magical book! Each page contains wonderful stories and beautiful gradients. Hover over the book to see the pages flip automatically, or use the buttons below for manual control.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 2 -->
+            <div class="page page2">
+                <div class="page-content">
+                    <div class="page-title">🎨 Pure CSS</div>
+                    <div class="page-text">
+                        This entire animation is created using pure CSS! No JavaScript libraries, just clean CSS transforms and transitions. The 3D effect uses perspective and transform-style properties.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 3 -->
+            <div class="page page3">
+                <div class="page-content">
+                    <div class="page-title">✨ Interactive</div>
+                    <div class="page-text">
+                        The pages respond to your interactions. You can hover to see all pages flip in sequence, or click the control buttons to manually flip through the book at your own pace.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 4 -->
+            <div class="page page4">
+                <div class="page-content">
+                    <div class="page-title">🎯 Responsive</div>
+                    <div class="page-text">
+                        This book animation works perfectly on all devices! The design is fully responsive and adapts to different screen sizes while maintaining the smooth flipping animation.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 5 -->
+            <div class="page page5">
+                <div class="page-content">
+                    <div class="page-title">🚀 Amazing</div>
+                    <div class="page-text">
+                        Thank you for exploring this magical book! The combination of CSS transforms, gradients, and smooth transitions creates this beautiful page-turning effect. Keep experimenting!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="btn" onclick="flipPages()">📖 Flip All Pages</div>
+        <div class="btn" onclick="resetPages()">🔄 Reset Book</div>
+    </div>
+
+    <script>
+        let isFlipped = false;
+
+        function flipPages() {
+            const book = document.getElementById('book');
+            book.classList.add('flipped');
+            isFlipped = true;
+        }
+
+        function resetPages() {
+            const book = document.getElementById('book');
+            book.classList.remove('flipped');
+            isFlipped = false;
+        }
+
+        // Add click listener to book for toggle effect
+        document.getElementById('book').addEventListener('click', function() {
+            if (isFlipped) {
+                resetPages();
+            } else {
+                flipPages();
+            }
+        });
+    </script>
+</body>
+</html>

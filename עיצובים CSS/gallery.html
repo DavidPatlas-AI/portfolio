@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>גלריית עיצובי CSS</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+            color: white;
+            padding: 20px;
+        }
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        .card:hover {
+            transform: scale(1.05);
+            transition: 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">גלריית עיצובי CSS</h1>
+    <div class="gallery">
+        <div class="card" onclick="window.open('projects/animated_404_page.html')">
+            <h3>דף 404 מונפש</h3>
+            <p>דף שגיאה עם אנימציות</p>
+        </div>
+        <div class="card" onclick="window.open('projects/car_speedometer.html')">
+            <h3>מד מהירות רכב</h3>
+            <p>מד מהירות דיגיטלי</p>
+        </div>
+        <div class="card" onclick="window.open('projects/engine_button.html')">
+            <h3>כפתור הנעה</h3>
+            <p>כפתור מנוע אינטראקטיבי</p>
+        </div>
+        <div class="card" onclick="window.open('projects/hazard_lights_button.html')">
+            <h3>כפתור אורות חירום</h3>
+            <p>כפתור חירום מונפש</p>
+        </div>
+        <div class="card" onclick="window.open('projects/hazard_lights_button (1).html')">
+            <h3>כפתור אורות חירום (2)</h3>
+            <p>גרסה משופרת</p>
+        </div>
+        <div class="card" onclick="window.open('projects/hazard_lights_button (2).html')">
+            <h3>כפתור אורות חירום (3)</h3>
+            <p>גרסה מתקדמת</p>
+        </div>
+        <div class="card" onclick="window.open('projects/interactive_credit_card.html')">
+            <h3>כרטיס אשראי אינטראקטיבי</h3>
+            <p>כרטיס תלת-מימדי</p>
+        </div>
+        <div class="card" onclick="window.open('projects/jewish_clock.html')">
+            <h3>שעון יהודי</h3>
+            <p>שעון עברי מתקדם</p>
+        </div>
+        <div class="card" onclick="window.open('projects/matching_game_presentation.html')">
+            <h3>משחק התאמות</h3>
+            <p>משחק אינטראקטיבי</p>
+        </div>
+        <div class="card" onclick="window.open('projects/modern_3d_ignition.html')">
+            <h3>הצתה תלת-מימדית</h3>
+            <p>מערכת הצתה מודרנית</p>
+        </div>
+        <div class="card" onclick="window.open('projects/modern_3d_ignition (1).html')">
+            <h3>הצתה תלת-מימדית (2)</h3>
+            <p>גרסה משופרת</p>
+        </div>
+        <div class="card" onclick="window.open('projects/rock_paper_scissors_game.html')">
+            <h3>אבן נייר מספריים</h3>
+            <p>משחק קלאסי</p>
+        </div>
+        <div class="card" onclick="window.open('projects/steering_wheel_system.html')">
+            <h3>מערכת הגה</h3>
+            <p>סימולטור הגה</p>
+        </div>
+        <div class="card" onclick="window.open('projects/steering_wheel_system (1).html')">
+            <h3>מערכת הגה (2)</h3>
+            <p>גרסה משופרת</p>
+        </div>
+        <div class="card" onclick="window.open('projects/steering_wheel_system (2).html')">
+            <h3>מערכת הגה (3)</h3>
+            <p>גרסה מתקדמת</p>
+        </div>
+        <div class="card" onclick="window.open('projects/theme_toggle.html')">
+            <h3>מחליף נושא</h3>
+            <p>מחליף יום/לילה</p>
+        </div>
+        <div class="card" onclick="window.open('projects/traffic_light (1).html')">
+            <h3>רמזור</h3>
+            <p>רמזור אינטראקטיבי</p>
+        </div>
+        <div class="card" onclick="window.open('projects/turning_page_animation.html')">
+            <h3>הפיכת עמוד</h3>
+            <p>אנימציה תלת-מימדית</p>
+        </div>
+        <div class="card" onclick="window.open('projects/turning_page_animation (1).html')">
+            <h3>הפיכת עמוד (2)</h3>
+            <p>גרסה משופרת</p>
+        </div>
+        <div class="card" onclick="window.open('projects/turning_page_animation (2).html')">
+            <h3>הפיכת עמוד (3)</h3>
+            <p>גרסה מתקדמת</p>
+        </div>
+        <div class="card" onclick="window.open('projects/turning_page_animation (3).html')">
+            <h3>הפיכת עמוד (4)</h3>
+            <p>גרסה מיוחדת</p>
+        </div>
+        <div class="card" onclick="window.open('projects/turning_page_animation (4).html')">
+            <h3>הפיכת עמוד (5)</h3>
+            <p>גרסה אולטימטיבית</p>
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 30px;">
+        <h2>22 פרויקטים CSS מתקדמים</h2>
+        <p>לחץ על כל כרטיס כדי לצפות בפרויקט</p>
+    </div>
+</body>
+</html> 

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>תפריט פיצה</title>
+</head>
+<body>
+  <h1>גודל מגש</h1>
+  <label><input type="radio" name="size" value="small"> קטן (20 ש"ח)</label><br>
+  <label><input type="radio" name="size" value="medium"> בינוני (30 ש"ח)</label><br>
+  <label><input type="radio" name="size" value="large"> גדול (40 ש"ח)</label><br><br>
+
+  <h2>בחר תוספות:</h2>
+  <label><input type="checkbox" id="cheese"> גבינה (7 ש"ח)</label><br>
+  <label><input type="checkbox" id="olives"> זיתים (7 ש"ח)</label><br>
+  <label><input type="checkbox" id="mushrooms"> פטריות (7 ש"ח)</label><br>
+  <label><input type="checkbox" id="corn"> תירס (7 ש"ח)</label><br><br>
+
+  <h2>כמה מגשים?</h2>
+  <input type="number" id="quantity" value="1" min="1"><br><br>
+
+  <h2>האם להוסיף שתייה? (10 ש"ח)</h2>
+  <input type="checkbox" id="drink"><label for="drink"> כן</label><br><br>
+
+  <button onclick="calculatePrice()">חשב מחיר</button>
+
+  <h3>מחיר סופי: <span id="totalPrice">0</span> ש"ח</h3>
+
+  <!-- חיבור לקובץ JS -->
+  <script src="pizza.js"></script>
+</body>
+</html>

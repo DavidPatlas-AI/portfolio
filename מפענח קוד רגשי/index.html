@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeMirror-Neshama™ - אורקל הקוד המתקדם</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">🧬🔮 CodeMirror-Neshama™</div>
+            <div class="subtitle">מערכת פיענוח קוד מתקדמת ומוח יצירתיות</div>
+            <div class="tagline">"לא רק 'מי אתה' - אלא 'כמה נדיר אתה'"</div>
+        </div>
+
+        <div class="main-card">
+            <div class="intro-text">
+                הכנס קטעי קוד מגוונים וקבל ניתוח מעמיק שיחשוף לא רק את האישיות שלך, אלא גם את <strong>רמת הייחודיות והיצירתיות</strong> של הרעיונות שלך בעולם התכנות
+            </div>
+
+            <div class="demo-section">
+                <div class="demo-title">🎲 רוצה לנסות? השתמש בדוגמאות רנדומליות!</div>
+                <div class="demo-buttons">
+                    <button class="demo-btn" onclick="fillRandomExample()">🎯 מלא דוגמה רנדומלית</button>
+                    <button class="demo-btn" onclick="fillBeginnerExample()">👶 דוגמת מתחיל</button>
+                    <button class="demo-btn" onclick="fillAdvancedExample()">🧠 דוגמת מתקדם</button>
+                    <button class="demo-btn" onclick="clearAllFields()">🧹 נקה הכל</button>
+                </div>
+            </div>
+
+            <div class="tip">
+                🌟 <strong>המערכת מנתחת:</strong> לא רק אישיות, אלא גם רמת נדירות הרעיונות שלך (1:10? 1:1000? 1:מיליון?), סגנון חשיבה ייחודי, ורמת יצירתיות טכנולוגית
+            </div>
+
+            <div class="code-section">
+                <div class="code-label">
+                    <div class="label-content">
+                        <span>🛠️</span>
+                        פונקציה קטנה או פתרון חכם
+                    </div>
+                    <button class="example-btn" onclick="fillExample(1)">דוגמה</button>
+                </div>
+                <textarea class="code-textarea" id="code1" placeholder="הדבק כאן פונקציה שפתרה לך בעיה בצורה מעניינת, או קוד שאתה גאה בו..."></textarea>
+            </div>
+
+            <div class="code-section">
+                <div class="code-label">
+                    <div class="label-content">
+                        <span>🧮</span>
+                        אלגוריתם או לוגיקה מורכבת
+                    </div>
+                    <button class="example-btn" onclick="fillExample(2)">דוגמה</button>
+                </div>
+                <textarea class="code-textarea" id="code2" placeholder="לולאות, תנאים, חישובים - קוד שדרש ממך חשיבה יצירתית..."></textarea>
+            </div>
+
+            <div class="code-section">
+                <div class="code-label">
+                    <div class="label-content">
+                        <span>📱</span>
+                        קוד ממשק או חוויית משתמש
+                    </div>
+                    <button class="example-btn" onclick="fillExample(3)">דוגמה</button>
+                </div>
+                <textarea class="code-textarea" id="code3" placeholder="UI/UX, אנימציות, אינטראקציות - כל דבר שקשור לחוויה..."></textarea>
+            </div>
+
+            <div class="code-section">
+                <div class="code-label">
+                    <div class="label-content">
+                        <span>⚡</span>
+                        קוד מתקדם או טכניקה חדשנית
+                    </div>
+                    <button class="example-btn" onclick="fillExample(4)">דוגמה</button>
+                </div>
+                <textarea class="code-textarea" id="code4" placeholder="API, מיקרו-סרביסים, AI, או כל דבר טכנולוגי מתקדם..."></textarea>
+            </div>
+
+            <div class="code-section">
+                <div class="code-label">
+                    <div class="label-content">
+                        <span>🎯</span>
+                        הפרויקט הכי מיוחד שלך
+                    </div>
+                    <button class="example-btn" onclick="fillExample(5)">דוגמה</button>
+                </div>
+                <textarea class="code-textarea" id="code5" placeholder="הקוד שאתה הכי גאה בו, או משהו שהמציא פתרון ייחודי לבעיה..."></textarea>
+            </div>
+
+            <button class="analyze-btn" onclick="analyzeCode()">
+                🔮✨ פענח את נשמת הקוד ואת רמת הייחודיות שלי
+            </button>
+
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">מפענח את DNA הקוד שלך...</div>
+                <div class="loading-steps" id="loadingSteps">סורק תבניות יצירתיות</div>
+            </div>
+
+            <div class="results" id="results">
+                <h2>🎭 דוח נשמת הקוד המלא שלך</h2>
+                <div id="personality-content"></div>
+                <button class="reset-btn" onclick="resetAnalysis()">🔄 נתח קוד אחר</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 

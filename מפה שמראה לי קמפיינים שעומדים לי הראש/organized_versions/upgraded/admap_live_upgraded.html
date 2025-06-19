@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdMap Live Pro - מפת פרסום דיגיטלי מתקדמת</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --success: #00b894;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --info: #3498db;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: rtl;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+
+        /* Header Styles */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo h1 {
+            color: var(--dark);
+            font-size: 2.2em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo .icon {
+            font-size: 2em;
+            color: var(--primary);
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--primary);
+            background: transparent;
+            color: var(--primary);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+        }
+
+        .nav-btn.success {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+
+        .nav-btn.warning {
+            background: var(--warning);
+            border-color: var(--warning);
+            color: white;
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1600px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* Status Bar */
+        .status-bar {
+            background: linear-gradient(135deg, var(--success), #00cec9);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+            animation: slideInDown 0.6s ease;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        @keyframes slideInDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Dashboard Grid */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .dashboard-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .dashboard-main {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-number {
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 8px;
+        }
+
+        .stat-change {
+            font-size: 0.8em;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .stat-change.positive {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        /* Control Cards */
+        .control-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+
+        .control-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Search Controls */
+        .search-grid {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-btn {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Filter Controls */
+        .filter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .filter-select {
+            padding: 10px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Advanced Filters */
+        .advanced-filters {
+            border-top: 1px solid #f0f0f0;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .filter-chip {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-chip.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .filter-chip:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* Map Header */
+        .map-header {
+            background: linear-gradient(135deg, var(--dark), #34495e);
+            color: white;
+            padding: 25px;
+            position: relative;
+        }
+
+        .map-title {
+            font-size: 1.8em;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .map-description {
+            opacity: 0.9;
+            font-size: 1em;
+            line-height: 1.4;
+        }
+
+        .live-indicator {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.15);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            backdrop-filter: blur(10px);
+        }
+
+        /* Map */
+        #map {
+            height: 600px;
+            width: 100%;
+            border: none;
+        }
+
+        /* Analytics Panel */
+        .analytics-panel {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .analytics-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .analytics-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .analytics-item:last-child {
+            border-bottom: none;
+        }
+
+        .analytics-label {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .analytics-value {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-sidebar {
+                order: 2;
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                display: grid;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-buttons {
+                justify-content: center;
+            }
+            
+            .nav-btn {
+                font-size: 0.8em;
+                padding: 8px 16px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .search-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .dashboard-sidebar {
+                grid-template-columns: 1fr;
+            }
+            
+            #map {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="icon">🗺️</span>
+                <h1>AdMap Live Pro</h1>
+            </div>
+            <div class="nav-buttons">
+                <a href="#dashboard" class="nav-btn">
+                    <i class="fas fa-chart-line"></i> דאשבורד
+                </a>
+                <button class="nav-btn" onclick="openGuideModal()">
+                    <i class="fas fa-book"></i> מדריך מחקרי
+                </button>
+                <button class="nav-btn" onclick="downloadPDF()">
+                    <i class="fas fa-download"></i> הורד PDF
+                </button>
+                <button class="nav-btn" onclick="openReportModal()">
+                    <i class="fas fa-flag"></i> דווח
+                </button>
+                <button class="nav-btn warning" onclick="toggleAutoRefresh()" id="liveBtn">
+                    <i class="fas fa-broadcast-tower"></i> מצב חי
+                </button>
+                <button class="nav-btn success" onclick="toggleHeatmap()" id="heatmapBtn">
+                    <i class="fas fa-fire"></i> מפת חום
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="status-bar">
+            <div class="status-dot"></div>
+            <span><strong>מערכת פעילה</strong> - נתונים חיים מ-5 מקורות | AI מתקדם פעיל</span>
+            <span id="lastUpdate" style="margin-right: auto;"></span>
+        </div>
+
+        <div class="dashboard" id="dashboard">
+            <div class="dashboard-sidebar">
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="campaignsCount">1,247</div>
+                        <div class="stat-label">קמפיינים פעילים</div>
+                        <div class="stat-change positive" id="campaignsChange">+12%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="reportsCount">89</div>
+                        <div class="stat-label">דיווחים השבוע</div>
+                        <div class="stat-change positive" id="reportsChange">+8%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="usersCount">8,432</div>
+                        <div class="stat-label">משתמשים פעילים</div>
+                        <div class="stat-change positive" id="usersChange">+15%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="accuracyRate">95%</div>
+                        <div class="stat-label">דיוק זיהוי</div>
+                        <div class="stat-change positive" id="accuracyChange">+3%</div>
+                    </div>
+                </div>
+
+                <!-- Search Controls -->
+                <div class="control-card">
+                    <div class="control-title">
+                        <i class="fas fa-search"></i>
+                        חיפוש מתקדם
+                    </div>
+                    <div class="search-grid">
+                        <input type="text" class="search-input" id="mainSearch" placeholder="חפש קמפיינים, מפרסמים או מיקומים...">
+                        <button class="search-btn" onclick="performSearch()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Filter Controls -->
+                <div class="control-card">
+                    <div class="control-title">
+                        <i class="fas fa-filter"></i>
+                        סינון חכם
+                    </div>
+                    <div class="filter-grid">
+                        <select class="filter-select" id="filterType">
+                            <option value="">כל הסוגים</option>
+                            <option value="political">פוליטי</option>
+                            <option value="commercial">מסחרי</option>
+                            <option value="government">ממשלתי</option>
+                            <option value="suspicious">חשוד</option>
+                        </select>
+                        <select class="filter-select" id="filterLocation">
+                            <option value="">כל המיקומים</option>
+                            <option value="tel-aviv">תל אביב</option>
+                            <option value="jerusalem">ירושלים</option>
+                            <option value="haifa">חיפה</option>
+                            <option value="beer-sheva">באר שבע</option>
+                        </select>
+                        <select class="filter-select" id="filterBudget">
+                            <option value="">כל התקציבים</option>
+                            <option value="small">עד ₪50K</option>
+                            <option value="medium">₪50K - ₪200K</option>
+                            <option value="large">מעל ₪200K</option>
+                        </select>
+                        <select class="filter-select" id="filterTime">
+                            <option value="">כל הזמנים</option>
+                            <option value="today">היום</option>
+                            <option value="week">השבוע</option>
+                            <option value="month">החודש</option>
+                        </select>
+                    </div>
+                    
+                    <div class="advanced-filters">
+                        <div class="filter-chips">
+                            <div class="filter-chip" onclick="toggleChip(this)" data-filter="verified">מאומת בלבד</div>
+                            <div class="filter-chip" onclick="toggleChip(this)" data-filter="trending">טרנדינג</div>
+                            <div class="filter-chip" onclick="toggleChip(this)" data-filter="ai-flagged">מזוהה AI</div>
+                            <div class="filter-chip" onclick="toggleChip(this)" data-filter="high-reach">הגעה גבוהה</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Panel -->
+                <div class="analytics-panel">
+                    <div class="analytics-title">ניתוח מהיר</div>
+                    <div class="analytics-item">
+                        <span class="analytics-label">פלטפורמה פופולרית:</span>
+                        <span class="analytics-value">Facebook (34%)</span>
+                    </div>
+                    <div class="analytics-item">
+                        <span class="analytics-label">ממוצע תקציב:</span>
+                        <span class="analytics-value">₪127,000</span>
+                    </div>
+                    <div class="analytics-item">
+                        <span class="analytics-label">מיקום חם:</span>
+                        <span class="analytics-value">תל אביב</span>
+                    </div>
+                    <div class="analytics-item">
+                        <span class="analytics-label">קמפיינים חדשים:</span>
+                        <span class="analytics-value">+23 היום</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-main">
+                <div class="map-header">
+                    <div class="live-indicator">
+                        <div class="status-dot"></div>
+                        <span>נתונים חיים</span>
+                    </div>
+                    <h2 class="map-title">
+                        <i class="fas fa-crosshairs"></i>
+                        מפת קמפיינים אינטראקטיבית
+                    </h2>
+                    <p class="map-description">גלה קמפיינים פרסומיים בזמן אמת עם ניתוח AI מתקדם ונתונים ממקורות מאומתים</p>
+                </div>
+                
+                <div id="map"></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script>
+        // Global variables
+        let map;
+        let markers = [];
+        let currentFilters = {};
+        let isLiveMode = false;
+        let isHeatmapMode = false;
+
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeMap();
+            loadDemoData();
+            setupEventListeners();
+            updateLastUpdate();
+        });
+
+        // Initialize Leaflet map
+        function initializeMap() {
+            map = L.map('map').setView([31.7683, 35.2137], 7);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+        }
+
+        // Load demo data
+        function loadDemoData() {
+            const demoData = [
+                {
+                    id: 1,
+                    lat: 32.0853,
+                    lng: 34.7818,
+                    type: 'political',
+                    title: 'בחירות מקומיות תל אביב 2025',
+                    advertiser: 'מועמד דן כהן',
+                    budget: '₪85,000',
+                    reach: '650K'
+                },
+                {
+                    id: 2,
+                    lat: 31.7683,
+                    lng: 35.2137,
+                    type: 'government',
+                    title: 'קמפיין משרד הבריאות',
+                    advertiser: 'משרד הבריאות',
+                    budget: '₪150,000',
+                    reach: '1.8M'
+                },
+                {
+                    id: 3,
+                    lat: 32.7940,
+                    lng: 34.9896,
+                    type: 'commercial',
+                    title: 'אפליקציית תחבורה',
+                    advertiser: 'מובי-טק',
+                    budget: '₪45,000',
+                    reach: '280K'
+                }
+            ];
+
+            demoData.forEach(campaign => createMarker(campaign));
+        }
+
+        // Create map marker
+        function createMarker(campaign) {
+            const colors = {
+                political: '#e74c3c',
+                commercial: '#3498db',
+                government: '#27ae60',
+                suspicious: '#f39c12'
+            };
+
+            const markerIcon = L.divIcon({
+                className: 'custom-marker',
+                html: `<div style="
+                    background: ${colors[campaign.type]};
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    border: 2px solid white;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+                    animation: pulse 2s infinite;
+                "></div>`,
+                iconSize: [16, 16],
+                iconAnchor: [8, 8]
+            });
+
+            const marker = L.marker([campaign.lat, campaign.lng], {
+                icon: markerIcon
+            }).addTo(map);
+
+            marker.bindPopup(`
+                <div style="direction: rtl; font-family: inherit;">
+                    <strong>${campaign.title}</strong><br>
+                    <small>${campaign.advertiser}</small><br>
+                    תקציב: ${campaign.budget}<br>
+                    הגעה: ${campaign.reach}
+                </div>
+            `);
+
+            markers.push(marker);
+        }
+
+        // Event listeners
+        function setupEventListeners() {
+            // Search functionality
+            document.getElementById('mainSearch').addEventListener('input', function() {
+                // Implement search logic
+            });
+
+            // Filter change handlers
+            ['filterType', 'filterLocation', 'filterBudget', 'filterTime'].forEach(id => {
+                document.getElementById(id).addEventListener('change', applyFilters);
+            });
+        }
+
+        // Apply filters
+        function applyFilters() {
+            // Implement filtering logic
+            console.log('Applying filters...');
+        }
+
+        // Toggle filter chip
+        function toggleChip(chip) {
+            chip.classList.toggle('active');
+        }
+
+        // Toggle live mode
+        function toggleAutoRefresh() {
+            isLiveMode = !isLiveMode;
+            const btn = document.getElementById('liveBtn');
+            
+            if (isLiveMode) {
+                btn.innerHTML = '<i class="fas fa-pause"></i> עצור מצב חי';
+                btn.style.background = '#e74c3c';
+            } else {
+                btn.innerHTML = '<i class="fas fa-broadcast-tower"></i> מצב חי';
+                btn.style.background = '';
+            }
+        }
+
+        // Toggle heatmap
+        function toggleHeatmap() {
+            isHeatmapMode = !isHeatmapMode;
+            const btn = document.getElementById('heatmapBtn');
+            
+            if (isHeatmapMode) {
+                btn.innerHTML = '<i class="fas fa-map"></i> מפה רגילה';
+            } else {
+                btn.innerHTML = '<i class="fas fa-fire"></i> מפת חום';
+            }
+        }
+
+        // Perform search
+        function performSearch() {
+            const searchTerm = document.getElementById('mainSearch').value;
+            console.log('Searching for:', searchTerm);
+        }
+
+        // Update last update time
+        function updateLastUpdate() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('he-IL');
+            document.getElementById('lastUpdate').textContent = `עדכון אחרון: ${timeString}`;
+        }
+
+        // Modal functions
+        function openGuideModal() {
+            alert('מדריך מחקרי נפתח...');
+        }
+
+        function openReportModal() {
+            alert('דיווח נפתח...');
+        }
+
+        function downloadPDF() {
+            alert('מתחיל הורדת PDF...');
+        }
+
+        // Add marker animation CSS
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes pulse {
+                0% { opacity: 1; transform: scale(1); }
+                50% { opacity: 0.7; transform: scale(1.2); }
+                100% { opacity: 1; transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html> 

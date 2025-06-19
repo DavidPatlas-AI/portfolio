@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engine Button</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+        }
+
+        .title {
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 18px;
+            margin-bottom: 60px;
+        }
+
+        .button-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .engine-button {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            border: 8px solid #4a4a4a;
+            background: radial-gradient(circle at 30% 30%, #3a3a3a, #1a1a1a);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 0 30px 5px rgba(0, 0, 0, 0.5),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .engine-button:hover {
+            transform: scale(1.05);
+            box-shadow: 
+                0 0 40px 8px rgba(0, 0, 0, 0.7),
+                inset 0 0 25px rgba(255, 255, 255, 0.15);
+        }
+
+        .engine-button:active {
+            transform: scale(0.98);
+        }
+
+        .button-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #212121;
+            font-family: sans-serif;
+            text-transform: uppercase;
+            font-weight: bold;
+            font-size: 30px;
+            line-height: 1.3;
+            transition: all 0.6s ease;
+        }
+
+        .indicator-light {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 35px;
+            height: 15px;
+            background-color: #212121;
+            border-radius: 7px;
+            transition: all 0.6s ease;
+            margin: 0 auto;
+            border: 1px solid #1b1b1b;
+        }
+
+        /* Active state - when engine is "running" */
+        .engine-button.active .button-text {
+            color: #C5DEA1;
+            text-shadow: 0 0 15px #8CA57D;
+        }
+
+        .engine-button.active .indicator-light {
+            background-color: #f9ea1a;
+            box-shadow: 
+                0 0 11px 3px #C94A29 inset,
+                0 0 32px 6px #C77713,
+                0 0 100px #fff;
+            border: 1px solid #923C14;
+        }
+
+        /* Inactive state styling */
+        .engine-button:not(.active) .indicator-light {
+            background-color: #212121;
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Pulsing animation for active state */
+        .engine-button.active {
+            animation: engine-pulse 2s infinite;
+        }
+
+        @keyframes engine-pulse {
+            0%, 100% {
+                box-shadow: 
+                    0 0 30px 5px rgba(0, 0, 0, 0.5),
+                    inset 0 0 20px rgba(255, 255, 255, 0.1);
+            }
+            50% {
+                box-shadow: 
+                    0 0 40px 8px rgba(249, 234, 26, 0.3),
+                    inset 0 0 25px rgba(255, 255, 255, 0.15);
+            }
+        }
+
+        .status-text {
+            margin-top: 40px;
+            color: #888;
+            font-size: 24px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .status-text.active {
+            color: #C5DEA1;
+            text-shadow: 0 0 10px #8CA57D;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Engine Button</h1>
+        
+        <div class="button-container">
+            <div class="engine-button" id="engineButton">
+                <div class="indicator-light"></div>
+                <div class="button-text">
+                    ENGINE<br>
+                    START<br>
+                    STOP
+                </div>
+            </div>
+        </div>
+        
+        <div class="status-text" id="statusText">Engine Off</div>
+    </div>
+
+    <script>
+        const engineButton = document.getElementById('engineButton');
+        const statusText = document.getElementById('statusText');
+        let isEngineRunning = false;
+
+        engineButton.addEventListener('click', function(e) {
+            // Create ripple effect
+            const ripple = document.createElement('span');
+            const rect = engineButton.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+            
+            engineButton.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+
+            // Toggle engine state
+            isEngineRunning = !isEngineRunning;
+            
+            if (isEngineRunning) {
+                engineButton.classList.add('active');
+                statusText.textContent = 'Engine Running';
+                statusText.classList.add('active');
+            } else {
+                engineButton.classList.remove('active');
+                statusText.textContent = 'Engine Off';
+                statusText.classList.remove('active');
+            }
+        });
+
+        // Add keyboard support (spacebar to toggle)
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                engineButton.click();
+            }
+        });
+    </script>
+</body>
+</html>

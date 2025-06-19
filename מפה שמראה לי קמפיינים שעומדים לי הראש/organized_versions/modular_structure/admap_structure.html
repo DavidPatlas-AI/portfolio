@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdMap Live - מפת קמפיינים ממוקדים בזמן אמת</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+    <link rel="stylesheet" href="admap_styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <span class="icon">🗺️</span>
+                <h1>AdMap Live</h1>
+            </div>
+            <div class="nav-buttons">
+                <a href="#map-section" class="nav-btn">
+                    <i class="fas fa-map"></i> חקור במפה
+                </a>
+                <button class="nav-btn" onclick="openReportModal()">
+                    <i class="fas fa-flag"></i> דווח על בעיה
+                </button>
+                <button class="nav-btn" onclick="refreshData()">
+                    <i class="fas fa-sync"></i> רענן נתונים
+                </button>
+                <button class="nav-btn primary" onclick="toggleAutoRefresh()">
+                    <i class="fas fa-broadcast-tower"></i> מצב חי
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <div class="status-bar">
+            <div class="status-dot"></div>
+            <span><strong>מערכת פעילה</strong> - מקבלת נתונים מ-Google Ad Transparency, Meta Ad Library ו-3 מקורות נוספים</span>
+            <span id="lastUpdate" style="margin-right: auto;"></span>
+        </div>
+
+        <div class="data-source-info">
+            <i class="fas fa-database" style="font-size: 1.5em;"></i>
+            <div>
+                <strong>מקורות נתונים אמיתיים:</strong> Google Ads Transparency Center, Meta Ad Library, 
+                נתוני סקרייפינג מפלטפורמות ישראליות, ודיווחי משתמשים מאומתים
+            </div>
+        </div>
+
+        <section class="hero-section">
+            <h1 class="hero-title">מפת פרסום דיגיטלי אמיתית</h1>
+            <p class="hero-subtitle">רואה בזמן אמת אילו קמפיינים פרסומיים מתרחשים סביבך עכשיו - מבוסס על נתונים אמיתיים מפלטפורמות מרכזיות</p>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="campaignsCount">...</div>
+                    <div class="stat-label">קמפיינים מזוהים</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="reportsCount">...</div>
+                    <div class="stat-label">דיווחים השבוע</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="usersCount">...</div>
+                    <div class="stat-label">משתמשים פעילים</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="accuracyRate">95%</div>
+                    <div class="stat-label">דיוק זיהוי</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="map-section" id="map-section">
+            <div class="map-header">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>נתונים חיים</span>
+                </div>
+                <h2 class="map-title">
+                    <i class="fas fa-crosshairs"></i>
+                    מפת קמפיינים אינטראקטיבית
+                </h2>
+                <p class="map-description">לחץ על כל סמן במפה כדי לראות פרטי הקמפיין, המפרסם, התקציב והקהל המיועד</p>
+            </div>
+            
+            <div class="controls-panel">
+                <div class="search-container">
+                    <input type="text" class="search-input" id="searchInput" placeholder="חפש קמפיינים לפי מיקום, מפרסם או נושא...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all" onclick="filterCampaigns('all')">
+                        <i class="fas fa-globe"></i> הכל
+                    </button>
+                    <button class="filter-tab" data-filter="political" onclick="filterCampaigns('political')">
+                        <i class="fas fa-vote-yea"></i> פוליטי
+                    </button>
+                    <button class="filter-tab" data-filter="commercial" onclick="filterCampaigns('commercial')">
+                        <i class="fas fa-shopping-cart"></i> מסחרי
+                    </button>
+                    <button class="filter-tab" data-filter="government" onclick="filterCampaigns('government')">
+                        <i class="fas fa-university"></i> ממשלתי
+                    </button>
+                    <button class="filter-tab" data-filter="suspicious" onclick="filterCampaigns('suspicious')">
+                        <i class="fas fa-exclamation-triangle"></i> חשוד
+                    </button>
+                </div>
+            </div>
+            
+            <div class="loading-indicator" id="loadingIndicator">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner"></i>
+                </div>
+                <p>טוען נתונים אמיתיים...</p>
+            </div>
+            
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-circle"></i>
+                שגיאה בטעינת נתונים. נסה שוב מאוחר יותר.
+            </div>
+            
+            <div id="map"></div>
+        </section>
+    </main>
+
+    <!-- Campaign Tooltip -->
+    <div class="campaign-tooltip" id="campaignTooltip">
+        <div class="tooltip-title" id="tooltipTitle"></div>
+        <div class="tooltip-meta" id="tooltipMeta"></div>
+        <div class="tooltip-description" id="tooltipDescription"></div>
+        <div class="tooltip-actions">
+            <button class="tooltip-btn tooltip-report" onclick="reportCampaign()">
+                <i class="fas fa-flag"></i> דווח
+            </button>
+            <button class="tooltip-btn tooltip-info" onclick="showMoreInfo()">
+                <i class="fas fa-info-circle"></i> פרטים
+            </button>
+        </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div id="reportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>דיווח על קמפיין חשוד</h3>
+                <span class="modal-close" onclick="closeModal('reportModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="reportForm">
+                    <div class="form-group">
+                        <label class="form-label">סוג הבעיה:</label>
+                        <select class="form-select" id="reportType" required>
+                            <option value="">בחר סוג בעיה</option>
+                            <option value="misleading">פרסום מטעה</option>
+                            <option value="illegal">תוכן לא חוקי</option>
+                            <option value="privacy">הפרת פרטיות</option>
+                            <option value="spam">ספאם</option>
+                            <option value="other">אחר</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">מיקום הקמפיין:</label>
+                        <input type="text" class="form-input" id="reportLocation" placeholder="עיר או אזור">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">תיאור הבעיה:</label>
+                        <textarea class="form-textarea" id="reportDescription" placeholder="תאר את הבעיה בפירוט..." required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">האימייל שלך (אופציונלי):</label>
+                        <input type="email" class="form-input" id="reportEmail" placeholder="example@domain.com">
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i> שלח דיווח
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="admap_script.js"></script>
+</body>
+</html> 

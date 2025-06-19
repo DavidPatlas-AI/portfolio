@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Car Start Sequence</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .car-system {
+            background: linear-gradient(145deg, #2c2c2c 0%, #1a1a1a 100%);
+            padding: 40px;
+            border-radius: 25px;
+            border: 3px solid #3a3a3a;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+            width: 600px;
+            text-align: center;
+        }
+
+        .step {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #ccc;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+
+        /* Step 1: Security Code */
+        .code-display {
+            background: #000;
+            border: 3px solid #333;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-family: 'Courier New', monospace;
+            font-size: 32px;
+            font-weight: bold;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+            margin: 20px auto;
+            letter-spacing: 8px;
+            width: 200px;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 250px;
+            margin: 20px auto;
+        }
+
+        .key-btn {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(145deg, #444 0%, #222 100%);
+            border: 2px solid #555;
+            border-radius: 10px;
+            color: #ccc;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            user-select: none;
+        }
+
+        .key-btn:hover {
+            background: linear-gradient(145deg, #555 0%, #333 100%);
+            transform: translateY(-2px);
+        }
+
+        .key-btn:active {
+            transform: translateY(0);
+        }
+
+        .control-btns {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .control-btn {
+            padding: 12px 25px;
+            background: linear-gradient(145deg, #666 0%, #333 100%);
+            border: 2px solid #777;
+            border-radius: 8px;
+            color: #ccc;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .control-btn:hover {
+            background: linear-gradient(145deg, #777 0%, #444 100%);
+        }
+
+        .control-btn.clear {
+            background: linear-gradient(145deg, #aa4444 0%, #662222 100%);
+        }
+
+        /* Step 2: Key Insertion */
+        .ignition-area {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            margin: 30px auto;
+        }
+
+        .ignition-slot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 30% 30%, #444 0%, #222 100%);
+            border-radius: 50%;
+            border: 4px solid #666;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .key-hole {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 6px;
+            background: #111;
+            border-radius: 3px;
+        }
+
+        .car-key {
+            position: absolute;
+            top: 50%;
+            left: 50px;
+            transform: translateY(-50%);
+            width: 100px;
+            height: 15px;
+            background: linear-gradient(90deg, #888 0%, #ccc 30%, #888 70%, #555 100%);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.5s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.6);
+        }
+
+        .car-key::after {
+            content: '';
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, #666, #333);
+            border-radius: 50%;
+            border: 2px solid #555;
+        }
+
+        .car-key.inserted {
+            left: 135px;
+        }
+
+        .car-key.turned {
+            left: 135px;
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        /* Step 3: Engine Status */
+        .engine-display {
+            background: linear-gradient(135deg, rgba(0, 20, 40, 0.9) 0%, rgba(0, 10, 20, 0.9) 100%);
+            border: 2px solid #00ffff;
+            border-radius: 15px;
+            padding: 30px;
+            color: #00ffff;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            animation: hologram-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes hologram-glow {
+            0%, 100% { 
+                box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+            }
+            50% { 
+                box-shadow: 0 0 50px rgba(0, 255, 255, 0.6);
+            }
+        }
+
+        .status-text {
+            font-size: 18px;
+            margin: 20px 0;
+            color: #888;
+            transition: all 0.3s ease;
+        }
+
+        .status-text.ready {
+            color: #ffaa00;
+            text-shadow: 0 0 8px #ffaa00;
+        }
+
+        .status-text.success {
+            color: #00ff88;
+            text-shadow: 0 0 8px #00ff88;
+        }
+
+        .error-msg {
+            color: #ff4444;
+            font-size: 16px;
+            margin: 15px 0;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .error-msg.show {
+            opacity: 1;
+            animation: shake 0.5s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00ffff);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #666;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .instructions span {
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        .hint {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="car-system">
+        <div class="hint">💡 Code: 1234</div>
+        
+        <!-- Step 1: Security Code -->
+        <div class="step active" id="step1">
+            <h2>🔐 Enter Security Code</h2>
+            <div class="code-display" id="codeDisplay">____</div>
+            
+            <div class="keypad">
+                <div class="key-btn" data-num="1">1</div>
+                <div class="key-btn" data-num="2">2</div>
+                <div class="key-btn" data-num="3">3</div>
+                <div class="key-btn" data-num="4">4</div>
+                <div class="key-btn" data-num="5">5</div>
+                <div class="key-btn" data-num="6">6</div>
+                <div class="key-btn" data-num="7">7</div>
+                <div class="key-btn" data-num="8">8</div>
+                <div class="key-btn" data-num="9">9</div>
+                <div></div>
+                <div class="key-btn" data-num="0">0</div>
+                <div></div>
+            </div>
+            
+            <div class="control-btns">
+                <div class="control-btn clear" id="clearBtn">Clear</div>
+                <div class="control-btn" id="enterBtn">Enter</div>
+            </div>
+            
+            <div class="error-msg" id="errorMsg">Incorrect code! Try again</div>
+            <div class="status-text">Enter 4-digit security code</div>
+        </div>
+
+        <!-- Step 2: Key Insertion & Turn -->
+        <div class="step" id="step2">
+            <h2>🔑 Insert & Turn Key</h2>
+            <div class="ignition-area">
+                <div class="ignition-slot">
+                    <div class="key-hole"></div>
+                </div>
+                <div class="car-key" id="carKey"></div>
+            </div>
+            <div class="status-text ready" id="keyStatus">Click key to insert into ignition</div>
+        </div>
+
+        <!-- Step 3: Engine Started -->
+        <div class="step" id="step3">
+            <h2>🚗 Engine Started Successfully!</h2>
+            <div class="engine-display">
+                <div style="font-size: 20px; margin-bottom: 15px;">🔓 SECURITY VERIFIED</div>
+                <div>🔋 ELECTRICAL SYSTEMS: ONLINE</div>
+                <div>⛽ FUEL INJECTION: ACTIVE</div>
+                <div>🔥 IGNITION SYSTEM: READY</div>
+                <div>🚗 ENGINE: RUNNING</div>
+                <div style="color: #00ff88; margin-top: 15px;">✅ ALL SYSTEMS OPERATIONAL</div>
+            </div>
+            <div class="status-text success">Ready to drive! 🛣️</div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+    </div>
+
+    <div class="instructions">
+        Step 1: Enter code <span>1234</span> • Step 2: Insert & turn <span>KEY</span> • Step 3: <span>Drive</span>!
+    </div>
+
+    <script>
+        class CompleteCarSystem {
+            constructor() {
+                this.currentStep = 1;
+                this.enteredCode = '';
+                this.correctCode = '1234';
+                this.keyInserted = false;
+                this.engineStarted = false;
+                
+                this.setupEventListeners();
+                this.updateProgress();
+            }
+
+            setupEventListeners() {
+                // Step 1: Keypad
+                document.querySelectorAll('.key-btn[data-num]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.addDigit(btn.dataset.num);
+                    });
+                });
+
+                document.getElementById('clearBtn').addEventListener('click', () => {
+                    this.clearCode();
+                });
+
+                document.getElementById('enterBtn').addEventListener('click', () => {
+                    this.verifyCode();
+                });
+
+                // Step 2: Key insertion and turning
+                document.getElementById('carKey').addEventListener('click', () => {
+                    this.handleKeyClick();
+                });
+
+                // Keyboard support
+                document.addEventListener('keydown', (e) => {
+                    if (this.currentStep === 1) {
+                        if (e.key >= '0' && e.key <= '9') {
+                            this.addDigit(e.key);
+                        } else if (e.key === 'Enter') {
+                            this.verifyCode();
+                        } else if (e.key === 'Backspace') {
+                            this.clearCode();
+                        }
+                    } else if (this.currentStep === 2 && e.code === 'Space') {
+                        e.preventDefault();
+                        this.handleKeyClick();
+                    }
+                });
+            }
+
+            // Step 1 Methods
+            addDigit(digit) {
+                if (this.enteredCode.length < 4) {
+                    this.enteredCode += digit;
+                    this.updateCodeDisplay();
+                    this.hideError();
+                    this.playSound('beep');
+                }
+            }
+
+            clearCode() {
+                this.enteredCode = '';
+                this.updateCodeDisplay();
+                this.hideError();
+                this.playSound('clear');
+            }
+
+            updateCodeDisplay() {
+                const display = this.enteredCode.padEnd(4, '_');
+                document.getElementById('codeDisplay').textContent = display;
+            }
+
+            verifyCode() {
+                if (this.enteredCode.length !== 4) {
+                    this.showError('Please enter 4 digits');
+                    return;
+                }
+
+                if (this.enteredCode === this.correctCode) {
+                    this.playSound('success');
+                    this.nextStep();
+                } else {
+                    this.showError();
+                    this.enteredCode = '';
+                    this.updateCodeDisplay();
+                    this.playSound('error');
+                    
+                    if (navigator.vibrate) {
+                        navigator.vibrate([100, 50, 100]);
+                    }
+                }
+            }
+
+            showError(msg = 'Incorrect code! Try again') {
+                const errorMsg = document.getElementById('errorMsg');
+                errorMsg.textContent = msg;
+                errorMsg.classList.add('show');
+            }
+
+            hideError() {
+                document.getElementById('errorMsg').classList.remove('show');
+            }
+
+            // Step 2 Methods
+            handleKeyClick() {
+                const carKey = document.getElementById('carKey');
+                const keyStatus = document.getElementById('keyStatus');
+
+                if (!this.keyInserted) {
+                    // Insert key
+                    this.keyInserted = true;
+                    carKey.classList.add('inserted');
+                    keyStatus.textContent = 'Key inserted! Click again to turn and start engine';
+                    this.playSound('keyInsert');
+                    
+                    if (navigator.vibrate) {
+                        navigator.vibrate(100);
+                    }
+                } else if (!this.engineStarted) {
+                    // Turn key and start engine
+                    this.engineStarted = true;
+                    carKey.classList.add('turned');
+                    keyStatus.textContent = 'Engine starting...';
+                    this.playSound('engineStart');
+                    
+                    if (navigator.vibrate) {
+                        navigator.vibrate([200, 100, 200]);
+                    }
+
+                    setTimeout(() => {
+                        this.nextStep();
+                    }, 1500);
+                }
+            }
+
+            // Navigation
+            nextStep() {
+                document.querySelector('.step.active').classList.remove('active');
+                this.currentStep++;
+                document.getElementById(`step${this.currentStep}`).classList.add('active');
+                this.updateProgress();
+            }
+
+            updateProgress() {
+                const progress = ((this.currentStep - 1) / 2) * 100;
+                document.getElementById('progressFill').style.width = progress + '%';
+            }
+
+            // Sound Effects
+            playSound(type) {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    switch(type) {
+                        case 'beep':
+                            oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+                            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                            break;
+                        case 'clear':
+                            oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+                            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+                            break;
+                        case 'success':
+                            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                            oscillator.frequency.exponentialRampToValueAtTime(1000, audioContext.currentTime + 0.3);
+                            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                            break;
+                        case 'error':
+                            oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                            gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                            break;
+                        case 'keyInsert':
+                            oscillator.frequency.setValueAtTime(700, audioContext.currentTime);
+                            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                            break;
+                        case 'engineStart':
+                            oscillator.frequency.setValueAtTime(150, audioContext.currentTime);
+                            oscillator.frequency.exponentialRampToValueAtTime(80, audioContext.currentTime + 1);
+                            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.05, audioContext.currentTime + 1);
+                            break;
+                    }
+                    
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 1);
+                } catch (err) {
+                    console.log('Audio not available');
+                }
+            }
+        }
+
+        // Initialize the system
+        window.addEventListener('load', () => {
+            new CompleteCarSystem();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍕 פיצה דלוקס - הזמנה אונליין</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --pizza: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+            --success: linear-gradient(135deg, #66bb6a 0%, #43a047 100%);
+            --glass: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            --text-light: rgba(255, 255, 255, 0.9);
+            --text-dark: rgba(0, 0, 0, 0.8);
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Cairo', sans-serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Dark Mode Support */
+        body.dark-mode {
+            background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f3460, #533483);
+        }
+
+        .dark-mode-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Pizza Animation - Enhanced */
+        .floating-pizza {
+            position: fixed;
+            font-size: 2rem;
+            color: #ffa726;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+            filter: drop-shadow(0 0 10px rgba(255, 167, 38, 0.5));
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translateY(100vh) rotate(0deg) scale(0.8); 
+                opacity: 0; 
+            }
+            10%, 90% { 
+                opacity: 1; 
+                transform: translateY(50vh) rotate(90deg) scale(1);
+            }
+            50% { 
+                transform: translateY(-10vh) rotate(180deg) scale(1.2); 
+                opacity: 0.8;
+            }
+        }
+
+        /* Particle System */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: particle-float 20s infinite linear;
+        }
+
+        @keyframes particle-float {
+            0% { 
+                transform: translateY(100vh) translateX(0) rotate(0deg); 
+                opacity: 0; 
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { 
+                transform: translateY(-10vh) translateX(100px) rotate(360deg); 
+                opacity: 0; 
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Enhanced Header with 3D Effect */
+        .header {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            transform: perspective(1000px) rotateX(2deg);
+            transition: all 0.4s ease;
+        }
+
+        .header:hover {
+            transform: perspective(1000px) rotateX(0deg) scale(1.02);
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: rotate 8s linear infinite;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        .logo {
+            font-size: 3rem;
+            background: var(--pizza);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: logoGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            0% { filter: drop-shadow(0 0 5px rgba(255, 167, 38, 0.5)); }
+            100% { filter: drop-shadow(0 0 20px rgba(255, 167, 38, 0.8)); }
+        }
+
+        .tagline {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 2;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.5s forwards;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Pizza Size Cards - Enhanced */
+        .pizza-section {
+            margin: 40px 0;
+        }
+
+        .section-title {
+            color: white;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--pizza);
+            margin: 10px auto;
+            border-radius: 2px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scaleX(1); }
+            50% { transform: scaleX(1.2); }
+        }
+
+        .pizza-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .pizza-card {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            position: relative;
+            overflow: hidden;
+            transform: perspective(1000px) rotateY(0deg);
+        }
+
+        .pizza-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .pizza-card:hover::before {
+            left: 100%;
+        }
+
+        .pizza-card:hover {
+            transform: perspective(1000px) rotateY(-5deg) translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .pizza-visual {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            transition: transform 0.4s ease;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.3));
+        }
+
+        .pizza-card:hover .pizza-visual {
+            transform: rotate(360deg) scale(1.1);
+            filter: drop-shadow(0 10px 20px rgba(255, 167, 38, 0.5));
+        }
+
+        .pizza-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .pizza-price {
+            font-size: 1.3rem;
+            background: var(--pizza);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 10px;
+        }
+
+        .qty-btn {
+            background: var(--primary);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qty-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s ease;
+        }
+
+        .qty-btn:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .qty-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .qty-btn:active {
+            transform: scale(0.95);
+        }
+
+        .qty-display {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            min-width: 60px;
+            transition: all 0.3s ease;
+        }
+
+        .qty-display.updated {
+            animation: quantityPulse 0.4s ease;
+        }
+
+        @keyframes quantityPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); background: rgba(255, 193, 7, 0.3); }
+        }
+
+        /* Enhanced Toppings with Visual Pizza Builder */
+        .toppings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .topping-card {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            transform: perspective(500px) rotateX(0deg);
+        }
+
+        .topping-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 30%, rgba(255,255,255,0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .topping-card:hover::before {
+            opacity: 1;
+        }
+
+        .topping-card.selected {
+            background: rgba(255, 193, 7, 0.3);
+            border: 2px solid #ffc107;
+            transform: perspective(500px) rotateX(-10deg) scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 193, 7, 0.3);
+        }
+
+        .topping-card:hover {
+            transform: perspective(500px) rotateX(-5deg) translateY(-5px) scale(1.02);
+        }
+
+        .topping-emoji {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+
+        .topping-card:hover .topping-emoji {
+            transform: scale(1.2) rotateZ(-10deg);
+            animation: bounce 0.6s ease;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 60%, 100% { transform: translateY(0) scale(1.2); }
+            40% { transform: translateY(-10px) scale(1.3); }
+            80% { transform: translateY(-5px) scale(1.25); }
+        }
+
+        .topping-name {
+            color: white;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .topping-price {
+            color: #ffc107;
+            font-weight: bold;
+        }
+
+        /* Visual Pizza Builder */
+        .pizza-builder {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            text-align: center;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pizza-preview {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            transition: all 0.4s ease;
+            animation: pizzaRotate 10s linear infinite;
+        }
+
+        @keyframes pizzaRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .pizza-preview:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255, 167, 38, 0.6);
+        }
+
+        .topping-on-pizza {
+            position: absolute;
+            font-size: 1.5rem;
+            animation: toppingPop 0.5s ease;
+        }
+
+        @keyframes toppingPop {
+            0% { transform: scale(0) rotate(0deg); opacity: 0; }
+            50% { transform: scale(1.3) rotate(180deg); opacity: 0.8; }
+            100% { transform: scale(1) rotate(360deg); opacity: 1; }
+        }
+
+        /* Enhanced Drinks Section */
+        .drinks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .drink-card {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .drink-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(59, 130, 246, 0.1), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+        }
+
+        .drink-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .drink-card.selected {
+            background: rgba(59, 130, 246, 0.3);
+            border: 2px solid #3b82f6;
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .drink-card:hover {
+            transform: translateY(-5px) scale(1.02);
+        }
+
+        /* Enhanced Calculate Button */
+        .calculate-btn {
+            background: var(--pizza);
+            border: none;
+            border-radius: 20px;
+            padding: 20px 40px;
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            display: block;
+            margin: 40px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            transform: perspective(500px) rotateX(0deg);
+        }
+
+        .calculate-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.6s ease;
+        }
+
+        .calculate-btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .calculate-btn:hover {
+            transform: perspective(500px) rotateX(-10deg) translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .calculate-btn:active {
+            transform: perspective(500px) rotateX(-20deg) scale(0.98);
+        }
+
+        .calculate-btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Promotional Banner */
+        .promo-banner {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+            animation: promoPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes promoPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7); }
+            50% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+        }
+
+        .promo-banner::before {
+            content: '🎉';
+            position: absolute;
+            left: 20px;
+            font-size: 1.5rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .promo-banner::after {
+            content: '🍕';
+            position: absolute;
+            right: 20px;
+            font-size: 1.5rem;
+            animation: bounce 2s ease-in-out infinite 0.5s;
+        }
+
+        /* Enhanced Results Section */
+        .result-section {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            opacity: 0;
+            transform: translateY(20px) rotateX(-10deg);
+            transition: all 0.5s ease;
+            perspective: 1000px;
+        }
+
+        .result-section.show {
+            opacity: 1;
+            transform: translateY(0) rotateX(0deg);
+        }
+
+        .total-price {
+            font-size: 3rem;
+            font-weight: bold;
+            background: var(--success);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 20px 0;
+            animation: priceGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes priceGlow {
+            0% { filter: drop-shadow(0 0 5px rgba(102, 187, 106, 0.5)); }
+            100% { filter: drop-shadow(0 0 20px rgba(102, 187, 106, 0.8)); }
+        }
+
+        .order-summary {
+            text-align: right;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            opacity: 0;
+            animation: slideInRight 0.5s ease forwards;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* Enhanced Error Messages */
+        .error-message {
+            background: rgba(244, 67, 54, 0.9);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+            opacity: 0;
+            transform: translateX(100%);
+            transition: all 0.5s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .error-message.show {
+            opacity: 1;
+            transform: translateX(0);
+            animation: errorShake 0.5s ease;
+        }
+
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Enhanced Success Popup */
+        .success-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0) rotateY(180deg);
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            z-index: 1000;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+            border: 2px solid var(--glass-border);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .success-popup.show {
+            transform: translate(-50%, -50%) scale(1) rotateY(0deg);
+        }
+
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Enhanced Confetti */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ffc107;
+            animation: confetti-fall 3s linear infinite;
+            z-index: 1001;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(50vh) rotate(360deg) scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Loading Animation - Enhanced */
+        .loading {
+            display: none;
+            text-align: center;
+            color: white;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .loading.show {
+            display: block;
+            animation: loadingPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes loadingPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .pizza-spinner {
+            font-size: 3rem;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 10px rgba(255, 167, 38, 0.5));
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Enhanced Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: var(--accent);
+            border: none;
+            border-radius: 15px;
+            padding: 15px 25px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            transform: perspective(500px) rotateX(0deg);
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
+        .action-btn:hover {
+            transform: perspective(500px) rotateX(-10deg) translateY(-2px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+        }
+
+        .print-btn {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        }
+
+        /* Live Price Calculator */
+        .live-price {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 15px 20px;
+            color: white;
+            font-weight: bold;
+            z-index: 100;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(100%);
+        }
+
+        .live-price.show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .live-price:hover {
+            transform: translateX(0) scale(1.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Customer Info Form */
+        .customer-form {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            margin: 30px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+
+        .customer-form.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            color: white;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #ffc107;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+
+        /* Timer/Countdown */
+        .promo-timer {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .timer-display {
+            background: linear-gradient(135deg, #ff4757 0%, #ff3838 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.5rem;
+            display: inline-block;
+            margin: 10px 0;
+            animation: timerPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes timerPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .pizza-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .toppings-grid {
+                grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+                gap: 15px;
+            }
+            
+            .drinks-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .logo {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .pizza-preview {
+                width: 150px;
+                height: 150px;
+                font-size: 4rem;
+            }
+
+            .live-price {
+                bottom: 10px;
+                right: 10px;
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .dark-mode-toggle {
+                top: 10px;
+                left: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .action-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+            border-radius: 6px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--pizza);
+            border-radius: 6px;
+            transition: background 0.3s ease;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #fb8c00 0%, #ffa726 100%);
+        }
+    </style>
+</head>
+<body>
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" onclick="toggleDarkMode()">
+        <i class="fas fa-moon" id="darkModeIcon"></i>
+    </button>
+
+    <!-- Particles System -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Floating Pizza Elements -->
+    <div class="floating-pizza" style="left: 10%; animation-delay: 0s;">🍕</div>
+    <div class="floating-pizza" style="left: 30%; animation-delay: 2s;">🍕</div>
+    <div class="floating-pizza" style="left: 50%; animation-delay: 4s;">🍕</div>
+    <div class="floating-pizza" style="left: 70%; animation-delay: 6s;">🍕</div>
+    <div class="floating-pizza" style="left: 90%; animation-delay: 8s;">🍕</div>
+
+    <!-- Live Price Display -->
+    <div class="live-price" id="livePrice">
+        <div>💰 סה"כ: <span id="livePriceAmount">0</span> ₪</div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🍕 פיצה דלוקס</div>
+            <div class="tagline">הפיצה הכי טעימה בעיר - הזמינו עכשיו!</div>
+        </div>
+
+        <!-- Promotional Banner -->
+        <div class="promo-banner">
+            <div>🔥 מבצע מיוחד: קנו 2 פיצות וקבלו הנחה של 15%! 🔥</div>
+            <div class="promo-timer">
+                <div>המבצע מסתיים בעוד:</div>
+                <div class="timer-display" id="promoTimer">23:59:59</div>
+            </div>
+        </div>
+
+        <!-- Pizza Sizes Section -->
+        <div class="pizza-section">
+            <h2 class="section-title">🍕 בחרו את גודל הפיצה</h2>
+            <div class="pizza-grid">
+                <div class="pizza-card" data-size="small" data-price="20">
+                    <div class="pizza-visual">🍕</div>
+                    <div class="pizza-name">פיצה קטנה</div>
+                    <div class="pizza-price">20 ₪</div>
+                    <div class="quantity-control">
+                        <button class="qty-btn" onclick="changeQuantity('small', -1)">-</button>
+                        <input type="text" class="qty-display" id="qty-small" value="0" readonly>
+                        <button class="qty-btn" onclick="changeQuantity('small', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="pizza-card" data-size="medium" data-price="30">
+                    <div class="pizza-visual">🍕</div>
+                    <div class="pizza-name">פיצה בינונית</div>
+                    <div class="pizza-price">30 ₪</div>
+                    <div class="quantity-control">
+                        <button class="qty-btn" onclick="changeQuantity('medium', -1)">-</button>
+                        <input type="text" class="qty-display" id="qty-medium" value="0" readonly>
+                        <button class="qty-btn" onclick="changeQuantity('medium', 1)">+</button>
+                    </div>
+                </div>
+
+                <div class="pizza-card" data-size="large" data-price="40">
+                    <div class="pizza-visual">🍕</div>
+                    <div class="pizza-name">פיצה גדולה</div>
+                    <div class="pizza-price">40 ₪</div>
+                    <div class="quantity-control">
+                        <button class="qty-btn" onclick="changeQuantity('large', -1)">-</button>
+                        <input type="text" class="qty-display" id="qty-large" value="0" readonly>
+                        <button class="qty-btn" onclick="changeQuantity('large', 1)">+</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Visual Pizza Builder -->
+        <div class="pizza-builder" id="pizzaBuilder" style="display: none;">
+            <h3 style="color: white; margin-bottom: 20px;">👨‍🍳 הפיצה שלכם נבנית...</h3>
+            <div class="pizza-preview" id="pizzaPreview">
+                🍕
+                <div id="toppingsOnPizza"></div>
+            </div>
+            <div style="color: white;">בחרו תוספות כדי לראות איך הפיצה נבנית!</div>
+        </div>
+
+        <!-- Toppings Section -->
+        <div class="pizza-section">
+            <h2 class="section-title">🧀 תוספות (לכל פיצה)</h2>
+            <div class="toppings-grid">
+                <div class="topping-card" onclick="toggleTopping('cheese')" data-price="4">
+                    <div class="topping-emoji">🧀</div>
+                    <div class="topping-name">גבינה נוספת</div>
+                    <div class="topping-price">4 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('olives')" data-price="4">
+                    <div class="topping-emoji">🫒</div>
+                    <div class="topping-name">זיתים</div>
+                    <div class="topping-price">4 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('mushrooms')" data-price="4">
+                    <div class="topping-emoji">🍄</div>
+                    <div class="topping-name">פטריות</div>
+                    <div class="topping-price">4 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('corn')" data-price="4">
+                    <div class="topping-emoji">🌽</div>
+                    <div class="topping-name">תירס</div>
+                    <div class="topping-price">4 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('onion')" data-price="4">
+                    <div class="topping-emoji">🧅</div>
+                    <div class="topping-name">בצל</div>
+                    <div class="topping-price">4 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('tomato')" data-price="4">
+                    <div class="topping-emoji">🍅</div>
+                    <div class="topping-name">עגבניות</div>
+                    <div class="topping-price">4 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('spicy')" data-price="4">
+                    <div class="topping-emoji">🌶️</div>
+                    <div class="topping-name">פלפל חריף</div>
+                    <div class="topping-price">4 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('bulgarit')" data-price="5">
+                    <div class="topping-emoji">🥒</div>
+                    <div class="topping-name">בולגרית</div>
+                    <div class="topping-price">5 ₪</div>
+                </div>
+
+                <div class="topping-card" onclick="toggleTopping('tuna')" data-price="6">
+                    <div class="topping-emoji">🐟</div>
+                    <div class="topping-name">טונה</div>
+                    <div class="topping-price">6 ₪</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drinks Section -->
+        <div class="pizza-section">
+            <h2 class="section-title">🥤 משקאות</h2>
+            <div class="drinks-grid">
+                <div class="drink-card selected" onclick="selectDrink(this, 0)">
+                    <div class="topping-emoji">❌</div>
+                    <div class="topping-name">ללא משקה</div>
+                    <div class="topping-price">0 ₪</div>
+                </div>
+
+                <div class="drink-card" onclick="selectDrink(this, 10)">
+                    <div class="topping-emoji">🥤</div>
+                    <div class="topping-name">קולה</div>
+                    <div class="topping-price">10 ₪</div>
+                </div>
+
+                <div class="drink-card" onclick="selectDrink(this, 9)">
+                    <div class="topping-emoji">🥤</div>
+                    <div class="topping-name">ספרייט</div>
+                    <div class="topping-price">9 ₪</div>
+                </div>
+
+                <div class="drink-card" onclick="selectDrink(this, 8)">
+                    <div class="topping-emoji">🧃</div>
+                    <div class="topping-name">פיוז-טי</div>
+                    <div class="topping-price">8 ₪</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Information Form -->
+        <div class="customer-form" id="customerForm">
+            <h3 style="color: white; text-align: center; margin-bottom: 20px;">📋 פרטי הזמנה</h3>
+            <div class="form-group">
+                <label for="customerName">שם מלא:</label>
+                <input type="text" id="customerName" placeholder="הכניסו את שמכם המלא">
+            </div>
+            <div class="form-group">
+                <label for="customerPhone">טלפון:</label>
+                <input type="tel" id="customerPhone" placeholder="05X-XXXXXXX">
+            </div>
+            <div class="form-group">
+                <label for="customerAddress">כתובת למשלוח:</label>
+                <input type="text" id="customerAddress" placeholder="רחוב, מספר בית, עיר">
+            </div>
+            <div class="form-group">
+                <label for="customerNotes">הערות להזמנה (אופציונלי):</label>
+                <textarea id="customerNotes" rows="3" placeholder="הערות מיוחדות למטבח או למשלוח..."></textarea>
+            </div>
+        </div>
+
+        <!-- Calculate Button -->
+        <button class="calculate-btn" onclick="calculateOrder()">
+            <span><i class="fas fa-calculator"></i> חשבו את ההזמנה</span>
+        </button>
+
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="pizza-spinner">🍕</div>
+            <div>מחשב את ההזמנה...</div>
+            <div style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">מכין את הפיצה הטעימה ביותר עבורכם</div>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage"></div>
+
+        <!-- Results Section -->
+        <div class="result-section" id="resultSection">
+            <h3 style="color: white; font-size: 1.5rem; margin-bottom: 20px;">📋 סיכום ההזמנה</h3>
+            <div class="order-summary" id="orderSummary"></div>
+            <div class="total-price" id="totalPrice">0 ₪</div>
+            
+            <div class="action-buttons">
+                <button class="action-btn whatsapp-btn" onclick="shareWhatsApp()">
+                    <i class="fab fa-whatsapp"></i> שלח בוואטסאפ
+                </button>
+                <button class="action-btn print-btn" onclick="printOrder()">
+                    <i class="fas fa-print"></i> הדפס הזמנה
+                </button>
+                <button class="action-btn" onclick="saveOrderToImage()">
+                    <i class="fas fa-download"></i> שמור כתמונה
+                </button>
+                <button class="action-btn" onclick="resetOrder()">
+                    <i class="fas fa-refresh"></i> הזמנה חדשה
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Popup -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
+    <div class="success-popup" id="successPopup">
+        <div style="font-size: 4rem; margin-bottom: 20px;">🎉</div>
+        <h3 style="color: white; margin-bottom: 20px;">ההזמנה הושלמה בהצלחה!</h3>
+        <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">תודה שבחרתם בפיצה דלוקס</p>
+        <p style="color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 30px;">
+            ההזמנה תגיע תוך 25-35 דקות
+        </p>
+        <button class="action-btn" onclick="closePopup()">סגור</button>
+    </div>
+
+    <script>
+        // Global Variables
+        let selectedToppings = {};
+        let selectedDrink = 0;
+        let pizzaQuantities = {
+            small: 0,
+            medium: 0,
+            large: 0
+        };
+        let isDarkMode = false;
+        let promoTimeLeft = 24 * 60 * 60; // 24 hours in seconds
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeParticles();
+            initializeFloatingPizzas();
+            startPromoTimer();
+            updateLivePrice();
+            
+            // Load saved preferences
+            const savedMode = localStorage.getItem('darkMode');
+            if (savedMode === 'true') {
+                toggleDarkMode();
+            }
+        });
+
+        // Dark Mode Toggle
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode');
+            const icon = document.getElementById('darkModeIcon');
+            icon.className = isDarkMode ? 'fas fa-sun' : 'fas fa-moon';
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+
+        // Initialize Particles
+        function initializeParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    createParticle();
+                }, i * 2000);
+            }
+        }
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.width = Math.random() * 4 + 2 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+            
+            document.getElementById('particles').appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+                createParticle(); // Create a new one
+            }, 25000);
+        }
+
+        // Initialize Floating Pizzas
+        function initializeFloatingPizzas() {
+            const floatingPizzas = document.querySelectorAll('.floating-pizza');
+            floatingPizzas.forEach((pizza, index) => {
+                pizza.style.animationDelay = (index * 2) + 's';
+            });
+        }
+
+        // Promo Timer
+        function startPromoTimer() {
+            const timer = setInterval(() => {
+                promoTimeLeft--;
+                if (promoTimeLeft <= 0) {
+                    promoTimeLeft = 24 * 60 * 60; // Reset to 24 hours
+                }
+                updatePromoTimer();
+            }, 1000);
+        }
+
+        function updatePromoTimer() {
+            const hours = Math.floor(promoTimeLeft / 3600);
+            const minutes = Math.floor((promoTimeLeft % 3600) / 60);
+            const seconds = promoTimeLeft % 60;
+            
+            const timerDisplay = document.getElementById('promoTimer');
+            timerDisplay.textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Sound Effects
+        function playSound(type) {
+            // Create audio context for sound effects
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                let frequency, duration;
+                
+                switch(type) {
+                    case 'click':
+                        frequency = 800;
+                        duration = 0.1;
+                        break;
+                    case 'success':
+                        frequency = 1000;
+                        duration = 0.3;
+                        break;
+                    case 'error':
+                        frequency = 300;
+                        duration = 0.5;
+                        break;
+                    default:
+                        return;
+                }
+                
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.frequency.value = frequency;
+                oscillator.type = 'sine';
+                
+                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + duration);
+            } catch (e) {
+                // Audio not supported or blocked
+            }
+        }
+
+        // Change Pizza Quantity
+        function changeQuantity(size, change) {
+            playSound('click');
+            const currentQty = pizzaQuantities[size];
+            const newQty = Math.max(0, currentQty + change);
+            
+            pizzaQuantities[size] = newQty;
+            const qtyDisplay = document.getElementById(`qty-${size}`);
+            qtyDisplay.value = newQty;
+            
+            // Add animation effect
+            qtyDisplay.classList.add('updated');
+            setTimeout(() => {
+                qtyDisplay.classList.remove('updated');
+            }, 400);
+            
+            updateLivePrice();
+            updatePizzaBuilder();
+        }
+
+        // Toggle Topping
+        function toggleTopping(toppingId) {
+            playSound('click');
+            const toppingCard = event.target.closest('.topping-card');
+            const price = parseInt(toppingCard.dataset.price);
+            
+            if (selectedToppings[toppingId]) {
+                delete selectedToppings[toppingId];
+                toppingCard.classList.remove('selected');
+                removeToppingFromPizza(toppingId);
+            } else {
+                selectedToppings[toppingId] = price;
+                toppingCard.classList.add('selected');
+                addToppingToPizza(toppingId);
+            }
+            
+            updateLivePrice();
+            updatePizzaBuilder();
+        }
+
+        // Select Drink
+        function selectDrink(element, price) {
+            playSound('click');
+            document.querySelectorAll('.drink-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            element.classList.add('selected');
+            selectedDrink = price;
+            updateLivePrice();
+        }
+
+        // Update Live Price
+        function updateLivePrice() {
+            const totalPizzas = pizzaQuantities.small + pizzaQuantities.medium + pizzaQuantities.large;
+            
+            if (totalPizzas === 0) {
+                document.getElementById('livePrice').classList.remove('show');
+                return;
+            }
+            
+            let total = 0;
+            total += pizzaQuantities.small * 20;
+            total += pizzaQuantities.medium * 30;
+            total += pizzaQuantities.large * 40;
+            
+            // Add toppings
+            let toppingsTotal = 0;
+            for (const price of Object.values(selectedToppings)) {
+                toppingsTotal += price * totalPizzas;
+            }
+            total += toppingsTotal;
+            
+            // Add drink
+            total += selectedDrink;
+            
+            // Apply discount if 2+ pizzas
+            if (totalPizzas >= 2) {
+                total = Math.round(total * 0.85); // 15% discount
+            }
+            
+            document.getElementById('livePriceAmount').textContent = total;
+            document.getElementById('livePrice').classList.add('show');
+        }
+
+        // Update Pizza Builder
+        function updatePizzaBuilder() {
+            const totalPizzas = pizzaQuantities.small + pizzaQuantities.medium + pizzaQuantities.large;
+            const builder = document.getElementById('pizzaBuilder');
+            
+            if (totalPizzas > 0 || Object.keys(selectedToppings).length > 0) {
+                builder.style.display = 'block';
+                
+                // Add visual effects based on toppings
+                const preview = document.getElementById('pizzaPreview');
+                if (Object.keys(selectedToppings).length > 3) {
+                    preview.style.background = 'linear-gradient(135deg, #d32f2f 0%, #c62828 100%)'; // Rich pizza
+                } else if (Object.keys(selectedToppings).length > 0) {
+                    preview.style.background = 'linear-gradient(135deg, #ffa726 0%, #fb8c00 100%)'; // Normal pizza
+                } else {
+                    preview.style.background = 'linear-gradient(135deg, #ffd54f 0%, #ffb300 100%)'; // Plain pizza
+                }
+            } else {
+                builder.style.display = 'none';
+            }
+        }
+
+        // Add Topping to Pizza Visual
+        function addToppingToPizza(toppingId) {
+            const toppingsContainer = document.getElementById('toppingsOnPizza');
+            const toppingEmojis = {
+                cheese: '🧀',
+                olives: '🫒',
+                mushrooms: '🍄',
+                corn: '🌽',
+                onion: '🧅',
+                tomato: '🍅',
+                spicy: '🌶️',
+                bulgarit: '🥒',
+                tuna: '🐟'
+            };
+            
+            const toppingElement = document.createElement('div');
+            toppingElement.className = 'topping-on-pizza';
+            toppingElement.id = `pizza-${toppingId}`;
+            toppingElement.textContent = toppingEmojis[toppingId];
+            
+            // Random position on pizza
+            const angle = Math.random() * 360;
+            const distance = Math.random() * 40 + 20;
+            const x = Math.cos(angle * Math.PI / 180) * distance;
+            const y = Math.sin(angle * Math.PI / 180) * distance;
+            
+            toppingElement.style.left = `calc(50% + ${x}px)`;
+            toppingElement.style.top = `calc(50% + ${y}px)`;
+            toppingElement.style.transform = 'translate(-50%, -50%)';
+            
+            toppingsContainer.appendChild(toppingElement);
+        }
+
+        // Remove Topping from Pizza Visual
+        function removeToppingFromPizza(toppingId) {
+            const toppingElement = document.getElementById(`pizza-${toppingId}`);
+            if (toppingElement) {
+                toppingElement.style.animation = 'toppingPop 0.3s ease reverse';
+                setTimeout(() => {
+                    toppingElement.remove();
+                }, 300);

@@ -1,0 +1,300 @@
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  direction: rtl;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('https://www.transparenttextures.com/patterns/food.png') repeat;
+  opacity: 0.07;
+  z-index: 0;
+  pointer-events: none;
+}
+
+h1 {
+  text-align: center;
+  color: #3b3b3b;
+  margin-top: 30px;
+  letter-spacing: 2px;
+  font-size: 2.2em;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+h1 svg {
+  animation: pizzaSpin 2.5s infinite linear;
+}
+@keyframes pizzaSpin {
+  0% { transform: rotate(-10deg) scale(1.1); }
+  50% { transform: rotate(10deg) scale(1.2); }
+  100% { transform: rotate(-10deg) scale(1.1); }
+}
+
+.cards-row {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin: 40px 0 0 0;
+  flex-wrap: wrap;
+}
+.pizza-card {
+  background: #fff;
+  border-radius: 24px;
+  box-shadow: 0 4px 24px rgba(60,60,120,0.10);
+  padding: 24px 28px 20px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 160px;
+  transition: box-shadow 0.3s, transform 0.3s;
+  position: relative;
+  z-index: 1;
+}
+.pizza-card:hover {
+  box-shadow: 0 8px 32px rgba(99,102,241,0.18);
+  transform: translateY(-6px) scale(1.04);
+}
+.pizza-icon svg {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 2px 6px #fbbf2433);
+  transition: transform 0.3s;
+}
+.pizza-card:hover .pizza-icon svg {
+  transform: scale(1.15) rotate(-8deg);
+}
+.pizza-title {
+  font-size: 1.15em;
+  font-weight: bold;
+  color: #6366f1;
+  margin-bottom: 4px;
+}
+.pizza-price {
+  color: #3b3b3b;
+  font-size: 1.05em;
+  margin-bottom: 10px;
+}
+.qty-input {
+  width: 60px;
+  padding: 7px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 10px;
+  font-size: 1.1em;
+  text-align: center;
+  transition: border 0.2s, box-shadow 0.2s;
+  box-shadow: 0 1px 4px #6366f11a;
+}
+.qty-input:focus {
+  border: 1.5px solid #6366f1;
+  outline: none;
+  box-shadow: 0 2px 8px #6366f133;
+}
+
+h2 {
+  color: #6366f1;
+  margin-right: 20vw;
+  margin-top: 40px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+h2 svg {
+  vertical-align: middle;
+  animation: drinkPop 2.5s infinite cubic-bezier(.68,-0.55,.27,1.55);
+}
+@keyframes drinkPop {
+  0% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.2) translateY(-4px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+.toppings-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 24px 0 0 0;
+  flex-wrap: wrap;
+}
+.topping-btn {
+  background: #fff;
+  border: 2px solid #e0e7ff;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 12px rgba(99,102,241,0.08);
+  cursor: pointer;
+  font-size: 1em;
+  color: #374151;
+  transition: border 0.3s, box-shadow 0.3s, transform 0.2s, background 0.2s;
+  position: relative;
+  z-index: 1;
+  outline: none;
+  border-bottom: 4px solid #c7d2fe;
+  margin-bottom: 8px;
+}
+.topping-btn svg {
+  margin-bottom: 4px;
+  transition: transform 0.3s;
+}
+.topping-btn span {
+  font-size: 1.05em;
+  font-weight: 500;
+}
+.topping-btn.active, .topping-btn:active, .topping-btn:focus {
+  border: 2.5px solid #6366f1;
+  background: linear-gradient(120deg, #e0e7ff 0%, #f1f5f9 100%);
+  box-shadow: 0 4px 16px #6366f133;
+  transform: scale(1.08);
+}
+.topping-btn.active svg {
+  transform: scale(1.18) rotate(-8deg);
+}
+.topping-btn:hover {
+  border: 2.5px solid #6366f1;
+  background: #f1f5f9;
+  transform: scale(1.06);
+}
+.topping-btn:hover svg {
+  transform: scale(1.12) rotate(-8deg);
+}
+
+.drink-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1em;
+  color: #2563eb;
+  margin: 12px 0 0 0;
+  background: #e0f2fe;
+  border-radius: 12px;
+  padding: 8px 18px;
+  width: fit-content;
+  box-shadow: 0 1px 4px #38bdf833;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.drink-label input[type="checkbox"] {
+  accent-color: #38bdf8;
+  transform: scale(1.2);
+}
+.drink-label:hover {
+  background: #bae6fd;
+  color: #0ea5e9;
+}
+
+.main-btn {
+  display: block;
+  margin: 40px auto 10px auto;
+  padding: 18px 48px;
+  background: linear-gradient(90deg, #6366f1 0%, #60a5fa 100%);
+  color: #fff;
+  border: none;
+  border-radius: 32px;
+  font-size: 1.3em;
+  font-weight: bold;
+  box-shadow: 0 2px 12px rgba(99,102,241,0.12);
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+.main-btn i, .main-btn svg {
+  margin-left: 12px;
+  font-size: 1.1em;
+  vertical-align: middle;
+  transition: transform 0.3s;
+}
+.main-btn:active {
+  transform: scale(0.97);
+  background: linear-gradient(90deg, #60a5fa 0%, #6366f1 100%);
+}
+.main-btn:hover {
+  background: linear-gradient(90deg, #60a5fa 0%, #6366f1 100%);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 6px 24px rgba(99,102,241,0.18);
+}
+.main-btn:hover i, .main-btn:hover svg {
+  transform: scale(1.2) rotate(8deg);
+}
+
+#errorMsg {
+  text-align: center;
+  margin: 10px auto 0 auto;
+  font-size: 1.1em;
+  color: #ef4444;
+  min-height: 24px;
+  transition: opacity 0.3s;
+  position: relative;
+  z-index: 1;
+}
+
+h3 {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 1.4em;
+  color: #10b981;
+  background: #f0fdf4;
+  border-radius: 16px;
+  display: inline-block;
+  padding: 12px 32px;
+  box-shadow: 0 2px 12px rgba(16,185,129,0.08);
+  transition: background 0.4s, color 0.4s;
+  animation: popIn 0.7s cubic-bezier(.68,-0.55,.27,1.55);
+  position: relative;
+  z-index: 1;
+}
+h3 svg {
+  margin-left: 10px;
+  font-size: 1.1em;
+  color: #f59e42;
+  vertical-align: middle;
+  animation: coinsPop 2.5s infinite cubic-bezier(.68,-0.55,.27,1.55);
+}
+@keyframes coinsPop {
+  0% { transform: scale(1) rotate(-10deg); }
+  50% { transform: scale(1.2) rotate(10deg); }
+  100% { transform: scale(1) rotate(-10deg); }
+}
+
+input[type="checkbox"] {
+  accent-color: #6366f1;
+  transform: scale(1.2);
+  margin-left: 8px;
+  transition: accent-color 0.2s;
+}
+
+::-webkit-input-placeholder { color: #a1a1aa; }
+::-moz-placeholder { color: #a1a1aa; }
+:-ms-input-placeholder { color: #a1a1aa; }
+::placeholder { color: #a1a1aa; }
+
+@media (max-width: 900px) {
+  .cards-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .toppings-row {
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+} 

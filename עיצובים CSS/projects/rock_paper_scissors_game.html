@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #1a1a1a;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .game-container {
+            width: 400px;
+            max-width: 90vw;
+            text-align: center;
+        }
+
+        .header {
+            background: #2d2d2d;
+            border-radius: 25px;
+            padding: 15px;
+            margin-bottom: 30px;
+            border: 1px solid #444;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .game-screen {
+            background: #2d2d2d;
+            border-radius: 20px;
+            padding: 40px 20px;
+            margin-bottom: 20px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border: 1px solid #444;
+        }
+
+        .selection-screen {
+            display: block;
+        }
+
+        .battle-screen {
+            display: none;
+        }
+
+        .select-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 40px;
+            color: #fff;
+        }
+
+        .weapons {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
+        }
+
+        .weapon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            text-align: center;
+        }
+
+        .weapon:hover {
+            transform: scale(1.1);
+        }
+
+        .weapon-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 10px;
+            font-size: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .weapon-label {
+            color: #ccc;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .vs-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+        }
+
+        .player-section {
+            text-align: center;
+            flex: 1;
+        }
+
+        .vs-text {
+            font-size: 20px;
+            font-weight: 600;
+            color: #888;
+            margin: 0 20px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .choice-display {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto;
+            font-size: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .result-message {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 30px 0 20px 0;
+            color: #fff;
+        }
+
+        .play-again-btn {
+            background: none;
+            border: 1px solid #666;
+            color: #ccc;
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            gap: 8px;
+        }
+
+        .play-again-btn:hover {
+            background: #444;
+            border-color: #777;
+        }
+
+        .stats {
+            background: #2d2d2d;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            justify-content: space-around;
+            border: 1px solid #444;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .profile {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            background: #444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .countdown {
+            font-size: 48px;
+            font-weight: bold;
+            color: #fff;
+            margin: 20px 0;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .thinking {
+            animation: thinking 1s ease-in-out infinite;
+        }
+
+        @keyframes thinking {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        /* Hand icons using CSS */
+        .rock-icon::before {
+            content: "✊";
+        }
+
+        .paper-icon::before {
+            content: "✋";
+        }
+
+        .scissors-icon::before {
+            content: "✌️";
+        }
+
+        .loading {
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="header">
+            <div class="title">Rock Paper Scissors</div>
+        </div>
+
+        <div class="game-screen">
+            <!-- Selection Screen -->
+            <div class="selection-screen" id="selectionScreen">
+                <div class="select-title">Select your Weapon</div>
+                
+                <div class="weapons">
+                    <button class="weapon" onclick="playerChoice('rock')">
+                        <div class="weapon-icon rock-icon"></div>
+                        <div class="weapon-label">Rock</div>
+                    </button>
+                    
+                    <button class="weapon" onclick="playerChoice('paper')">
+                        <div class="weapon-icon paper-icon"></div>
+                        <div class="weapon-label">Paper</div>
+                    </button>
+                    
+                    <button class="weapon" onclick="playerChoice('scissors')">
+                        <div class="weapon-icon scissors-icon"></div>
+                        <div class="weapon-label">Scissors</div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Battle Screen -->
+            <div class="battle-screen" id="battleScreen">
+                <div class="vs-section">
+                    <div class="player-section">
+                        <div class="section-title">Player</div>
+                        <div class="choice-display" id="playerDisplay">
+                            <span class="loading">🤔</span>
+                        </div>
+                    </div>
+                    
+                    <div class="vs-text">vs</div>
+                    
+                    <div class="player-section">
+                        <div class="section-title">Computer</div>
+                        <div class="choice-display" id="computerDisplay">
+                            <span class="thinking">🤖</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="countdown" id="countdown"></div>
+                
+                <div class="result-message" id="resultMessage"></div>
+                
+                <button class="play-again-btn" id="playAgainBtn" onclick="resetGame()" style="display: none;">
+                    🔄 Play Again
+                </button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Won</div>
+                <div class="stat-value" id="winsCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Lost</div>
+                <div class="stat-value" id="lossesCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Draw</div>
+                <div class="stat-value" id="drawsCount">0</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile">
+        <div class="profile-pic">👤</div>
+    </div>
+
+    <script>
+        let gameStats = {
+            wins: 0,
+            losses: 0,
+            draws: 0
+        };
+
+        const choices = ['rock', 'paper', 'scissors'];
+        const icons = {
+            rock: '✊',
+            paper: '✋',
+            scissors: '✌️'
+        };
+
+        function playerChoice(choice) {
+            // Hide selection screen, show battle screen
+            document.getElementById('selectionScreen').style.display = 'none';
+            document.getElementById('battleScreen').style.display = 'block';
+            
+            // Start countdown and game
+            startBattle(choice);
+        }
+
+        function startBattle(playerChoice) {
+            const playerDisplay = document.getElementById('playerDisplay');
+            const computerDisplay = document.getElementById('computerDisplay');
+            const countdown = document.getElementById('countdown');
+            const resultMessage = document.getElementById('resultMessage');
+            const playAgainBtn = document.getElementById('playAgainBtn');
+
+            // Reset displays
+            playerDisplay.innerHTML = '<span class="loading">🤔</span>';
+            computerDisplay.innerHTML = '<span class="thinking">🤖</span>';
+            resultMessage.textContent = '';
+            playAgainBtn.style.display = 'none';
+
+            // Countdown
+            let count = 3;
+            countdown.textContent = count;
+            
+            const countdownInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdown.textContent = count;
+                } else {
+                    countdown.textContent = '';
+                    clearInterval(countdownInterval);
+                    showResults(playerChoice);
+                }
+            }, 1000);
+        }
+
+        function showResults(playerChoice) {
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+            const playerDisplay = document.getElementById('playerDisplay');
+            const computerDisplay = document.getElementById('computerDisplay');
+            const resultMessage = document.getElementById('resultMessage');
+            const playAgainBtn = document.getElementById('playAgainBtn');
+
+            // Show choices
+            playerDisplay.innerHTML = icons[playerChoice];
+            computerDisplay.innerHTML = icons[computerChoice];
+
+            // Determine winner
+            const result = getWinner(playerChoice, computerChoice);
+            
+            // Show result after a brief delay
+            setTimeout(() => {
+                let message = '';
+                if (result === 'tie') {
+                    message = "Oops! It's a Draw";
+                    gameStats.draws++;
+                } else if (result === 'player') {
+                    message = "You Win! 🎉";
+                    gameStats.wins++;
+                } else {
+                    message = "You Lose! 😢";
+                    gameStats.losses++;
+                }
+
+                resultMessage.textContent = message;
+                playAgainBtn.style.display = 'flex';
+                updateStats();
+                
+                // Add shake animation to choices
+                playerDisplay.classList.add('shake');
+                computerDisplay.classList.add('shake');
+                
+                setTimeout(() => {
+                    playerDisplay.classList.remove('shake');
+                    computerDisplay.classList.remove('shake');
+                }, 500);
+            }, 500);
+        }
+
+        function getWinner(player, computer) {
+            if (player === computer) return 'tie';
+            
+            if (
+                (player === 'rock' && computer === 'scissors') ||
+                (player === 'paper' && computer === 'rock') ||
+                (player === 'scissors' && computer === 'paper')
+            ) {
+                return 'player';
+            } else {
+                return 'computer';
+            }
+        }
+
+        function updateStats() {
+            document.getElementById('winsCount').textContent = gameStats.wins;
+            document.getElementById('lossesCount').textContent = gameStats.losses;
+            document.getElementById('drawsCount').textContent = gameStats.draws;
+        }
+
+        function resetGame() {
+            // Hide battle screen, show selection screen
+            document.getElementById('battleScreen').style.display = 'none';
+            document.getElementById('selectionScreen').style.display = 'block';
+        }
+
+        // Add click sound effects
+        function playSound(type) {
+            try {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                switch(type) {
+                    case 'click':
+                        oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                        break;
+                    case 'win':
+                        oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+                        oscillator.frequency.exponentialRampToValueAtTime(800, audioContext.currentTime + 0.3);
+                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                        break;
+                    case 'lose':
+                        oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+                        oscillator.frequency.exponentialRampToValueAtTime(200, audioContext.currentTime + 0.5);
+                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                        break;
+                }
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 1);
+            } catch (err) {
+                console.log('Audio not available');
+            }
+        }
+
+        // Add click sound to weapon buttons
+        document.querySelectorAll('.weapon').forEach(button => {
+            button.addEventListener('click', () => playSound('click'));
+        });
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('selectionScreen').style.display !== 'none') {
+                switch(e.key) {
+                    case '1':
+                    case 'r':
+                    case 'R':
+                        playerChoice('rock');
+                        break;
+                    case '2':
+                    case 'p':
+                    case 'P':
+                        playerChoice('paper');
+                        break;
+                    case '3':
+                    case 's':
+                    case 'S':
+                        playerChoice('scissors');
+                        break;
+                }
+            } else if (document.getElementById('playAgainBtn').style.display !== 'none') {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    resetGame();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

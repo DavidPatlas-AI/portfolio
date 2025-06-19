@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beautiful Page Turner</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+        }
+
+        .book-container {
+            perspective: 2000px;
+            position: relative;
+        }
+
+        .book {
+            width: 600px;
+            height: 400px;
+            position: relative;
+            transform-style: preserve-3d;
+            cursor: pointer;
+            filter: drop-shadow(0 25px 50px rgba(0, 0, 0, 0.3));
+        }
+
+        .page {
+            width: 300px;
+            height: 400px;
+            position: absolute;
+            background: white;
+            border-radius: 0 15px 15px 0;
+            transform-style: preserve-3d;
+            transform-origin: left center;
+            transition: transform 2s cubic-bezier(0.23, 1, 0.32, 1);
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .page-content {
+            padding: 50px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            backface-visibility: hidden;
+        }
+
+        .page-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 0 15px 15px 0;
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Page positions */
+        .page1 { left: 300px; z-index: 5; }
+        .page2 { left: 300px; z-index: 4; }
+        .page3 { left: 300px; z-index: 3; }
+        .page4 { left: 300px; z-index: 2; }
+        .page5 { left: 300px; z-index: 1; }
+
+        /* Book cover */
+        .book-cover {
+            width: 300px;
+            height: 400px;
+            position: absolute;
+            left: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px 0 0 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .cover-title {
+            font-size: 32px;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .cover-subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Content styling */
+        .page-title {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 30px;
+            color: #2d3748;
+            letter-spacing: 1px;
+        }
+
+        .page-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #4a5568;
+            font-weight: 300;
+            text-align: justify;
+        }
+
+        .page-number {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            font-size: 12px;
+            color: #a0aec0;
+            font-weight: 300;
+        }
+
+        /* Page flipping animations */
+        .book.page-1-flipped .page1 { transform: rotateY(-175deg); }
+        .book.page-2-flipped .page2 { transform: rotateY(-175deg); }
+        .book.page-3-flipped .page3 { transform: rotateY(-175deg); }
+        .book.page-4-flipped .page4 { transform: rotateY(-175deg); }
+        .book.page-5-flipped .page5 { transform: rotateY(-175deg); }
+
+        /* Navigation */
+        .navigation {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .nav-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 18px;
+            color: #4a5568;
+        }
+
+        .nav-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 2px;
+            transition: width 0.5s ease;
+            width: 20%;
+        }
+
+        /* Instructions */
+        .instructions {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            color: white;
+        }
+
+        .instruction-title {
+            font-size: 24px;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .instruction-text {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .book {
+                width: 500px;
+                height: 330px;
+            }
+            
+            .page, .book-cover {
+                width: 250px;
+                height: 330px;
+            }
+            
+            .page1, .page2, .page3, .page4, .page5 {
+                left: 250px;
+            }
+            
+            .page-content, .page-back {
+                padding: 35px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="instructions">
+        <div class="instruction-title">📚 Beautiful Book</div>
+        <div class="instruction-text">Use the arrows below to navigate through pages</div>
+    </div>
+
+    <div class="book-container">
+        <div class="book" id="book">
+            <!-- Book cover -->
+            <div class="book-cover">
+                <div class="cover-title">STORIES</div>
+                <div class="cover-subtitle">Collection</div>
+            </div>
+
+            <!-- Page 1 -->
+            <div class="page page1">
+                <div class="page-content">
+                    <div class="page-title">Chapter One</div>
+                    <div class="page-text">
+                        In the beginning, there was an idea. A simple thought that grew into something beautiful. This is the story of how creativity transforms the ordinary into the extraordinary.
+                    </div>
+                    <div class="page-number">01</div>
+                </div>
+                <div class="page-back">
+                    <div class="page-text">
+                        Every great journey begins with a single step. This page represents the courage to start something new and the excitement of possibilities ahead.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 2 -->
+            <div class="page page2">
+                <div class="page-content">
+                    <div class="page-title">The Journey</div>
+                    <div class="page-text">
+                        With each turn of the page, we discover new perspectives. The journey unfolds gradually, revealing hidden depths and unexpected connections.
+                    </div>
+                    <div class="page-number">02</div>
+                </div>
+                <div class="page-back">
+                    <div class="page-text">
+                        Progress is not always linear. Sometimes we must look back to understand how far we've come and appreciate the path that brought us here.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 3 -->
+            <div class="page page3">
+                <div class="page-content">
+                    <div class="page-title">Discovery</div>
+                    <div class="page-text">
+                        In the middle of our story, we find the heart of the matter. This is where understanding deepens and true wisdom begins to emerge from experience.
+                    </div>
+                    <div class="page-number">03</div>
+                </div>
+                <div class="page-back">
+                    <div class="page-text">
+                        Discovery often comes when we least expect it. The most profound insights arise from patient observation and openness to new ideas.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 4 -->
+            <div class="page page4">
+                <div class="page-content">
+                    <div class="page-title">Transformation</div>
+                    <div class="page-text">
+                        Change is the only constant. As we near the end of our tale, we see how each chapter has contributed to a greater transformation.
+                    </div>
+                    <div class="page-number">04</div>
+                </div>
+                <div class="page-back">
+                    <div class="page-text">
+                        Transformation is not just about reaching a destination. It's about becoming someone new through the experiences we gather along the way.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 5 -->
+            <div class="page page5">
+                <div class="page-content">
+                    <div class="page-title">New Beginnings</div>
+                    <div class="page-text">
+                        Every ending is a new beginning. As this story concludes, we carry forward the lessons learned and the inspiration to write new chapters.
+                    </div>
+                    <div class="page-number">05</div>
+                </div>
+                <div class="page-back">
+                    <div class="page-text">
+                        Thank you for joining this journey. May your own story be filled with wonder, growth, and beautiful moments that take your breath away.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn" onclick="previousPage()">←</button>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <button class="nav-btn" id="nextBtn" onclick="nextPage()">→</button>
+    </div>
+
+    <script>
+        let currentPage = 0;
+        const totalPages = 5;
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const progress = (currentPage / totalPages) * 100;
+            progressFill.style.width = progress + '%';
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentPage === 0;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                document.getElementById('book').classList.add(`page-${currentPage}-flipped`);
+                updateProgress();
+            }
+        }
+
+        function previousPage() {
+            if (currentPage > 0) {
+                document.getElementById('book').classList.remove(`page-${currentPage}-flipped`);
+                currentPage--;
+                updateProgress();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextPage();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousPage();
+            }
+        });
+
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextPage();
+                } else {
+                    previousPage();
+                }
+            }
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Steering & Wipers System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .car-interior {
+            background: linear-gradient(145deg, #2c2c2c 0%, #1a1a1a 100%);
+            padding: 40px;
+            border-radius: 30px;
+            border: 3px solid #3a3a3a;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+            position: relative;
+            width: 800px;
+            height: 600px;
+        }
+
+        .windshield {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(173, 216, 230, 0.3) 0%, rgba(135, 206, 235, 0.2) 100%);
+            border: 3px solid #444;
+            border-radius: 15px 15px 5px 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .wiper {
+            position: absolute;
+            bottom: 0;
+            transform-origin: bottom center;
+            transition: transform 0.3s ease;
+        }
+
+        .wiper-left {
+            left: 30%;
+            width: 3px;
+            height: 150px;
+            background: linear-gradient(to top, #333 0%, #666 100%);
+            border-radius: 2px;
+            transform: rotate(-30deg);
+        }
+
+        .wiper-right {
+            right: 30%;
+            width: 3px;
+            height: 150px;
+            background: linear-gradient(to top, #333 0%, #666 100%);
+            border-radius: 2px;
+            transform: rotate(30deg);
+        }
+
+        .wiper-blade {
+            position: absolute;
+            top: 0;
+            left: -15px;
+            width: 30px;
+            height: 4px;
+            background: #222;
+            border-radius: 2px;
+        }
+
+        .water-drops {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .water-drop {
+            position: absolute;
+            width: 4px;
+            height: 8px;
+            background: rgba(173, 216, 230, 0.8);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            opacity: 0;
+            animation: water-fall 2s linear infinite;
+        }
+
+        @keyframes water-fall {
+            0% {
+                opacity: 1;
+                transform: translateY(-10px);
+            }
+            100% {
+                opacity: 0.3;
+                transform: translateY(200px);
+            }
+        }
+
+        .steering-area {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 300px;
+            height: 300px;
+        }
+
+        .steering-wheel {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle at 30% 30%, #444 0%, #222 100%);
+            border-radius: 50%;
+            border: 8px solid #555;
+            position: relative;
+            cursor: grab;
+            transition: all 0.2s ease;
+            transform-origin: center center;
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.8),
+                inset 0 5px 15px rgba(255, 255, 255, 0.1),
+                inset 0 -5px 15px rgba(0, 0, 0, 0.5);
+            margin: 25px auto;
+        }
+
+        .steering-wheel:active {
+            cursor: grabbing;
+        }
+
+        .steering-wheel::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            bottom: 15px;
+            border: 3px solid #666;
+            border-radius: 50%;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .wheel-spokes {
+            position: absolute;
+            inset: 0;
+        }
+
+        .spoke {
+            position: absolute;
+            width: 4px;
+            height: 80px;
+            background: linear-gradient(to bottom, #666 0%, #333 100%);
+            border-radius: 2px;
+            top: 50%;
+            left: 50%;
+            transform-origin: center bottom;
+        }
+
+        .spoke:nth-child(1) {
+            transform: translate(-50%, -100%) rotate(0deg);
+        }
+
+        .spoke:nth-child(2) {
+            transform: translate(-50%, -100%) rotate(90deg);
+        }
+
+        .spoke:nth-child(3) {
+            transform: translate(-50%, -100%) rotate(180deg);
+        }
+
+        .spoke:nth-child(4) {
+            transform: translate(-50%, -100%) rotate(270deg);
+        }
+
+        .horn-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, #333 0%, #111 100%);
+            border-radius: 50%;
+            border: 4px solid #444;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.6),
+                inset 0 2px 5px rgba(255, 255, 255, 0.1);
+        }
+
+        .horn-button:hover {
+            background: radial-gradient(circle at 30% 30%, #444 0%, #222 100%);
+        }
+
+        .horn-button:active {
+            transform: translate(-50%, -50%) scale(0.95);
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.8),
+                inset 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .controls-panel {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .wiper-control {
+            background: linear-gradient(145deg, #444 0%, #222 100%);
+            border: 3px solid #555;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.6),
+                inset 0 2px 5px rgba(255, 255, 255, 0.1);
+        }
+
+        .wiper-btn {
+            width: 80px;
+            height: 50px;
+            background: linear-gradient(145deg, #666 0%, #333 100%);
+            border: 2px solid #777;
+            border-radius: 10px;
+            color: #ccc;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .wiper-btn:hover {
+            background: linear-gradient(145deg, #777 0%, #444 100%);
+            transform: translateY(-2px);
+        }
+
+        .wiper-btn:active {
+            transform: translateY(0);
+        }
+
+        .wiper-btn.active {
+            background: linear-gradient(145deg, #0088ff 0%, #0066cc 100%);
+            border-color: #00aaff;
+            color: white;
+            box-shadow: 0 0 15px rgba(0, 136, 255, 0.5);
+        }
+
+        .spray-btn {
+            background: linear-gradient(145deg, #4488ff 0%, #2266cc 100%);
+            border-color: #66aaff;
+        }
+
+        .spray-btn:hover {
+            background: linear-gradient(145deg, #66aaff 0%, #4488dd 100%);
+        }
+
+        .spray-btn.spraying {
+            background: linear-gradient(145deg, #88ccff 0%, #66aadd 100%);
+            animation: spray-pulse 0.3s ease infinite;
+        }
+
+        @keyframes spray-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .status-display {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+        }
+
+        .steering-indicator {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .steering-bar {
+            width: 100px;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .steering-position {
+            position: absolute;
+            top: 0;
+            width: 10px;
+            height: 100%;
+            background: #00ff00;
+            border-radius: 3px;
+            left: 45px;
+            transition: left 0.2s ease;
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #666;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .instructions span {
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        /* Wiper animations */
+        .wipers.active .wiper-left {
+            animation: wipe-left 1s ease-in-out infinite;
+        }
+
+        .wipers.active .wiper-right {
+            animation: wipe-right 1s ease-in-out infinite;
+        }
+
+        @keyframes wipe-left {
+            0%, 100% { transform: rotate(-30deg); }
+            50% { transform: rotate(30deg); }
+        }
+
+        @keyframes wipe-right {
+            0%, 100% { transform: rotate(30deg); }
+            50% { transform: rotate(-30deg); }
+        }
+
+        /* Horn visual effect */
+        .horn-blast {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            border: 3px solid #ffaa00;
+            border-radius: 50%;
+            opacity: 0;
+            animation: horn-wave 0.5s ease-out;
+        }
+
+        @keyframes horn-wave {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="car-interior">
+        <!-- Windshield with wipers -->
+        <div class="windshield" id="windshield">
+            <div class="wiper wiper-left">
+                <div class="wiper-blade"></div>
+            </div>
+            <div class="wiper wiper-right">
+                <div class="wiper-blade"></div>
+            </div>
+            <div class="water-drops" id="waterDrops"></div>
+        </div>
+
+        <!-- Status Display -->
+        <div class="status-display">
+            <div>🚗 Car Control System</div>
+            <div class="steering-indicator">
+                Steering: 
+                <div class="steering-bar">
+                    <div class="steering-position" id="steeringPos"></div>
+                </div>
+            </div>
+            <div id="statusText">Steering: CENTER</div>
+        </div>
+
+        <!-- Steering Wheel -->
+        <div class="steering-area">
+            <div class="steering-wheel" id="steeringWheel">
+                <div class="wheel-spokes">
+                    <div class="spoke"></div>
+                    <div class="spoke"></div>
+                    <div class="spoke"></div>
+                    <div class="spoke"></div>
+                </div>
+                <div class="horn-button" id="hornButton">📯</div>
+            </div>
+        </div>
+
+        <!-- Controls Panel -->
+        <div class="controls-panel">
+            <div class="wiper-control">
+                <div style="color: #ccc; margin-bottom: 10px; font-weight: bold;">WIPERS</div>
+                <div class="wiper-btn" id="wipersBtn">🧽 WIPERS</div>
+                <div class="wiper-btn spray-btn" id="sprayBtn">💧 SPRAY</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="instructions">
+        <span>Drag</span> steering wheel left/right • <span>Click center</span> for horn • <span>Wipers/Spray</span> buttons on right
+    </div>
+
+    <script>
+        class CarControlSystem {
+            constructor() {
+                this.steeringAngle = 0;
+                this.isWipersActive = false;
+                this.isSpraying = false;
+                this.isDragging = false;
+                
+                this.steeringWheel = document.getElementById('steeringWheel');
+                this.hornButton = document.getElementById('hornButton');
+                this.wipersBtn = document.getElementById('wipersBtn');
+                this.sprayBtn = document.getElementById('sprayBtn');
+                this.steeringPos = document.getElementById('steeringPos');
+                this.statusText = document.getElementById('statusText');
+                this.windshield = document.getElementById('windshield');
+                this.waterDrops = document.getElementById('waterDrops');
+                
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                // Steering wheel drag
+                let startX = 0;
+                let startAngle = 0;
+
+                this.steeringWheel.addEventListener('mousedown', (e) => {
+                    if (e.target === this.hornButton) return;
+                    this.isDragging = true;
+                    startX = e.clientX;
+                    startAngle = this.steeringAngle;
+                    this.steeringWheel.style.cursor = 'grabbing';
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (!this.isDragging) return;
+                    
+                    const deltaX = e.clientX - startX;
+                    const sensitivity = 0.5;
+                    this.steeringAngle = Math.max(-90, Math.min(90, startAngle + deltaX * sensitivity));
+                    
+                    this.updateSteering();
+                });
+
+                document.addEventListener('mouseup', () => {
+                    this.isDragging = false;
+                    this.steeringWheel.style.cursor = 'grab';
+                });
+
+                // Touch support for mobile
+                this.steeringWheel.addEventListener('touchstart', (e) => {
+                    if (e.target === this.hornButton) return;
+                    e.preventDefault();
+                    this.isDragging = true;
+                    startX = e.touches[0].clientX;
+                    startAngle = this.steeringAngle;
+                });
+
+                document.addEventListener('touchmove', (e) => {
+                    if (!this.isDragging) return;
+                    e.preventDefault();
+                    
+                    const deltaX = e.touches[0].clientX - startX;
+                    const sensitivity = 0.5;
+                    this.steeringAngle = Math.max(-90, Math.min(90, startAngle + deltaX * sensitivity));
+                    
+                    this.updateSteering();
+                });
+
+                document.addEventListener('touchend', () => {
+                    this.isDragging = false;
+                });
+
+                // Horn button
+                this.hornButton.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.honkHorn();
+                });
+
+                // Wipers control
+                this.wipersBtn.addEventListener('click', () => {
+                    this.toggleWipers();
+                });
+
+                // Spray control
+                this.sprayBtn.addEventListener('click', () => {
+                    this.activateSpray();
+                });
+
+                // Keyboard controls
+                document.addEventListener('keydown', (e) => {
+                    switch(e.code) {
+                        case 'ArrowLeft':
+                            e.preventDefault();
+                            this.steeringAngle = Math.max(-90, this.steeringAngle - 5);
+                            this.updateSteering();
+                            break;
+                        case 'ArrowRight':
+                            e.preventDefault();
+                            this.steeringAngle = Math.min(90, this.steeringAngle + 5);
+                            this.updateSteering();
+                            break;
+                        case 'Space':
+                            e.preventDefault();
+                            this.honkHorn();
+                            break;
+                        case 'KeyW':
+                            this.toggleWipers();
+                            break;
+                        case 'KeyS':
+                            this.activateSpray();
+                            break;
+                    }
+                });
+            }
+
+            updateSteering() {
+                // Update wheel rotation
+                this.steeringWheel.style.transform = `rotate(${this.steeringAngle}deg)`;
+                
+                // Update steering position indicator
+                const position = 45 + (this.steeringAngle / 90) * 45; // 0-90px range
+                this.steeringPos.style.left = position + 'px';
+                
+                // Update status text
+                let direction = 'CENTER';
+                if (this.steeringAngle < -10) {
+                    direction = 'LEFT';
+                } else if (this.steeringAngle > 10) {
+                    direction = 'RIGHT';
+                }
+                
+                this.statusText.textContent = `Steering: ${direction} (${Math.round(this.steeringAngle)}°)`;
+            }
+
+            honkHorn() {
+                // Create visual horn blast effect
+                const blast = document.createElement('div');
+                blast.className = 'horn-blast';
+                this.steeringWheel.appendChild(blast);
+                
+                setTimeout(() => blast.remove(), 500);
+                
+                // Play horn sound
+                this.playSound('horn');
+                
+                // Haptic feedback
+                if (navigator.vibrate) {
+                    navigator.vibrate([200, 100, 200]);
+                }
+            }
+
+            toggleWipers() {
+                this.isWipersActive = !this.isWipersActive;
+                
+                if (this.isWipersActive) {
+                    this.windshield.classList.add('wipers', 'active');
+                    this.wipersBtn.classList.add('active');
+                    this.wipersBtn.textContent = '🧽 STOP';
+                } else {
+                    this.windshield.classList.remove('wipers', 'active');
+                    this.wipersBtn.classList.remove('active');
+                    this.wipersBtn.textContent = '🧽 WIPERS';
+                }
+                
+                this.playSound('wipers');
+            }
+
+            activateSpray() {
+                if (this.isSpraying) return;
+                
+                this.isSpraying = true;
+                this.sprayBtn.classList.add('spraying');
+                this.sprayBtn.textContent = '💧 SPRAYING';
+                
+                // Create water drops
+                this.createWaterDrops();
+                
+                // Play spray sound
+                this.playSound('spray');
+                
+                setTimeout(() => {
+                    this.isSpraying = false;
+                    this.sprayBtn.classList.remove('spraying');
+                    this.sprayBtn.textContent = '💧 SPRAY';
+                }, 2000);
+            }
+
+            createWaterDrops() {
+                for (let i = 0; i < 20; i++) {
+                    setTimeout(() => {
+                        const drop = document.createElement('div');
+                        drop.className = 'water-drop';
+                        drop.style.left = Math.random() * 580 + 'px';
+                        drop.style.animationDelay = Math.random() * 0.5 + 's';
+                        this.waterDrops.appendChild(drop);
+                        
+                        setTimeout(() => drop.remove(), 2000);
+                    }, i * 100);
+                }
+            }
+
+            playSound(type) {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    switch(type) {
+                        case 'horn':
+                            oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+                            oscillator.frequency.exponentialRampToValueAtTime(350, audioContext.currentTime + 0.5);
+                            gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+                            break;
+                        case 'wipers':
+                            oscillator.frequency.setValueAtTime(300, audioContext.currentTime);
+                            gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                            break;
+                        case 'spray':
+                            oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                            oscillator.frequency.exponentialRampToValueAtTime(600, audioContext.currentTime + 0.3);
+                            gainNode.gain.setValueAtTime(0.08, audioContext.currentTime);
+                            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                            break;
+                    }
+                    
+                    oscillator.start();
+                    oscillator.stop(audioContext.currentTime + 1);
+                } catch (err) {
+                    console.log('Audio not available');
+                }
+            }
+        }
+
+        // Initialize the system
+        window.addEventListener('load', () => {
+            new CarControlSystem();
+        });
+    </script>
+</body>
+</html>

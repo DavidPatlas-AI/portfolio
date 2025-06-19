@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AdMap Live - גלריית גרסאות</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            direction: rtl;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .status-bar {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background: #00ff88;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto 50px auto;
+        }
+
+        .version-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .version-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .version-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+
+        .version-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .version-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            color: white;
+        }
+
+        .version-icon.simple { background: linear-gradient(135deg, #3498db, #2980b9); }
+        .version-icon.upgraded { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .version-icon.real { background: linear-gradient(135deg, #27ae60, #229954); }
+        .version-icon.enhanced { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .version-icon.modular { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+
+        .version-info h3 {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .version-tag {
+            background: #f8f9fa;
+            color: #666;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .version-description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .version-features {
+            margin-bottom: 25px;
+        }
+
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .feature-item i {
+            color: #27ae60;
+            font-size: 0.8em;
+        }
+
+        .version-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .action-btn.secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e9ecef;
+        }
+
+        .action-btn.info {
+            background: #3498db;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .stats-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .stat-item {
+            padding: 20px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        .project-structure {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+
+        .structure-title {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .folder-tree {
+            font-family: 'Courier New', monospace;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            color: #2c3e50;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .folder {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .file {
+            color: #3498db;
+        }
+
+        .documentation-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .doc-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .doc-link {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .doc-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>🗺️ AdMap Live - גלריית גרסאות</h1>
+        <p>מפת פרסום דיגיטלי מתקדמת לחקירת קמפיינים פרסומיים בישראל</p>
+        <div class="status-bar">
+            <div class="status-dot"></div>
+            <span>5 גרסאות מסודרות ומוכנות לשימוש</span>
+        </div>
+    </header>
+
+    <main>
+        <!-- Statistics Section -->
+        <section class="stats-section">
+            <h2>סטטיסטיקות הפרויקט</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">גרסאות שונות</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">4,371</div>
+                    <div class="stat-label">שורות קוד</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">₪1.58B</div>
+                    <div class="stat-label">שוק פרסום דיגיטלי ישראלי</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">79%</div>
+                    <div class="stat-label">פרסום פרוגרמטי</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Grid -->
+        <section class="gallery-grid">
+            <!-- Simple Working Version -->
+            <article class="version-card">
+                <div class="version-header">
+                    <div class="version-icon simple">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <div class="version-info">
+                        <h3>גרסה פשוטה ופועלת</h3>
+                        <span class="version-tag">למתחילים</span>
+                    </div>
+                </div>
+                
+                <p class="version-description">
+                    גרסה בסיסית ופונקציונלית המתאימה למתחילים ולהדגמות מהירות. כוללת נתוני דמו וממשק נקי.
+                </p>
+                
+                <div class="version-features">
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>ממשק פשוט ונקי</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>נתוני דמו</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>סינון בסיסי</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>מפה אינטראקטיבית</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="version-actions">
+                    <a href="organized_versions/simple_working/admap_simple_working.html" class="action-btn primary" target="_blank">
+                        <i class="fas fa-play"></i> הפעל עכשיו
+                    </a>
+                    <button class="action-btn secondary" onclick="showCode('simple')">
+                        <i class="fas fa-code"></i> הצג קוד
+                    </button>
+                    <button class="action-btn info" onclick="showInfo('simple')">
+                        <i class="fas fa-info-circle"></i> פרטים
+                    </button>
+                </div>
+            </article>
+
+            <!-- Upgraded Version -->
+            <article class="version-card">
+                <div class="version-header">
+                    <div class="version-icon upgraded">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <div class="version-info">
+                        <h3>גרסה מתקדמת</h3>
+                        <span class="version-tag">פרו</span>
+                    </div>
+                </div>
+                
+                <p class="version-description">
+                    גרסה מתקדמת עם תכונות פרו, ממשק משופר וכלים מתקדמים לניתוח קמפיינים.
+                </p>
+                
+                <div class="version-features">
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>ממשק מתקדם</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>סינונים מתקדמים</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>ניתוח AI</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>דיווחים מפורטים</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="version-actions">
+                    <a href="organized_versions/upgraded/admap_live_upgraded.html" class="action-btn primary" target="_blank">
+                        <i class="fas fa-rocket"></i> הפעל עכשיו
+                    </a>
+                    <button class="action-btn secondary" onclick="showCode('upgraded')">
+                        <i class="fas fa-code"></i> הצג קוד
+                    </button>
+                    <button class="action-btn info" onclick="showInfo('upgraded')">
+                        <i class="fas fa-info-circle"></i> פרטים
+                    </button>
+                </div>
+            </article>
+
+            <!-- Real Live Version -->
+            <article class="version-card">
+                <div class="version-header">
+                    <div class="version-icon real">
+                        <i class="fas fa-satellite-dish"></i>
+                    </div>
+                    <div class="version-info">
+                        <h3>נתונים אמיתיים</h3>
+                        <span class="version-tag">לייב</span>
+                    </div>
+                </div>
+                
+                <p class="version-description">
+                    גרסה המיועדת לעבודה עם נתונים אמיתיים מ-APIs רשמיים של פלטפורמות פרסום.
+                </p>
+                
+                <div class="version-features">
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>נתונים אמיתיים</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>APIs רשמיים</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>עדכונים בזמן אמת</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>מקורות מאומתים</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="version-actions">
+                    <a href="organized_versions/real_live/real_admap_live.html" class="action-btn primary" target="_blank">
+                        <i class="fas fa-satellite-dish"></i> הפעל עכשיו
+                    </a>
+                    <button class="action-btn secondary" onclick="showCode('real')">
+                        <i class="fas fa-code"></i> הצג קוד
+                    </button>
+                    <button class="action-btn info" onclick="showInfo('real')">
+                        <i class="fas fa-info-circle"></i> פרטים
+                    </button>
+                </div>
+            </article>
+
+            <!-- Enhanced Version -->
+            <article class="version-card">
+                <div class="version-header">
+                    <div class="version-icon enhanced">
+                        <i class="fas fa-crown"></i>
+                    </div>
+                    <div class="version-info">
+                        <h3>גרסה משופרת מלאה</h3>
+                        <span class="version-tag">פרמיום</span>
+                    </div>
+                </div>
+                
+                <p class="version-description">
+                    הגרסה המלאה והמתקדמת ביותר עם כל התכונות, ניתוח מתקדם ויכולות פרמיום.
+                </p>
+                
+                <div class="version-features">
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>כל התכונות</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>ניתוח AI מתקדם</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>דשבורד מלא</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>יצוא נתונים</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="version-actions">
+                    <a href="organized_versions/real_live_enhanced/real_admap_live (1).html" class="action-btn primary" target="_blank">
+                        <i class="fas fa-crown"></i> הפעל עכשיו
+                    </a>
+                    <button class="action-btn secondary" onclick="showCode('enhanced')">
+                        <i class="fas fa-code"></i> הצג קוד
+                    </button>
+                    <button class="action-btn info" onclick="showInfo('enhanced')">
+                        <i class="fas fa-info-circle"></i> פרטים
+                    </button>
+                </div>
+            </article>
+
+            <!-- Modular Structure -->
+            <article class="version-card">
+                <div class="version-header">
+                    <div class="version-icon modular">
+                        <i class="fas fa-cubes"></i>
+                    </div>
+                    <div class="version-info">
+                        <h3>מבנה מודולרי</h3>
+                        <span class="version-tag">מפותחים</span>
+                    </div>
+                </div>
+                
+                <p class="version-description">
+                    גרסה מחולקת לקבצים נפרדים (HTML, CSS, JS) לקלות פיתוח ותחזוקה.
+                </p>
+                
+                <div class="version-features">
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>קבצים נפרדים</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>קל לתחזוקה</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>מבנה נקי</span>
+                        </div>
+                        <div class="feature-item">
+                            <i class="fas fa-check"></i>
+                            <span>ידידותי למפתחים</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="version-actions">
+                    <a href="organized_versions/modular_structure/admap_modular.html" class="action-btn primary" target="_blank">
+                        <i class="fas fa-cubes"></i> הפעל עכשיו
+                    </a>
+                    <button class="action-btn secondary" onclick="showCode('modular')">
+                        <i class="fas fa-code"></i> הצג קוד
+                    </button>
+                    <button class="action-btn info" onclick="showInfo('modular')">
+                        <i class="fas fa-info-circle"></i> פרטים
+                    </button>
+                </div>
+            </article>
+        </section>
+
+        <!-- Project Structure -->
+        <section class="project-structure">
+            <h2 class="structure-title">מבנה הפרויקט המסודר</h2>
+            <div class="folder-tree">
+📁 <span class="folder">organized_versions/</span>
+├── 📁 <span class="folder">simple_working/</span>
+│   └── 📄 <span class="file">admap_simple_working.html</span>
+├── 📁 <span class="folder">upgraded/</span>
+│   └── 📄 <span class="file">admap_live_upgraded.html</span>
+├── 📁 <span class="folder">real_live/</span>
+│   └── 📄 <span class="file">real_admap_live.html</span>
+├── 📁 <span class="folder">real_live_enhanced/</span>
+│   └── 📄 <span class="file">real_admap_live (1).html</span>
+├── 📁 <span class="folder">modular_structure/</span>
+│   ├── 📄 <span class="file">admap_modular.html</span>
+│   ├── 📄 <span class="file">admap_styles.css</span>
+│   └── 📄 <span class="file">admap_script.js</span>
+├── 📁 <span class="folder">shared_assets/</span>
+│   ├── 📄 <span class="file">admap_styles.css</span>
+│   └── 📄 <span class="file">admap_script.js</span>
+└── 📁 <span class="folder">documentation/</span>
+    ├── 📄 <span class="file">research_guide.md</span>
+    ├── 📄 <span class="file">מדריך.pdf</span>
+    └── 📄 <span class="file">compass_artifact_*.md</span>
+
+📄 <span class="file">gallery_index.html</span> (קובץ הגלריה הראשי)
+📄 <span class="file">README.md</span> (תיעוד הפרויקט)
+            </div>
+        </section>
+
+        <!-- Documentation Section -->
+        <section class="documentation-section">
+            <h2>תיעוד ומשאבים</h2>
+            <p>מדריכים מפורטים ותיעוד טכני לפרויקט</p>
+            
+            <div class="doc-links">
+                <a href="README.md" class="doc-link" target="_blank">
+                    <i class="fas fa-book"></i>
+                    <h3>README</h3>
+                    <p>תיעוד הפרויקט המלא</p>
+                </a>
+                
+                <a href="organized_versions/documentation/research_guide.md" class="doc-link" target="_blank">
+                    <i class="fas fa-search"></i>
+                    <h3>מדריך מחקר</h3>
+                    <p>מתודולוגיית מחקר מפורטת</p>
+                </a>
+                
+                <a href="organized_versions/documentation/מדריך.pdf" class="doc-link" target="_blank">
+                    <i class="fas fa-file-pdf"></i>
+                    <h3>מדריך PDF</h3>
+                    <p>מדריך מקורי בעברית</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        function showCode(version) {
+            const codeInfo = {
+                simple: 'גרסה פשוטה - 809 שורות קוד\nכוללת ממשק בסיסי ופונקציונליות חיונית',
+                upgraded: 'גרסה מתקדמת - 994 שורות קוד\nכוללת תכונות פרו וניתוח מתקדם',
+                real: 'נתונים אמיתיים - 851 שורות קוד\nאינטגרציה עם APIs רשמיים',
+                enhanced: 'גרסה משופרת - 1,318 שורות קוד\nכל התכונות המתקדמות',
+                modular: 'מבנה מודולרי - 3 קבצים נפרדים\nHTML + CSS + JavaScript'
+            };
+            
+            alert(`📋 פרטי קוד:\n\n${codeInfo[version]}`);
+        }
+
+        function showInfo(version) {
+            const versionInfo = {
+                simple: 'גרסה בסיסית ופונקציונלית המתאימה למתחילים. כוללת נתוני דמו, ממשק נקי וסינון בסיסי. מושלמת להדגמות מהירות.',
+                upgraded: 'גרסה מתקדמת עם תכונות פרו כוללות ניתוח AI, סינונים מתקדמים ודיווחים מפורטים. מיועדת למשתמשים מנוסים.',
+                real: 'גרסה המיועדת לעבודה עם נתונים אמיתיים מ-APIs רשמיים של Google Ads ו-Meta. כוללת עדכונים בזמן אמת.',
+                enhanced: 'הגרסה המלאה והמתקדמת ביותר עם כל התכונות, ניתוח AI מתקדם, דשבורד מלא ויכולות יצוא נתונים.',
+                modular: 'גרסה מחולקת לקבצים נפרדים (HTML, CSS, JS) לקלות פיתוח ותחזוקה. מיועדת למפתחים המעוניינים לעבוד על הקוד.'
+            };
+            
+            alert(`ℹ️ מידע על הגרסה:\n\n${versionInfo[version]}`);
+        }
+
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.version-card');
+            
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+        });
+    </script>
+</body>
+</html> 

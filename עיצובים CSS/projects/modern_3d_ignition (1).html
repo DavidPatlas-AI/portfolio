@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turn Key to Start</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .dashboard {
+            background: linear-gradient(145deg, #2c2c2c 0%, #1a1a1a 100%);
+            padding: 60px;
+            border-radius: 30px;
+            border: 3px solid #3a3a3a;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9);
+        }
+
+        .ignition-area {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            margin: 0 auto;
+        }
+
+        .ignition-cylinder {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 30% 30%, #444 0%, #222 100%);
+            border-radius: 50%;
+            border: 4px solid #666;
+            box-shadow: 
+                inset 0 0 30px rgba(0, 0, 0, 0.8),
+                0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+
+        .key-hole {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 25px;
+            height: 5px;
+            background: #111;
+            border-radius: 3px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);
+        }
+
+        .key {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 12px;
+            background: linear-gradient(90deg, #888 0%, #ccc 30%, #888 70%, #555 100%);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transform-origin: 10px center;
+            box-shadow: 
+                0 3px 10px rgba(0, 0, 0, 0.6),
+                inset 0 1px 3px rgba(255, 255, 255, 0.3);
+            z-index: 10;
+        }
+
+        .key::before {
+            content: '';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle at 30% 30%, #666 0%, #333 100%);
+            border-radius: 50%;
+            border: 2px solid #555;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .key.position-1 {
+            transform: translate(-50%, -50%) rotate(0deg);
+        }
+
+        .key.position-2 {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        .key.position-3 {
+            transform: translate(-50%, -50%) rotate(90deg);
+        }
+
+        .key.position-4 {
+            transform: translate(-50%, -50%) rotate(135deg);
+        }
+
+        .position-labels {
+            position: absolute;
+            inset: -40px;
+            pointer-events: none;
+        }
+
+        .position-label {
+            position: absolute;
+            font-size: 12px;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .position-label.active {
+            color: #00ff88;
+            text-shadow: 0 0 8px #00ff88;
+        }
+
+        .label-off {
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .label-acc {
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+        }
+
+        .label-on {
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .label-start {
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+        }
+
+        .status-display {
+            margin: 40px 0 20px 0;
+            font-size: 20px;
+            font-weight: bold;
+            color: #888;
+            transition: all 0.3s ease;
+        }
+
+        .status-display.acc {
+            color: #ffaa00;
+            text-shadow: 0 0 10px #ffaa00;
+        }
+
+        .status-display.on {
+            color: #ff6600;
+            text-shadow: 0 0 10px #ff6600;
+        }
+
+        .status-display.start {
+            color: #00ff88;
+            text-shadow: 0 0 10px #00ff88;
+        }
+
+        .engine-display {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+            text-shadow: 0 0 5px #00ff00;
+            opacity: 0;
+            transition: all 0.5s ease;
+            margin-top: 20px;
+        }
+
+        .engine-display.active {
+            opacity: 1;
+            border-color: #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        .instructions {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #888;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .instructions span {
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        /* Glow effects */
+        .ignition-cylinder.active {
+            border-color: #00ff88;
+            box-shadow: 
+                inset 0 0 30px rgba(0, 0, 0, 0.8),
+                0 10px 30px rgba(0, 0, 0, 0.6),
+                0 0 25px rgba(0, 255, 136, 0.5);
+        }
+
+        .key:hover {
+            transform: translate(-50%, -50%) rotate(var(--rotation, 0deg)) scale(1.05);
+            box-shadow: 
+                0 5px 15px rgba(0, 0, 0, 0.8),
+                inset 0 1px 5px rgba(255, 255, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <h2 style="margin-bottom: 30px; color: #ccc;">Car Ignition System</h2>
+        
+        <div class="ignition-area">
+            <div class="ignition-cylinder" id="cylinder">
+                <div class="key-hole"></div>
+                <div class="key" id="key"></div>
+            </div>
+            
+            <div class="position-labels">
+                <div class="position-label label-off active">OFF</div>
+                <div class="position-label label-acc">ACC</div>
+                <div class="position-label label-on">ON</div>
+                <div class="position-label label-start">START</div>
+            </div>
+        </div>
+        
+        <div class="status-display" id="statusDisplay">Click key to turn - Engine OFF</div>
+        
+        <div class="engine-display" id="engineDisplay">
+            🚗 ENGINE STARTED<br>
+            ⚡ ALL SYSTEMS OPERATIONAL<br>
+            🔥 READY TO DRIVE<br>
+            🛣️ ENJOY YOUR RIDE!
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <span>Click</span> the key to turn it • Each click advances position • <span>START</span> position starts engine
+    </div>
+
+    <script>
+        class KeyIgnition {
+            constructor() {
+                this.position = 0; // 0=OFF, 1=ACC, 2=ON, 3=START
+                this.positions = ['OFF', 'ACC', 'ON', 'START'];
+                this.rotations = [0, 45, 90, 135];
+                
+                this.key = document.getElementById('key');
+                this.cylinder = document.getElementById('cylinder');
+                this.statusDisplay = document.getElementById('statusDisplay');
+                this.engineDisplay = document.getElementById('engineDisplay');
+                
+                this.setupEventListeners();
+                this.updateDisplay();
+            }
+
+            setupEventListeners() {
+                this.key.addEventListener('click', () => {
+                    this.turnKey();
+                });
+
+                // Keyboard support - Space to turn key
+                document.addEventListener('keydown', (e) => {
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        this.turnKey();
+                    }
+                });
+            }
+
+            turnKey() {
+                // Advance position
+                this.position = (this.position + 1) % 4;
+                
+                // If we reach START (position 3), automatically return to ON after 1 second
+                if (this.position === 3) {
+                    setTimeout(() => {
+                        this.position = 2; // Back to ON
+                        this.updateDisplay();
+                    }, 1000);
+                }
+                
+                this.updateDisplay();
+                this.playSound();
+                
+                // Haptic feedback
+                if (navigator.vibrate) {
+                    if (this.position === 3) {
+                        navigator.vibrate([200, 100, 200]); // Engine start
+                    } else {
+                        navigator.vibrate(50); // Key turn
+                    }
+                }
+            }
+
+            updateDisplay() {
+                const currentPos = this.positions[this.position];
+                const rotation = this.rotations[this.position];
+                
+                // Update key rotation
+                this.key.style.setProperty('--rotation', rotation + 'deg');
+                this.key.className = `key position-${this.position + 1}`;
+                
+                // Update position labels
+                document.querySelectorAll('.position-label').forEach(label => {
+                    label.classList.remove('active');
+                });
+                
+                const activeLabel = document.querySelector(`.label-${currentPos.toLowerCase()}`);
+                if (activeLabel) {
+                    activeLabel.classList.add('active');
+                }
+                
+                // Update status display
+                let statusText = '';
+                let statusClass = '';
+                
+                switch (this.position) {
+                    case 0: // OFF
+                        statusText = 'Engine OFF - Click key to turn';
+                        statusClass = '';
+                        this.cylinder.classList.remove('active');
+                        this.engineDisplay.classList.remove('active');
+                        break;
+                    case 1: // ACC
+                        statusText = 'Accessories ON - Electronics Active';
+                        statusClass = 'acc';
+                        this.cylinder.classList.remove('active');
+                        this.engineDisplay.classList.remove('active');
+                        break;
+                    case 2: // ON
+                        statusText = 'Ignition ON - Ready to Start';
+                        statusClass = 'on';
+                        this.cylinder.classList.remove('active');
+                        this.engineDisplay.classList.remove('active');
+                        break;
+                    case 3: // START
+                        statusText = 'ENGINE STARTING...';
+                        statusClass = 'start';
+                        this.cylinder.classList.add('active');
+                        this.engineDisplay.classList.add('active');
+                        break;
+                }
+                
+                this.statusDisplay.textContent = statusText;
+                this.statusDisplay.className = `status-display ${statusClass}`;
+            }
+
+            playSound() {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioContext.createOscillator();
+                    const gainNode = audioContext.createGain();
+                    
+                    oscillator.connect(gainNode);
+                    gainNode.connect(audioContext.destination);
+                    
+                    if (this.position === 3) {
+                        // Engine start sound
+                        oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                        oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.8);
+                        gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.05, audioContext.currentTime + 0.8);
+                        oscillator.start();
+                        oscillator.stop(audioContext.currentTime + 0.8);
+                    } else {
+                        // Key turn sound
+                        oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+                        oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.2);
+                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                        oscillator.start();
+                        oscillator.stop(audioContext.currentTime + 0.2);
+                    }
+                } catch (err) {
+                    console.log('Audio not available');
+                }
+            }
+        }
+
+        // Initialize the system
+        window.addEventListener('load', () => {
+            new KeyIgnition();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hazard Lights Button</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+        }
+
+        .title {
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 60px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .button-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hazard-button {
+            width: 200px;
+            height: 80px;
+            border-radius: 15px;
+            border: 3px solid #666;
+            background: linear-gradient(145deg, #4a4a4a, #2a2a2a);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.6),
+                inset 0 2px 5px rgba(255, 255, 255, 0.1),
+                inset 0 -2px 5px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hazard-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 25px rgba(0, 0, 0, 0.8),
+                inset 0 2px 8px rgba(255, 255, 255, 0.15),
+                inset 0 -2px 8px rgba(0, 0, 0, 0.4);
+        }
+
+        .hazard-button:active {
+            transform: translateY(0px);
+            box-shadow: 
+                0 4px 10px rgba(0, 0, 0, 0.6),
+                inset 0 2px 5px rgba(0, 0, 0, 0.3),
+                inset 0 -1px 3px rgba(255, 255, 255, 0.1);
+        }
+
+        .triangle-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .triangle {
+            width: 0;
+            height: 0;
+            border-left: 25px solid transparent;
+            border-right: 25px solid transparent;
+            border-bottom: 35px solid #333;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .triangle::before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: -20px;
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 28px solid #555;
+            transition: all 0.3s ease;
+        }
+
+        /* Active state - when hazard lights are ON */
+        .hazard-button.active {
+            background: linear-gradient(145deg, #ff6b35, #cc5528);
+            border-color: #ff8c42;
+            animation: hazard-pulse 1s infinite;
+        }
+
+        .hazard-button.active .triangle {
+            border-bottom-color: #fff;
+            filter: drop-shadow(0 0 8px #ffaa42);
+            animation: triangle-flash 1s infinite;
+        }
+
+        .hazard-button.active .triangle::before {
+            border-bottom-color: #ffdd88;
+        }
+
+        /* Warning indicators on sides */
+        .warning-indicator {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #333;
+            border-radius: 50%;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: all 0.3s ease;
+            border: 2px solid #555;
+        }
+
+        .warning-indicator.left {
+            left: -40px;
+        }
+
+        .warning-indicator.right {
+            right: -40px;
+        }
+
+        .hazard-button.active .warning-indicator {
+            background: #ff6b35;
+            border-color: #ff8c42;
+            box-shadow: 0 0 15px #ff6b35;
+            animation: indicator-flash 1s infinite;
+        }
+
+        /* Flashing animations */
+        @keyframes hazard-pulse {
+            0%, 100% {
+                box-shadow: 
+                    0 8px 20px rgba(0, 0, 0, 0.6),
+                    inset 0 2px 5px rgba(255, 255, 255, 0.1),
+                    inset 0 -2px 5px rgba(0, 0, 0, 0.3),
+                    0 0 30px rgba(255, 107, 53, 0.5);
+            }
+            50% {
+                box-shadow: 
+                    0 8px 20px rgba(0, 0, 0, 0.6),
+                    inset 0 2px 5px rgba(255, 255, 255, 0.1),
+                    inset 0 -2px 5px rgba(0, 0, 0, 0.3),
+                    0 0 50px rgba(255, 107, 53, 0.8);
+            }
+        }
+
+        @keyframes triangle-flash {
+            0%, 100% {
+                filter: drop-shadow(0 0 8px #ffaa42);
+            }
+            50% {
+                filter: drop-shadow(0 0 20px #ffdd88) drop-shadow(0 0 30px #ff6b35);
+            }
+        }
+
+        @keyframes indicator-flash {
+            0%, 100% {
+                background: #ff6b35;
+                box-shadow: 0 0 15px #ff6b35;
+            }
+            50% {
+                background: #ffaa42;
+                box-shadow: 0 0 25px #ffaa42, 0 0 35px #ff6b35;
+            }
+        }
+
+        .status-text {
+            margin-top: 40px;
+            color: #888;
+            font-size: 24px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .status-text.active {
+            color: #ff6b35;
+            text-shadow: 0 0 10px #ff6b35;
+            animation: status-flash 1s infinite;
+        }
+
+        @keyframes status-flash {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        /* Ripple effect */
+        .ripple {
+            position: absolute;
+            border-radius: 15px;
+            background: rgba(255, 107, 53, 0.3);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+
+        /* Sound wave effect when active */
+        .sound-wave {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border: 3px solid transparent;
+            border-radius: 15px;
+            opacity: 0;
+        }
+
+        .hazard-button.active .sound-wave {
+            animation: sound-wave 1s infinite;
+        }
+
+        @keyframes sound-wave {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                border-color: #ff6b35;
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1.5);
+                border-color: transparent;
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Hazard Lights</h1>
+        
+        <div class="button-container">
+            <div class="hazard-button" id="hazardButton">
+                <div class="warning-indicator left"></div>
+                <div class="triangle-container">
+                    <div class="triangle"></div>
+                </div>
+                <div class="warning-indicator right"></div>
+                <div class="sound-wave"></div>
+            </div>
+        </div>
+        
+        <div class="status-text" id="statusText">Hazard Lights Off</div>
+    </div>
+
+    <script>
+        const hazardButton = document.getElementById('hazardButton');
+        const statusText = document.getElementById('statusText');
+        let isHazardActive = false;
+
+        hazardButton.addEventListener('click', function(e) {
+            // Create ripple effect
+            const ripple = document.createElement('span');
+            const rect = hazardButton.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+            
+            hazardButton.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+
+            // Toggle hazard state
+            isHazardActive = !isHazardActive;
+            
+            if (isHazardActive) {
+                hazardButton.classList.add('active');
+                statusText.textContent = 'Hazard Lights On';
+                statusText.classList.add('active');
+                
+                // Play a clicking sound effect (if you want to add audio)
+                // You can uncomment this and add an audio file
+                // new Audio('click.mp3').play();
+            } else {
+                hazardButton.classList.remove('active');
+                statusText.textContent = 'Hazard Lights Off';
+                statusText.classList.remove('active');
+            }
+        });
+
+        // Add keyboard support (H key to toggle)
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'KeyH' || e.code === 'Space') {
+                e.preventDefault();
+                hazardButton.click();
+            }
+        });
+
+        // Auto-click effect for demonstration (remove if not needed)
+        // setTimeout(() => {
+        //     hazardButton.click();
+        // }, 2000);
+    </script>
+</body>
+</html>

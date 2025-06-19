@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theme Toggle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #f5f5f5;
+        }
+
+        body.dark {
+            background: #000000;
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: 300;
+            margin-bottom: 4rem;
+            color: #333;
+            transition: color 0.5s ease;
+            letter-spacing: -1px;
+        }
+
+        body.dark .title {
+            color: white;
+        }
+
+        .toggle-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .toggle {
+            width: 140px;
+            height: 70px;
+            background: rgba(200, 200, 200, 0.6);
+            border-radius: 35px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        body.dark .toggle {
+            background: rgba(50, 50, 50, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .toggle-ball {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(145deg, #ffffff, #e0e0e0);
+            border-radius: 50%;
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 12px rgba(0, 0, 0, 0.3),
+                0 2px 4px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body.dark .toggle-ball {
+            left: 75px;
+        }
+
+        .moon-icon {
+            width: 28px;
+            height: 28px;
+            transition: all 0.4s ease;
+            opacity: 1;
+            transform: rotate(0deg);
+        }
+
+        body.dark .moon-icon {
+            opacity: 0;
+            transform: rotate(180deg);
+        }
+
+        .sun-icon {
+            width: 28px;
+            height: 28px;
+            position: absolute;
+            transition: all 0.4s ease;
+            opacity: 0;
+            transform: rotate(-180deg);
+        }
+
+        body.dark .sun-icon {
+            opacity: 1;
+            transform: rotate(0deg);
+        }
+
+        .toggle:hover .toggle-ball {
+            transform: scale(1.05);
+        }
+
+        .toggle:active .toggle-ball {
+            transform: scale(0.95);
+        }
+
+        /* Background pattern */
+        .bg-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 120, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 120, 255, 0.3) 0%, transparent 50%);
+            transition: opacity 0.5s ease;
+        }
+
+        body.dark .bg-pattern {
+            opacity: 0.1;
+        }
+
+        /* Animated particles */
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 4s infinite ease-in-out;
+        }
+
+        body.dark .particle {
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        .particle:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 30%; right: 15%; animation-delay: 1s; }
+        .particle:nth-child(3) { bottom: 40%; left: 20%; animation-delay: 2s; }
+        .particle:nth-child(4) { bottom: 20%; right: 25%; animation-delay: 3s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); opacity: 0.6; }
+            50% { transform: translateY(-15px); opacity: 1; }
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+                margin-bottom: 3rem;
+            }
+            
+            .toggle {
+                width: 120px;
+                height: 60px;
+            }
+            
+            .toggle-ball {
+                width: 50px;
+                height: 50px;
+            }
+            
+            body.light .toggle-ball {
+                left: 65px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+
+    <div class="container">
+        <h1 class="title">Theme Toggle</h1>
+        
+        <div class="toggle-container">
+            <div class="toggle" onclick="toggleTheme()">
+                <div class="toggle-ball">
+                    <!-- Moon Icon -->
+                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313-12.454z" fill="#64748b"/>
+                    </svg>
+                    <!-- Sun Icon -->
+                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="4" fill="#fbbf24"/>
+                        <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 6.34L4.93 4.93M19.07 19.07l-1.41-1.41" stroke="#fbbf24" stroke-width="2"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('dark');
+        }
+    </script>
+</body>
+</html>
