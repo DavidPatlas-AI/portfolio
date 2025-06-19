@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>מרכז הבודקים - דף הבית</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;500;700&display=swap');
+        body {
+            margin: 0 auto;
+            padding: 0 8px;
+            box-sizing: border-box;
+            font-family: 'Heebo', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #fffbe4 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            color: #232526;
+            text-align: center;
+            max-width: 900px;
+            position: relative;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            background: url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><circle fill="%23ffe082" fill-opacity="0.08" cx="80" cy="80" r="60"/><circle fill="%23ffd700" fill-opacity="0.07" cx="80%25" cy="90%25" r="120"/></svg>') repeat;
+            pointer-events: none;
+        }
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 6px;
+            margin-top: 24px;
+            letter-spacing: 1px;
+            color: #ffd700;
+            text-shadow: 0 2px 8px #fffde455;
+            font-weight: 700;
+        }
+        .subtitle {
+            font-size: 1.1em;
+            color: #232526;
+            margin-bottom: 18px;
+            font-weight: 500;
+        }
+        .sections-container {
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        section {
+            background: rgba(255,255,255,0.92);
+            border-radius: 32px;
+            box-shadow: 0 4px 24px 0 #ffd70022, 0 1.5px 8px #fffbe4cc;
+            padding: 18px 12px 12px 12px;
+            margin-bottom: 0;
+            border-bottom: 1px solid #ffe08244;
+            position: relative;
+            min-width: 0;
+            animation: fadeInSection 0.7s;
+            transition: box-shadow 0.2s, background 0.2s;
+        }
+        @keyframes fadeInSection {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        section:hover {
+            box-shadow: 0 8px 32px 0 #ffd70055, 0 2px 12px #fffbe4cc;
+            background: rgba(255,255,255,0.98);
+        }
+        section:not(:last-child)::after {
+            content: '';
+            display: block;
+            height: 1px;
+            background: linear-gradient(90deg, #ffd70033 0%, #fffde4 100%);
+            margin: 18px 0 0 0;
+        }
+        details {
+            margin-bottom: 0;
+        }
+        summary {
+            outline: none;
+            list-style: none;
+            cursor: pointer;
+            font-size: 1.15em;
+            font-weight: bold;
+            color: #ffd700;
+            background: linear-gradient(90deg, #fffbe4 60%, #ffd70022 100%);
+            border-radius: 22px;
+            padding: 12px 0 12px 0;
+            margin-bottom: 7px;
+            box-shadow: 0 2px 8px #ffd70022;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            letter-spacing: 1px;
+            gap: 8px;
+        }
+        summary::-webkit-details-marker { display: none; }
+        summary:after {
+            content: "▼";
+            font-size: 0.9em;
+            color: #ffd700;
+            margin-right: 12px;
+            transition: transform 0.2s;
+        }
+        details[open] summary:after {
+            transform: rotate(180deg);
+        }
+        .buttons-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 5px;
+        }
+        .gold-button, .sub-button {
+            background: linear-gradient(145deg, #ffe082 60%, #ffd700 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 22px;
+            font-size: 1.08em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s, box-shadow 0.2s;
+            color: #232526;
+            box-shadow: 0 2px 10px #ffd70044;
+            margin-bottom: 0;
+            min-width: 130px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .gold-button:hover, .sub-button:hover {
+            background: linear-gradient(145deg, #ffd700 60%, #ffe082 100%);
+            color: #232526;
+            transform: scale(1.06);
+            box-shadow: 0 4px 18px #ffd70077, 0 0 8px #fffde4aa;
+        }
+        .tool-row {
+            position: relative;
+            background: rgba(255,255,255,0.70);
+            border-radius: 18px;
+            margin: 0 0 6px 0;
+            padding: 10px 0 8px 0;
+            box-shadow: 0 1px 4px #ffd70022;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            min-width: 0;
+        }
+        .tool-row button {
+            transition: box-shadow 0.2s, color 0.2s, background 0.2s, transform 0.2s;
+        }
+        .fav-btn, .copy-btn, .share-btn, .prev-tool-btn, .next-tool-btn {
+            margin-right: 2px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #fffbe4 60%, #ffd700 100%);
+            color: #232526;
+            border: none;
+            width: 38px;
+            height: 38px;
+            font-size: 1.15em;
+            box-shadow: 0 1px 4px #ffd70022;
+            transition: background 0.2s, color 0.2s, transform 0.2s;
+        }
+        .fav-btn:hover, .copy-btn:hover, .share-btn:hover, .prev-tool-btn:hover, .next-tool-btn:hover {
+            color: #ffd700;
+            background: #232526;
+            transform: scale(1.13);
+        }
+        .prev-tool-btn[disabled], .next-tool-btn[disabled] {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+        .footer-links {
+            margin-top: 10px;
+        }
+        .footer-links a {
+            color: #ffd700;
+            text-decoration: none;
+            margin: 0 6px;
+            font-weight: bold;
+            transition: color 0.2s;
+        }
+        .footer-links a:hover {
+            color: #fffde4;
+        }
+        .main-header {
+            animation: fadeInDown 1.2s;
+        }
+        .logo {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px #ffd70055;
+            background: #fffde4;
+            object-fit: cover;
+            border: 3px solid #ffd700;
+        }
+        .header-btns {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .header-btns button {
+            margin: 0;
+        }
+        .fade-section {
+            animation: fadeInSection 0.5s;
+        }
+        .hidden-row { display: none !important; }
+        .active-btn {
+            border: 2px solid #ffd700;
+            background: #fffbe4;
+            color: #ffd700;
+        }
+        #datetime-bar {
+            display: inline-block;
+            min-width: 260px;
+            background: linear-gradient(90deg, #ffe082 0%, #fffde4 100%);
+            color: #232526;
+            font-size: 1.08em;
+            font-weight: bold;
+            letter-spacing: 1px;
+            padding: 7px 24px 7px 24px;
+            text-align: right;
+            box-shadow: 0 2px 8px #ffd70033;
+            position: relative;
+            top: 18px;
+            border-radius: 0 0 22px 22px;
+            margin-bottom: 18px;
+            z-index: 10;
+        }
+        @media (max-width: 700px) {
+            body {
+                max-width: 100vw;
+                padding: 0 2vw;
+            }
+            h1 { font-size: 1.1em; margin-top: 10px; }
+            .sections-container {
+                max-width: 100vw;
+                padding: 0;
+            }
+            .gold-button, .sub-button { min-width: 70px; font-size: 0.92em; padding: 8px 8px; }
+            section { padding: 7px 1vw 7px 1vw; }
+            .tool-row { padding: 4px 0 4px 0; }
+            .quick-nav { flex-wrap: wrap; gap: 7px; padding: 4px 0; }
+            .faq-section, .suggest-section { padding: 8px 2vw 8px 2vw; }
+            .logo { width: 32px; height: 32px; }
+            #datetime-bar { font-size: 0.95em; padding: 6px 10px 6px 10px; min-width: 120px; }
+        }
+        /* מצב בהיר */
+        body.light-mode {
+            background: linear-gradient(135deg, #fffde4 0%, #ffe082 100%);
+            color: #232526;
+        }
+        body.light-mode section {
+            background: rgba(255,255,255,0.99);
+            box-shadow: 0 2px 12px 0 #ffd70022;
+            border-bottom: 1px solid #ffd70033;
+        }
+        body.light-mode .tool-row {
+            background: rgba(255,255,255,0.85);
+            box-shadow: 0 1px 4px #ffd70022;
+        }
+        body.light-mode .gold-button, body.light-mode .sub-button {
+            color: #232526;
+            background: linear-gradient(145deg, #ffd700 60%, #fffde4 100%);
+        }
+        body.light-mode .gold-button:hover, body.light-mode .sub-button:hover {
+            background: linear-gradient(145deg, #fffde4 60%, #ffd700 100%);
+            color: #232526;
+        }
+        body.light-mode .fav-btn, body.light-mode .copy-btn, body.light-mode .share-btn, body.light-mode .prev-tool-btn, body.light-mode .next-tool-btn {
+            background: linear-gradient(145deg, #ffd700 60%, #fffbe4 100%);
+            color: #232526;
+        }
+        body.light-mode .fav-btn:hover, body.light-mode .copy-btn:hover, body.light-mode .share-btn:hover, body.light-mode .prev-tool-btn:hover, body.light-mode .next-tool-btn:hover {
+            background: #232526;
+            color: #ffd700;
+        }
+        body.light-mode #datetime-bar {
+            background: linear-gradient(90deg, #fffde4 0%, #ffd700 100%);
+            color: #232526;
+            border-bottom: 1.5px solid #ffd700;
+        }
+        body.light-mode .footer-links a {
+            color: #232526;
+        }
+        body.light-mode .footer-links a:hover {
+            color: #ffd700;
+        }
+        /* תצוגת רשימה */
+        body.list-view .buttons-container {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        body.list-view .tool-row {
+            justify-content: flex-start;
+        }
+    </style>
+</head>
+<body>
+    <div id="datetime-bar"></div>
+    <div id="top-message"></div>
+    <header class="main-header">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="בודק לוגו" class="logo">
+        <h1>🎯 מרכז הבודקים החכם</h1>
+        <div class="header-btns">
+            <button id="theme-toggle" title="החלף מצב כהה/בהיר">🌙</button>
+            <button id="font-plus" title="הגדל טקסט">A+</button>
+            <button id="font-minus" title="הקטן טקסט">A-</button>
+            <button id="print-btn" title="הדפס דף" style="font-size:1.3em; margin-right:10px;">🖨️</button>
+            <button id="focus-mode-btn" title="מצב פוקוס">🛡️</button>
+            <button id="toggle-view-btn" title="החלף תצוגה">🔳</button>
+            <button id="show-favs-btn" title="הצג מועדפים בלבד">⭐</button>
+            <button id="show-history-btn" title="הצג היסטוריה">🕓</button>
+            <button id="show-all-btn" title="הצג את כל הקטגוריות" style="font-size:1em; margin-left:10px;">הצג הכל</button>
+        </div>
+    </header>
+    <nav class="quick-nav">
+        <a href="#id-section">ת.ז.</a>
+        <a href="#phone-section">טלפון</a>
+        <a href="#car-section">רכב</a>
+        <a href="#bank-section">בנק</a>
+        <a href="#other-section">נוספים</a>
+        <a href="#home-section">דפי בית</a>
+    </nav>
+    <div class="subtitle">בחרו כלי בדיקה מהקבוצות למטה. כל הכלים זמינים לשימוש מיידי!</div>
+    <input id="search-input" type="text" placeholder="חפש כלי..." autocomplete="off">
+    <div class="sections-container" id="sections-container">
+        <section id="id-section" class="category-section">
+            <button class="hide-cat-btn" title="הסתר קטגוריה">הסתר</button>
+            <details open>
+                <summary>🆔 בודק תעודת זהות</summary>
+                <div class="buttons-container">
+                    <div class="tool-row">
+                        <button class="prev-tool-btn" title="כלי קודם">⬅️</button>
+                        <button class="sub-button" onclick="location.href='tz-validator-html (3).html'">גרסה 3</button>
+                        <button class="next-tool-btn" title="כלי הבא">➡️</button>
+                        <button class="fav-btn" title="הוסף למועדפים">★</button>
+                        <button class="copy-btn" title="העתק שם">📋</button>
+                        <button class="share-btn" title="שתף כלי">📤</button>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section id="phone-section" class="category-section">
+            <button class="hide-cat-btn" title="הסתר קטגוריה">הסתר</button>
+            <details open>
+                <summary>📞 בודק מספר טלפון</summary>
+                <div class="buttons-container">
+                    <div class="tool-row">
+                        <button class="prev-tool-btn" title="כלי קודם">⬅️</button>
+                        <button class="sub-button" onclick="location.href='phone-number-validator.html'">גרסה ראשית</button>
+                        <button class="next-tool-btn" title="כלי הבא">➡️</button>
+                        <button class="fav-btn" title="הוסף למועדפים">★</button>
+                        <button class="copy-btn" title="העתק שם">📋</button>
+                        <button class="share-btn" title="שתף כלי">📤</button>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section id="car-section" class="category-section">
+            <button class="hide-cat-btn" title="הסתר קטגוריה">הסתר</button>
+            <details open>
+                <summary>🚗 בודק מספר רכב</summary>
+                <div class="buttons-container">
+                    <div class="tool-row">
+                        <button class="prev-tool-btn" title="כלי קודם">⬅️</button>
+                        <button class="sub-button" onclick="location.href='car-number-validator-html.html'">בודק מספר רכב (HTML)</button>
+                        <button class="next-tool-btn" title="כלי הבא">➡️</button>
+                        <button class="fav-btn" title="הוסף למועדפים">★</button>
+                        <button class="copy-btn" title="העתק שם">📋</button>
+                        <button class="share-btn" title="שתף כלי">📤</button>
+                    </div>
+                </div>
+            </details>
+        </section>
+        <section id="bank-section" class="category-section">
+            <button class="hide-cat-btn" title="הסתר קטגוריה">הסתר</button>
+            <div class="buttons-container">
+                <div class="tool-row">
+                    <button class="prev-tool-btn" title="כלי קודם">⬅️</button>
+                    <button class="gold-button" onclick="location.href='bank-account-validator.html'">🏦 בודק חשבון בנק</button>
+                    <button class="next-tool-btn" title="כלי הבא">➡️</button>
+                    <button class="fav-btn" title="הוסף למועדפים">★</button>
+                    <button class="copy-btn" title="העתק שם">📋</button>
+                    <button class="share-btn" title="שתף כלי">📤</button>
+                </div>
+            </div>
+        </section>
+        <section id="other-section" class="category-section">
+            <button class="hide-cat-btn" title="הסתר קטגוריה">הסתר</button>
+            <div class="buttons-container">
+                <div class="tool-row">
+                    <button class="prev-tool-btn" title="כלי קודם">⬅️</button>
+                    <button class="gold-button" onclick="location.href='barcode-ean13-validator.html'">🔢 בודק ברקוד EAN13</button>
+                    <button class="next-tool-btn" title="כלי הבא">➡️</button>
+                    <button class="fav-btn" title="הוסף למועדפים">★</button>
+                    <button class="copy-btn" title="העתק שם">📋</button>
+                    <button class="share-btn" title="שתף כלי">📤</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='company-tax-id-validator.html'">🏢 בודק ח.פ./עוסק מורשה</button>
+                    <button class="fav-btn" title="הוסף למועדפים">★</button>
+                    <button class="copy-btn" title="העתק שם">📋</button>
+                    <button class="share-btn" title="שתף כלי">📤</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='passport-validator-artifact.html'">🛂 בודק דרכון</button>
+                    <button class="fav-btn" title="הוסף למועדפים">★</button>
+                    <button class="copy-btn" title="העתק שם">📋</button>
+                    <button class="share-btn" title="שתף כלי">📤</button>
+                </div>
+            </div>
+        </section>
+        <section id="home-section" class="category-section">
+            <button class="hide-cat-btn" title="הסתר קטגוריה">הסתר</button>
+            <details open>
+                <summary>🏠 דפי בית</summary>
+                <div class="buttons-container">
+                    <div class="tool-row">
+                        <button class="prev-tool-btn" title="כלי קודם">⬅️</button>
+                        <button class="sub-button" onclick="location.href='homepage.html'">דף הבית (אתה כאן)</button>
+                        <button class="next-tool-btn" title="כלי הבא">➡️</button>
+                        <button class="fav-btn" title="הוסף למועדפים">★</button>
+                        <button class="copy-btn" title="העתק שם">📋</button>
+                        <button class="share-btn" title="שתף כלי">📤</button>
+                    </div>
+                    <div class="tool-row">
+                        <button class="sub-button" onclick="location.href='secure_homepage.html'">דף בית מאובטח</button>
+                        <button class="fav-btn" title="הוסף למועדפים">★</button>
+                        <button class="copy-btn" title="העתק שם">📋</button>
+                        <button class="share-btn" title="שתף כלי">📤</button>
+                    </div>
+                </div>
+            </details>
+        </section>
+    </div>
+    <div id="loader" style="display:none"><div class="lds-dual-ring"></div></div>
+    <div id="history-box"><h3>היסטוריית בדיקות</h3><ul id="history-list"></ul></div>
+    <nav class="external-links">
+        <a href="https://govextra.gov.il/piba/piba-services/first-page/" target="_blank">רשות האוכלוסין</a>
+        <a href="https://www.gov.il/he/departments/israel_tax_authority" target="_blank">רשות המיסים</a>
+        <a href="https://www.police.gov.il/" target="_blank">משטרת ישראל</a>
+    </nav>
+    <button id="scrollTopBtn" title="גלול לראש הדף">⬆️</button>
+    <footer>
+        <p>© 2025 - כל הזכויות שמורות | נבנה באהבה 💡</p>
+        <div class="footer-links">
+            <a href="#" title="מדיניות פרטיות">מדיניות פרטיות</a> |
+            <a href="mailto:susp4514@gmail.com" title="צור קשר">צור קשר</a>
+        </div>
+    </footer>
+    <section id="faq-section" class="faq-section">
+        <details>
+            <summary>❓ שאלות נפוצות (FAQ)</summary>
+            <div class="faq-content">
+                <b>איך משתמשים בכלי?</b><br>פשוט לוחצים על הכפתור של הכלי הרצוי.<br><br>
+                <b>איך מוסיפים כלי למועדפים?</b><br>לוחצים על כוכב ליד הכלי.<br><br>
+                <b>איך משתפים כלי?</b><br>לוחצים על כפתור השיתוף ליד הכלי.<br><br>
+                <b>איך מחפשים כלי?</b><br>משתמשים בשדה החיפוש בראש הדף.<br><br>
+                <b>איך מדפיסים?</b><br>לוחצים על כפתור ההדפסה בראש הדף.<br><br>
+                <b>איך מציעים כלי חדש?</b><br>ממלאים את הטופס למטה.
+            </div>
+        </details>
+    </section>
+    <section id="suggest-section" class="suggest-section">
+        <details>
+            <summary>💡 המלץ על כלי/פיצ'ר חדש</summary>
+            <form id="suggest-form" style="margin-top:10px;">
+                <input type="text" id="suggest-name" placeholder="שם מלא" required style="margin-bottom:7px; width:220px;">
+                <br>
+                <input type="email" id="suggest-email" placeholder="אימייל (לא חובה)" style="margin-bottom:7px; width:220px;">
+                <br>
+                <textarea id="suggest-msg" placeholder="הצעתך..." required style="width:260px; height:60px; margin-bottom:7px;"></textarea>
+                <br>
+                <button type="submit" class="gold-button">שלח המלצה</button>
+                <span id="suggest-status" style="margin-right:10px;"></span>
+            </form>
+        </details>
+    </section>
+    <!-- כפתורים לדפים נוספים -->
+    <section id="more-pages-section" class="category-section" style="margin-top:32px;">
+        <details open>
+            <summary>🔗 דפים נוספים בתיקייה</summary>
+            <div class="buttons-container">
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='bank-account-validator-interactive.html'">בודק חשבון בנק אינטראקטיבי</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='phone-number-validator-artifact.html'">בודק טלפון (ארטיפקט)</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='phone-number-validator (1).html'">בודק טלפון (גרסה 1)</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='tz-validator-html (1).html'">בודק ת.ז. (גרסה 1)</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='tz-validator-html (2).html'">בודק ת.ז. (גרסה 2)</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='tz-validator-html.html'">בודק ת.ז. (גרסה ישנה)</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='car-number-validator-ui.html'">בודק רכב (UI)</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='id-analyzer-final.tsx'">Id Analyzer Final (TSX)</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='id-analyzer-simple.tsx'">Id Analyzer Simple (TSX)</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='id-analyzer.tsx'">Id Analyzer (TSX)</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='id-analyzer-complete.tsx'">Id Analyzer Complete (TSX)</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='super-id-analyzer.tsx'">Super Id Analyzer (TSX)</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='Homepage_GoldenButtons.tsx'">Homepage Golden Buttons (TSX)</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='דף_בית_כפתורים_זהובים_מעודכן.tsx'">דף בית כפתורים זהובים מעודכן (TSX)</button>
+                </div>
+                <div class="tool-row">
+                    <button class="gold-button" onclick="location.href='דף_בית_כפתורים_זהובים.tsx'">דף בית כפתורים זהובים (TSX)</button>
+                </div>
+            </div>
+        </details>
+    </section>
+    <script>
+        // הודעת ברוך הבא/טיפ יומי
+        const tips = [
+            'ברוך הבא למרכז הבודקים! 🤩',
+            'טיפ: אפשר לחפש כלי לפי שם בשדה החיפוש.',
+            'חדש! אפשר להוסיף כלים למועדפים.',
+            'השתמש בכפתור ⬆️ כדי לחזור לראש הדף.',
+            'העתק שם כלי בלחיצה על 📋.',
+            'היסטוריית בדיקות נשמרת בדפדפן שלך.'
+        ];
+        let tipIdx = 0;
+        function rotateTip() {
+            document.getElementById('top-message').textContent = tips[tipIdx];
+            tipIdx = (tipIdx + 1) % tips.length;
+        }
+        setInterval(rotateTip, 5000);
+        rotateTip();
+        // Dark/Light Mode
+        const themeBtn = document.getElementById('theme-toggle');
+        themeBtn.onclick = function() {
+            document.body.classList.toggle('light-mode');
+            themeBtn.textContent = document.body.classList.contains('light-mode') ? '☀️' : '🌙';
+        };
+        // הגדלה/הקטנת טקסט
+        document.getElementById('font-plus').onclick = function() {
+            document.body.style.fontSize = (parseFloat(getComputedStyle(document.body).fontSize) + 2) + 'px';
+        };
+        document.getElementById('font-minus').onclick = function() {
+            document.body.style.fontSize = (parseFloat(getComputedStyle(document.body).fontSize) - 2) + 'px';
+        };
+        // חיפוש מהיר (משופר)
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('input', function() {
+            const val = this.value.trim();
+            const allSections = document.querySelectorAll('.sections-container section');
+            const allDetails = document.querySelectorAll('.sections-container details');
+            const allButtons = document.querySelectorAll('.gold-button, .sub-button');
+            if (!val) {
+                allSections.forEach(e => e.style.display = '');
+                allDetails.forEach(d => { d.open = false; d.style.display = ''; });
+                allButtons.forEach(b => b.style.display = '');
+                return;
+            }
+            allButtons.forEach(btn => {
+                if (btn.textContent.includes(val)) {
+                    btn.style.display = '';
+                    const details = btn.closest('details');
+                    if (details) details.open = true;
+                    btn.closest('section, details').style.display = '';
+                } else {
+                    btn.style.display = 'none';
+                }
+            });
+            allSections.forEach(sec => {
+                if (!sec.querySelector('.gold-button:not([style*="display: none"]), .sub-button:not([style*="display: none"])')) {
+                    sec.style.display = 'none';
+                }
+            });
+            allDetails.forEach(details => {
+                if (!details.querySelector('.gold-button:not([style*="display: none"]), .sub-button:not([style*="display: none"])')) {
+                    details.style.display = 'none';
+                } else {
+                    details.style.display = '';
+                }
+            });
+        });
+        // Tooltip הסבר לכל כפתור
+        const tooltips = {
+            'גרסה ראשית': 'הגרסה המומלצת והמעודכנת ביותר לכלי',
+            'גרסה 1': 'גרסה ישנה יותר של הכלי',
+            'גרסה 2': 'גרסה ישנה יותר של הכלי',
+            'גרסה 3': 'גרסה ישנה יותר של הכלי',
+            'בודק מספר רכב (HTML)': 'בדיקת מספר רכב בגרסת HTML',
+            'בודק מספר רכב (UI)': 'בדיקת מספר רכב בגרסת UI',
+            'בודק חשבון בנק': 'בדיקת תקינות חשבון בנק',
+            'בודק חשבון בנק אינטראקטיבי': 'בדיקת חשבון בנק עם ממשק אינטראקטיבי',
+            'בודק ברקוד EAN13': 'בדיקת תקינות ברקוד EAN13',
+            'בודק ח.פ./עוסק מורשה': 'בדיקת מספר ח.פ./עוסק מורשה',
+            'בודק דרכון': 'בדיקת תקינות מספר דרכון',
+            'דף הבית (אתה כאן)': 'חזרה לדף הבית הראשי',
+            'דף בית מאובטח': 'גרסה מאובטחת של דף הבית',
+        };
+        document.querySelectorAll('.gold-button, .sub-button').forEach(btn => {
+            btn.title = tooltips[btn.textContent.trim()] || btn.textContent.trim();
+        });
+        // כפתור גלילה לראש הדף
+        const scrollBtn = document.getElementById('scrollTopBtn');
+        window.onscroll = function() {
+            if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                scrollBtn.style.display = 'block';
+            } else {
+                scrollBtn.style.display = 'none';
+            }
+        };
+        scrollBtn.onclick = function() {
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        };
+        // Loader דמו
+        function showLoader() {
+            document.getElementById('loader').style.display = 'flex';
+            setTimeout(() => document.getElementById('loader').style.display = 'none', 1200);
+        }
+        document.querySelectorAll('.gold-button, .sub-button').forEach(btn => {
+            btn.addEventListener('click', showLoader);
+        });
+        // מועדפים
+        function getFavs() {
+            return JSON.parse(localStorage.getItem('favTools') || '[]');
+        }
+        function setFavs(favs) {
+            localStorage.setItem('favTools', JSON.stringify(favs));
+        }
+        function updateFavBtns() {
+            const favs = getFavs();
+            document.querySelectorAll('.fav-btn').forEach(btn => {
+                const tool = btn.previousElementSibling.textContent.trim();
+                btn.textContent = favs.includes(tool) ? '★' : '☆';
+            });
+        }
+        document.querySelectorAll('.fav-btn').forEach(btn => {
+            btn.onclick = function(e) {
+                e.stopPropagation();
+                const tool = btn.previousElementSibling.textContent.trim();
+                let favs = getFavs();
+                if (favs.includes(tool)) {
+                    favs = favs.filter(f => f !== tool);
+                } else {
+                    favs.push(tool);
+                }
+                setFavs(favs);
+                updateFavBtns();
+                updateHistory();
+            };
+        });
+        updateFavBtns();
+        // העתק שם כלי
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.onclick = function(e) {
+                e.stopPropagation();
+                const tool = btn.previousElementSibling.textContent.trim();
+                navigator.clipboard.writeText(tool);
+                btn.textContent = '✔️';
+                setTimeout(() => btn.textContent = '📋', 900);
+            };
+        });
+        // היסטוריית בדיקות (דמו)
+        function getHistory() {
+            return JSON.parse(localStorage.getItem('toolHistory') || '[]');
+        }
+        function setHistory(hist) {
+            localStorage.setItem('toolHistory', JSON.stringify(hist));
+        }
+        function updateHistory() {
+            const favs = getFavs();
+            const hist = getHistory();
+            const list = document.getElementById('history-list');
+            list.innerHTML = '';
+            hist.slice(-7).reverse().forEach(tool => {
+                const li = document.createElement('li');
+                li.textContent = tool;
+                if (favs.includes(tool)) li.style.color = '#ffd700';
+                list.appendChild(li);
+            });
+        }
+        document.querySelectorAll('.gold-button, .sub-button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                let hist = getHistory();
+                const tool = btn.textContent.trim();
+                hist = hist.filter(t => t !== tool);
+                hist.push(tool);
+                setHistory(hist);
+                updateHistory();
+            });
+        });
+        updateHistory();
+        // תאריך ושעה
+        function pad(n) { return n < 10 ? '0' + n : n; }
+        function hebDateString(date) {
+            const days = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+            const months = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+            return `${days[date.getDay()]} | ${pad(date.getDate())} ב${months[date.getMonth()]} ${date.getFullYear()} | ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+        }
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById('datetime-bar').textContent = hebDateString(now);
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+        // שיתוף כלי
+        function getToolUrl(btn) {
+            const toolBtn = btn.parentElement.querySelector('button:not(.fav-btn):not(.copy-btn):not(.share-btn)');
+            if (!toolBtn) return window.location.href;
+            const href = toolBtn.getAttribute('onclick')?.match(/location.href='([^']+)'/);
+            if (href && href[1]) {
+                return window.location.origin + '/' + href[1];
+            }
+            return window.location.href;
+        }
+        function showShareMenu(btn) {
+            const url = getToolUrl(btn);
+            const toolName = btn.parentElement.querySelector('button:not(.fav-btn):not(.copy-btn):not(.share-btn)').textContent.trim();
+            const menu = document.createElement('div');
+            menu.className = 'share-menu';
+            menu.innerHTML = `
+                <button onclick="window.open('https://wa.me/?text=' + encodeURIComponent('${toolName}: ${url}'),'_blank')">וואטסאפ</button>
+                <button onclick="window.open('mailto:?subject=שיתוף כלי בודק&body=${toolName}: ${url}')">מייל</button>
+                <button onclick="navigator.clipboard.writeText('${url}');this.textContent='✔️';setTimeout(()=>this.textContent='העתק קישור',900)">העתק קישור</button>
+            `;
+            menu.style.position = 'absolute';
+            menu.style.left = btn.getBoundingClientRect().left + 'px';
+            menu.style.top = (btn.getBoundingClientRect().top + 30 + window.scrollY) + 'px';
+            menu.style.zIndex = 9999;
+            menu.style.background = '#fffde4';
+            menu.style.border = '1px solid #ffd700';
+            menu.style.borderRadius = '12px';
+            menu.style.boxShadow = '0 2px 8px #ffd70055';
+            menu.style.padding = '8px 12px';
+            menu.style.display = 'flex';
+            menu.style.flexDirection = 'column';
+            menu.style.gap = '7px';
+            menu.style.minWidth = '110px';
+            document.body.appendChild(menu);
+            function removeMenu(e) {
+                if (!menu.contains(e.target) && e.target !== btn) {
+                    menu.remove();
+                    document.removeEventListener('mousedown', removeMenu);
+                }
+            }
+            document.addEventListener('mousedown', removeMenu);
+        }
+        document.querySelectorAll('.share-btn').forEach(btn => {
+            btn.onclick = function(e) {
+                e.stopPropagation();
+                document.querySelectorAll('.share-menu').forEach(m => m.remove());
+                showShareMenu(btn);
+            };
+        });
+        // הדפסה
+        document.getElementById('print-btn').onclick = function() {
+            window.print();
+        };
+        // הסתר קטגוריה
+        document.querySelectorAll('.hide-cat-btn').forEach(btn => {
+            btn.onclick = function() {
+                btn.closest('.category-section').style.display = 'none';
+            };
+        });
+        document.getElementById('show-all-btn').onclick = function() {
+            document.querySelectorAll('.category-section').forEach(sec => sec.style.display = '');
+        };
+        // טופס המלצה
+        document.getElementById('suggest-form').onsubmit = function(e) {
+            e.preventDefault();
+            const name = document.getElementById('suggest-name').value.trim();
+            const email = document.getElementById('suggest-email').value.trim();
+            const msg = document.getElementById('suggest-msg').value.trim();
+            const mailto = `mailto:susp4514@gmail.com?subject=המלצה על כלי/פיצ'ר חדש מהאתר&body=שם: ${name}%0Aאימייל: ${email}%0Aהצעה: ${msg}`;
+            window.open(mailto);
+            document.getElementById('suggest-status').textContent = 'נשלח! תודה :)';
+            setTimeout(()=>document.getElementById('suggest-status').textContent='', 3000);
+            document.getElementById('suggest-form').reset();
+        };
+        document.getElementById('focus-mode-btn').onclick = function() {
+            document.body.classList.toggle('focus-mode');
+        };
+        document.querySelectorAll('.prev-tool-btn').forEach(btn => {
+            btn.onclick = function(e) {
+                e.stopPropagation();
+                const row = btn.closest('.tool-row');
+                const prev = row.previousElementSibling;
+                if (prev) prev.querySelector('button:not(.fav-btn):not(.copy-btn):not(.share-btn)').focus();
+            };
+        });
+        document.querySelectorAll('.next-tool-btn').forEach(btn => {
+            btn.onclick = function(e) {
+                e.stopPropagation();
+                const row = btn.closest('.tool-row');
+                const next = row.nextElementSibling;
+                if (next) next.querySelector('button:not(.fav-btn):not(.copy-btn):not(.share-btn)').focus();
+            };
+        });
+        document.getElementById('toggle-view-btn').onclick = function() {
+            document.body.classList.toggle('list-view');
+        };
+        // הצג מועדפים בלבד
+        let favsMode = false;
+        document.getElementById('show-favs-btn').onclick = function() {
+            favsMode = !favsMode;
+            this.classList.toggle('active-btn', favsMode);
+            if (favsMode) {
+                const favs = getFavs();
+                document.querySelectorAll('.tool-row').forEach(row => {
+                    const tool = row.querySelector('button:not(.fav-btn):not(.copy-btn):not(.share-btn):not(.prev-tool-btn):not(.next-tool-btn)').textContent.trim();
+                    row.classList.toggle('hidden-row', !favs.includes(tool));
+                });
+            } else {
+                document.querySelectorAll('.tool-row').forEach(row => row.classList.remove('hidden-row'));
+            }
+        };
+        // הצג היסטוריה בלבד
+        let histMode = false;
+        document.getElementById('show-history-btn').onclick = function() {
+            histMode = !histMode;
+            this.classList.toggle('active-btn', histMode);
+            if (histMode) {
+                const hist = getHistory();
+                document.querySelectorAll('.tool-row').forEach(row => {
+                    const tool = row.querySelector('button:not(.fav-btn):not(.copy-btn):not(.share-btn):not(.prev-tool-btn):not(.next-tool-btn)').textContent.trim();
+                    row.classList.toggle('hidden-row', !hist.includes(tool));
+                });
+            } else {
+                document.querySelectorAll('.tool-row').forEach(row => row.classList.remove('hidden-row'));
+            }
+        };
+        // הצג הכל
+        document.getElementById('show-all-btn').onclick = function() {
+            favsMode = false;
+            histMode = false;
+            document.getElementById('show-favs-btn').classList.remove('active-btn');
+            document.getElementById('show-history-btn').classList.remove('active-btn');
+            document.querySelectorAll('.tool-row').forEach(row => row.classList.remove('hidden-row'));
+            document.querySelectorAll('.category-section').forEach(sec => sec.style.display = '');
+        };
+        // חיצים בין כלים
+        document.querySelectorAll('.tool-row').forEach(container => {
+            const rows = Array.from(container.parentElement.querySelectorAll('.tool-row'));
+            const idx = rows.indexOf(container);
+            const prevBtn = container.querySelector('.prev-tool-btn');
+            const nextBtn = container.querySelector('.next-tool-btn');
+            if (prevBtn) {
+                prevBtn.disabled = idx === 0;
+                prevBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    if (idx > 0) rows[idx-1].querySelector('button:not(.fav-btn):not(.copy-btn):not(.share-btn):not(.prev-tool-btn):not(.next-tool-btn)').focus();
+                };
+            }
+            if (nextBtn) {
+                nextBtn.disabled = idx === rows.length-1;
+                nextBtn.onclick = function(e) {
+                    e.stopPropagation();
+                    if (idx < rows.length-1) rows[idx+1].querySelector('button:not(.fav-btn):not(.copy-btn):not(.share-btn):not(.prev-tool-btn):not(.next-tool-btn)').focus();
+                };
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הפלטה של פטלס - צבע עם שיניים</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>הפלטה של פטלס</h1>
+            <p class="subtitle">צבע עם שיניים</p>
+        </header>
+
+        <div class="palette-container">
+            <div class="palette">
+                <div class="color-box" data-color="#FF6B6B">
+                    <div class="color-preview"></div>
+                    <div class="color-info">
+                        <span class="color-name">אדום שיניים</span>
+                        <span class="color-hex">#FF6B6B</span>
+                    </div>
+                </div>
+                <div class="color-box" data-color="#4ECDC4">
+                    <div class="color-preview"></div>
+                    <div class="color-info">
+                        <span class="color-name">טורקיז רופא</span>
+                        <span class="color-hex">#4ECDC4</span>
+                    </div>
+                </div>
+                <div class="color-box" data-color="#FFE66D">
+                    <div class="color-preview"></div>
+                    <div class="color-info">
+                        <span class="color-name">צהוב שיניים</span>
+                        <span class="color-hex">#FFE66D</span>
+                    </div>
+                </div>
+                <div class="color-box" data-color="#1A535C">
+                    <div class="color-preview"></div>
+                    <div class="color-info">
+                        <span class="color-name">כחול רופא</span>
+                        <span class="color-hex">#1A535C</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="dentist-character">
+            <svg viewBox="0 0 200 200" class="dentist-svg">
+                <circle cx="100" cy="100" r="90" fill="#FFE66D" class="face"/>
+                <circle cx="70" cy="80" r="10" fill="#1A535C" class="eye"/>
+                <circle cx="130" cy="80" r="10" fill="#1A535C" class="eye"/>
+                <path d="M60 120 Q100 150 140 120" stroke="#1A535C" stroke-width="4" fill="none" class="smile"/>
+                <rect x="85" y="110" width="30" height="20" fill="#FF6B6B" class="mouth"/>
+                <path d="M85 110 L115 110 L100 130 Z" fill="#FF6B6B" class="mouth"/>
+            </svg>
+        </div>
+
+        <div class="controls">
+            <button id="generateBtn" class="generate-btn">צור פלטה חדשה</button>
+            <button id="copyBtn" class="copy-btn">העתק את הפלטה</button>
+        </div>
+
+        <div class="palette-description">
+            <p>פלטה זו נוצרה במיוחד עבורך על ידי ד"ר פטלס, מומחה לצבעים ורפואת שיניים!</p>
+        </div>
+    </div>
+
+    <script src="js/palettes.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 

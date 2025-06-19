@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>דפי בית ותבניות - מרכז הבודק</title>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: linear-gradient(135deg, #001d3d 0%, #232526 100%);
+      color: #fff;
+      margin: 0;
+      min-height: 100vh;
+      direction: rtl;
+      padding: 2em 1em;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 3em;
+    }
+    .header h1 {
+      font-size: 2.5em;
+      color: #ffd700;
+      margin-bottom: 0.5em;
+    }
+    .back-btn {
+      position: absolute;
+      top: 2em;
+      right: 2em;
+      background: #ffd700;
+      color: #232526;
+      padding: 0.8em 1.5em;
+      border-radius: 2em;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+    .back-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+    }
+    .pages-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5em;
+    }
+    .page-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: 1em;
+      padding: 1.5em;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+    .page-card:hover {
+      transform: translateY(-5px);
+      border-color: #ffd700;
+      box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+    }
+    .page-card h3 {
+      color: #ffd700;
+      margin-bottom: 1em;
+      font-size: 1.3em;
+    }
+    .page-card p {
+      color: #cdeeff;
+      margin-bottom: 1em;
+      line-height: 1.6;
+    }
+    .page-type {
+      color: #ffd700;
+      font-size: 0.9em;
+      margin-bottom: 1.5em;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 0.5em;
+      border-radius: 0.5em;
+    }
+    .page-link {
+      background: #ffd700;
+      color: #232526;
+      padding: 0.8em 1.5em;
+      border-radius: 2em;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+      transition: all 0.3s ease;
+      margin-left: 0.5em;
+    }
+    .page-link:hover {
+      background: #ff8c00;
+      transform: scale(1.05);
+    }
+    .main-page {
+      position: relative;
+    }
+    .main-page::before {
+      content: "עיקרי";
+      position: absolute;
+      top: -0.5em;
+      right: -0.5em;
+      background: #ff8c00;
+      color: white;
+      padding: 0.3em 0.8em;
+      border-radius: 1em;
+      font-size: 0.8em;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <a href="../index.html" class="back-btn">← חזרה לדף הבית</a>
+  
+  <div class="container">
+    <header class="header">
+      <h1>🏠 דפי בית ותבניות</h1>
+      <p>אוסף דפי בית שונים ותבניות למערכת</p>
+    </header>
+
+    <div class="pages-grid">
+      <div class="page-card main-page">
+        <h3>🏆 דף הבית המלא</h3>
+        <p>דף הבית הראשי והמפורט ביותר עם כל הכלים והקטגוריות</p>
+        <div class="page-type">HTML מלא • 891 שורות • עיצוב מתקדם</div>
+        <a href="homepage.html" class="page-link">צפה בדף</a>
+      </div>
+
+      <div class="page-card">
+        <h3>🌟 מרכז הכלים</h3>
+        <p>דף בית מאורגן ומסודר עם חיפוש וקטגוריות</p>
+        <div class="page-type">HTML מאורגן • 399 שורות • ממשק נוח</div>
+        <a href="home-hub.html" class="page-link">צפה בדף</a>
+      </div>
+
+      <div class="page-card">
+        <h3>🔒 דף בית מאובטח</h3>
+        <p>דף בית פשוט ומאובטח עם עיצוב מינימלי</p>
+        <div class="page-type">HTML מאובטח • 112 שורות • פשוט</div>
+        <a href="secure_homepage.html" class="page-link">צפה בדף</a>
+      </div>
+
+      <div class="page-card">
+        <h3>⚛️ רכיב כפתורים זהובים</h3>
+        <p>רכיב React עם כפתורים זהובים מעוצבים</p>
+        <div class="page-type">TSX/React • רכיב • עיצוב מתקדם</div>
+        <a href="Homepage_GoldenButtons.tsx" class="page-link">צפה בקוד</a>
+      </div>
+
+      <div class="page-card">
+        <h3>🎨 דף בית כפתורים זהובים</h3>
+        <p>דף בית בעברית עם כפתורים זהובים מיוחדים</p>
+        <div class="page-type">TSX/React • עברית • עיצוב מיוחד</div>
+        <a href="דף_בית_כפתורים_זהובים.tsx" class="page-link">צפה בקוד</a>
+      </div>
+
+      <div class="page-card">
+        <h3>✨ דף בית כפתורים זהובים מעודכן</h3>
+        <p>גרסה מעודכנת של דף הבית עם כפתורים זהובים</p>
+        <div class="page-type">TSX/React • מעודכן • שיפורים</div>
+        <a href="דף_בית_כפתורים_זהובים_מעודכן.tsx" class="page-link">צפה בקוד</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html> 

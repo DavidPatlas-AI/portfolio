@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>אודות Patlas - מרכז החדשנות והפיתוח</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Rubik', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+        header h1 {
+            font-size: 4em;
+            margin: 0;
+            background: linear-gradient(45deg, #00aaff, #00eeff, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        header p {
+            font-size: 1.4em;
+            margin-top: 20px;
+            opacity: 0.9;
+        }
+        .intro-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(15px);
+            text-align: center;
+        }
+        .intro-section h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #00eeff;
+        }
+        .intro-section p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        .projects-nav {
+            background: rgba(0, 0, 0, 0.4);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(15px);
+        }
+        .projects-nav h2 {
+            text-align: center;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #00aaff;
+        }
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .project-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        .project-button:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+        .project-button .icon {
+            font-size: 2em;
+            margin-left: 15px;
+        }
+        .project-button .info {
+            flex-grow: 1;
+            text-align: right;
+        }
+        .project-button .title {
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        .project-button .desc {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        .stats-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(15px);
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #00eeff;
+            margin-bottom: 10px;
+        }
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .about-details {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+        }
+        .about-details h2 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            color: #00aaff;
+            text-align: center;
+        }
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .detail-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .detail-card h3 {
+            color: #00eeff;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+        .detail-card p {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+        .floating-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        .floating-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            animation: float 6s ease-in-out infinite;
+        }
+        .floating-circle:nth-child(1) {
+            width: 80px;
+            height: 80px;
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        .floating-circle:nth-child(2) {
+            width: 120px;
+            height: 120px;
+            top: 60%;
+            right: 10%;
+            animation-delay: 2s;
+        }
+        .floating-circle:nth-child(3) {
+            width: 60px;
+            height: 60px;
+            bottom: 20%;
+            left: 15%;
+            animation-delay: 4s;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 170, 255, 0.9);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        .back-button:hover {
+            background: rgba(0, 136, 204, 1);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+        <div class="floating-circle"></div>
+    </div>
+
+    <button class="back-button" onclick="window.location.href='../index.html'">
+        ← חזרה לעמוד הראשי
+    </button>
+
+    <div class="container">
+        <header>
+            <div style="display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                    <h1>🚀 Patlas</h1>
+                    <p>מרכז החדשנות והפיתוח הטכנולוגי</p>
+                    <p style="font-size: 1em; opacity: 0.7;">Innovation • Technology • Excellence</p>
+                </div>
+                <div style="text-align: center;">
+                    <img src="../family.jpg" alt="צוות Patlas" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 4px solid #00aaff; box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3); transition: all 0.3s ease;" 
+                         onmouseover="this.style.transform='scale(1.1)'; this.style.boxShadow='0 20px 40px rgba(0, 170, 255, 0.4)'" 
+                         onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 15px 30px rgba(0, 0, 0, 0.3)'">
+                    <p style="margin-top: 15px; font-size: 1.1em; color: #00eeff; font-weight: 600;">צוות החדשנות</p>
+                    
+                    <!-- קישורים לערוצי המדיה -->
+                    <div style="margin-top: 15px; display: flex; justify-content: center; gap: 10px;">
+                        <a href="https://www.youtube.com/@tzvipatlastzvipatlas" target="_blank" 
+                           style="background: linear-gradient(45deg, #ff0000, #ff4444); color: white; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 0.8em; transition: all 0.3s ease; box-shadow: 0 3px 6px rgba(255, 0, 0, 0.3);"
+                           onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 5px 10px rgba(255, 0, 0, 0.4)'"
+                           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 3px 6px rgba(255, 0, 0, 0.3)'">
+                            📺 YouTube
+                        </a>
+                        <a href="https://www.tiktok.com/@tzvipatlas?_t=ZS-8xJ8duA75Fg&_r=1" target="_blank"
+                           style="background: linear-gradient(45deg, #000000, #25f4ee); color: white; padding: 6px 12px; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 0.8em; transition: all 0.3s ease; box-shadow: 0 3px 6px rgba(37, 244, 238, 0.3);"
+                           onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 5px 10px rgba(37, 244, 238, 0.4)'"
+                           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 3px 6px rgba(37, 244, 238, 0.3)'">
+                            🎵 TikTok  
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="intro-section">
+            <h2>🌟 ברוכים הבאים לעולם Patlas</h2>
+            <div style="display: flex; align-items: center; gap: 40px; flex-wrap: wrap; margin-bottom: 30px;">
+                <div style="flex: 1; min-width: 300px;">
+                    <p>Patlas הוא מרכז חדשנות טכנולוגית המתמחה בפיתוח פתרונות מתקדמים ויצירתיים. אנו מובילים בתחומי הבינה המלאכותית, פיתוח ווב, ניתוח נתונים ומערכות אינטראקטיביות.</p>
+                    <p>כל פרויקט במרכז נוצר עם מחשבה על חדשנות, פונקציונליות ועיצוב מתקדם. אנו מאמינים בכוח הטכנולוגיה לשנות ולשפר את החיים.</p>
+                    <p>הצטרפו אלינו למסע מרתק בעולם הטכנולוגיה והיצירתיות!</p>
+                </div>
+                <div style="text-align: center;">
+                    <img src="../family.jpg" alt="משפחת Patlas" style="width: 250px; height: 250px; border-radius: 25px; object-fit: cover; border: 4px solid #00eeff; box-shadow: 0 20px 40px rgba(0, 238, 255, 0.3); transition: all 0.5s ease; filter: brightness(1.1);" 
+                         onmouseover="this.style.transform='scale(1.05) rotateY(10deg)'; this.style.boxShadow='0 25px 50px rgba(0, 238, 255, 0.5)'" 
+                         onmouseout="this.style.transform='scale(1) rotateY(0deg)'; this.style.boxShadow='0 20px 40px rgba(0, 238, 255, 0.3)'">
+                    <p style="margin-top: 15px; font-size: 1.2em; color: #00eeff; font-weight: 700;">❤️ המשפחה שמובילה את החדשנות</p>
+                    
+                    <!-- קישורים לערוצי המדיה -->
+                    <div style="margin-top: 20px; display: flex; justify-content: center; gap: 15px;">
+                        <a href="https://www.youtube.com/@tzvipatlastzvipatlas" target="_blank" 
+                           style="background: linear-gradient(45deg, #ff0000, #ff4444); color: white; padding: 10px 18px; border-radius: 25px; text-decoration: none; font-weight: 600; font-size: 1em; transition: all 0.3s ease; box-shadow: 0 5px 10px rgba(255, 0, 0, 0.3);"
+                           onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(255, 0, 0, 0.4)'"
+                           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 5px 10px rgba(255, 0, 0, 0.3)'">
+                            📺 YouTube שלי
+                        </a>
+                        <a href="https://www.tiktok.com/@tzvipatlas?_t=ZS-8xJ8duA75Fg&_r=1" target="_blank"
+                           style="background: linear-gradient(45deg, #000000, #25f4ee); color: white; padding: 10px 18px; border-radius: 25px; text-decoration: none; font-weight: 600; font-size: 1em; transition: all 0.3s ease; box-shadow: 0 5px 10px rgba(37, 244, 238, 0.3);"
+                           onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 8px 16px rgba(37, 244, 238, 0.4)'"
+                           onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 5px 10px rgba(37, 244, 238, 0.3)'">
+                            🎵 TikTok שלי
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h2 style="text-align: center; color: #00aaff; margin-bottom: 20px;">📊 מספרים מרשימים</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">15</div>
+                    <div class="stat-label">פרויקטים פעילים</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">24</div>
+                    <div class="stat-label">גרסאות ויישומים</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">200+</div>
+                    <div class="stat-label">קבצי קוד</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">תחומי מומחיות</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">מחויבות לאיכות</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="projects-nav">
+            <h2>🎯 גישה מהירה לכל הפרויקטים</h2>
+            <p style="text-align: center; font-size: 1.1em; opacity: 0.8; margin-bottom: 30px;">
+                לחצו על כל כפתור כדי לגשת ישירות לפרויקט הרצוי
+            </p>
+            
+            <!-- כלי עזר ומערכות תומכות -->
+            <div style="margin-bottom: 30px;">
+                <h3 style="color: #00eeff; text-align: center; margin-bottom: 20px; font-size: 1.5em;">🔧 כלי עזר ומערכות תומכות</h3>
+                <div class="buttons-grid">
+                    <a href="תחפשני/index.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">יוצר פישינג קריליות</div>
+                            <div class="desc">חקירה חינוכית של הנדסה חברתית</div>
+                        </div>
+                        <div class="icon">🎭</div>
+                    </a>
+
+                    <a href="מפצל קוד מקלוד/index.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">מפצל קוד מקלאוד</div>
+                            <div class="desc">חילוץ וארגון קוד מהענן</div>
+                        </div>
+                        <div class="icon">📂</div>
+                    </a>
+
+                    <a href="מפענח קוד רגשי/index.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">מנתח כותב הקוד</div>
+                            <div class="desc">זיהוי סגנון קוד אישי</div>
+                        </div>
+                        <div class="icon">🧑‍💻</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- פרויקטים מרכזיים -->
+            <div style="margin-bottom: 30px;">
+                <h3 style="color: #00eeff; text-align: center; margin-bottom: 20px; font-size: 1.5em;">⭐ פרויקטים מרכזיים</h3>
+                <div class="buttons-grid">
+                    <a href="ID מפענח ובודק/index.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">מרכז הבודק המקצועי</div>
+                            <div class="desc">בדיקת ואימות נתונים ישראליים</div>
+                        </div>
+                        <div class="icon">🛡️</div>
+                    </a>
+
+                    <a href="לידים מגיבוי ווצאפ/project_gallery.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">מערכת לידים חכמה</div>
+                            <div class="desc">גיוס אסטרטגי מגיבויי וואטסאפ</div>
+                        </div>
+                        <div class="icon">🪖</div>
+                    </a>
+
+                    <a href="יצירת תוכן ויראלי לפי טרנדים/project_gallery.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">מערכת טרנדים חיה</div>
+                            <div class="desc">מפת תודעה בזמן אמת</div>
+                        </div>
+                        <div class="icon">📈</div>
+                    </a>
+
+                    <a href="הפלטה של פטלס/גרסה 4 - הפלטה של פטלס סופי/הפלטה של פטלס סופי/index.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">הפלטה של Patlas</div>
+                            <div class="desc">צבעים תרבותיים + חיוך אנושי</div>
+                        </div>
+                        <div class="icon">🎨</div>
+                    </a>
+
+                    <a href="תיקון שם השם ברוסית/gallery.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">מתקן השמות הקדושים</div>
+                            <div class="desc">תיקון טקסטים קדושים ברוסית</div>
+                        </div>
+                        <div class="icon">✡️</div>
+                    </a>
+
+                    <a href="מסלול_מלא_מפוצץ/gallery.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">מסלול מלא מפוצץ</div>
+                            <div class="desc">מערכת מסלולים מתקדמת</div>
+                        </div>
+                        <div class="icon">🛣️</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- פרויקטים יצירתיים ואינטראקטיביים -->
+            <div style="margin-bottom: 30px;">
+                <h3 style="color: #00eeff; text-align: center; margin-bottom: 20px; font-size: 1.5em;">🎨 פרויקטים יצירתיים ואינטראקטיביים</h3>
+                <div class="buttons-grid">
+                    <a href="עיצובים CSS/gallery.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">השטויות של CSS</div>
+                            <div class="desc">מגרש משחקים לניסויי עיצוב</div>
+                        </div>
+                        <div class="icon">🧠</div>
+                    </a>
+
+                    <a href="פיצה/pizza_deluxe.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">תפריט לחנות פיצה</div>
+                            <div class="desc">תפריט דיגיטלי + סל קניות</div>
+                        </div>
+                        <div class="icon">🍕</div>
+                    </a>
+
+                    <a href="אני על רמקול סימן שאלה/index.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">בודק רמקול</div>
+                            <div class="desc">זיהוי שיחות על רמקול בזמן אמת</div>
+                        </div>
+                        <div class="icon">🔊</div>
+                    </a>
+
+                    <a href="מבחן דפר/gallery.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">אתר מבחן דפ״ר</div>
+                            <div class="desc">סימולציה חינוכית + עבודה אופליין</div>
+                        </div>
+                        <div class="icon">📘</div>
+                    </a>
+
+                    <a href="מפה שמראה לי קמפיינים שעומדים לי הראש/gallery_index.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">מיפוי קמפיינים</div>
+                            <div class="desc">מפה דינמית לניטור פעילויות</div>
+                        </div>
+                        <div class="icon">🗺️</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- פרויקטים מתקדמים -->
+            <div style="margin-bottom: 30px;">
+                <h3 style="color: #00eeff; text-align: center; margin-bottom: 20px; font-size: 1.5em;">🚀 פרויקטים מתקדמים</h3>
+                <div class="buttons-grid">
+                    <a href="חממה דיגיטלית/landing_page.html" class="project-button" target="_blank">
+                        <div class="info">
+                            <div class="title">חממה דיגיטלית</div>
+                            <div class="desc">דף נחיתה מקצועי עם גלריה מלאה</div>
+                        </div>
+                        <div class="icon">🌱</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-details">
+            <h2>🎯 תחומי המומחיות שלנו</h2>
+            <div class="details-grid">
+                <div class="detail-card">
+                    <h3>🤖 בינה מלאכותית</h3>
+                    <p>פיתוח מערכות זיהוי חכמות, ניתוח רגשות, ועיבוד שפה טבעית למגוון יישומים חדשניים.</p>
+                </div>
+                <div class="detail-card">
+                    <h3>🌐 פיתוח ווב מתקדם</h3>
+                    <p>יצירת אתרים ויישומי ווב אינטראקטיביים עם טכנולוגיות מתקדמות ועיצוב מודרני.</p>
+                </div>
+                <div class="detail-card">
+                    <h3>📊 ניתוח נתונים</h3>
+                    <p>מערכות לעיבוד וניתוח נתונים מורכבים, זיהוי דפוסים וחילוץ תובנות עסקיות.</p>
+                </div>
+                <div class="detail-card">
+                    <h3>🎨 UX/UI מתקדם</h3>
+                    <p>עיצוב חוויות משתמש מרשימות עם אנימציות, אפקטים ויזואליים וממשקים אינטואיטיביים.</p>
+                </div>
+                <div class="detail-card">
+                    <h3>🔒 אבטחת מידע</h3>
+                    <p>פתרונות לאימות זהות, בדיקת תקינות נתונים וזיהוי איומי אבטחה מתקדמים.</p>
+                </div>
+                <div class="detail-card">
+                    <h3>📱 יישומים מובילים</h3>
+                    <p>פיתוח כלים וחקלאות חכמה, מערכות ניהול ויישומים לייעול תהליכים עסקיים.</p>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 50px; padding: 40px; background: rgba(0, 0, 0, 0.3); border-radius: 20px; backdrop-filter: blur(15px);">
+            <h3 style="color: #00eeff; font-size: 2em; margin-bottom: 20px;">🚀 Patlas - שם נרדף לחדשנות</h3>
+                            <p style="font-size: 1.2em; margin-bottom: 15px;">15 פרויקטים מרכזיים | 8 תחומי מומחיות | 200+ קבצי קוד</p>
+            <p style="font-size: 1em; opacity: 0.8;">מובילים את המהפכה הטכנולוגית בישראל ובעולם</p>
+            <p style="font-size: 0.9em; color: #888; margin-top: 30px;">
+                עדכון אחרון: ${new Date().toLocaleDateString('he-IL')} | גרסה 2.0
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // אנימציית כפתורים מתקדמת
+        document.querySelectorAll('.project-button').forEach(button => {
+            button.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            button.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // אפקט פרללקס עדין
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.floating-elements');
+            const speed = scrolled * 0.5;
+            parallax.style.transform = `translateY(${speed}px)`;
+        });
+
+        // אנימציית טעינה לכפתורים
+        window.addEventListener('load', () => {
+            const buttons = document.querySelectorAll('.project-button');
+            buttons.forEach((button, index) => {
+                setTimeout(() => {
+                    button.style.opacity = '0';
+                    button.style.transform = 'translateY(30px)';
+                    setTimeout(() => {
+                        button.style.transition = 'all 0.6s ease';
+                        button.style.opacity = '1';
+                        button.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html> 

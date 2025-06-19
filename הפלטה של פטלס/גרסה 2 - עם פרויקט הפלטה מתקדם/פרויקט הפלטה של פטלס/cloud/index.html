@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הפלטה של פטלס - צבע עם שיניים</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">הפלטה של פטלס</a>
+                <ul class="nav-menu">
+                    <li><a href="#palettes">פלטות</a></li>
+                    <li><a href="#about">אודות</a></li>
+                    <li><a href="#contact">צור קשר</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <section class="hero fade-in">
+                <h1>צבע עם שיניים</h1>
+                <p>פלטות צבעים מעוררות השראה שמחליפות את הגומיות בזמן אמת. כל חיוך הוא עולם של צבעים.</p>
+            </section>
+
+            <section class="teeth-section fade-in">
+                <h2 class="teeth-title">הפלטה שלך</h2>
+                <p class="teeth-subtitle">בחר פלטה ותראה איך הגומיות משתנות</p>
+                
+                <div class="teeth-container">
+                    <svg class="teeth-svg" viewBox="0 0 600 300" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Background -->
+                        <defs>
+                            <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#f8f9fa"/>
+                                <stop offset="100%" style="stop-color:#f1f3f4"/>
+                            </linearGradient>
+                            <linearGradient id="toothGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#ffffff"/>
+                                <stop offset="100%" style="stop-color:#f8fafc"/>
+                            </linearGradient>
+                        </defs>
+                        
+                        <!-- Upper Row Teeth -->
+                        <rect x="80" y="60" width="20" height="35" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="110" y="55" width="20" height="45" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="140" y="50" width="20" height="55" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="170" y="48" width="20" height="60" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="200" y="48" width="20" height="60" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="230" y="48" width="20" height="60" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="260" y="48" width="20" height="60" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="290" y="50" width="20" height="55" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="320" y="55" width="20" height="45" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="350" y="60" width="20" height="35" rx="10" class="tooth" fill="url(#toothGradient)"/>
+
+                        <!-- Lower Row Teeth -->
+                        <rect x="85" y="200" width="20" height="35" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="115" y="195" width="20" height="45" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="145" y="190" width="20" height="55" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="175" y="185" width="20" height="60" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="205" y="185" width="20" height="60" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="235" y="185" width="20" height="60" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="265" y="185" width="20" height="60" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="295" y="190" width="20" height="55" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="325" y="195" width="20" height="45" rx="10" class="tooth" fill="url(#toothGradient)"/>
+                        <rect x="355" y="200" width="20" height="35" rx="10" class="tooth" fill="url(#toothGradient)"/>
+
+                        <!-- Upper Brace wire -->
+                        <path d="M 90 85 Q 215 78 340 85" class="brace-wire"/>
+                        
+                        <!-- Lower Brace wire -->
+                        <path d="M 95 215 Q 220 208 345 215" class="brace-wire"/>
+                        
+                        <!-- Upper Rubber bands -->
+                        <circle cx="120" cy="85" r="10" class="rubber-band" id="band1" fill="#3b82f6"/>
+                        <circle cx="180" cy="82" r="10" class="rubber-band" id="band2" fill="#10b981"/>
+                        <circle cx="210" cy="82" r="10" class="rubber-band" id="band3" fill="#f59e0b"/>
+                        <circle cx="240" cy="82" r="10" class="rubber-band" id="band4" fill="#ef4444"/>
+                        <circle cx="300" cy="85" r="10" class="rubber-band" id="band5" fill="#8b5cf6"/>
+
+                        <!-- Lower Rubber bands -->
+                        <circle cx="125" cy="215" r="10" class="rubber-band" id="band6" fill="#3b82f6"/>
+                        <circle cx="185" cy="212" r="10" class="rubber-band" id="band7" fill="#10b981"/>
+                        <circle cx="215" cy="212" r="10" class="rubber-band" id="band8" fill="#f59e0b"/>
+                        <circle cx="245" cy="212" r="10" class="rubber-band" id="band9" fill="#ef4444"/>
+                        <circle cx="305" cy="215" r="10" class="rubber-band" id="band10" fill="#8b5cf6"/>
+                    </svg>
+                </div>
+
+                <div id="currentPaletteInfo" class="current-palette-info">
+                    <h3>פלטה דיגיטלית מודרנית</h3>
+                    <p>כחול, ירוק, כתום, אדום, סגול</p>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" onclick="downloadPalette()">
+                        <i class="fas fa-download"></i>
+                        הורד כתמונה
+                    </button>
+                    <button class="btn btn-secondary" onclick="randomPalette()">
+                        <i class="fas fa-shuffle"></i>
+                        פלטה אקראית
+                    </button>
+                    <button class="btn btn-secondary" onclick="copyPalette()">
+                        <i class="fas fa-copy"></i>
+                        העתק קודים
+                    </button>
+                </div>
+            </section>
+
+            <section class="palettes-section" id="palettes">
+                <div class="section-header">
+                    <h2>בחר פלטה</h2>
+                    <p>פלטות מעוצבות לכל מצב רוח ומגזר</p>
+                </div>
+
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterPalettes('all')">הכל</button>
+                    <button class="filter-tab" onclick="filterPalettes('flags')">דגלים</button>
+                    <button class="filter-tab" onclick="filterPalettes('sectors')">מגזרים</button>
+                    <button class="filter-tab" onclick="filterPalettes('moods')">רגשות</button>
+                </div>
+
+                <div class="palette-grid" id="paletteGrid">
+                    <!-- Palettes will be generated by JavaScript -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="js/palettes.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html> 

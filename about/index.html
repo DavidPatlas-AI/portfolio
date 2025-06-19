@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>דוד פטלס – יוצר, לומד, חי</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;500;700&display=swap');
+
+    :root {
+      --primary: #ff9800;
+      --bg-light: #f4f4f4;
+      --bg-dark: #1c1c2b;
+      --text-light: #ffffff;
+      --text-dark: #333333;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Heebo', sans-serif;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      transition: all 0.4s ease;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: var(--bg-dark);
+        color: var(--text-light);
+      }
+
+      .card {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: var(--text-light);
+      }
+
+      .btn {
+        background-color: #ffd54f;
+        color: #000;
+      }
+
+      .btn:hover {
+        background-color: #fff176;
+      }
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 40px 20px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .image-box img {
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: var(--primary);
+      margin-top: 0;
+    }
+
+    p {
+      font-size: 1.1em;
+      line-height: 1.8;
+    }
+
+    .btn-container {
+      margin-top: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .btn {
+      background-color: var(--primary);
+      color: white;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: bold;
+      transition: background 0.3s ease;
+    }
+
+    .btn:hover {
+      background-color: #ffa726;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="image-box">
+      <img src="../family.jpg" alt="משפחת פטלס">
+    </div>
+    <div class="card">
+      <h1>עליי – דוד פטלס</h1>
+      <p>
+        אני דוד פטלס, בן 32 מירושלים. נשוי באהבה, אב לארבעה – ואשתי בהריון חמישי, ברוך ה'.<br>
+        אמא שלי עברה לאחרונה ניתוח, ואני מנסה להיות שם גם בשבילה, גם בשביל המשפחה וגם בשביל הלימודים.
+      </p>
+      <p>
+        אני לומד הנדסת תוכנה. כל יום אני עולה על שלושה או ארבעה אוטובוסים, הולך כ־20 דקות רגלית, ולמרות הפרעת הקשב שלי – אני מתעקש להישאר על המסלול.
+      </p>
+      <p>
+        הפרויקטים שלי נולדים מתוך החיים: לוחות זמנים עם נחש מתקדם, קוד חזותי שמבטא רגש, וכלים שעוזרים לי ולעוד אנשים לעשות סדר בתוך הבלגן.
+      </p>
+      <p>
+        אני גם יוצר תוכן ביוטיוב ובטיקטוק – משתף ניסויים, תובנות, רגעים אמיתיים של מאבק ותקווה.
+      </p>
+      <div class="btn-container">
+        <a class="btn" href="https://youtube.com/@tzvipatlastzvipatlas?si=2vxw7TXvkfPSmHwt" target="_blank">היוטיוב שלי</a>
+        <a class="btn" href="https://www.tiktok.com/@tzvipatlas?_t=ZS-8xJ8duA75Fg&_r=1" target="_blank">הטיקטוק שלי</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html> 

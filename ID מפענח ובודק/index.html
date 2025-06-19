@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>מרכז הבודק המקצועי - דף הבית</title>
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: linear-gradient(135deg, #001d3d 0%, #232526 100%);
+      color: #fff;
+      margin: 0;
+      min-height: 100vh;
+      direction: rtl;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg"><circle fill="%23ffd700" fill-opacity="0.05" cx="10%" cy="20%" r="50"/><circle fill="%23ffd700" fill-opacity="0.03" cx="90%" cy="80%" r="80"/></svg>') no-repeat;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2em 1em 3em 1em;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 3em;
+      animation: fadeInDown 1s ease-out;
+    }
+    
+    .header h1 {
+      font-size: 3em;
+      color: #ffd700;
+      margin-bottom: 0.5em;
+      text-shadow: 0 4px 8px rgba(255, 215, 0, 0.3);
+      font-weight: 900;
+    }
+    
+    .header p {
+      font-size: 1.3em;
+      color: #cdeeff;
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+    
+    .search-box {
+      width: 100%;
+      max-width: 400px;
+      margin: 0 auto 3em auto;
+      display: block;
+      padding: 1em 1.5em;
+      border-radius: 2em;
+      border: 2px solid #ffd70055;
+      font-size: 1.1em;
+      background: rgba(35, 37, 38, 0.9);
+      color: #ffd700;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+      outline: none;
+      text-align: right;
+      transition: all 0.3s ease;
+    }
+    
+    .search-box:focus {
+      border-color: #ffd700;
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
+      transform: scale(1.02);
+    }
+    
+    .categories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2em;
+      margin-bottom: 3em;
+    }
+    
+    .category-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid rgba(255, 215, 0, 0.2);
+      border-radius: 1.5em;
+      padding: 2em;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+      backdrop-filter: blur(10px);
+      animation: fadeInUp 0.7s ease-out;
+    }
+    
+    .category-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: #ffd700;
+      box-shadow: 0 15px 35px rgba(255, 215, 0, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .category-card h2 {
+      font-size: 1.8em;
+      color: #ffd700;
+      margin-bottom: 1em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5em;
+    }
+    
+    .category-card .icon {
+      font-size: 2em;
+    }
+    
+    .category-card p {
+      color: #cdeeff;
+      margin-bottom: 1.5em;
+      line-height: 1.6;
+    }
+    
+    .category-card .stats {
+      font-size: 0.9em;
+      color: #ffd700;
+      background: rgba(255, 215, 0, 0.1);
+      padding: 0.5em 1em;
+      border-radius: 1em;
+      margin-bottom: 1.5em;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+      color: #232526;
+      border: none;
+      padding: 1em 2em;
+      border-radius: 2em;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+      background: linear-gradient(135deg, #ff8c00 0%, #ffd700 100%);
+    }
+    
+    .quick-tools {
+      text-align: center;
+      margin-bottom: 3em;
+    }
+    
+    .quick-tools h2 {
+      color: #ffd700;
+      margin-bottom: 1.5em;
+      font-size: 2em;
+    }
+    
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1em;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .tool-btn {
+      background: rgba(35, 37, 38, 0.9);
+      color: #fff;
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: 1em;
+      padding: 1.2em 1em;
+      font-size: 1em;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: block;
+      backdrop-filter: blur(5px);
+    }
+    
+    .tool-btn:hover {
+      background: #ffd700;
+      color: #232526;
+      border-color: #ffd700;
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
+    }
+    
+    .footer {
+      text-align: center;
+      margin-top: 3em;
+      padding: 2em 0;
+      border-top: 1px solid rgba(255, 215, 0, 0.2);
+      color: #cdeeff;
+    }
+    
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @media (max-width: 768px) {
+      .categories-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5em;
+      }
+      
+      .header h1 {
+        font-size: 2.2em;
+      }
+      
+      .tools-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🛡️ מרכז הבודק המקצועי</h1>
+      <p>מערכת מתקדמת לבדיקה ואימות נתונים - הכל במקום אחד, מסודר ומקצועי</p>
+    </header>
+
+    <input class="search-box" id="searchBox" type="text" placeholder="חפש כלי לפי שם או קטגוריה...">
+
+    <div class="categories-grid">
+      <!-- קטגוריית בודקים -->
+      <div class="category-card">
+        <h2><span class="icon">✅</span> בודקים ומאמתים</h2>
+        <p>כלים מתקדמים לבדיקת תעודות זהות, דרכונים, חברות ועוד</p>
+        <div class="stats">12 כלים זמינים</div>
+        <a href="validators/" class="btn-primary">גלה את הבודקים</a>
+      </div>
+
+      <!-- קטגוריית מנתחים -->
+      <div class="category-card">
+        <h2><span class="icon">🔍</span> מנתחים מתקדמים</h2>
+        <p>ניתוח מעמיק של תעודות זהות והפקת מידע רחב</p>
+        <div class="stats">6 כלים זמינים</div>
+        <a href="analyzers/" class="btn-primary">גלה את המנתחים</a>
+      </div>
+
+      <!-- קטגוריית דפי בית -->
+      <div class="category-card">
+        <h2><span class="icon">🏠</span> דפי בית ותבניות</h2>
+        <p>דפי בית שונים ותבניות למערכת</p>
+        <div class="stats">6 דפים זמינים</div>
+        <a href="homepages/" class="btn-primary">צפה בדפים</a>
+      </div>
+
+      <!-- קטגוריית תיעוד -->
+      <div class="category-card">
+        <h2><span class="icon">📚</span> תיעוד ומדריכים</h2>
+        <p>מדריכים מפורטים ותיעוד שלם למערכת</p>
+        <div class="stats">תיעוד מלא</div>
+        <a href="documentation/" class="btn-primary">קרא תיעוד</a>
+      </div>
+    </div>
+
+    <!-- כלים מהירים -->
+    <section class="quick-tools">
+      <h2>🚀 כלים מהירים</h2>
+      <div class="tools-grid">
+        <a href="validators/tz-validator-html.html" class="tool-btn">בודק ת"ז</a>
+        <a href="validators/passport-validator-artifact.html" class="tool-btn">בודק דרכון</a>
+        <a href="validators/phone-number-validator.html" class="tool-btn">בודק טלפון</a>
+        <a href="validators/car-number-validator-ui.html" class="tool-btn">בודק רכב</a>
+        <a href="analyzers/super-id-analyzer-fixed.tsx" class="tool-btn">מנתח ת"ז מתקדם</a>
+        <a href="validators/company-tax-id-validator.html" class="tool-btn">בודק ח.פ.</a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>© 2025 מרכז הבודק המקצועי | מערכת מסודרת ומקצועית לבדיקת נתונים</p>
+      <p>גרסה 2.0 - מעודכן ומסודר</p>
+    </footer>
+  </div>
+
+  <script>
+    // חיפוש מהיר
+    const searchBox = document.getElementById('searchBox');
+    const categoryCards = document.querySelectorAll('.category-card');
+    const toolBtns = document.querySelectorAll('.tool-btn');
+
+    searchBox.addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      
+      // חיפוש בקטגוריות
+      categoryCards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+          card.style.display = 'block';
+          card.style.animation = 'fadeInUp 0.5s ease-out';
+        } else {
+          card.style.display = searchTerm === '' ? 'block' : 'none';
+        }
+      });
+      
+      // חיפוש בכלים
+      toolBtns.forEach(btn => {
+        const text = btn.textContent.toLowerCase();
+        if (text.includes(searchTerm)) {
+          btn.style.display = 'block';
+          btn.style.animation = 'fadeInUp 0.5s ease-out';
+        } else {
+          btn.style.display = searchTerm === '' ? 'block' : 'none';
+        }
+      });
+    });
+
+    // אנימציות בעת טעינה
+    window.addEventListener('load', function() {
+      const cards = document.querySelectorAll('.category-card');
+      cards.forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.2}s`;
+      });
+    });
+  </script>
+</body>
+</html> 

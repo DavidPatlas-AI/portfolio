@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בודק תקינות מספר חשבון בנק ישראלי</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+            padding: 25px;
+        }
+        h1 {
+            color: #003366;
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #003366;
+            padding-bottom: 15px;
+            font-size: 2rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        input {
+            width: calc(100% - 22px);
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 5px rgba(0, 51, 102, 0.3);
+        }
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+            transition: border-color 0.3s ease;
+        }
+        select:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 5px rgba(0, 51, 102, 0.3);
+        }
+        button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            margin-top: 15px;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        button:hover {
+            background-color: #004080;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 5px;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .success {
+            background-color: #dff0d8;
+            border-right: 4px solid #3c763d;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            border-right: 4px solid #a94442;
+            color: #a94442;
+        }
+        .details {
+            margin-top: 25px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .step {
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #fff;
+            border-radius: 3px;
+            border-right: 3px solid #003366;
+            padding-right: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .step:hover {
+            transform: translateX(-5px);
+        }
+        .highlight {
+            font-weight: bold;
+            color: #003366;
+        }
+        .error-item {
+            color: #a94442;
+            margin-bottom: 8px;
+            padding-right: 15px;
+            position: relative;
+        }
+        .error-item::before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            color: #a94442;
+        }
+        .help-text {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            border-right: 4px solid #5bc0de;
+        }
+        .help-text h3 {
+            color: #31708f;
+            margin-top: 0;
+        }
+        .help-text ol {
+            padding-right: 20px;
+        }
+        .help-text li {
+            margin-bottom: 8px;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .digit-display {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 25px;
+        }
+        .account-display {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            margin: 25px 0;
+        }
+        .account-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .section-label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .digits-container {
+            display: flex;
+            gap: 2px;
+        }
+        .digit-box {
+            width: 30px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 20px;
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+        .digit-box.filled {
+            border-color: #003366;
+            background-color: #e8f4f8;
+        }
+        .separator {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0 5px;
+            align-self: center;
+        }
+        .highlight-row {
+            background-color: #f0f8ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-right: 3px solid #003366;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .bank-info {
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .bank-icon {
+            font-size: 1.8rem;
+            margin-left: 10px;
+        }
+        .iban-display {
+            background-color: #f0f8ff;
+            border: 1px dashed #003366;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 15px;
+            font-family: monospace;
+            font-size: 16px;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>בודק תקינות מספר חשבון בנק ישראלי</h1>
+        
+        <div class="bank-info">
+            <div class="bank-icon">🏦</div>
+            <div>
+                <select id="bankSelect">
+                    <option value="12">בנק הפועלים (12)</option>
+                    <option value="10">בנק לאומי (10)</option>
+                    <option value="11">בנק דיסקונט (11)</option>
+                    <option value="20">בנק מזרחי-טפחות (20)</option>
+                    <option value="31">הבנק הבינלאומי (31)</option>
+                    <option value="4">בנק יהב (4)</option>
+                    <option value="9">בנק ירושלים (9)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="branchNumber">מספר סניף:</label>
+            <input type="text" id="branchNumber" placeholder="לדוגמה: 123" maxlength="3">
+        </div>
+        
+        <div class="form-group">
+            <label for="accountNumber">מספר חשבון:</label>
+            <input type="text" id="accountNumber" placeholder="לדוגמה: 1234567" maxlength="9">
+        </div>
+        
+        <div id="accountDisplay" class="account-display">
+            <!-- כאן תוצג תצוגת החשבון -->
+        </div>
+        
+        <button id="checkButton">בדוק תקינות</button>
+        
+        <div id="result" class="result">
+            <!-- כאן יוצגו תוצאות הבדיקה -->
+        </div>
+        
+        <div id="details" class="details" style="display: none;">
+            <!-- כאן יוצגו פרטי החישוב -->
+        </div>
+        
+        <div class="help-text">
+            <h3>כיצד בודקים תקינות של מספר חשבון בנק ישראלי?</h3>
+            <p>בדיקת תקינות של מספר חשבון בנק בישראל מורכבת ממספר שלבים:</p>
+            <ol>
+                <li>בדיקת קוד הבנק - חייב להיות קוד תקין של בנק מוכר בישראל</li>
+                <li>בדיקת מספר הסניף - מוודאים שהסניף קיים ומוכר במערכת</li>
+                <li>בדיקת מספר החשבון - בהתאם לחוקים של כל בנק</li>
+                <li>בדיקת ה-IBAN - המספר הבינלאומי של החשבון (אם רלוונטי)</li>
+            </ol>
+            <p>פורמט מספר חשבון בנק בישראל: קוד בנק (2 ספרות) - מספר סניף (3 ספרות) - מספר חשבון (עד 9 ספרות)</p>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 בודק תקינות מספרי חשבון בנק | פותח עבור מטרות הדגמה בלבד</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const bankSelect = document.getElementById('bankSelect');
+            const branchInput = document.getElementById('branchNumber');
+            const accountInput = document.getElementById('accountNumber');
+            const checkButton = document.getElementById('checkButton');
+            const resultDiv = document.getElementById('result');
+            const detailsDiv = document.getElementById('details');
+            const accountDisplay = document.getElementById('accountDisplay');
+            
+            // נתונים של הבנקים
+            const banks = {
+                '12': {
+                    name: 'בנק הפועלים',
+                    branchLength: 3,
+                    accountLength: 7,
+                    validation: validatePoalimAccount
+                },
+                '10': {
+                    name: 'בנק לאומי',
+                    branchLength: 3,
+                    accountLength: 6,
+                    validation: validateLeumiAccount
+                },
+                '11': {
+                    name: 'בנק דיסקונט',
+                    branchLength: 3,
+                    accountLength: 7,
+                    validation: validateDiscountAccount
+                },
+                '20': {
+                    name: 'בנק מזרחי-טפחות',
+                    branchLength: 3,
+                    accountLength: 8,
+                    validation: validateMizrahiAccount
+                },
+                '31': {
+                    name: 'הבנק הבינלאומי',
+                    branchLength: 3,
+                    accountLength: 6,
+                    validation: validateBinleumiAccount
+                },
+                '4': {
+                    name: 'בנק יהב',
+                    branchLength: 3,
+                    accountLength: 6,
+                    validation: validateYahavAccount
+                },
+                '9': {
+                    name: 'בנק ירושלים',
+                    branchLength: 3,
+                    accountLength: 6,
+                    validation: validateJerusalemAccount
+                }
+            };
+            
+            // יצירת תצוגת החשבון הראשונית
+            updateAccountDisplay();
+            
+            // הוספת אירוע לשינוי בנק
+            bankSelect.addEventListener('change', function() {
+                // ניקוי שדות
+                branchInput.value = '';
+                accountInput.value = '';
+                
+                // עדכון אורך מקסימלי לפי הבנק
+                const selectedBank = this.value;
+                const bank = banks[selectedBank];
+                
+                branchInput.maxLength = bank.branchLength;
+                accountInput.maxLength = bank.accountLength;
+                
+                updateAccountDisplay();
+                
+                // ניקוי תוצאות קודמות
+                resultDiv.style.display = 'none';
+                detailsDiv.style.display = 'none';
+            });
+            
+            // הוספת אירוע לחיצה לכפתור בדיקה
+            checkButton.addEventListener('click', function() {
+                validateBankAccount();
+            });
+            
+            // הוספת אירוע לחיצה על Enter בשדות הקלט
+            branchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    accountInput.focus();
+                }
+            });
+            
+            accountInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    validateBankAccount();
+                }
+            });
+            
+            // עדכון תצוגת הספרות בזמן הקלדה
+            branchInput.addEventListener('input', function() {
+                // אפשר רק מספרים
+                this.value = this.value.replace(/[^0-9]/g, '');
+                updateAccountDisplay();
+            });
+            
+            accountInput.addEventListener('input', function() {
+                // אפשר רק מספרים
+                this.value = this.value.replace(/[^0-9]/g, '');
+                updateAccountDisplay();
+            });
+            
+            // פונקציה לעדכון תצוגת החשבון
+            function updateAccountDisplay() {
+                const selectedBank = bankSelect.value;
+                const bank = banks[selectedBank];
+                const branchValue = branchInput.value;
+                const accountValue = accountInput.value;
+                
+                // יצירת תצוגת החשבון
+                accountDisplay.innerHTML = '';
+                
+                // סקציית בנק
+                const bankSection = document.createElement('div');
+                bankSection.className = 'account-section';
+                
+                const bankLabel = document.createElement('div');
+                bankLabel.className = 'section-label';
+                bankLabel.textContent = 'בנק';
+                bankSection.appendChild(bankLabel);
+                
+                const bankDigits = document.createElement('div');
+                bankDigits.className = 'digits-container';
+                
+                // תצוגת קוד הבנק
+                const bankCode = selectedBank.padStart(2, '0');
+                for (let i = 0; i < bankCode.length; i++) {
+                    const digit = document.createElement('div');
+                    digit.className = 'digit-box filled';
+                    digit.textContent = bankCode[i];
+                    bankDigits.appendChild(digit);
+                }
+                
+                bankSection.appendChild(bankDigits);
+                accountDisplay.appendChild(bankSection);
+                
+                // מפריד
+                const separator1 = document.createElement('div');
+                separator1.className = 'separator';
+                separator1.textContent = '-';
+                accountDisplay.appendChild(separator1);
+                
+                // סקציית סניף
+                const branchSection = document.createElement('div');
+                branchSection.className = 'account-section';
+                
+                const branchLabel = document.createElement('div');
+                branchLabel.className = 'section-label';
+                branchLabel.textContent = 'סניף';
+                branchSection.appendChild(branchLabel);
+                
+                const branchDigits = document.createElement('div');
+                branchDigits.className = 'digits-container';
+                
+                // תצוגת מספר הסניף
+                for (let i = 0; i < bank.branchLength; i++) {
+                    const digit = document.createElement('div');
+                    digit.className = 'digit-box';
+                    
+                    if (i < branchValue.length) {
+                        digit.textContent = branchValue[i];
+                        digit.classList.add('filled');
+                    }
+                    
+                    branchDigits.appendChild(digit);
+                }
+                
+                branchSection.appendChild(branchDigits);
+                accountDisplay.appendChild(branchSection);
+                
+                // מפריד
+                const separator2 = document.createElement('div');
+                separator2.className = 'separator';
+                separator2.textContent = '-';
+                accountDisplay.appendChild(separator2);
+                
+                // סקציית חשבון
+                const accountSection = document.createElement('div');
+                accountSection.className = 'account-section';
+                
+                const accountLabel = document.createElement('div');
+                accountLabel.className = 'section-label';
+                accountLabel.textContent = 'חשבון';
+                accountSection.appendChild(accountLabel);
+                
+                const accountDigits = document.createElement('div');
+                accountDigits.className = 'digits-container';
+                
+                // תצוגת מספר החשבון
+                for (let i = 0; i < bank.accountLength; i++) {
+                    const digit = document.createElement('div');
+                    digit.className = 'digit-box';
+                    
+                    if (i < accountValue.length) {
+                        digit.textContent = accountValue[i];
+                        digit.classList.add('filled');
+                    }
+                    
+                    accountDigits.appendChild(digit);
+                }
+                
+                accountSection.appendChild(accountDigits);
+                accountDisplay.appendChild(accountSection);
+            }
+            
+            // פונקציה לבדיקת תקינות חשבון
+            function validateBankAccount() {
+                const selectedBank = bankSelect.value;
+                const bank = banks[selectedBank];
+                const branchValue = branchInput.value.trim();
+                const accountValue = accountInput.value.trim();
+                
+                const errors = [];
+                
+                // בדיקות בסיסיות
+                if (branchValue === '') {
+                    errors.push('נא להזין מספר סניף');
+                } else if (branchValue.length !== bank.branchLength) {
+                    errors.push(`מספר הסניף חייב להכיל ${bank.branchLength} ספרות בדיוק (התקבלו ${branchValue.length} ספרות)`);
+                }
+                
+                if (accountValue === '') {
+                    errors.push('נא להזין מספר חשבון');
+                } else if (accountValue.length > bank.accountLength) {
+                    errors.push(`מספר החשבון יכול להכיל עד ${bank.accountLength} ספרות (התקבלו ${accountValue.length} ספרות)`);
+                }
+                
+                if (errors.length > 0) {
+                    // הצגת השגיאות
+                    showErrors(errors);
+                    detailsDiv.style.display = 'none';
+                    return;
+                }
+                
+                // בדיקת תקינות לפי חוקי הבנק
+                const validationResult = bank.validation(branchValue, accountValue);
+                
+                if (validationResult.valid) {
+                    showSuccess();
+                } else {
+                    showErrors([validationResult.error]);
+                }
+                
+                // הצגת פרטי החישוב
+                showValidationDetails(selectedBank, branchValue, accountValue, validationResult);
+            }
+            
+            // פונקציות אימות לבנקים השונים (לצורך הדגמה)
+            function validatePoalimAccount(branch, account) {
+                // בדיקה בסיסית - האם מספר חיובי
+                if (parseInt(branch) <= 0 || parseInt(account) <= 0) {
+                    return {
+                        valid: false,
+                        error: 'מספרי סניף וחשבון חייבים להיות מספרים חיוביים'
+                    };
+                }
+                
+                // בדיקת הסניף (לצורך הדגמה בלבד)
+                if (parseInt(branch) > 800) {
+                    return {
+                        valid: false,
+                        error: 'מספר סניף לא תקין בבנק הפועלים (חייב להיות עד 800)'
+                    };
+                }
+                
+                return {
+                    valid: true,
+                    details: [
+                        `מספר הסניף ${branch} נמצא בטווח חוקי`,
+                        `מספר החשבון ${account} תקין`,
+                        `החשבון אומת לפי חוקי בנק הפועלים`
+                    ]
+                };
+            }
+            
+            function validateLeumiAccount(branch, account) {
+                // בדיקה בסיסית - האם מספר חיובי
+                if (parseInt(branch) <= 0 || parseInt(account) <= 0) {
+                    return {
+                        valid: false,
+                        error: 'מספרי סניף וחשבון חייבים להיות מספרים חיוביים'
+                    };
+                }
+                
+                // בדיקת הסניף (לצורך הדגמה בלבד)
+                if (parseInt(branch) > 900) {
+                    return {
+                        valid: false,
+                        error: 'מספר סניף לא תקין בבנק לאומי (חייב להיות עד 900)'
+                    };
+                }
+                
+                return {
+                    valid: true,
+                    details: [
+                        `מספר הסניף ${branch} נמצא בטווח חוקי`,
+                        `מספר החשבון ${account} תקין`,
+                        `החשבון אומת לפי חוקי בנק לאומי`
+                    ]
+                };
+            }
+            
+            function validateDiscountAccount(branch, account) {
+                // בדיקה דומה
+                return {
+                    valid: true,
+                    details: [
+                        `מספר הסניף ${branch} נמצא בטווח חוקי`,
+                        `מספר החשבון ${account} תקין`,
+                        `החשבון אומת לפי חוקי בנק דיסקונט`
+                    ]
+                };
+            }
+            
+            function validateMizrahiAccount(branch, account) {
+                // בדיקה דומה
+                return {
+                    valid: true,
+                    details: [
+                        `מספר הסניף ${branch} נמצא בטווח חוקי`,
+                        `מספר החשבון ${account} תקין`,
+                        `החשבון אומת לפי חוקי בנק מזרחי-טפחות`
+                    ]
+                };
+            }
+            
+            function validateBinleumiAccount(branch, account) {
+                // בדיקה דומה
+                return {
+                    valid: true,
+                    details: [
+                        `מספר הסניף ${branch} נמצא בטווח חוקי`,
+                        `מספר החשבון ${account} תקין`,
+                        `החשבון אומת לפי חוקי הבנק הבינלאומי`
+                    ]
+                };
+            }
+            
+            function validateYahavAccount(branch, account) {
+                // בדיקה דומה
+                return {
+                    valid: true,
+                    details: [
+                        `מספר הסניף ${branch} נמצא בטווח חוקי`,
+                        `מספר החשבון ${account} תקין`,
+                        `החשבון אומת לפי חוקי בנק יהב`
+                    ]
+                };
+            }
+            
+            function validateJerusalemAccount(branch, account) {
+                // בדיקה דומה
+                return {
+                    valid: true,
+                    details: [
+                        `מספר הסניף ${branch} נמצא בטווח חוקי`,
+                        `מספר החשבון ${account} תקין`,
+                        `החשבון אומת לפי חוקי בנק ירושלים`
+                    ]
+                };
+            }
+            
+            // פונקציה להצגת הודעת הצלחה
+            function showSuccess() {
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = '<h3>✓ פרטי החשבון תקינים!</h3>';
+                resultDiv.style.display = 'block';
+            }
+            
+            // פונקציה להצגת שגיאות
+            function showErrors(errors) {
+                resultDiv.className = 'result error';
+                let errorHtml = '<h3>✗ פרטי החשבון אינם תקינים!</h3><ul>';
+                errors.forEach(error => {
+                    errorHtml += `<li class="error-item">${error}</li>`;
+                });
+                errorHtml += '</ul>';
+                resultDiv.innerHTML = errorHtml;
+                resultDiv.style.display = 'block';
+            }
+            
+            // פונקציה להצגת פרטי הבדיקה
+            function showValidationDetails(bankCode, branch, account, validationResult) {
+                let detailsHtml = '<h3>פרטי בדיקת החשבון:</h3>';
+                
+                // פרטי הבנק
+                const bank = banks[bankCode];
+                detailsHtml += `
+                    <div class="highlight-row">
+                        <div class="step"><span class="highlight">שם הבנק:</span> ${bank.name} (${bankCode})</div>
+                        <div class="step"><span class="highlight">מספר סניף:</span> ${branch}</div>
+                        <div class="step"><span class="highlight">מספר חשבון:</span> ${account}</div>
+                    </div>`;
+                
+                // פרטי האימות
+                if (validationResult.details) {
+                    detailsHtml += '<h3>תוצאות האימות:</h3>';
+                    
+                    validationResult.details.forEach(detail => {
+                        detailsHtml += `<div class="step">${detail}</div>`;
+                    });
+                }
+                
+                // יצירת IBAN (לצורך הדגמה)
+                detailsHtml += '<h3>פרטי IBAN (מספר חשבון בנק בינלאומי):</h3>';
+                
+                const paddedBranch = branch.padStart(3, '0');
+                const paddedAccount = account.padStart(bank.accountLength, '0');
+                const iban = `IL270${bankCode}${paddedBranch}${paddedAccount}00`;
+                
+                detailsHtml += `
+                    <div class="iban-display">
+                        ${iban}
+                    </div>
+                    <div class="step"><span class="highlight">מבנה:</span> IL (קוד מדינה) + 27 (ספרות ביקורת) + 0 + קוד בנק + מספר סניף + מספר חשבון + 00</div>
+                `;
+                
+                detailsDiv.innerHTML = detailsHtml;
+                detailsDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

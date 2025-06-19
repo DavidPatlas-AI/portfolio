@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בודק תקינות מספר דרכון ישראלי</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+            padding: 25px;
+        }
+        h1 {
+            color: #003366;
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #003366;
+            padding-bottom: 15px;
+            font-size: 2rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        input {
+            width: calc(100% - 22px);
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 5px rgba(0, 51, 102, 0.3);
+        }
+        input[type="date"] {
+            padding: 10px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            margin-top: 15px;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        button:hover {
+            background-color: #004080;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 5px;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .success {
+            background-color: #dff0d8;
+            border-right: 4px solid #3c763d;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            border-right: 4px solid #a94442;
+            color: #a94442;
+        }
+        .warning {
+            background-color: #fcf8e3;
+            border-right: 4px solid #f0ad4e;
+            color: #8a6d3b;
+        }
+        .details {
+            margin-top: 25px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .step {
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #fff;
+            border-radius: 3px;
+            border-right: 3px solid #003366;
+            padding-right: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .step:hover {
+            transform: translateX(-5px);
+        }
+        .highlight {
+            font-weight: bold;
+            color: #003366;
+        }
+        .error-item {
+            color: #a94442;
+            margin-bottom: 8px;
+            padding-right: 15px;
+            position: relative;
+        }
+        .error-item::before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            color: #a94442;
+        }
+        .help-text {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            border-right: 4px solid #5bc0de;
+        }
+        .help-text h3 {
+            color: #31708f;
+            margin-top: 0;
+        }
+        .help-text ol {
+            padding-right: 20px;
+        }
+        .help-text li {
+            margin-bottom: 8px;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .digit-display {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 25px;
+        }
+        .digit-box {
+            width: 40px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 20px;
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+        .digit-box.filled {
+            border-color: #003366;
+            background-color: #e8f4f8;
+        }
+        .digit-separator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 2px;
+        }
+        .highlight-row {
+            background-color: #f0f8ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-right: 3px solid #003366;
+        }
+        .passport-icon {
+            font-size: 24px;
+            margin-left: 10px;
+        }
+        .expiry-warning {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #fff3cd;
+            border-radius: 5px;
+            border-right: 3px solid #ffc107;
+        }
+        .expiry-critical {
+            background-color: #f8d7da;
+            border-right: 3px solid #dc3545;
+        }
+        .expiry-ok {
+            background-color: #d1e7dd;
+            border-right: 3px solid #198754;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .passport-display {
+            margin: 20px auto;
+            width: 320px;
+            background-color: #000066;
+            border-radius: 10px;
+            padding: 15px;
+            color: gold;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        .passport-header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .passport-title {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .passport-number {
+            font-size: 22px;
+            letter-spacing: 3px;
+            margin: 10px 0;
+        }
+        .passport-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .passport-field {
+            margin-bottom: 5px;
+        }
+        .passport-label {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+        .passport-value {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>בודק תקינות מספר דרכון ישראלי</h1>
+        
+        <div class="form-group">
+            <label for="passportNumber">הכנס מספר דרכון:</label>
+            <input type="text" id="passportNumber" placeholder="לדוגמה: 12345678" maxlength="8">
+        </div>
+        
+        <div id="digitDisplay" class="digit-display">
+            <!-- כאן יוצגו הספרות בזמן אמת -->
+        </div>
+        
+        <div class="form-group">
+            <label for="expiryDate">תאריך תפוגת תוקף:</label>
+            <input type="date" id="expiryDate">
+        </div>
+        
+        <button id="checkButton">בדוק תקינות</button>
+        
+        <div class="passport-display" id="passportDisplay">
+            <div class="passport-header">
+                <div class="passport-title">PASSPORT / דרכון</div>
+                <div class="passport-title">ISRAEL / ישראל</div>
+            </div>
+            <div class="passport-number" id="displayPassportNumber">12345678</div>
+            <div class="passport-fields">
+                <div class="passport-field">
+                    <div class="passport-label">שם משפחה / SURNAME</div>
+                    <div class="passport-value">ISRAELI</div>
+                </div>
+                <div class="passport-field">
+                    <div class="passport-label">שם פרטי / GIVEN NAMES</div>
+                    <div class="passport-value">ISRAEL</div>
+                </div>
+                <div class="passport-field">
+                    <div class="passport-label">לאום / NATIONALITY</div>
+                    <div class="passport-value">ISRAELI</div>
+                </div>
+                <div class="passport-field">
+                    <div class="passport-label">תאריך תפוגה / DATE OF EXPIRY</div>
+                    <div class="passport-value" id="displayExpiryDate">01.01.2030</div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="result" class="result">
+            <!-- כאן יוצגו תוצאות הבדיקה -->
+        </div>
+        
+        <div id="details" class="details" style="display: none;">
+            <!-- כאן יוצגו פרטי הבדיקה -->
+        </div>
+        
+        <div class="help-text">
+            <h3>מידע חשוב בנוגע לדרכון ישראלי</h3>
+            <p>דרכון ישראלי ביומטרי תקף ל-10 שנים למבוגרים ול-5 שנים לילדים מתחת לגיל 18.</p>
+            <ol>
+                <li>מספר דרכון ישראלי מורכב מ-8 ספרות.</li>
+                <li>יש לוודא שלא ניתן לצאת מהארץ עם דרכון שתוקפו עומד לפוג בתוך פחות מ-6 חודשים.</li>
+                <li>מדינות רבות דורשות שתוקף הדרכון יהיה לפחות 6 חודשים מיום הכניסה אליהן.</li>
+                <li>לקראת פקיעת התוקף, יש לחדש את הדרכון במשרד הפנים או בנציגות ישראל בחו"ל.</li>
+            </ol>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 בודק תקינות מספר דרכון ישראלי | פותח עבור מטרות הדגמה בלבד</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const passportInput = document.getElementById('passportNumber');
+            const expiryDateInput = document.getElementById('expiryDate');
+            const checkButton = document.getElementById('checkButton');
+            const resultDiv = document.getElementById('result');
+            const detailsDiv = document.getElementById('details');
+            const digitDisplayDiv = document.getElementById('digitDisplay');
+            const displayPassportNumber = document.getElementById('displayPassportNumber');
+            const displayExpiryDate = document.getElementById('displayExpiryDate');
+            
+            // הגדרת תאריך ברירת מחדל (שנה מהיום)
+            const defaultDate = new Date();
+            defaultDate.setFullYear(defaultDate.getFullYear() + 1);
+            const defaultDateString = defaultDate.toISOString().split('T')[0];
+            expiryDateInput.value = defaultDateString;
+            updatePassportDisplay();
+            
+            // יצירת תצוגת הספרות הראשונית
+            createDigitDisplay();
+            
+            // הוספת אירוע לחיצה לכפתור בדיקה
+            checkButton.addEventListener('click', function() {
+                validatePassport();
+            });
+            
+            // הוספת אירוע לחיצה על Enter בשדה הקלט
+            passportInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    validatePassport();
+                }
+            });
+            
+            // עדכון תצוגת הספרות בזמן הקלדה
+            passportInput.addEventListener('input', function() {
+                // אפשר רק מספרים ואותיות באנגלית (לדרכון)
+                this.value = this.value.replace(/[^0-9a-zA-Z]/g, '').toUpperCase();
+                
+                updateDigitDisplay(this.value);
+                updatePassportDisplay();
+            });
+            
+            // עדכון תצוגת הדרכון כאשר תאריך התפוגה משתנה
+            expiryDateInput.addEventListener('change', function() {
+                updatePassportDisplay();
+            });
+            
+            // פונקציה ליצירת תצוגת הספרות הראשונית
+            function createDigitDisplay() {
+                digitDisplayDiv.innerHTML = '';
+                
+                // מספר דרכון ישראלי הוא בן 8 ספרות
+                for (let i = 0; i < 8; i++) {
+                    const digitBox = document.createElement('div');
+                    digitBox.className = 'digit-box';
+                    digitDisplayDiv.appendChild(digitBox);
+                }
+            }
+            
+            // פונקציה לעדכון תצוגת הספרות
+            function updateDigitDisplay(value) {
+                const digitBoxes = digitDisplayDiv.querySelectorAll('.digit-box');
+                
+                digitBoxes.forEach((box, index) => {
+                    // מסיר את הקלאס של תא מלא
+                    box.classList.remove('filled');
+                    
+                    // עדכון תוכן התא
+                    if (index < value.length) {
+                        box.textContent = value[index];
+                        box.classList.add('filled');
+                    } else {
+                        box.textContent = '';
+                    }
+                });
+            }
+            
+            // פונקציה לעדכון תצוגת הדרכון
+            function updatePassportDisplay() {
+                // עדכון מספר דרכון
+                displayPassportNumber.textContent = passportInput.value.padEnd(8, 'X');
+                
+                // עדכון תאריך תפוגה
+                if (expiryDateInput.value) {
+                    const expiryDate = new Date(expiryDateInput.value);
+                    const day = String(expiryDate.getDate()).padStart(2, '0');
+                    const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
+                    const year = expiryDate.getFullYear();
+                    
+                    displayExpiryDate.textContent = `${day}.${month}.${year}`;
+                } else {
+                    displayExpiryDate.textContent = 'XX.XX.XXXX';
+                }
+            }
+            
+            // פונקציה לבדיקת תקינות מספר דרכון
+            function validatePassport() {
+                const passportNumber = passportInput.value.trim();
+                const expiryDate = expiryDateInput.value;
+                
+                const errors = [];
+                
+                // בדיקות בסיסיות למספר דרכון
+                if (passportNumber === '') {
+                    errors.push('נא להזין מספר דרכון');
+                } else if (!/^\d{8}$/.test(passportNumber)) {
+                    errors.push('מספר דרכון ישראלי חייב להכיל 8 ספרות בדיוק');
+                }
+                
+                // בדיקת תאריך תפוגה
+                if (!expiryDate) {
+                    errors.push('נא להזין תאריך תפוגת תוקף');
+                }
+                
+                if (errors.length > 0) {
+                    // הצגת השגיאות
+                    showError(errors);
+                    detailsDiv.style.display = 'none';
+                    return;
+                }
+                
+                // בדיקה שהמספר תקין (פשוט בודק שיש 8 ספרות, אין אלגוריתם ספציפי לדרכון)
+                // בדיקה אמיתית תכלול אימות מול מאגר רשמי
+                const isValidNumber = /^\d{8}$/.test(passportNumber);
+                
+                if (!isValidNumber) {
+                    showError(['מספר הדרכון אינו תקין']);
+                    detailsDiv.style.display = 'none';
+                    return;
+                }
+                
+                // בדיקת תוקף הדרכון
+                const today = new Date();
+                const expiryDateObj = new Date(expiryDate);
+                
+                // חישוב ההפרש בחודשים
+                const monthsDiff = (expiryDateObj.getFullYear() - today.getFullYear()) * 12 + 
+                                   (expiryDateObj.getMonth() - today.getMonth());
+                
+                if (expiryDateObj < today) {
+                    // הדרכון פג תוקף
+                    showError(['הדרכון פג תוקף! נדרש לחדש את הדרכון בהקדם']);
+                } else if (monthsDiff <= 6) {
+                    // פחות מחצי שנה לתפוגה - אזהרה
+                    showWarning('תוקף הדרכון יפוג בקרוב! לא ניתן להיכנס לרוב המדינות עם דרכון שתוקפו פחות מ-6 חודשים');
+                } else {
+                    // הדרכון תקין
+                    showSuccess();
+                }
+                
+                // הצגת פרטי הבדיקה
+                showPassportDetails(passportNumber, expiryDateObj, monthsDiff);
+            }
+            
+            // פונקציה להצגת הודעת הצלחה
+            function showSuccess() {
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `<h3>✓ מספר הדרכון והתוקף תקינים!</h3>`;
+                resultDiv.style.display = 'block';
+            }
+            
+            // פונקציה להצגת אזהרה
+            function showWarning(message) {
+                resultDiv.className = 'result warning';
+                resultDiv.innerHTML = `<h3>⚠️ ${message}</h3>`;
+                resultDiv.style.display = 'block';
+            }
+            
+            // פונקציה להצגת הודעת שגיאה
+            function showError(errors) {
+                resultDiv.className = 'result error';
+                let errorHtml = '<h3>✗ בעיה בפרטי הדרכון</h3><ul>';
+                errors.forEach(error => {
+                    errorHtml += `<li class="error-item">${error}</li>`;
+                });
+                errorHtml += '</ul>';
+                resultDiv.innerHTML = errorHtml;
+                resultDiv.style.display = 'block';
+            }
+            
+            // פונקציה להצגת פרטי הדרכון
+            function showPassportDetails(passportNumber, expiryDate, monthsToExpiry) {
+                let detailsHtml = '<h3>פרטי הדרכון:</h3>';
+                
+                // עיצוב הודעת תפוגה בהתאם למספר החודשים שנותרו
+                let expiryClass = 'expiry-ok';
+                let expiryMessage = 'תקין, פג תוקף בעוד יותר מ-6 חודשים';
+                
+                if (monthsToExpiry <= 0) {
+                    expiryClass = 'expiry-critical';
+                    expiryMessage = 'פג תוקף! יש לחדש בהקדם';
+                } else if (monthsToExpiry <= 6) {
+                    expiryClass = 'expiry-warning';
+                    expiryMessage = `נותרו ${monthsToExpiry} חודשים בלבד! מומלץ לחדש בהקדם`;
+                }
+                
+                const day = String(expiryDate.getDate()).padStart(2, '0');
+                const month = String(expiryDate.getMonth() + 1).padStart(2, '0');
+                const year = expiryDate.getFullYear();
+                
+                detailsHtml += `
+                    <div class="highlight-row">
+                        <div class="step"><span class="highlight">מספר דרכון:</span> ${passportNumber}</div>
+                        <div class="step"><span class="highlight">תאריך תפוגת תוקף:</span> ${day}.${month}.${year}</div>
+                    </div>
+                    
+                    <div class="${expiryClass}">
+                        <div class="step"><span class="highlight">סטטוס תוקף:</span> ${expiryMessage}</div>
+                    </div>
+                `;
+                
+                // מידע על מגבלות כניסה למדינות
+                if (monthsToExpiry <= 6) {
+                    detailsHtml += `
+                        <div class="highlight-row">
+                            <div class="step"><span class="highlight">הגבלות כניסה למדינות:</span></div>
+                            <div class="step">• רוב המדינות דורשות שתוקף הדרכון יהיה לפחות 6 חודשים מיום הכניסה</div>
+                            <div class="step">• בדרכון שתוקפו פחות מ-6 חודשים, יתכן ותימנע הכניסה למדינות רבות</div>
+                            <div class="step">• גם יציאה מישראל עלולה להימנע אם הדרכון יפוג תוך חצי שנה</div>
+                            <div class="step">• מומלץ לחדש את הדרכון בהקדם בלשכת רשות האוכלוסין</div>
+                        </div>
+                    `;
+                }
+                
+                detailsDiv.innerHTML = detailsHtml;
+                detailsDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

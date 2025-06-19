@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>החממה הדיגיטלית - גידול משותף בכל מקום בעולם</title>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-green: #2ecc71;
+            --secondary-green: #27ae60;
+            --accent-green: #a8e6cf;
+            --dark-green: #1e8449;
+            --light-green: #d5f4e6;
+            --earth-brown: #8b4513;
+            --sky-blue: #87ceeb;
+            --warm-white: #fefefe;
+            --soft-gray: #ecf0f1;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-green);
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%),
+                        url('https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,144C960,149,1056,139,1152,128C1248,117,1344,107,1392,101.3L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+            background-size: cover;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .hero-content {
+            text-align: center;
+            color: white;
+            z-index: 2;
+            max-width: 800px;
+            padding: 0 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero .subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero .tagline {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            color: var(--accent-green);
+            font-weight: 500;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: var(--primary-green);
+        }
+
+        /* Floating Elements */
+        .floating-plants {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .plant-icon {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(255, 255, 255, 0.3);
+            animation: floatPlant 8s ease-in-out infinite;
+        }
+
+        .plant-icon:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .plant-icon:nth-child(2) { top: 60%; left: 85%; animation-delay: 2s; }
+        .plant-icon:nth-child(3) { top: 80%; left: 15%; animation-delay: 4s; }
+        .plant-icon:nth-child(4) { top: 30%; left: 90%; animation-delay: 6s; }
+
+        @keyframes floatPlant {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(10deg); }
+        }
+
+        /* Stats Section */
+        .stats {
+            background: var(--light-green);
+            padding: 4rem 0;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding: 0 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-icon {
+            font-size: 3rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark-green);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #7f8c8d;
+        }
+
+        /* About Section */
+        .about {
+            padding: 6rem 0;
+            background: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark-green);
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-content h3 {
+            font-size: 1.8rem;
+            color: var(--dark-green);
+            margin-bottom: 1rem;
+        }
+
+        .about-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            color: #555;
+        }
+
+        .about-visual {
+            background: linear-gradient(135deg, var(--accent-green), var(--light-green));
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .greenhouse-demo {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* Features Section */
+        .features {
+            background: var(--soft-gray);
+            padding: 6rem 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border-top: 4px solid var(--primary-green);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            color: var(--dark-green);
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* Vision Section */
+        .vision {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.9), rgba(39, 174, 96, 0.9)),
+                        url('https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+            color: white;
+            padding: 6rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vision::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.1);
+        }
+
+        .vision-content {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .vision h2 {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .vision-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .vision-step {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .step-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--accent-green);
+        }
+
+        /* CTA Section */
+        .final-cta {
+            background: white;
+            padding: 6rem 0;
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            font-size: 2.5rem;
+            color: var(--dark-green);
+            margin-bottom: 1rem;
+        }
+
+        .cta-content p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .contact-info {
+            background: var(--light-green);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-top: 3rem;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, var(--dark-green), var(--secondary-green));
+            color: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        /* Responsive Design for Gallery */
+        @media (max-width: 768px) {
+            .image-gallery {
+                grid-template-columns: 1fr !important;
+            }
+            
+            .gallery-item {
+                height: 250px !important;
+            }
+            
+            .gallery-overlay {
+                padding: 1.5rem !important;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .about-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Interactive Elements */
+        .interactive-demo {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 3rem 0;
+            text-align: center;
+            color: white;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .demo-card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 1.5rem;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-card:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                החממה הדיגיטלית
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">בית</a></li>
+                <li><a href="#gallery">גלריה</a></li>
+                <li><a href="#about">אודות</a></li>
+                <li><a href="#features">תכונות</a></li>
+                <li><a href="#vision">חזון</a></li>
+                <li><a href="#contact">צור קשר</a></li>
+            </ul>
+            <a href="#gallery" class="cta-button">צפה בגלריה</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="floating-plants">
+            <i class="fas fa-leaf plant-icon"></i>
+            <i class="fas fa-seedling plant-icon"></i>
+            <i class="fas fa-tree plant-icon"></i>
+            <i class="fas fa-spa plant-icon"></i>
+        </div>
+        
+        <div class="hero-content">
+            <h1>החממה הדיגיטלית</h1>
+            <p class="subtitle">גידול משותף – בכל מקום בעולם</p>
+            <p class="tagline">🌍 מערכת חדשנית לגידול שיתופי של צמחים בזמן אמת</p>
+            
+            <div class="hero-buttons">
+                <a href="#gallery" class="btn-primary">
+                    <i class="fas fa-images"></i>
+                    צפה בגלריה
+                </a>
+                <a href="#about" class="btn-secondary">
+                    למד עוד
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-number">10K+</div>
+                <div class="stat-label">משתמשים פעילים</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <div class="stat-number">50K+</div>
+                <div class="stat-label">צמחים בגידול</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <div class="stat-number">85</div>
+                <div class="stat-label">מדינות משתתפות</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-leaf"></i>
+                </div>
+                <div class="stat-number">95%</div>
+                <div class="stat-label">שיעור הצלחה</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <h2 class="section-title">מהפכה ירוקה דיגיטלית</h2>
+            <p class="section-subtitle">
+                שילוב בין טכנולוגיה, קהילתיות וחקלאות בת־קיימא
+            </p>
+            
+            <div class="about-grid">
+                <div class="about-content">
+                    <h3>🌱 הבעיה שאנחנו פותרים</h3>
+                    <p>
+                        במציאות העירונית של היום, רבים מאיתנו מנותקים מהטבע ומגידול מזון. 
+                        החממה הדיגיטלית מחברת בין אנשים ברחבי העולם ליצירת קהילת גידול משותפת.
+                    </p>
+                    
+                    <h3>🚀 הפתרון שלנו</h3>
+                    <p>
+                        פלטפורמה דיגיטלית שמאפשרת מעקב, שיתוף ידע, וגידול משותף של צמחים בזמן אמת. 
+                        משתמשים יכולים לשתף ציוד, ידע, ואפילו תוצרת - מכל מקום בעולם.
+                    </p>
+                </div>
+                
+                <div class="about-visual">
+                    <div class="greenhouse-demo">
+                        <h4 style="color: var(--dark-green); margin-bottom: 1rem;">
+                            <i class="fas fa-home"></i>
+                            החממה שלך
+                        </h4>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                            <div style="background: var(--light-green); padding: 1rem; border-radius: 8px; text-align: center;">
+                                <i class="fas fa-seedling" style="color: var(--primary-green); font-size: 1.5rem;"></i>
+                                <div style="font-size: 0.9rem; margin-top: 0.5rem;">עגבנייה</div>
+                            </div>
+                            <div style="background: var(--light-green); padding: 1rem; border-radius: 8px; text-align: center;">
+                                <i class="fas fa-leaf" style="color: var(--primary-green); font-size: 1.5rem;"></i>
+                                <div style="font-size: 0.9rem; margin-top: 0.5rem;">חסה</div>
+                            </div>
+                            <div style="background: var(--light-green); padding: 1rem; border-radius: 8px; text-align: center;">
+                                <i class="fas fa-spa" style="color: var(--primary-green); font-size: 1.5rem;"></i>
+                                <div style="font-size: 0.9rem; margin-top: 0.5rem;">בזיליקום</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">תכונות מרכזיות</h2>
+            <p class="section-subtitle">
+                כל מה שאתה צריך לגידול מוצלח ושיתופי
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <h3>מעקב בזמן אמת</h3>
+                    <p>מצלמות וחיישנים חכמים למעקב אחר טמפרטורה, לחות, ואור. צפה בצמחים שלך מכל מקום בעולם.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>קהילה גלובלית</h3>
+                    <p>התחבר לגננים ומגדלים ברחבי העולם. שתף ידע, קבל עצות, וגדלו יחד.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>AI חכם</h3>
+                    <p>בינה מלאכותית שלומדת את הצרכים של הצמחים שלך ומספקת המלצות מותאמות אישית.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <h3>שוק משותף</h3>
+                    <p>מכור את התוצרת שלך, קנה מגדלים אחרים, או החלף זרעים וידע.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>אפליקציה ניידת</h3>
+                    <p>נהל את החממה שלך מהטלפון. קבל התראות והתעדכנות בזמן אמת.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>ניתוח נתונים</h3>
+                    <p>גרפים ודוחות מפורטים על התקדמות הגידול, צריכת מים, ותפוקה.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery section" id="gallery" style="background: white;">
+        <div class="container">
+            <h2 class="section-title">גלריית החממה הדיגיטלית</h2>
+            <p class="section-subtitle">
+                תמונות מהעולם הירוק והטכנולוגי שלנו
+            </p>
+            
+            <div class="image-gallery" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                <div class="gallery-item" onclick="openLightbox(this)" style="position: relative; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; height: 300px; cursor: pointer;">
+                    <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="חממה מתקדמת" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                    <div class="gallery-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; padding: 2rem; transform: translateY(100%); transition: transform 0.3s ease;">
+                        <h3>חממה מתקדמת</h3>
+                        <p>טכנולוגיה חדישה לגידול אופטימלי</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" onclick="openLightbox(this)" style="position: relative; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; height: 300px; cursor: pointer;">
+                    <img src="https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="חקלאות עירונית" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                    <div class="gallery-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; padding: 2rem; transform: translateY(100%); transition: transform 0.3s ease;">
+                        <h3>חקלאות עירונית</h3>
+                        <p>גידול בלב העיר הגדולה</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" onclick="openLightbox(this)" style="position: relative; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; height: 300px; cursor: pointer;">
+                    <img src="https://images.unsplash.com/photo-1574263867128-a3d5c1b1deac?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="גידול הידרופוני" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                    <div class="gallery-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; padding: 2rem; transform: translateY(100%); transition: transform 0.3s ease;">
+                        <h3>גידול הידרופוני</h3>
+                        <p>חסכון במים וייעול מקסימלי</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" onclick="openLightbox(this)" style="position: relative; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; height: 300px; cursor: pointer;">
+                    <img src="https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="חיישנים חכמים" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                    <div class="gallery-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; padding: 2rem; transform: translateY(100%); transition: transform 0.3s ease;">
+                        <h3>חיישנים חכמים</h3>
+                        <p>מעקב בזמן אמת אחר תנאי הגידול</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" onclick="openLightbox(this)" style="position: relative; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; height: 300px; cursor: pointer;">
+                    <img src="https://images.unsplash.com/photo-1466692476868-aef1dfb1e735?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="קהילת מגדלים" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                    <div class="gallery-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; padding: 2rem; transform: translateY(100%); transition: transform 0.3s ease;">
+                        <h3>קהילת מגדלים</h3>
+                        <p>שיתוף ידע ברחבי העולם</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" onclick="openLightbox(this)" style="position: relative; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; height: 300px; cursor: pointer;">
+                    <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="תוצרת טרייה" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                    <div class="gallery-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; padding: 2rem; transform: translateY(100%); transition: transform 0.3s ease;">
+                        <h3>תוצרת טרייה</h3>
+                        <p>מהחממה ישירות לשולחן</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" onclick="openLightbox(this)" style="position: relative; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; height: 300px; cursor: pointer;">
+                    <img src="../יצירת תוכן ויראלי לפי טרנדים/TrendOS_Organized/src/images/icon.jpg" alt="פרויקט החממה הדיגיטלית" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                    <div class="gallery-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; padding: 2rem; transform: translateY(100%); transition: transform 0.3s ease;">
+                        <h3>פרויקט החממה</h3>
+                        <p>חדשנות ישראלית ברחבי העולם 🇮🇱</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" onclick="openLightbox(this)" style="position: relative; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; height: 300px; cursor: pointer;">
+                    <img src="https://images.unsplash.com/photo-1599134842279-fe807d23316e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="AI בחקלאות" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                    <div class="gallery-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; padding: 2rem; transform: translateY(100%); transition: transform 0.3s ease;">
+                        <h3>AI בחקלאות</h3>
+                        <p>בינה מלאכותית לטיפוח הצמחים</p>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" onclick="openLightbox(this)" style="position: relative; border-radius: 15px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: all 0.3s ease; height: 300px; cursor: pointer;">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="טכנולוגיה ירוקה" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                    <div class="gallery-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white; padding: 2rem; transform: translateY(100%); transition: transform 0.3s ease;">
+                        <h3>טכנולוגיה ירוקה</h3>
+                        <p>עתיד החקלאות הבת-קיימא</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Demo -->
+    <section class="interactive-demo" id="demo">
+        <div class="container">
+            <h2>דמו אינטראקטיבי</h2>
+            <p>לחץ על אחד מהצמחים כדי לראות מידע בזמן אמת</p>
+            
+            <div class="demo-grid">
+                <div class="demo-card" onclick="showPlantInfo('tomato')">
+                    <i class="fas fa-seedling" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <div>עגבנייה</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">יום 45</div>
+                </div>
+                <div class="demo-card" onclick="showPlantInfo('lettuce')">
+                    <i class="fas fa-leaf" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <div>חסה</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">יום 23</div>
+                </div>
+                <div class="demo-card" onclick="showPlantInfo('basil')">
+                    <i class="fas fa-spa" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <div>בזיליקום</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">יום 30</div>
+                </div>
+                <div class="demo-card" onclick="showPlantInfo('pepper')">
+                    <i class="fas fa-pepper-hot" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <div>פלפל</div>
+                    <div style="font-size: 0.8rem; opacity: 0.8;">יום 67</div>
+                </div>
+            </div>
+            
+            <div id="plantInfo" style="margin-top: 2rem; padding: 1.5rem; background: rgba(255,255,255,0.2); border-radius: 10px; display: none;">
+                <!-- Plant info will be displayed here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Vision Section -->
+    <section class="vision" id="vision">
+        <div class="container">
+            <div class="vision-content">
+                <h2>החזון שלנו</h2>
+                <p style="font-size: 1.2rem; margin-bottom: 3rem;">
+                    עולם שבו כל אדם יכול להיות חלק מקהילת גידול גלובלית
+                </p>
+                
+                <div class="vision-steps">
+                    <div class="vision-step">
+                        <div class="step-number">1</div>
+                        <h4>🇮🇱 בישראל</h4>
+                        <p>אדם שותל עגבנייה ומתחיל לגדל</p>
+                    </div>
+                    
+                    <div class="vision-step">
+                        <div class="step-number">2</div>
+                        <h4>🇨🇦 בקנדה</h4>
+                        <p>מגדל מנוסה מספק ייעוץ בשידור חי</p>
+                    </div>
+                    
+                    <div class="vision-step">
+                        <div class="step-number">3</div>
+                        <h4>🇳🇱 בהולנד</h4>
+                        <p>משקיע מצטרף ומממן את הקטיף</p>
+                    </div>
+                    
+                    <div class="vision-step">
+                        <div class="step-number">4</div>
+                        <h4>🌍 בעולם</h4>
+                        <p>הקהילה כולה מתעדת, משתפת ומרוויחה יחד</p>
+                    </div>
+                </div>
+                
+                <p style="font-size: 1.3rem; font-weight: 600; margin-top: 2rem;">
+                    הכל דרך אפליקציה אחת – פשוטה, ירוקה, וחדשנית 🌍
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta" id="contact">
+        <div class="container">
+            <div class="cta-content">
+                <h2>מוכנים להצטרף למהפכה?</h2>
+                <p>
+                    הצטרפו לקהילת הגידול הגלובלית שלנו ותהיו חלק מהעתיד של החקלאות האורבנית
+                </p>
+                
+                <div style="margin: 2rem 0;">
+                    <a href="mailto:info@digital-greenhouse.com" class="btn-primary" style="margin: 0.5rem;">
+                        <i class="fas fa-envelope"></i>
+                        צור קשר למשקיעים
+                    </a>
+                    <a href="#demo" class="btn-secondary" style="margin: 0.5rem; color: var(--primary-green); border-color: var(--primary-green);">
+                        <i class="fas fa-rocket"></i>
+                        הזמן דמו אישי
+                    </a>
+                </div>
+                
+                <div class="contact-info">
+                    <h3 style="color: var(--dark-green); margin-bottom: 1rem;">פרטי התקשרות</h3>
+                    <div class="contact-grid">
+                        <div class="contact-item">
+                            <i class="fas fa-user"></i>
+                            <span>צבי פטלס - מייסד</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fab fa-youtube"></i>
+                            <a href="https://youtube.com/@tzvipatlastzvipatlas?si=2vxw7TXvkfPSmHwt" target="_blank" style="color: var(--dark-green);">YouTube</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fab fa-tiktok"></i>
+                            <a href="https://www.tiktok.com/@tzvipatlas?_t=ZS-8xJ8duA75Fg&_r=1" target="_blank" style="color: var(--dark-green);">TikTok</a>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@digital-greenhouse.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 החממה הדיגיטלית. כל הזכויות שמורות לצבי פטלס.</p>
+            <p style="margin-top: 1rem; opacity: 0.8;">
+                🌱 גידול משותף - בכל מקום בעולם 🌍
+            </p>
+        </div>
+    </footer>
+
+    <!-- Lightbox -->
+    <div id="lightbox" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; justify-content: center; align-items: center; z-index: 10000; cursor: pointer;" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="" style="max-width: 90%; max-height: 90%; border-radius: 10px; box-shadow: 0 10px 50px rgba(0,0,0,0.5);">
+    </div>
+
+    <script>
+        // Gallery hover effects
+        document.addEventListener('DOMContentLoaded', function() {
+            const galleryItems = document.querySelectorAll('.gallery-item');
+            
+            galleryItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-10px)';
+                    this.style.boxShadow = '0 20px 50px rgba(0,0,0,0.2)';
+                    this.querySelector('img').style.transform = 'scale(1.05)';
+                    this.querySelector('.gallery-overlay').style.transform = 'translateY(0)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = '0 10px 30px rgba(0,0,0,0.1)';
+                    this.querySelector('img').style.transform = 'scale(1)';
+                    this.querySelector('.gallery-overlay').style.transform = 'translateY(100%)';
+                });
+            });
+        });
+
+        // Lightbox functionality
+        function openLightbox(element) {
+            const img = element.querySelector('img');
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            
+            lightboxImg.src = img.src;
+            lightboxImg.alt = img.alt;
+            lightbox.style.display = 'flex';
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').style.display = 'none';
+        }
+
+        // Close lightbox with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Fade in animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Add fade-in class to elements
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.stat-card, .feature-card, .about-content, .about-visual');
+            elements.forEach(el => {
+                el.classList.add('fade-in');
+                observer.observe(el);
+            });
+        });
+
+        // Interactive demo
+        function showPlantInfo(plantType) {
+            const plantInfo = document.getElementById('plantInfo');
+            const plantData = {
+                tomato: {
+                    name: 'עגבנייה שרי',
+                    day: 45,
+                    temp: '22°C',
+                    humidity: '65%',
+                    light: '8 שעות',
+                    water: 'השקיה בוקר',
+                    status: 'מוכנה לקטיף בעוד שבוע',
+                    community: '15 אנשים עוקבים'
+                },
+                lettuce: {
+                    name: 'חסה איסברג',
+                    day: 23,
+                    temp: '18°C',
+                    humidity: '70%',
+                    light: '6 שעות',
+                    water: 'השקיה ערב',
+                    status: 'צמיחה מהירה',
+                    community: '8 אנשים עוקבים'
+                },
+                basil: {
+                    name: 'בזיליקום מתוק',
+                    day: 30,
+                    temp: '25°C',
+                    humidity: '60%',
+                    light: '10 שעות',
+                    water: 'השקיה יומית',
+                    status: 'ניתן לקטוף עלים',
+                    community: '23 אנשים עוקבים'
+                },
+                pepper: {
+                    name: 'פלפל חריף',
+                    day: 67,
+                    temp: '26°C',
+                    humidity: '55%',
+                    light: '12 שעות',
+                    water: 'השקיה דלה',
+                    status: 'פרחים מתפתחים',
+                    community: '31 אנשים עוקבים'
+                }
+            };
+
+            const plant = plantData[plantType];
+            plantInfo.innerHTML = `
+                <h3>${plant.name} - יום ${plant.day}</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin: 1rem 0;">
+                    <div><strong>🌡️ טמפרטורה:</strong> ${plant.temp}</div>
+                    <div><strong>💧 לחות:</strong> ${plant.humidity}</div>
+                    <div><strong>☀️ אור:</strong> ${plant.light}</div>
+                    <div><strong>🚿 השקיה:</strong> ${plant.water}</div>
+                </div>
+                <div style="margin: 1rem 0;">
+                    <strong>📊 סטטוס:</strong> ${plant.status}
+                </div>
+                <div style="margin: 1rem 0;">
+                    <strong>👥 קהילה:</strong> ${plant.community}
+                </div>
+                <button onclick="joinCommunity('${plantType}')" style="background: rgba(255,255,255,0.3); border: none; padding: 0.5rem 1rem; border-radius: 5px; color: white; cursor: pointer;">
+                    הצטרף לקהילת ${plant.name}
+                </button>
+            `;
+            plantInfo.style.display = 'block';
+        }
+
+        function joinCommunity(plantType) {
+            alert(`הצטרפת לקהילת גידול ${plantType}! בקרוב תקבל עדכונים וטיפים מהמגדלים הטובים ביותר.`);
+        }
+
+        // Add some interactive animations
+        document.addEventListener('mousemove', (e) => {
+            const plants = document.querySelectorAll('.plant-icon');
+            plants.forEach((plant, index) => {
+                const speed = (index + 1) * 0.00005;
+                const x = e.clientX * speed;
+                const y = e.clientY * speed;
+                plant.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+
+        // Stats counter animation
+        const animateStats = () => {
+            const stats = document.querySelectorAll('.stat-number');
+            stats.forEach(stat => {
+                const target = parseInt(stat.textContent.replace(/[^\d]/g, ''));
+                let current = 0;
+                const increment = target / 100;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        stat.textContent = stat.textContent; // Keep original format
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = Math.floor(current) + stat.textContent.replace(/^\d+/, '');
+                    }
+                }, 20);
+            });
+        };
+
+        // Trigger stats animation when section is visible
+        const statsSection = document.querySelector('.stats');
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateStats();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        statsObserver.observe(statsSection);
+    </script>
+</body>
+</html> 

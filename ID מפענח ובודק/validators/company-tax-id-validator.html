@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בודק תקינות מספר עוסק מורשה/ח.פ.</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+            padding: 25px;
+        }
+        h1 {
+            color: #003366;
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #003366;
+            padding-bottom: 15px;
+            font-size: 2rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        input {
+            width: calc(100% - 22px);
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 5px rgba(0, 51, 102, 0.3);
+        }
+        button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            margin-top: 15px;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        button:hover {
+            background-color: #004080;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 5px;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .success {
+            background-color: #dff0d8;
+            border-right: 4px solid #3c763d;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            border-right: 4px solid #a94442;
+            color: #a94442;
+        }
+        .details {
+            margin-top: 25px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .step {
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #fff;
+            border-radius: 3px;
+            border-right: 3px solid #003366;
+            padding-right: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .step:hover {
+            transform: translateX(-5px);
+        }
+        .highlight {
+            font-weight: bold;
+            color: #003366;
+        }
+        .error-item {
+            color: #a94442;
+            margin-bottom: 8px;
+            padding-right: 15px;
+            position: relative;
+        }
+        .error-item::before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            color: #a94442;
+        }
+        .help-text {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            border-right: 4px solid #5bc0de;
+        }
+        .help-text h3 {
+            color: #31708f;
+            margin-top: 0;
+        }
+        .help-text ol {
+            padding-right: 20px;
+        }
+        .help-text li {
+            margin-bottom: 8px;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .digit-display {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 25px;
+        }
+        .digit-box {
+            width: 40px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 20px;
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+        .digit-box.filled {
+            border-color: #003366;
+            background-color: #e8f4f8;
+        }
+        .digit-box.check-digit {
+            background-color: rgba(0, 51, 102, 0.1);
+            border-color: #003366;
+        }
+        .highlight-row {
+            background-color: #f0f8ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-right: 3px solid #003366;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .format-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .format-option {
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .format-option:hover {
+            background-color: #e8f4f8;
+        }
+        .format-option.selected {
+            background-color: #003366;
+            color: white;
+            border-color: #003366;
+        }
+        .entity-icon {
+            font-size: 24px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>בודק תקינות מספר עוסק מורשה/ח.פ.</h1>
+        
+        <div class="format-selector">
+            <div class="format-option selected" data-format="osek">עוסק מורשה (9 ספרות)</div>
+            <div class="format-option" data-format="company">חברה פרטית/ח.פ. (9 ספרות)</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="taxNumber">הכנס מספר עוסק מורשה/ח.פ.:</label>
+            <input type="text" id="taxNumber" placeholder="לדוגמה: 558097822" maxlength="9">
+        </div>
+        
+        <div id="digitDisplay" class="digit-display">
+            <!-- כאן יוצגו הספרות בזמן אמת -->
+        </div>
+        
+        <button id="checkButton">בדוק תקינות</button>
+        
+        <div id="result" class="result">
+            <!-- כאן יוצגו תוצאות הבדיקה -->
+        </div>
+        
+        <div id="details" class="details" style="display: none;">
+            <!-- כאן יוצגו פרטי החישוב -->
+        </div>
+        
+        <div class="help-text">
+            <h3>מהו אלגוריתם בדיקת תקינות מספר עוסק מורשה/ח.פ.?</h3>
+            <p>בדיקת תקינות של מספר עוסק מורשה או ח.פ. בישראל מבוססת על ספרת ביקורת המחושבת באופן הבא:</p>
+            <ol>
+                <li>מספר עוסק מורשה וח.פ. מורכבים מ-9 ספרות כאשר הספרה האחרונה היא ספרת ביקורת</li>
+                <li>מכפילים את 8 הספרות הראשונות במשקלים: 1,2,1,2,1,2,1,2</li>
+                <li>אם מתקבלת תוצאה דו-ספרתית, מחברים את שתי הספרות</li>
+                <li>מחברים את כל התוצאות</li>
+                <li>ספרת הביקורת היא הספרה שיש להוסיף לסכום כדי להגיע למספר שמתחלק ב-10</li>
+            </ol>
+            <p>עבור חברות פרטיות (ח.פ.) המספר מתחיל בספרה 5, ועבור עוסקים מורשים בדרך כלל מתחיל בספרה אחרת.</p>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 בודק תקינות מספרי עוסק מורשה וח.פ. | פותח עבור מטרות הדגמה בלבד</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const taxInput = document.getElementById('taxNumber');
+            const checkButton = document.getElementById('checkButton');
+            const resultDiv = document.getElementById('result');
+            const detailsDiv = document.getElementById('details');
+            const digitDisplayDiv = document.getElementById('digitDisplay');
+            const formatOptions = document.querySelectorAll('.format-option');
+            
+            let currentFormat = 'osek'; // פורמט ברירת מחדל - עוסק מורשה
+            
+            // יצירת תצוגת הספרות הראשונית
+            createDigitDisplay();
+            
+            // הוספת אירוע לחיצה לכפתור בדיקה
+            checkButton.addEventListener('click', function() {
+                validateTaxNumber();
+            });
+            
+            // הוספת אירוע לחיצה על Enter בשדה הקלט
+            taxInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    validateTaxNumber();
+                }
+            });
+            
+            // עדכון תצוגת הספרות בזמן הקלדה
+            taxInput.addEventListener('input', function() {
+                // אפשר רק מספרים
+                this.value = this.value.replace(/[^0-9]/g, '');
+                
+                // עדכון תצוגת הספרות
+                updateDigitDisplay(this.value);
+            });
+            
+            // מעבר בין פורמטים
+            formatOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // הסרת הסימון הנוכחי
+                    document.querySelector('.format-option.selected').classList.remove('selected');
+                    
+                    // הוספת סימון לאפשרות שנבחרה
+                    this.classList.add('selected');
+                    
+                    // עדכון הפורמט הנוכחי
+                    currentFormat = this.dataset.format;
+                    
+                    // עדכון שדה הקלט
+                    if (currentFormat === 'company' && taxInput.value && taxInput.value.length > 0) {
+                        // אם עוברים לפורמט חברה ויש מספר, נוודא שהוא מתחיל ב-5
+                        if (taxInput.value[0] !== '5') {
+                            taxInput.value = '5' + taxInput.value.substring(1);
+                        }
+                    }
+                    
+                    // עדכון תצוגת הספרות
+                    updateDigitDisplay(taxInput.value);
+                    
+                    // ניקוי תוצאות קודמות
+                    resultDiv.style.display = 'none';
+                    detailsDiv.style.display = 'none';
+                });
+            });
+            
+            // פונקציה ליצירת תצוגת הספרות הראשונית
+            function createDigitDisplay() {
+                digitDisplayDiv.innerHTML = '';
+                
+                for (let i = 0; i < 9; i++) {
+                    const digitBox = document.createElement('div');
+                    digitBox.className = 'digit-box';
+                    
+                    if (i === 8) {
+                        digitBox.classList.add('check-digit');
+                    }
+                    
+                    digitDisplayDiv.appendChild(digitBox);
+                }
+            }
+            
+            // פונקציה לעדכון תצוגת הספרות
+            function updateDigitDisplay(value) {
+                const digitBoxes = digitDisplayDiv.querySelectorAll('.digit-box');
+                
+                digitBoxes.forEach((box, index) => {
+                    // מסיר את הקלאס של תא מלא
+                    box.classList.remove('filled');
+                    
+                    // עדכון תוכן התא
+                    if (index < value.length) {
+                        box.textContent = value[index];
+                        box.classList.add('filled');
+                    } else {
+                        box.textContent = '';
+                    }
+                });
+            }
+            
+            // פונקציה לבדיקת תקינות מספר עוסק מורשה/ח.פ.
+            function validateTaxNumber() {
+                const taxNumber = taxInput.value.trim();
+                const errors = [];
+                
+                // בדיקות בסיסיות
+                if (taxNumber === '') {
+                    errors.push('נא להזין מספר עוסק מורשה/ח.פ.');
+                } else if (taxNumber.length !== 9) {
+                    errors.push(`מספר עוסק מורשה/ח.פ. חייב להכיל 9 ספרות בדיוק (התקבלו ${taxNumber.length} ספרות)`);
+                }
+                
+                // בדיקות ספציפיות לפי סוג ישות
+                if (currentFormat === 'company' && taxNumber.length > 0 && taxNumber[0] !== '5') {
+                    errors.push('מספר ח.פ. של חברה פרטית חייב להתחיל בספרה 5');
+                }
+                
+                if (errors.length > 0) {
+                    // הצגת השגיאות
+                    showErrors(errors);
+                    detailsDiv.style.display = 'none';
+                    return;
+                }
+                
+                // חישוב לפי האלגוריתם
+                const calculationSteps = [];
+                let sum = 0;
+                
+                // משקלים לאלגוריתם בדיקת עוסק מורשה/ח.פ.
+                const weights = [1, 2, 1, 2, 1, 2, 1, 2];
+                
+                // חישוב הסכום המשוקלל
+                for (let i = 0; i < 8; i++) {
+                    const digit = parseInt(taxNumber[i]);
+                    const weight = weights[i];
+                    const product = digit * weight;
+                    
+                    let digitSum = product;
+                    let stepText = '';
+                    
+                    // אם המכפלה היא דו-ספרתית, מחברים את הספרות
+                    if (product > 9) {
+                        digitSum = Math.floor(product / 10) + (product % 10);
+                        stepText = `${digit} × ${weight} = ${product} → ${Math.floor(product / 10)}+${product % 10} = ${digitSum}`;
+                    } else {
+                        stepText = `${digit} × ${weight} = ${product}`;
+                    }
+                    
+                    calculationSteps.push(stepText);
+                    sum += digitSum;
+                }
+                
+                // חישוב ספרת הביקורת
+                const mod = sum % 10;
+                const calculatedCheckDigit = (10 - mod) % 10;
+                const actualCheckDigit = parseInt(taxNumber[8]);
+                
+                // בדיקה אם ספרת הביקורת נכונה
+                const isValid = calculatedCheckDigit === actualCheckDigit;
+                
+                if (isValid) {
+                    showSuccess();
+                } else {
+                    showErrors([`ספרת הביקורת שגויה. התקבלה: ${actualCheckDigit}, אמורה להיות: ${calculatedCheckDigit}`]);
+                }
+                
+                // הצגת פרטי החישוב
+                showCalculationDetails(calculationSteps, sum, mod, calculatedCheckDigit, actualCheckDigit);
+            }
+            
+            // פונקציה להצגת הודעת הצלחה
+            function showSuccess() {
+                resultDiv.className = 'result success';
+                
+                const entityType = currentFormat === 'osek' ? 'עוסק מורשה' : 'ח.פ.';
+                const entityIcon = currentFormat === 'osek' ? '👤' : '🏢';
+                
+                resultDiv.innerHTML = `<h3>${entityIcon} מספר ה${entityType} תקין!</h3>`;
+                resultDiv.style.display = 'block';
+            }
+            
+            // פונקציה להצגת שגיאות
+            function showErrors(errors) {
+                resultDiv.className = 'result error';
+                
+                const entityType = currentFormat === 'osek' ? 'עוסק מורשה' : 'ח.פ.';
+                const entityIcon = currentFormat === 'osek' ? '👤' : '🏢';
+                
+                let errorHtml = `<h3>✗ מספר ה${entityType} אינו תקין!</h3><ul>`;
+                errors.forEach(error => {
+                    errorHtml += `<li class="error-item">${error}</li>`;
+                });
+                errorHtml += '</ul>';
+                resultDiv.innerHTML = errorHtml;
+                resultDiv.style.display = 'block';
+            }
+            
+            // פונקציה להצגת פרטי החישוב
+            function showCalculationDetails(steps, sum, mod, calculatedCheckDigit, actualCheckDigit) {
+                let detailsHtml = '<h3>פירוט החישוב:</h3>';
+                
+                // הצגת שלבי החישוב
+                steps.forEach(step => {
+                    detailsHtml += `<div class="step">${step}</div>`;
+                });
+                
+                // הצגת סיכום החישוב
+                detailsHtml += `
+                    <div class="highlight-row">
+                        <div class="step"><span class="highlight">סכום המכפלות:</span> ${sum}</div>
+                        <div class="step"><span class="highlight">מודולו 10:</span> ${mod}</div>
+                        <div class="step"><span class="highlight">השלמה ל-10:</span> ${calculatedCheckDigit}</div>
+                        <div class="step"><span class="highlight">ספרת ביקורת מחושבת:</span> ${calculatedCheckDigit}</div>
+                        <div class="step"><span class="highlight">ספרת ביקורת בפועל:</span> ${actualCheckDigit}</div>
+                    </div>
+                `;
+                
+                detailsDiv.innerHTML = detailsHtml;
+                detailsDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

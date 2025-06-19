@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בודק תקינות ברקוד EAN-13</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+            padding: 25px;
+        }
+        h1 {
+            color: #003366;
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #003366;
+            padding-bottom: 15px;
+            font-size: 2rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        input {
+            width: calc(100% - 22px);
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 5px rgba(0, 51, 102, 0.3);
+        }
+        button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            margin-top: 15px;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        button:hover {
+            background-color: #004080;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 5px;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .success {
+            background-color: #dff0d8;
+            border-right: 4px solid #3c763d;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            border-right: 4px solid #a94442;
+            color: #a94442;
+        }
+        .details {
+            margin-top: 25px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .step {
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #fff;
+            border-radius: 3px;
+            border-right: 3px solid #003366;
+            padding-right: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .step:hover {
+            transform: translateX(-5px);
+        }
+        .highlight {
+            font-weight: bold;
+            color: #003366;
+        }
+        .error-item {
+            color: #a94442;
+            margin-bottom: 8px;
+            padding-right: 15px;
+            position: relative;
+        }
+        .error-item::before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            color: #a94442;
+        }
+        .help-text {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            border-right: 4px solid #5bc0de;
+        }
+        .help-text h3 {
+            color: #31708f;
+            margin-top: 0;
+        }
+        .help-text ol {
+            padding-right: 20px;
+        }
+        .help-text li {
+            margin-bottom: 8px;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .digit-display {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 25px;
+        }
+        .digit-box {
+            width: 30px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 20px;
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+        .digit-box.filled {
+            border-color: #003366;
+            background-color: #e8f4f8;
+        }
+        .digit-box.check-digit {
+            background-color: #ffe6cc;
+            border-color: #ff9900;
+        }
+        .digit-box.country-code {
+            background-color: #e6f2ff;
+            border-color: #0066cc;
+        }
+        .digit-box.manufacturer-code {
+            background-color: #f2e6ff;
+            border-color: #6600cc;
+        }
+        .digit-box.product-code {
+            background-color: #e6ffe6;
+            border-color: #00cc66;
+        }
+        .digit-separator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 2px;
+        }
+        .highlight-row {
+            background-color: #f0f8ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-right: 3px solid #003366;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .barcode-display {
+            margin: 20px auto;
+            text-align: center;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .barcode-sections {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+            justify-content: space-between;
+        }
+        .barcode-section {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            min-width: 140px;
+            border: 1px solid #eee;
+            flex-grow: 1;
+        }
+        .section-name {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .section-value {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #003366;
+        }
+        .country-flag {
+            font-size: 1.2rem;
+            margin-right: 5px;
+        }
+        .ean-image {
+            margin-top: 15px;
+            max-width: 100%;
+            height: 100px;
+            background-image: linear-gradient(90deg, #000 0%, #000 2%, white 2%, white 4%, #000 4%, #000 6%, white 6%, white 8%, #000 8%, #000 10%, white 10%, white 93%, #000 93%, #000 96%, white 96%, white 98%, #000 98%, #000 100%);
+            position: relative;
+        }
+        .ean-overlay {
+            position: absolute;
+            bottom: -20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>בודק תקינות ברקוד EAN-13</h1>
+        
+        <div class="form-group">
+            <label for="barcodeNumber">הכנס מספר ברקוד (13 ספרות):</label>
+            <input type="text" id="barcodeNumber" placeholder="לדוגמה: 7290000000000" maxlength="13">
+        </div>
+        
+        <div id="digitDisplay" class="digit-display">
+            <!-- כאן יוצגו הספרות בזמן אמת -->
+        </div>
+        
+        <div class="barcode-display" id="barcodeDisplay">
+            <div class="ean-image">
+                <div class="ean-overlay" id="barcodeText">7290000000000</div>
+            </div>
+            
+            <div class="barcode-sections">
+                <div class="barcode-section">
+                    <div class="section-name">קידומת מדינה</div>
+                    <div class="section-value" id="countryCode"><span class="country-flag">🇮🇱</span> 729</div>
+                </div>
+                <div class="barcode-section">
+                    <div class="section-name">קוד יצרן</div>
+                    <div class="section-value" id="manufacturerCode">0000</div>
+                </div>
+                <div class="barcode-section">
+                    <div class="section-name">קוד מוצר</div>
+                    <div class="section-value" id="productCode">00000</div>
+                </div>
+                <div class="barcode-section">
+                    <div class="section-name">ספרת ביקורת</div>
+                    <div class="section-value" id="checkDigit">0</div>
+                </div>
+            </div>
+        </div>
+        
+        <button id="checkButton">בדוק תקינות</button>
+        
+        <div id="result" class="result">
+            <!-- כאן יוצגו תוצאות הבדיקה -->
+        </div>
+        
+        <div id="details" class="details" style="display: none;">
+            <!-- כאן יוצגו פרטי החישוב -->
+        </div>
+        
+        <div class="help-text">
+            <h3>מידע על ברקוד EAN-13</h3>
+            <p>ברקוד EAN-13 הוא תקן בינלאומי לסימון מוצרים הנפוץ בישראל וברחבי העולם.</p>
+            <ol>
+                <li><strong>קידומת מדינה (3 ספרות)</strong> - מזהה את המדינה שבה נרשם המוצר. לישראל הקידומת 729.</li>
+                <li><strong>קוד יצרן (4-5 ספרות)</strong> - מספר ייחודי המזהה את היצרן או המשווק.</li>
+                <li><strong>קוד מוצר (4-5 ספרות)</strong> - מספר ייחודי שהיצרן מקצה למוצר הספציפי.</li>
+                <li><strong>ספרת ביקורת (1 ספרה)</strong> - נקבעת באמצעות אלגוריתם לגילוי שגיאות הקלדה וסריקה.</li>
+            </ol>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 בודק תקינות ברקוד EAN-13 | פותח עבור מטרות הדגמה בלבד</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const barcodeInput = document.getElementById('barcodeNumber');
+            const checkButton = document.getElementById('checkButton');
+            const resultDiv = document.getElementById('result');
+            const detailsDiv = document.getElementById('details');
+            const digitDisplayDiv = document.getElementById('digitDisplay');
+            const barcodeText = document.getElementById('barcodeText');
+            const countryCodeDisplay = document.getElementById('countryCode');
+            const manufacturerCodeDisplay = document.getElementById('manufacturerCode');
+            const productCodeDisplay = document.getElementById('productCode');
+            const checkDigitDisplay = document.getElementById('checkDigit');
+            
+            // מילון קודי מדינות
+            const countryCodes = {
+                '729': { name: 'ישראל', flag: '🇮🇱' },
+                '00': { name: 'ארה"ב וקנדה', flag: '🇺🇸' },
+                '45': { name: 'יפן', flag: '🇯🇵' },
+                '50': { name: 'בריטניה', flag: '🇬🇧' },
+                '30': { name: 'צרפת', flag: '🇫🇷' },
+                '40': { name: 'גרמניה', flag: '🇩🇪' },
+                '84': { name: 'ספרד', flag: '🇪🇸' },
+                '80': { name: 'איטליה', flag: '🇮🇹' },
+                '57': { name: 'דנמרק', flag: '🇩🇰' },
+                '70': { name: 'נורבגיה', flag: '🇳🇴' },
+                '73': { name: 'שבדיה', flag: '🇸🇪' },
+                '64': { name: 'פינלנד', flag: '🇫🇮' },
+                '76': { name: 'שוויץ', flag: '🇨🇭' },
+                '93': { name: 'אוסטרליה', flag: '🇦🇺' },
+                '94': { name: 'ניו זילנד', flag: '🇳🇿' },
+                '69': { name: 'סין', flag: '🇨🇳' },
+                '77': { name: 'רוסיה', flag: '🇷🇺' },
+                '54': { name: 'בלגיה', flag: '🇧🇪' },
+                '87': { name: 'הולנד', flag: '🇳🇱' },
+                '60': { name: 'פולין', flag: '🇵🇱' },
+            };
+            
+            // יצירת תצוגת הספרות הראשונית
+            createDigitDisplay();
+            
+            // הגדרת ערך ברירת מחדל
+            barcodeInput.value = "7290000000000";
+            updateDigitDisplay(barcodeInput.value);
+            updateBarcodeDisplay(barcodeInput.value);
+            
+            // הוספת אירוע לחיצה לכפתור בדיקה
+            checkButton.addEventListener('click', function() {
+                validateBarcode();
+            });
+            
+            // הוספת אירוע לחיצה על Enter בשדה הקלט
+            barcodeInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    validateBarcode();
+                }
+            });
+            
+            // עדכון תצוגת הספרות בזמן הקלדה
+            barcodeInput.addEventListener('input', function() {
+                // אפשר רק מספרים
+                this.value = this.value.replace(/[^0-9]/g, '');
+                
+                updateDigitDisplay(this.value);
+                updateBarcodeDisplay(this.value);
+            });
+            
+            // פונקציה ליצירת תצוגת הספרות הראשונית
+            function createDigitDisplay() {
+                digitDisplayDiv.innerHTML = '';
+                
+                // ברקוד EAN-13 מורכב מ-13 ספרות
+                for (let i = 0; i < 13; i++) {
+                    const digitBox = document.createElement('div');
+                    digitBox.className = 'digit-box';
+                    
+                    // הוספת קלאסים ייחודיים לפי חלק הברקוד
+                    if (i < 3) {
+                        digitBox.classList.add('country-code');
+                    } else if (i < 7) {
+                        digitBox.classList.add('manufacturer-code');
+                    } else if (i < 12) {
+                        digitBox.classList.add('product-code');
+                    } else {
+                        digitBox.classList.add('check-digit');
+                    }
+                    
+                    digitDisplayDiv.appendChild(digitBox);
+                }
+            }
+            
+            // פונקציה לעדכון תצוגת הספרות
+            function updateDigitDisplay(value) {
+                const digitBoxes = digitDisplayDiv.querySelectorAll('.digit-box');
+                
+                digitBoxes.forEach((box, index) => {
+                    // מסיר את הקלאס של תא מלא
+                    box.classList.remove('filled');
+                    
+                    // עדכון תוכן התא
+                    if (index < value.length) {
+                        box.textContent = value[index];
+                        box.classList.add('filled');
+                    } else {
+                        box.textContent = '';
+                    }
+                });
+            }
+            
+            // פונקציה לעדכון תצוגת הברקוד
+            function updateBarcodeDisplay(barcode) {
+                // עדכון מספר הברקוד
+                barcodeText.textContent = barcode.padEnd(13, '0');
+                
+                // עדכון חלקי הברקוד
+                const countryCode = barcode.substring(0, 3);
+                const manufacturerCode = barcode.substring(3, 7);
+                const productCode = barcode.substring(7, 12);
+                const checkDigit = barcode.length >= 13 ? barcode[12] : '0';
+                
+                // עדכון תצוגת קוד המדינה
+                let countryDisplay = countryCode;
+                if (countryCodes[countryCode]) {
+                    countryDisplay = `<span class="country-flag">${countryCodes[countryCode].flag}</span> ${countryCode}`;
+                }
+                countryCodeDisplay.innerHTML = countryDisplay;
+                
+                // עדכון קודי יצרן, מוצר וספרת ביקורת
+                manufacturerCodeDisplay.textContent = manufacturerCode;
+                productCodeDisplay.textContent = productCode;
+                checkDigitDisplay.textContent = checkDigit;
+            }
+            
+            // פונקציה לבדיקת תקינות ברקוד
+            function validateBarcode() {
+                const barcode = barcodeInput.value.trim();
+                
+                const errors = [];
+                
+                // בדיקות בסיסיות
+                if (barcode === '') {
+                    errors.push('נא להזין מספר ברקוד');
+                } else if (barcode.length !== 13) {
+                    errors.push(`ברקוד EAN-13 חייב להכיל 13 ספרות בדיוק (התקבלו ${barcode.length} ספרות)`);
+                }
+                
+                if (errors.length > 0) {
+                    // הצגת השגיאות
+                    showError(errors);
+                    detailsDiv.style.display = 'none';
+                    return;
+                }
+                
+                // חישוב ספרת ביקורת ובדיקת תקינות הברקוד
+                const calculatedCheckDigit = calculateEAN13CheckDigit(barcode.substring(0, 12));
+                const actualCheckDigit = parseInt(barcode[12]);
+                
+                if (calculatedCheckDigit !== actualCheckDigit) {
+                    showError([`ספרת הביקורת שגויה. התקבלה: ${actualCheckDigit}, אמורה להיות: ${calculatedCheckDigit}`]);
+                    
+                    // הצגת פרטי החישוב גם אם יש שגיאה
+                    showBarcodeDetails(barcode, calculatedCheckDigit);
+                    return;
+                }
+                
+                // אם הגענו לכאן, הברקוד תקין
+                showSuccess();
+                
+                // הצגת פרטי הברקוד
+                showBarcodeDetails(barcode, calculatedCheckDigit);
+            }
+            
+            // פונקציה לחישוב ספרת ביקורת של EAN-13
+            function calculateEAN13CheckDigit(barcode12) {
+                let sum = 0;
+                
+                // אלגוריתם EAN-13 מכפיל כל ספרה לסירוגין ב-1 וב-3
+                for (let i = 0; i < 12; i++) {
+                    const digit = parseInt(barcode12[i]);
+                    // ספרות במיקום זוגי כפול 1, ספרות במיקום אי-זוגי כפול 3
+                    const weight = i % 2 === 0 ? 1 : 3;
+                    sum += digit * weight;
+                }
+                
+                // חישוב ספרת הביקורת
+                const remainder = sum % 10;
+                const checkDigit = remainder === 0 ? 0 : 10 - remainder;
+                
+                return checkDigit;
+            }
+            
+            // פונקציה להצגת הודעת הצלחה
+            function showSuccess() {
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `<h3>✓ הברקוד תקין!</h3>`;
+                resultDiv.style.display = 'block';
+            }
+            
+            // פונקציה להצגת הודעת שגיאה
+            function showError(errors) {
+                resultDiv.className = 'result error';
+                let errorHtml = '<h3>✗ הברקוד אינו תקין</h3><ul>';
+                errors.forEach(error => {
+                    errorHtml += `<li class="error-item">${error}</li>`;
+                });
+                errorHtml += '</ul>';
+                resultDiv.innerHTML = errorHtml;
+                resultDiv.style.display = 'block';
+            }
+            
+            // פונקציה להצגת פרטי הברקוד
+            function showBarcodeDetails(barcode, calculatedCheckDigit) {
+                let detailsHtml = '<h3>פרטי הברקוד:</h3>';
+                
+                // חלוקת הברקוד לחלקיו
+                const countryCode = barcode.substring(0, 3);
+                const manufacturerCode = barcode.substring(3, 7);
+                const productCode = barcode.substring(7, 12);
+                const checkDigit = barcode[12];
+                
+                // זיהוי מדינת המקור
+                let countryInfo = 'לא ידוע';
+                if (countryCodes[countryCode]) {
+                    countryInfo = `${countryCodes[countryCode].flag} ${countryCodes[countryCode].name} (${countryCode})`;
+                } else {
+                    for (const [code, info] of Object.entries(countryCodes)) {
+                        if (countryCode.startsWith(code)) {
+                            countryInfo = `${info.flag} ${info.name} (${code}xx)`;
+                            break;
+                        }
+                    }
+                }
+                
+                // הצגת פרטי הברקוד
+                detailsHtml += `
+                    <div class="highlight-row">
+                        <div class="step"><span class="highlight">מדינת מקור:</span> ${countryInfo}</div>
+                        <div class="step"><span class="highlight">קוד יצרן:</span> ${manufacturerCode}</div>
+                        <div class="step"><span class="highlight">קוד מוצר:</span> ${productCode}</div>
+                        <div class="step"><span class="highlight">ספרת ביקורת:</span> ${checkDigit} ${checkDigit == calculatedCheckDigit ? '✓' : '✗'}</div>
+                    </div>
+                `;
+                
+                // הצגת חישוב ספרת הביקורת
+                detailsHtml += `<h3>חישוב ספרת הביקורת:</h3>`;
+                
+                detailsHtml += `<div class="step">1. הכפלת כל ספרה במיקום אי-זוגי ב-1 וכל ספרה במיקום זוגי ב-3:</div>`;
+                
+                let sum = 0;
+                let calcSteps = '';
+                
+                for (let i = 0; i < 12; i++) {
+                    const digit = parseInt(barcode[i]);
+                    const weight = i % 2 === 0 ? 1 : 3;
+                    const product = digit * weight;
+                    
+                    calcSteps += `${digit} × ${weight} = ${product}, `;
+                    sum += product;
+                }
+                
+                calcSteps = calcSteps.slice(0, -2);
+                
+                detailsHtml += `<div class="step">${calcSteps}</div>`;
+                detailsHtml += `<div class="step">2. סכום המכפלות: ${sum}</div>`;
+                detailsHtml += `<div class="step">3. חישוב הספרה שיש להוסיף לסכום כדי להגיע למספר שמתחלק ב-10:</div>`;
+                
+                const remainder = sum % 10;
+                const checkDigitCalc = remainder === 0 ? 0 : 10 - remainder;
+                
+                detailsHtml += `<div class="step">   ${sum} % 10 = ${remainder}</div>`;
+                
+                if (remainder === 0) {
+                    detailsHtml += `<div class="step">   כיוון שהשארית היא 0, ספרת הביקורת היא 0</div>`;
+                } else {
+                    detailsHtml += `<div class="step">   10 - ${remainder} = ${checkDigitCalc}</div>`;
+                }
+                
+                detailsHtml += `<div class="step">4. ספרת הביקורת המחושבת: ${checkDigitCalc}</div>`;
+                
+                if (checkDigit == calculatedCheckDigit) {
+                    detailsHtml += `<div class="step highlight">ספרת הביקורת שהתקבלה (${checkDigit}) תואמת לספרה המחושבת (${calculatedCheckDigit}) ✓</div>`;
+                } else {
+                    detailsHtml += `<div class="step error-item">ספרת הביקורת שהתקבלה (${checkDigit}) אינה תואמת לספרה המחושבת (${calculatedCheckDigit}) ✗</div>`;
+                }
+                
+                detailsDiv.innerHTML = detailsHtml;
+                detailsDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

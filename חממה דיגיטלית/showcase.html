@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חממה דיגיטלית - תצוגת ממשקים אמיתיים</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dbeafe 100%);
+            direction: rtl;
+        }
+
+        .header {
+            background: linear-gradient(90deg, #16a34a 0%, #2563eb 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .home-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .home-section h1 {
+            font-size: 2.5rem;
+            color: #166534;
+            margin-bottom: 1rem;
+        }
+
+        .interfaces-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .interface-card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .interface-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
+            border-color: #16a34a;
+        }
+
+        .card-preview {
+            height: 150px;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .card-content {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: #166534;
+        }
+
+        .card-description {
+            color: #6b7280;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .interface-view {
+            display: none;
+        }
+
+        .demo-interface {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+
+        .basic-demo {
+            background: #f0fdf4;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .basic-header {
+            background: #16a34a;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .basic-main {
+            flex-grow: 1;
+            padding: 1rem;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h3 {
+            color: #166534;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            cursor: pointer;
+            margin-left: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-blue { background: #3b82f6; }
+        .btn-green { background: #16a34a; }
+
+        @media (max-width: 768px) {
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>🌱 חממה דיגיטלית - תצוגת ממשקים</h1>
+            <button class="back-btn" id="backBtn" onclick="showHome()">← חזרה לרשימה</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div id="homeView">
+            <div class="home-section">
+                <h1>ממשקי החממה הדיגיטלית</h1>
+                <p>לחץ על כל ממשק כדי לראות אותו בפעולה עם התוכן האמיתי</p>
+            </div>
+
+            <div class="interfaces-list">
+                <div class="interface-card" onclick="showInterface('basic')">
+                    <div class="card-preview">🌱</div>
+                    <div class="card-content">
+                        <h3 class="card-title">ממשק בסיסי - הגן שלי</h3>
+                        <p class="card-description">ממשק פשוט עם סטטוס צמחים, פעולות מהירות ורשימת הצמחים. כולל השקיה ודישון.</p>
+                    </div>
+                </div>
+
+                <div class="interface-card" onclick="showInterface('advanced')">
+                    <div class="card-preview">🌳</div>
+                    <div class="card-content">
+                        <h3 class="card-title">ממשק מתקדם</h3>
+                        <p class="card-description">ממשק עם חיישנים, בחירת שפות ומעקב מתקדם אחר בריאות הצמחים.</p>
+                    </div>
+                </div>
+
+                <div class="interface-card" onclick="showInterface('premium')">
+                    <div class="card-preview">✨</div>
+                    <div class="card-content">
+                        <h3 class="card-title">ממשק פרימיום</h3>
+                        <p class="card-description">ממשק מקצועי עם צד-בר, ניווט מתקדם ומעקב מפורט אחר צמחים.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="interfaceView" class="interface-view">
+            <div id="interfaceContainer"></div>
+        </div>
+    </main>
+
+    <script>
+        function showHome() {
+            document.getElementById('homeView').style.display = 'block';
+            document.getElementById('interfaceView').style.display = 'none';
+            document.getElementById('backBtn').style.display = 'none';
+        }
+
+        function showInterface(type) {
+            document.getElementById('homeView').style.display = 'none';
+            document.getElementById('interfaceView').style.display = 'block';
+            document.getElementById('backBtn').style.display = 'inline-block';
+            
+            const container = document.getElementById('interfaceContainer');
+            
+            if (type === 'basic') {
+                container.innerHTML = `
+                    <div class="demo-interface">
+                        <div class="basic-demo">
+                            <header class="basic-header">
+                                <h1>הגן הדיגיטלי שלי</h1>
+                            </header>
+                            <main class="basic-main">
+                                <div class="grid-2">
+                                    <div class="card">
+                                        <h3>סטטוס צמחים</h3>
+                                        <div style="margin: 0.5rem 0;">☀️ אור: 70%</div>
+                                        <div style="margin: 0.5rem 0;">💧 לחות: 60%</div>
+                                        <div style="margin: 0.5rem 0;">🌡️ טמפרטורה: 22°C</div>
+                                    </div>
+                                    <div class="card">
+                                        <h3>פעולות מהירות</h3>
+                                        <div style="margin-top: 1rem;">
+                                            <button class="btn btn-blue" onclick="alert('השקיה בוצעה! 💧')">השקיה</button>
+                                            <button class="btn btn-green" onclick="alert('דישון בוצע! 🌱')">דישון</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <h3>הצמחים שלי</h3>
+                                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1rem;">
+                                        <div style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; text-align: center;">
+                                            <div style="font-size: 2rem;">🍅</div>
+                                            <span>עגבנייה</span>
+                                        </div>
+                                        <div style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; text-align: center;">
+                                            <div style="font-size: 2rem;">🥒</div>
+                                            <span>מלפפון</span>
+                                        </div>
+                                        <div style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; text-align: center;">
+                                            <div style="font-size: 2rem;">🍓</div>
+                                            <span>תות שדה</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </main>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'advanced') {
+                container.innerHTML = `
+                    <div class="demo-interface">
+                        <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dbeafe 100%); min-height: 600px;">
+                            <header style="background: #16a34a; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center;">
+                                <h1>הגן החכם שלי</h1>
+                                <div>
+                                    <span style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 1rem; margin-left: 1rem;">🌿 100 נקודות</span>
+                                    <select style="background: #166534; color: white; border: none; border-radius: 1rem; padding: 0.5rem 1rem;">
+                                        <option>עברית</option>
+                                        <option>English</option>
+                                        <option>Русский</option>
+                                    </select>
+                                </div>
+                            </header>
+                            <main style="padding: 1.5rem; display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+                                <div class="card">
+                                    <h2 style="margin-bottom: 1rem;">הגן החכם שלי</h2>
+                                    <div style="height: 200px; background: linear-gradient(to bottom, #bfdbfe 0%, #bbf7d0 100%); border-radius: 0.5rem; display: flex; align-items: flex-end; justify-content: center; margin-bottom: 1rem;">
+                                        <div style="width: 8px; height: 80px; background: linear-gradient(to top, #65a30d 0%, #16a34a 100%); border-radius: 4px;"></div>
+                                    </div>
+                                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                                        <button class="btn btn-blue" onclick="alert('השקיה חכמה! 💧')">💧 השקיה</button>
+                                        <button class="btn btn-green" onclick="alert('דישון אקולוגי! 🌱')">⚡ דישון</button>
+                                    </div>
+                                </div>
+                                <div class="card">
+                                    <h3 style="margin-bottom: 1rem;">בריאות הצמח</h3>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6;">
+                                        <span>🌡️ טמפרטורה</span>
+                                        <span style="color: #16a34a; font-weight: bold;">24°C</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6;">
+                                        <span>💧 לחות</span>
+                                        <span style="color: #3b82f6; font-weight: bold;">65%</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #f3f4f6;">
+                                        <span>☀️ אור</span>
+                                        <span style="color: #fbbf24; font-weight: bold;">80%</span>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; padding: 0.5rem 0;">
+                                        <span>🌬️ CO₂</span>
+                                        <span style="color: #6b7280; font-weight: bold;">450 ppm</span>
+                                    </div>
+                                </div>
+                            </main>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'premium') {
+                container.innerHTML = `
+                    <div class="demo-interface">
+                        <div style="background: #f9fafb; min-height: 600px; display: flex;">
+                            <div style="width: 200px; background: white; box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);">
+                                <div style="padding: 1rem; border-bottom: 1px solid #f3f4f6; text-align: center;">
+                                    <h3 style="color: #166534;">הגן החכם שלי</h3>
+                                </div>
+                                <nav style="padding: 1rem;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; background: #16a34a; color: white; border-radius: 0.5rem; margin-bottom: 0.25rem;">
+                                        <span>🏠</span>
+                                        <span>לוח בקרה</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.25rem; cursor: pointer;" onclick="alert('קהילות - התחבר לחקלאים!')">
+                                        <span>👥</span>
+                                        <span>קהילות</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem; border-radius: 0.5rem; margin-bottom: 0.25rem; cursor: pointer;" onclick="alert('שוק דיגיטלי פתוח!')">
+                                        <span>🛒</span>
+                                        <span>שוק</span>
+                                    </div>
+                                </nav>
+                            </div>
+                            <main style="flex-grow: 1; padding: 1.5rem;">
+                                <div class="card">
+                                    <h2 style="margin-bottom: 1rem;">הצמחים שלי</h2>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                                        <div style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; text-align: center; cursor: pointer;" onclick="alert('עגבניות שרי - בריאות: 85%')">
+                                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🍅</div>
+                                            <h4>עגבניות שרי</h4>
+                                            <div style="margin-top: 0.5rem;">
+                                                <span style="background: #dcfce7; color: #166534; padding: 0.25rem 0.5rem; border-radius: 1rem; font-size: 0.75rem;">85%</span>
+                                            </div>
+                                        </div>
+                                        <div style="background: #f0fdf4; padding: 1rem; border-radius: 0.5rem; text-align: center; cursor: pointer;" onclick="alert('בזיליקום - בריאות: 92%')">
+                                            <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🌿</div>
+                                            <h4>בזיליקום</h4>
+                                            <div style="margin-top: 0.5rem;">
+                                                <span style="background: #dcfce7; color: #166534; padding: 0.25rem 0.5rem; border-radius: 1rem; font-size: 0.75rem;">92%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </main>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 

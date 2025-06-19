@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בודק תקינות מספר רכב ישראלי</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+            padding: 25px;
+        }
+        h1 {
+            color: #003366;
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #003366;
+            padding-bottom: 15px;
+            font-size: 2rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        input {
+            width: calc(100% - 22px);
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 5px rgba(0, 51, 102, 0.3);
+        }
+        button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            margin-top: 15px;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        button:hover {
+            background-color: #004080;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 5px;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .success {
+            background-color: #dff0d8;
+            border-right: 4px solid #3c763d;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            border-right: 4px solid #a94442;
+            color: #a94442;
+        }
+        .details {
+            margin-top: 25px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .step {
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #fff;
+            border-radius: 3px;
+            border-right: 3px solid #003366;
+            padding-right: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .step:hover {
+            transform: translateX(-5px);
+        }
+        .highlight {
+            font-weight: bold;
+            color: #003366;
+        }
+        .error-item {
+            color: #a94442;
+            margin-bottom: 8px;
+            padding-right: 15px;
+            position: relative;
+        }
+        .error-item::before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            color: #a94442;
+        }
+        .help-text {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            border-right: 4px solid #5bc0de;
+        }
+        .help-text h3 {
+            color: #31708f;
+            margin-top: 0;
+        }
+        .help-text ol {
+            padding-right: 20px;
+        }
+        .help-text li {
+            margin-bottom: 8px;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .digit-display {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 25px;
+        }
+        .digit-box {
+            width: 40px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 20px;
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+        .digit-box.filled {
+            border-color: #003366;
+            background-color: #e8f4f8;
+        }
+        .digit-separator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 2px;
+        }
+        .highlight-row {
+            background-color: #f0f8ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-right: 3px solid #003366;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .format-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .format-option {
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .format-option:hover {
+            background-color: #e8f4f8;
+        }
+        .format-option.selected {
+            background-color: #003366;
+            color: white;
+            border-color: #003366;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>בודק תקינות מספר רכב ישראלי</h1>
+        
+        <div class="format-selector">
+            <div class="format-option selected" data-format="new">פורמט חדש (8 ספרות)</div>
+            <div class="format-option" data-format="old">פורמט ישן (7 ספרות)</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="carNumber">הכנס מספר רכב:</label>
+            <input type="text" id="carNumber" placeholder="לדוגמה: 12345678" maxlength="8">
+        </div>
+        
+        <div id="digitDisplay" class="digit-display">
+            <!-- כאן יוצגו הספרות בזמן אמת -->
+        </div>
+        
+        <button id="checkButton">בדוק תקינות</button>
+        
+        <div id="result" class="result">
+            <!-- כאן יוצגו תוצאות הבדיקה -->
+        </div>
+        
+        <div id="details" class="details" style="display: none;">
+            <!-- כאן יוצגו פרטי החישוב -->
+        </div>
+        
+        <div class="help-text">
+            <h3>מהו אלגוריתם בדיקת תקינות מספר רכב ישראלי?</h3>
+            <p>בדיקת תקינות של מספר רכב ישראלי מבוססת על ספרת ביקורת שמחושבת באופן הבא:</p>
+            <ol>
+                <li>עבור פורמט חדש (8 ספרות): הספרה האחרונה היא ספרת ביקורת</li>
+                <li>מכפילים את הספרות הנותרות במשקלים: 3,1,3,1,3,1,3</li>
+                <li>מחברים את התוצאות ולוקחים את השארית בחלוקה ל-10</li>
+                <li>ספרת הביקורת צריכה להשלים את הסכום למספר שמתחלק ב-10</li>
+            </ol>
+            <p>עבור פורמט ישן (7 ספרות) משתמשים במשקלים: 3,1,3,1,3,1 ובודקים את הספרה השביעית.</p>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 בודק תקינות מספרי רכב ישראליים | פותח עבור מטרות הדגמה בלבד</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const carInput = document.getElementById('carNumber');
+            const checkButton = document.getElementById('checkButton');
+            const resultDiv = document.getElementById('result');
+            const detailsDiv = document.getElementById('details');
+            const digitDisplayDiv = document.getElementById('digitDisplay');
+            const formatOptions = document.querySelectorAll('.format-option');
+            
+            let currentFormat = 'new'; // פורמט ברירת מחדל - חדש (8 ספרות)
+            
+            // יצירת תצוגת הספרות הראשונית
+            createDigitDisplay();
+            
+            // הוספת אירוע לחיצה לכפתור בדיקה
+            checkButton.addEventListener('click', function() {
+                validateCarNumber();
+            });
+            
+            // הוספת אירוע לחיצה על Enter בשדה הקלט
+            carInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    validateCarNumber();
+                }
+            });
+            
+            // עדכון תצוגת הספרות בזמן הקלדה
+            carInput.addEventListener('input', function() {
+                // אפשר רק מספרים
+                this.value = this.value.replace(/[^0-9]/g, '');
+                
+                // הגבלת אורך בהתאם לפורמט
+                const maxLength = currentFormat === 'new' ? 8 : 7;
+                if (this.value.length > maxLength) {
+                    this.value = this.value.slice(0, maxLength);
+                }
+                
+                // עדכון תצוגת הספרות
+                updateDigitDisplay(this.value);
+            });
+            
+            // מעבר בין פורמטים
+            formatOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // הסרת הסימון הנוכחי
+                    document.querySelector('.format-option.selected').classList.remove('selected');
+                    
+                    // הוספת סימון לאפשרות שנבחרה
+                    this.classList.add('selected');
+                    
+                    // עדכון הפורמט הנוכחי
+                    currentFormat = this.dataset.format;
+                    
+                    // עדכון שדה הקלט
+                    carInput.value = '';
+                    carInput.placeholder = currentFormat === 'new' ? 'לדוגמה: 12345678' : 'לדוגמה: 1234567';
+                    carInput.maxLength = currentFormat === 'new' ? 8 : 7;
+                    
+                    // עדכון תצוגת הספרות
+                    createDigitDisplay();
+                    
+                    // ניקוי תוצאות קודמות
+                    resultDiv.style.display = 'none';
+                    detailsDiv.style.display = 'none';
+                });
+            });
+            
+            // פונקציה ליצירת תצוגת הספרות הראשונית
+            function createDigitDisplay() {
+                digitDisplayDiv.innerHTML = '';
+                
+                const maxLength = currentFormat === 'new' ? 8 : 7;
+                
+                for (let i = 0; i < maxLength; i++) {
+                    // בדיקה אם צריך להוסיף מפריד
+                    if ((currentFormat === 'new' && (i === 2 || i === 5)) || 
+                        (currentFormat === 'old' && (i === 2 || i === 4))) {
+                        const separator = document.createElement('div');
+                        separator.className = 'digit-separator';
+                        separator.textContent = '-';
+                        digitDisplayDiv.appendChild(separator);
+                    }
+                    
+                    const digitBox = document.createElement('div');
+                    digitBox.className = 'digit-box';
+                    digitDisplayDiv.appendChild(digitBox);
+                }
+            }
+            
+            // פונקציה לעדכון תצוגת הספרות
+            function updateDigitDisplay(value) {
+                const digitBoxes = digitDisplayDiv.querySelectorAll('.digit-box');
+                
+                digitBoxes.forEach((box, index) => {
+                    // מסיר את הקלאס של תא מלא
+                    box.classList.remove('filled');
+                    
+                    // עדכון תוכן התא
+                    if (index < value.length) {
+                        box.textContent = value[index];
+                        box.classList.add('filled');
+                    } else {
+                        box.textContent = '';
+                    }
+                });
+            }
+            
+            // פונקציה לבדיקת תקינות מספר רכב
+            function validateCarNumber() {
+                const carNumber = carInput.value.trim();
+                const errors = [];
+                
+                // בדיקות בסיסיות
+                if (carNumber === '') {
+                    errors.push('נא להזין מספר רכב');
+                } else {
+                    const expectedLength = currentFormat === 'new' ? 8 : 7;
+                    if (carNumber.length !== expectedLength) {
+                        errors.push(`מספר הרכב חייב להכיל ${expectedLength} ספרות בדיוק (התקבלו ${carNumber.length} ספרות)`);
+                    }
+                }
+                
+                if (errors.length > 0) {
+                    // הצגת השגיאות
+                    showErrors(errors);
+                    detailsDiv.style.display = 'none';
+                    return;
+                }
+                
+                // חישוב לפי האלגוריתם
+                const calculationSteps = [];
+                let sum = 0;
+                
+                // הגדרת המשקלים בהתאם לפורמט
+                const weights = currentFormat === 'new' 
+                    ? [3, 1, 3, 1, 3, 1, 3] // משקלים לפורמט חדש
+                    : [3, 1, 3, 1, 3, 1];   // משקלים לפורמט ישן
+                
+                // הגדרת אורך הספרות לחישוב בהתאם לפורמט
+                const digitsLength = currentFormat === 'new' ? 7 : 6;
+                
+                // חישוב הסכום המשוקלל
+                for (let i = 0; i < digitsLength; i++) {
+                    const digit = parseInt(carNumber[i]);
+                    const weight = weights[i];
+                    const product = digit * weight;
+                    
+                    calculationSteps.push(`${digit} × ${weight} = ${product}`);
+                    sum += product;
+                }
+                
+                // חישוב ספרת הביקורת
+                const mod = sum % 10;
+                const calculatedCheckDigit = (10 - mod) % 10;
+                const actualCheckDigit = parseInt(carNumber[digitsLength]);
+                
+                // בדיקה אם ספרת הביקורת נכונה
+                const isValid = calculatedCheckDigit === actualCheckDigit;
+                
+                if (isValid) {
+                    showSuccess();
+                } else {
+                    showErrors([`ספרת הביקורת שגויה. התקבלה: ${actualCheckDigit}, אמורה להיות: ${calculatedCheckDigit}`]);
+                }
+                
+                // הצגת פרטי החישוב
+                showCalculationDetails(calculationSteps, sum, mod, calculatedCheckDigit, actualCheckDigit);
+            }
+            
+            // פונקציה להצגת הודעת הצלחה
+            function showSuccess() {
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = '<h3>✓ מספר הרכב תקין!</h3>';
+                resultDiv.style.display = 'block';
+            }
+            
+            // פונקציה להצגת שגיאות
+            function showErrors(errors) {
+                resultDiv.className = 'result error';
+                let errorHtml = '<h3>✗ מספר הרכב אינו תקין!</h3><ul>';
+                errors.forEach(error => {
+                    errorHtml += `<li class="error-item">${error}</li>`;
+                });
+                errorHtml += '</ul>';
+                resultDiv.innerHTML = errorHtml;
+                resultDiv.style.display = 'block';
+            }
+            
+            // פונקציה להצגת פרטי החישוב
+            function showCalculationDetails(steps, sum, mod, calculatedCheckDigit, actualCheckDigit) {
+                let detailsHtml = '<h3>פירוט החישוב:</h3>';
+                
+                // הצגת שלבי החישוב
+                steps.forEach(step => {
+                    detailsHtml += `<div class="step">${step}</div>`;
+                });
+                
+                // הצגת סיכום החישוב
+                detailsHtml += `
+                    <div class="highlight-row">
+                        <div class="step"><span class="highlight">סכום המכפלות:</span> ${sum}</div>
+                        <div class="step"><span class="highlight">מודולו 10:</span> ${mod}</div>
+                        <div class="step"><span class="highlight">השלמה ל-10:</span> ${calculatedCheckDigit}</div>
+                        <div class="step"><span class="highlight">ספרת ביקורת מחושבת:</span> ${calculatedCheckDigit}</div>
+                        <div class="step"><span class="highlight">ספרת ביקורת בפועל:</span> ${actualCheckDigit}</div>
+                    </div>
+                `;
+                
+                detailsDiv.innerHTML = detailsHtml;
+                detailsDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

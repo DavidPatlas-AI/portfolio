@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הפלטה של פטלס - צבע עם שיניים</title>
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700&family=Rubik:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">הפלטה של פטלס</a>
+                <div class="nav-controls">
+                    <button id="darkModeToggle" class="theme-toggle" aria-label="החלף למצב כהה">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="colorPickerToggle" class="color-picker-toggle" aria-label="בחר צבע">
+                        <i class="fas fa-palette"></i>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>הפלטה של פטלס</h1>
+                <p>גלה עולם של צבעים עם הפלטה הייחודית שלנו</p>
+                <div class="hero-actions">
+                    <button id="scrollToPalettes" class="btn btn-primary hero-btn">
+                        <i class="fas fa-palette"></i>
+                        עבור לפלטות
+                        <i class="fas fa-arrow-down"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="teeth-section">
+            <div class="container">
+                <h2 class="teeth-title">צבע עם שיניים</h2>
+                <p class="teeth-subtitle">בחר פלטה והתאמה את צבעי הגומיות</p>
+                
+                <!-- Dentist Character -->
+                <div class="dentist-character">
+                    <div class="dentist-icon">
+                        <i class="fas fa-user-md"></i>
+                    </div>
+                    <!-- Speech Bubble -->
+                    <div class="speech-bubble" id="speechBubble">
+                        <div class="bubble-content">
+                            <i class="fas fa-tooth bubble-icon"></i>
+                            <span class="bubble-text">ברוכים הבאים! בחרו פלטת צבעים מעולה!</span>
+                        </div>
+                        <div class="bubble-tail"></div>
+                    </div>
+                </div>
+
+                <div class="teeth-container">
+                    
+                    <svg class="teeth-svg" viewBox="0 0 700 350" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                            <linearGradient id="bg" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#f9fafb"/>
+                                <stop offset="100%" style="stop-color:#e5e7eb"/>
+                            </linearGradient>
+                            <linearGradient id="toothGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" style="stop-color:#fefefe"/>
+                                <stop offset="30%" style="stop-color:#f8f8f8"/>
+                                <stop offset="100%" style="stop-color:#f0f0f0"/>
+                            </linearGradient>
+                            <linearGradient id="toothShine" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:rgba(255,255,255,0.6)"/>
+                                <stop offset="100%" style="stop-color:rgba(255,255,255,0.1)"/>
+                            </linearGradient>
+                            <linearGradient id="lipGradient" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#ff9999"/>
+                                <stop offset="50%" stop-color="#ff6b6b"/>
+                                <stop offset="100%" stop-color="#e63946"/>
+                            </linearGradient>
+                            <linearGradient id="lipGradient2" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#e63946"/>
+                                <stop offset="50%" stop-color="#ff6b6b"/>
+                                <stop offset="100%" stop-color="#ff9999"/>
+                            </linearGradient>
+                                <radialGradient id="mouthShadow" cx="50%" cy="60%" r="60%">
+                                    <stop offset="0%" stop-color="#7a2f2f"/>
+                                    <stop offset="100%" stop-color="#1a1a1a"/>
+                                </radialGradient>
+                                <linearGradient id="tongueGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#ffb6b6"/>
+                                    <stop offset="100%" stop-color="#d97b7b"/>
+                                </linearGradient>
+                            </defs>
+                        
+                        <!-- Upper Lip -->
+                        <path d="M 150 170 Q 250 140 350 145 Q 450 140 550 170 Q 450 160 350 165 Q 250 160 150 170 Z" fill="url(#lipGradient)" opacity="0.9"/>
+                        
+                        <!-- Lower Lip -->
+                        <path d="M 150 190 Q 250 240 350 245 Q 450 240 550 190 Q 450 220 350 225 Q 250 220 150 190 Z" fill="url(#lipGradient2)" opacity="0.85"/>
+                        
+                        <!-- Lip Line (separation between lips) -->
+                        <path d="M 150 180 Q 350 175 550 180" stroke="#d97b7b" stroke-width="2" fill="none" opacity="0.6"/>
+                        
+                            <!-- Mouth opening -->
+                        <ellipse cx="350" cy="180" rx="100" ry="25" fill="url(#mouthShadow)" opacity="0.8"/>
+                        
+                            <!-- Tongue -->
+                        <ellipse cx="350" cy="195" rx="45" ry="12" fill="url(#tongueGrad)" opacity="0.7"/>
+                        
+                        <!-- Lip highlights -->
+                        <path d="M 200 155 Q 350 150 500 155" stroke="rgba(255,255,255,0.4)" stroke-width="3" fill="none"/>
+                        <ellipse cx="320" cy="235" rx="25" ry="8" fill="rgba(255,255,255,0.2)"/>
+                        <ellipse cx="380" cy="235" rx="25" ry="8" fill="rgba(255,255,255,0.2)"/>
+                        
+                        <!-- Upper Gum line -->
+                        <path d="M220,150 Q350,140 480,150" fill="none" stroke="#ff8a95" stroke-width="8" opacity="0.8"/>
+                        <path d="M220,152 Q350,142 480,152" fill="none" stroke="#ffb3ba" stroke-width="4" opacity="0.6"/>
+                        
+                        <!-- Lower Gum line -->
+                        <path d="M225,240 Q355,230 485,240" fill="none" stroke="#ff8a95" stroke-width="8" opacity="0.8"/>
+                        <path d="M225,242 Q355,232 485,242" fill="none" stroke="#ffb3ba" stroke-width="4" opacity="0.6"/>
+                        
+                        <!-- Upper Row Teeth -->
+                        <rect x="240" y="130" width="22" height="38" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="246" cy="138" rx="3" ry="8" fill="url(#toothShine)" opacity="0.4"/>
+                        
+                        <rect x="272" y="125" width="22" height="48" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="278" cy="135" rx="3" ry="10" fill="url(#toothShine)" opacity="0.4"/>
+                        
+                        <rect x="304" y="120" width="22" height="58" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="310" cy="132" rx="3" ry="12" fill="url(#toothShine)" opacity="0.4"/>
+                        
+                        <rect x="336" y="118" width="22" height="63" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="342" cy="132" rx="3" ry="13" fill="url(#toothShine)" opacity="0.4"/>
+                        
+                        <rect x="368" y="118" width="22" height="63" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="374" cy="132" rx="3" ry="13" fill="url(#toothShine)" opacity="0.4"/>
+                        
+                        <rect x="400" y="120" width="22" height="58" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="406" cy="132" rx="3" ry="12" fill="url(#toothShine)" opacity="0.4"/>
+                        
+                        <rect x="432" y="125" width="22" height="48" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="438" cy="135" rx="3" ry="10" fill="url(#toothShine)" opacity="0.4"/>
+                        
+                        <rect x="464" y="130" width="22" height="38" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="470" cy="138" rx="3" ry="8" fill="url(#toothShine)" opacity="0.4"/>
+
+                        <!-- Lower Row Teeth -->
+                        <rect x="245" y="210" width="22" height="38" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="251" cy="218" rx="3" ry="8" fill="url(#toothShine)" opacity="0.4"/>
+                        
+                        <rect x="277" y="205" width="22" height="48" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="283" cy="215" rx="3" ry="10" fill="url(#toothShine)" opacity="0.4"/>
+                        
+                        <rect x="309" y="200" width="22" height="58" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="315" cy="212" rx="3" ry="12" fill="url(#toothShine)" opacity="0.4"/>
+                        
+                        <rect x="341" y="195" width="22" height="63" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="347" cy="210" rx="3" ry="13" fill="url(#toothShine)" opacity="0.4"/>
+                        
+                        <rect x="373" y="195" width="22" height="63" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="379" cy="210" rx="3" ry="13" fill="url(#toothShine)" opacity="0.4"/>
+                        
+                        <rect x="405" y="200" width="22" height="58" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="411" cy="212" rx="3" ry="12" fill="url(#toothShine)" opacity="0.4"/>
+                        
+                        <rect x="437" y="205" width="22" height="48" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="443" cy="215" rx="3" ry="10" fill="url(#toothShine)" opacity="0.4"/>
+                        
+                        <rect x="469" y="210" width="22" height="38" rx="12" class="tooth" fill="url(#toothGradient)"/>
+                        <ellipse cx="475" cy="218" rx="3" ry="8" fill="url(#toothShine)" opacity="0.4"/>
+
+                        <!-- Metal Brackets on teeth -->
+                        <rect x="246" y="147" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="249" y="149" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <rect x="278" y="142" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="281" y="144" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <rect x="310" y="137" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="313" y="139" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <rect x="342" y="135" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="345" y="137" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <rect x="374" y="135" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="377" y="137" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <rect x="406" y="137" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="409" y="139" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <rect x="438" y="142" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="441" y="144" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <rect x="470" y="147" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="473" y="149" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+
+                        <!-- Lower Brackets -->
+                        <rect x="251" y="227" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="254" y="229" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <rect x="283" y="222" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="286" y="224" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <rect x="315" y="217" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="318" y="219" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <rect x="347" y="212" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="350" y="214" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <rect x="379" y="212" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="382" y="214" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <rect x="411" y="217" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="414" y="219" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <rect x="443" y="222" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="446" y="224" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+                        
+                        <rect x="475" y="227" width="16" height="16" rx="2" fill="#e6e6e6" stroke="#b3b3b3" stroke-width="1" class="bracket"/>
+                        <rect x="478" y="229" width="4" height="4" rx="1" fill="rgba(255,255,255,0.6)"/>
+
+                        <!-- Upper Brace wire - more prominent -->
+                        <path d="M 250 155 Q 350 148 450 155" class="brace-wire" stroke="#888" stroke-width="3" fill="none"/>
+                        
+                        <!-- Lower Brace wire - more prominent -->
+                        <path d="M 255 235 Q 355 228 455 235" class="brace-wire" stroke="#888" stroke-width="3" fill="none"/>
+                        
+                        <!-- Upper Rubber bands -->
+                        <circle cx="254" cy="155" r="10" class="rubber-band" id="band1" fill="#3b82f6" data-hex="#3b82f6"/>
+                        <circle cx="286" cy="150" r="10" class="rubber-band" id="band2" fill="#10b981" data-hex="#10b981"/>
+                        <circle cx="318" cy="145" r="10" class="rubber-band" id="band3" fill="#f59e0b" data-hex="#f59e0b"/>
+                        <circle cx="350" cy="143" r="10" class="rubber-band" id="band4" fill="#ef4444" data-hex="#ef4444"/>
+                        <circle cx="382" cy="143" r="10" class="rubber-band" id="band5" fill="#8b5cf6" data-hex="#8b5cf6"/>
+                        <circle cx="414" cy="145" r="10" class="rubber-band" id="band6" fill="#3b82f6" data-hex="#3b82f6"/>
+                        <circle cx="446" cy="150" r="10" class="rubber-band" id="band7" fill="#10b981" data-hex="#10b981"/>
+                        <circle cx="478" cy="155" r="10" class="rubber-band" id="band8" fill="#f59e0b" data-hex="#f59e0b"/>
+
+                        <!-- Lower Rubber bands -->
+                        <circle cx="259" cy="235" r="10" class="rubber-band" id="band9" fill="#ef4444" data-hex="#ef4444"/>
+                        <circle cx="291" cy="230" r="10" class="rubber-band" id="band10" fill="#8b5cf6" data-hex="#8b5cf6"/>
+                        <circle cx="323" cy="225" r="10" class="rubber-band" id="band11" fill="#3b82f6" data-hex="#3b82f6"/>
+                        <circle cx="355" cy="220" r="10" class="rubber-band" id="band12" fill="#10b981" data-hex="#10b981"/>
+                        <circle cx="387" cy="220" r="10" class="rubber-band" id="band13" fill="#f59e0b" data-hex="#f59e0b"/>
+                        <circle cx="419" cy="225" r="10" class="rubber-band" id="band14" fill="#ef4444" data-hex="#ef4444"/>
+                        <circle cx="451" cy="230" r="10" class="rubber-band" id="band15" fill="#8b5cf6" data-hex="#8b5cf6"/>
+                        <circle cx="483" cy="235" r="10" class="rubber-band" id="band16" fill="#3b82f6" data-hex="#3b82f6"/>
+                        </svg>
+                    </div>
+
+                <div class="current-palette-info" id="currentPaletteInfo">
+                    <h3>דיגיטלי מודרני</h3>
+                    <p>כחול, ירוק, כתום, אדום, סגול</p>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="downloadBtn">
+                        <i class="fas fa-download"></i>
+                        הורד פלטה
+                    </button>
+                    <button class="btn btn-secondary" id="randomBtn">
+                        <i class="fas fa-random"></i>
+                        פלטה אקראית
+                    </button>
+                    <button class="btn btn-secondary" id="copyBtn">
+                        <i class="fas fa-copy"></i>
+                        העתק קודי צבע
+                    </button>
+                    <button class="btn btn-secondary" id="saveBtn">
+                        <i class="fas fa-save"></i>
+                        שמור פלטה
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="palettes-section" id="palettes">
+            <div class="container">
+                <div class="section-header">
+                    <h2>בחר פלטה</h2>
+                    <p>גלה את הפלטות המובילות שלנו</p>
+                </div>
+
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-category="all">הכל</button>
+                    <button class="filter-tab" data-category="tech">הייטק</button>
+                    <button class="filter-tab" data-category="flags">דגלים</button>
+                    <button class="filter-tab" data-category="sectors">מגזרים</button>
+                    <button class="filter-tab" data-category="vintage">וינטאג'</button>
+                    <button class="filter-tab" data-category="sports">ספורט</button>
+                    <button class="filter-tab" data-category="holidays">חגים יהודיים</button>
+                    <button class="filter-tab" data-category="gaming">גיימינג</button>
+                    <button class="filter-tab" data-category="space">חלל</button>
+                    <button class="filter-tab" data-category="fashion">אופנה</button>
+                    <button class="filter-tab" data-category="music">מוזיקה</button>
+                    <button class="filter-tab" data-category="finance">פיננסים</button>
+                </div>
+
+                <div class="palette-grid" id="paletteGrid">
+                    <!-- Palette cards will be generated by JavaScript -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/palettes.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

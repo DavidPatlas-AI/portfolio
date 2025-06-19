@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בודק תקינות מספר טלפון ישראלי</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            direction: rtl;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+            padding: 25px;
+        }
+        h1 {
+            color: #003366;
+            text-align: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #003366;
+            padding-bottom: 15px;
+            font-size: 2rem;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        input {
+            width: calc(100% - 22px);
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 18px;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #003366;
+            box-shadow: 0 0 5px rgba(0, 51, 102, 0.3);
+        }
+        button {
+            background-color: #003366;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            margin-top: 15px;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+        button:hover {
+            background-color: #004080;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 5px;
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .success {
+            background-color: #dff0d8;
+            border-right: 4px solid #3c763d;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            border-right: 4px solid #a94442;
+            color: #a94442;
+        }
+        .details {
+            margin-top: 25px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .step {
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: #fff;
+            border-radius: 3px;
+            border-right: 3px solid #003366;
+            padding-right: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+        .step:hover {
+            transform: translateX(-5px);
+        }
+        .highlight {
+            font-weight: bold;
+            color: #003366;
+        }
+        .error-item {
+            color: #a94442;
+            margin-bottom: 8px;
+            padding-right: 15px;
+            position: relative;
+        }
+        .error-item::before {
+            content: "•";
+            position: absolute;
+            right: 0;
+            color: #a94442;
+        }
+        .help-text {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #e8f4f8;
+            border-radius: 5px;
+            border-right: 4px solid #5bc0de;
+        }
+        .help-text h3 {
+            color: #31708f;
+            margin-top: 0;
+        }
+        .help-text ol {
+            padding-right: 20px;
+        }
+        .help-text li {
+            margin-bottom: 8px;
+        }
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 14px;
+            color: #777;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .digit-display {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 25px;
+        }
+        .digit-box {
+            width: 30px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 20px;
+            background-color: white;
+            transition: all 0.2s ease;
+        }
+        .digit-box.filled {
+            border-color: #003366;
+            background-color: #e8f4f8;
+        }
+        .digit-separator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin: 0 2px;
+        }
+        .highlight-row {
+            background-color: #f0f8ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-right: 3px solid #003366;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .format-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        .format-option {
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .format-option:hover {
+            background-color: #e8f4f8;
+        }
+        .format-option.selected {
+            background-color: #003366;
+            color: white;
+            border-color: #003366;
+        }
+        .provider-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            background-color: #fffbea;
+            padding: 10px;
+            border-radius: 5px;
+            border-right: 3px solid #ffc107;
+        }
+        .provider-icon {
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>בודק תקינות מספר טלפון ישראלי</h1>
+        
+        <div class="format-selector">
+            <div class="format-option selected" data-format="mobile">טלפון נייד</div>
+            <div class="format-option" data-format="landline">טלפון נייח</div>
+            <div class="format-option" data-format="international">פורמט בינלאומי</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="phoneNumber">הכנס מספר טלפון:</label>
+            <input type="text" id="phoneNumber" placeholder="לדוגמה: 0501234567" maxlength="15">
+        </div>
+        
+        <div id="digitDisplay" class="digit-display">
+            <!-- כאן יוצגו הספרות בזמן אמת -->
+        </div>
+        
+        <button id="checkButton">בדוק תקינות</button>
+        
+        <div id="result" class="result">
+            <!-- כאן יוצגו תוצאות הבדיקה -->
+        </div>
+        
+        <div id="details" class="details" style="display: none;">
+            <!-- כאן יוצגו פרטי החישוב -->
+        </div>
+        
+        <div class="help-text">
+            <h3>כיצד בודקים תקינות של מספר טלפון ישראלי?</h3>
+            <p>מספרי טלפון בישראל צריכים להיות בפורמטים הבאים:</p>
+            <ol>
+                <li><strong>טלפונים ניידים:</strong> מתחילים ב-05 ואחריהם 8 ספרות נוספות (סה"כ 10 ספרות)
+                    <ul>
+                        <li>קידומות מוכרות: 050, 051, 052, 053, 054, 055, 056, 058, 059</li>
+                    </ul>
+                </li>
+                <li><strong>טלפונים נייחים:</strong> מתחילים ב-0 ואחריהם 8 ספרות נוספות (סה"כ 9 ספרות)
+                    <ul>
+                        <li>קידומות אזוריות: 02 (ירושלים), 03 (מרכז), 04 (צפון), 08 (דרום), 09 (שרון)</li>
+                    </ul>
+                </li>
+                <li><strong>פורמט בינלאומי:</strong> מתחיל ב-+972 ואחריו מספר הטלפון ללא ה-0 שבהתחלה
+                    <ul>
+                        <li>לדוגמה: +972-50-1234567</li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 בודק תקינות מספרי טלפון ישראליים | פותח עבור מטרות הדגמה בלבד</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const phoneInput = document.getElementById('phoneNumber');
+            const checkButton = document.getElementById('checkButton');
+            const resultDiv = document.getElementById('result');
+            const detailsDiv = document.getElementById('details');
+            const digitDisplayDiv = document.getElementById('digitDisplay');
+            const formatOptions = document.querySelectorAll('.format-option');
+            
+            // נתוני ספקי סלולר וקידומות אזוריות
+            const mobileNetworks = {
+                '050': 'פלאפון',
+                '051': 'קידומת 051',
+                '052': 'סלקום',
+                '053': 'הוט מובייל',
+                '054': 'פרטנר',
+                '055': 'גולן טלקום',
+                '056': 'רמי לוי',
+                '058': 'אקספון',
+                '059': 'קידומת 059'
+            };
+            
+            const landlineAreas = {
+                '02': 'ירושלים והסביבה',
+                '03': 'תל אביב והמרכז',
+                '04': 'חיפה והצפון',
+                '08': 'באר שבע והדרום',
+                '09': 'השרון'
+            };
+            
+            // הגדרת פורמטים
+            const formats = {
+                'mobile': {
+                    pattern: /^05\d{8}$/,
+                    displayFormat: "XXX-XXXXXXX",
+                    example: "050-1234567",
+                    separatorAfter: [3],
+                    length: 10
+                },
+                'landline': {
+                    pattern: /^0[2-4,8-9]\d{7}$/,
+                    displayFormat: "XX-XXXXXXX",
+                    example: "03-1234567",
+                    separatorAfter: [2],
+                    length: 9
+                },
+                'international': {
+                    pattern: /^\+972\d{8,9}$/,
+                    displayFormat: "+972-XX-XXXXXXX",
+                    example: "+972-50-1234567",
+                    separatorAfter: [4, 7],
+                    length: 13
+                }
+            };
+            
+            let currentFormat = 'mobile'; // פורמט ברירת מחדל
+            
+            // יצירת תצוגת הספרות הראשונית
+            createDigitDisplay();
+            
+            // הוספת אירוע לחיצה לכפתור בדיקה
+            checkButton.addEventListener('click', function() {
+                validatePhoneNumber();
+            });
+            
+            // הוספת אירוע לחיצה על Enter בשדה הקלט
+            phoneInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    validatePhoneNumber();
+                }
+            });
+            
+            // עדכון תצוגת הספרות בזמן הקלדה
+            phoneInput.addEventListener('input', function() {
+                // הסרת תווים לא רצויים לפי הפורמט
+                if (currentFormat === 'international') {
+                    // אפשר +, מספרים ורווחים
+                    this.value = this.value.replace(/[^0-9+ -]/g, '');
+                } else {
+                    // אפשר רק מספרים
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                }
+                
+                updateDigitDisplay(this.value);
+            });
+            
+            // מעבר בין פורמטים
+            formatOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // הסרת הסימון הנוכחי
+                    document.querySelector('.format-option.selected').classList.remove('selected');
+                    
+                    // הוספת סימון לאפשרות שנבחרה
+                    this.classList.add('selected');
+                    
+                    // עדכון הפורמט הנוכחי
+                    currentFormat = this.dataset.format;
+                    
+                    // עדכון שדה הקלט
+                    phoneInput.value = '';
+                    
+                    // עדכון פלייסהולדר
+                    phoneInput.placeholder = 'לדוגמה: ' + formats[currentFormat].example.replace(/-/g, '');
+                    
+                    // עדכון תצוגת הספרות
+                    createDigitDisplay();
+                    
+                    // ניקוי תוצאות קודמות
+                    resultDiv.style.display = 'none';
+                    detailsDiv.style.display = 'none';
+                });
+            });
+            
+            // פונקציה ליצירת תצוגת הספרות הראשונית
+            function createDigitDisplay() {
+                digitDisplayDiv.innerHTML = '';
+                
+                const format = formats[currentFormat];
+                let pattern = format.displayFormat;
+                
+                let i = 0;
+                while (i < pattern.length) {
+                    if (pattern[i] === '-') {
+                        // הוספת מפריד
+                        const separator = document.createElement('div');
+                        separator.className = 'digit-separator';
+                        separator.textContent = '-';
+                        digitDisplayDiv.appendChild(separator);
+                    } else if (pattern[i] === 'X') {
+                        // הוספת תיבת ספרה
+                        const digitBox = document.createElement('div');
+                        digitBox.className = 'digit-box';
+                        digitDisplayDiv.appendChild(digitBox);
+                    } else {
+                        // הוספת תו קבוע (למשל בפורמט בינלאומי)
+                        const digitBox = document.createElement('div');
+                        digitBox.className = 'digit-box filled';
+                        digitBox.textContent = pattern[i];
+                        digitDisplayDiv.appendChild(digitBox);
+                    }
+                    i++;
+                }
+            }
+            
+            // פונקציה לעדכון תצוגת הספרות
+            function updateDigitDisplay(value) {
+                const digitBoxes = digitDisplayDiv.querySelectorAll('.digit-box');
+                const format = formats[currentFormat];
+                
+                // ניקוי כל התאים שאינם קבועים
+                digitBoxes.forEach(box => {
+                    if (!['+', '9', '7', '2'].includes(box.textContent)) {
+                        box.textContent = '';
+                        box.classList.remove('filled');
+                    }
+                });
+                
+                // עדכון התאים לפי הערך החדש
+                let boxIndex = 0;
+                let valueIndex = 0;
+                
+                while (boxIndex < digitBoxes.length && valueIndex < value.length) {
+                    const currentBox = digitBoxes[boxIndex];
+                    
+                    // אם התא כבר מלא (תווים קבועים בפורמט בינלאומי), עבור לתא הבא
+                    if (currentBox.classList.contains('filled')) {
+                        boxIndex++;
+                        continue;
+                    }
+                    
+                    // עדכון התא בערך הנוכחי
+                    currentBox.textContent = value[valueIndex];
+                    currentBox.classList.add('filled');
+                    
+                    boxIndex++;
+                    valueIndex++;
+                }
+            }
+            
+            // פונקציה לבדיקת תקינות מספר טלפון
+            function validatePhoneNumber() {
+                const phoneNumber = phoneInput.value.trim();
+                
+                // בדיקה שהוזן מספר
+                if (phoneNumber === '') {
+                    showError('נא להזין מספר טלפון');
+                    return;
+                }
+                
+                // ניקוי המספר לצורך בדיקה
+                let cleanNumber = phoneNumber.replace(/[- ]/g, '');
+                
+                let isValid = false;
+                let errorMessage = '';
+                let detailsData = {};
+                
+                switch (currentFormat) {
+                    case 'mobile':
+                        if (!cleanNumber.startsWith('05')) {
+                            errorMessage = 'מספר טלפון נייד חייב להתחיל ב-05';
+                        } else if (cleanNumber.length !== 10) {
+                            errorMessage = `מספר טלפון נייד חייב להכיל 10 ספרות (התקבלו ${cleanNumber.length})`;
+                        } else {
+                            const prefix = cleanNumber.substring(0, 3);
+                            if (!mobileNetworks[prefix]) {
+                                errorMessage = `הקידומת ${prefix} אינה קידומת תקינה לטלפון נייד בישראל`;
+                            } else {
+                                isValid = true;
+                                detailsData = {
+                                    type: 'טלפון נייד',
+                                    provider: mobileNetworks[prefix],
+                                    prefix: prefix,
+                                    formattedNumber: `${prefix}-${cleanNumber.substring(3)}`,
+                                    internationalNumber: `+972-${cleanNumber.substring(1, 3)}-${cleanNumber.substring(3)}`
+                                };
+                            }
+                        }
+                        break;
+                        
+                    case 'landline':
+                        if (!cleanNumber.startsWith('0')) {
+                            errorMessage = 'מספר טלפון נייח חייב להתחיל ב-0';
+                        } else if (cleanNumber.startsWith('05')) {
+                            errorMessage = 'מספר שמתחיל ב-05 הוא מספר נייד, לא נייח';
+                        } else if (cleanNumber.length !== 9) {
+                            errorMessage = `מספר טלפון נייח חייב להכיל 9 ספרות (התקבלו ${cleanNumber.length})`;
+                        } else {
+                            const areaCode = cleanNumber.substring(0, 2);
+                            if (!landlineAreas[areaCode]) {
+                                errorMessage = `הקידומת ${areaCode} אינה קידומת תקינה לטלפון נייח בישראל`;
+                            } else {
+                                isValid = true;
+                                detailsData = {
+                                    type: 'טלפון נייח',
+                                    area: landlineAreas[areaCode],
+                                    areaCode: areaCode,
+                                    formattedNumber: `${areaCode}-${cleanNumber.substring(2)}`,
+                                    internationalNumber: `+972-${cleanNumber.substring(1, 2)}-${cleanNumber.substring(2)}`
+                                };
+                            }
+                        }
+                        break;
+                        
+                    case 'international':
+                        if (!cleanNumber.startsWith('+972')) {
+                            errorMessage = 'מספר טלפון בינלאומי חייב להתחיל ב-972+';
+                        } else {
+                            // הסרת הקידומת הבינלאומית
+                            const localPart = cleanNumber.substring(4);
+                            
+                            if (localPart.startsWith('5')) {
+                                // מספר נייד
+                                if (localPart.length !== 9) {
+                                    errorMessage = 'אורך המספר לאחר הקידומת הבינלאומית אינו תקין למספר נייד';
+                                } else {
+                                    const prefix = '05' + localPart.substring(0, 1);
+                                    if (!mobileNetworks[prefix]) {
+                                        errorMessage = `הקידומת ${prefix} אינה קידומת תקינה לטלפון נייד בישראל`;
+                                    } else {
+                                        isValid = true;
+                                        detailsData = {
+                                            type: 'טלפון נייד (פורמט בינלאומי)',
+                                            provider: mobileNetworks[prefix],
+                                            prefix: prefix,
+                                            localNumber: `0${localPart}`,
+                                            formattedNumber: `+972-${localPart.substring(0, 1)}-${localPart.substring(1)}`
+                                        };
+                                    }
+                                }
+                            } else if (['2', '3', '4', '8', '9'].includes(localPart[0])) {
+                                // מספר נייח
+                                if (localPart.length !== 8) {
+                                    errorMessage = 'אורך המספר לאחר הקידומת הבינלאומית אינו תקין למספר נייח';
+                                } else {
+                                    const areaCode = '0' + localPart.substring(0, 1);
+                                    if (!landlineAreas[areaCode]) {
+                                        errorMessage = `הקידומת ${areaCode} אינה קידומת תקינה לטלפון נייח בישראל`;
+                                    } else {
+                                        isValid = true;
+                                        detailsData = {
+                                            type: 'טלפון נייח (פורמט בינלאומי)',
+                                            area: landlineAreas[areaCode],
+                                            areaCode: areaCode,
+                                            localNumber: `0${localPart}`,
+                                            formattedNumber: `+972-${localPart.substring(0, 1)}-${localPart.substring(1)}`
+                                        };
+                                    }
+                                }
+                            } else {
+                                errorMessage = 'הספרה הראשונה לאחר הקידומת הבינלאומית אינה תקינה';
+                            }
+                        }
+                        break;
+                }
+                
+                if (isValid) {
+                    showSuccess();
+                    showDetails(detailsData);
+                } else {
+                    showError(errorMessage);
+                }
+            }
+            
+            // פונקציה להצגת הודעת הצלחה
+            function showSuccess() {
+                resultDiv.className = 'result success';
+                
+                let icon = currentFormat === 'mobile' ? '📱' : '☎️';
+                if (currentFormat === 'international') {
+                    icon = '🌐';
+                }
+                
+                resultDiv.innerHTML = `<h3>${icon} מספר הטלפון תקין!</h3>`;
+                resultDiv.style.display = 'block';
+            }
+            
+            // פונקציה להצגת הודעת שגיאה
+            function showError(message) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `<h3>✗ ${message}</h3>`;
+                resultDiv.style.display = 'block';
+                detailsDiv.style.display = 'none';
+            }
+            
+            // פונקציה להצגת פרטים נוספים
+            function showDetails(data) {
+                let detailsHtml = '<h3>פרטי המספר:</h3>';
+                
+                detailsHtml += `
+                    <div class="highlight-row">
+                        <div class="step"><span class="highlight">סוג:</span> ${data.type}</div>
+                `;
+                
+                if (data.provider) {
+                    detailsHtml += `<div class="step"><span class="highlight">ספק:</span> ${data.provider}</div>`;
+                }
+                
+                if (data.area) {
+                    detailsHtml += `<div class="step"><span class="highlight">אזור:</span> ${data.area}</div>`;
+                }
+                
+                if (data.localNumber) {
+                    detailsHtml += `<div class="step"><span class="highlight">מספר מקומי:</span> ${data.localNumber}</div>`;
+                }
+                
+                detailsHtml += `
+                        <div class="step"><span class="highlight">פורמט מקומי:</span> ${data.formattedNumber || data.localNumber}</div>
+                        <div class="step"><span class="highlight">פורמט בינלאומי:</span> ${data.internationalNumber || data.formattedNumber}</div>
+                    </div>
+                `;
+                
+                if (data.provider) {
+                    detailsHtml += `
+                        <div class="provider-info">
+                            <div class="provider-icon">📱</div>
+                            <div>מספר שייך לרשת ${data.provider}</div>
+                        </div>
+                    `;
+                }
+                
+                if (data.area) {
+                    detailsHtml += `
+                        <div class="provider-info">
+                            <div class="provider-icon">🏢</div>
+                            <div>מספר שייך לאזור ${data.area}</div>
+                        </div>
+                    `;
+                }
+                
+                detailsDiv.innerHTML = detailsHtml;
+                detailsDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

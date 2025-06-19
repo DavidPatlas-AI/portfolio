@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patlas Homepage - Innovation Center</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Rubik', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to left, #0f2027, #203a43, #2c5364);
+            color: white;
+        }
+        header {
+            text-align: center;
+            padding: 40px 10px;
+            background-color: #1a1a1a;
+            border-bottom: 4px solid #00aaff;
+        }
+        header h1 {
+            font-size: 3em;
+            margin: 0;
+        }
+        header p {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        .projects-section {
+            max-width: 1200px;
+            margin: auto;
+            padding: 30px;
+        }
+        .projects-section h2 {
+            border-bottom: 2px solid #00aaff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .projects-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+        .project {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+        .project:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+        }
+        .project h3 {
+            margin-top: 0;
+            font-size: 1.4em;
+            color: #00aaff;
+        }
+        .project p {
+            line-height: 1.6;
+        }
+        .project-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+        }
+        .status-complete {
+            background-color: #27ae60;
+        }
+        .status-active {
+            background-color: #f39c12;
+        }
+        .status-planning {
+            background-color: #9b59b6;
+        }
+        .progress {
+            height: 10px;
+            background-color: #444;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #00aaff;
+            transition: width 0.3s ease;
+        }
+        .snake {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="50" r="8" fill="%2300aaff"/><circle cx="40" cy="50" r="6" fill="%2300ccff"/><circle cx="60" cy="50" r="4" fill="%2300eeff"/></svg>') no-repeat center;
+            background-size: contain;
+            animation: crawl 25s infinite linear;
+            z-index: 999;
+        }
+        @keyframes crawl {
+            0%   {top: 90%; left: -10%; transform: rotate(0deg);}
+            25%  {top: 20%; left: 30%; transform: rotate(90deg);}
+            50%  {top: 10%; left: 70%; transform: rotate(180deg);}
+            75%  {top: 70%; left: 90%; transform: rotate(270deg);}
+            100% {top: 90%; left: 110%; transform: rotate(360deg);}
+        }
+        marquee {
+            font-size: 1.1em;
+            padding: 10px;
+            background: #444;
+            margin-bottom: 20px;
+        }
+        .file-count {
+            font-size: 0.9em;
+            color: #888;
+            margin-top: 5px;
+        }
+        .project-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background-color: #00aaff;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .project-link:hover {
+            background-color: #0088cc;
+        }
+        .stats {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .stats h3 {
+            margin-bottom: 15px;
+            color: #00aaff;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        .stat-item {
+            background-color: #444;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #00aaff;
+        }
+        .stat-label {
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 40px; flex-wrap: wrap;">
+            <div style="text-align: center;">
+                <h1>🚀 Patlas Innovation Center</h1>
+                <p>דף הבית המרכזי - אוסף מלא של כל הפרויקטים, המערכות והכלים שפותחו - מהרעיון ועד המימוש 💡</p>
+                <div style="margin-top: 20px;">
+                    <a href="about/about-patlas.html" style="background: linear-gradient(45deg, #00aaff, #00eeff); color: white; padding: 12px 25px; border-radius: 50px; text-decoration: none; font-weight: 600; transition: all 0.3s ease;" 
+                       onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        📋 אודות Patlas - מרכז החדשנות
+                    </a>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <img src="family.jpg" alt="צוות Patlas" style="width: 180px; height: 180px; border-radius: 20px; object-fit: cover; border: 3px solid #00aaff; box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3); transition: all 0.3s ease;" 
+                     onmouseover="this.style.transform='scale(1.08) rotate(2deg)'; this.style.boxShadow='0 20px 40px rgba(0, 170, 255, 0.4)'" 
+                     onmouseout="this.style.transform='scale(1) rotate(0deg)'; this.style.boxShadow='0 12px 24px rgba(0, 0, 0, 0.3)'">
+                <p style="margin-top: 10px; font-size: 1em; color: #00eeff; font-weight: 600;">הצוות שמאחורי הקסם ✨</p>
+                
+                <!-- קישורים לערוצי המדיה -->
+                <div style="margin-top: 15px; display: flex; justify-content: center; gap: 15px;">
+                    <a href="https://www.youtube.com/@tzvipatlastzvipatlas" target="_blank" 
+                       style="background: linear-gradient(45deg, #ff0000, #ff4444); color: white; padding: 8px 15px; border-radius: 25px; text-decoration: none; font-weight: 600; font-size: 0.9em; transition: all 0.3s ease; box-shadow: 0 4px 8px rgba(255, 0, 0, 0.3);"
+                       onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 12px rgba(255, 0, 0, 0.4)'"
+                       onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(255, 0, 0, 0.3)'">
+                        📺 YouTube
+                    </a>
+                    <a href="https://www.tiktok.com/@tzvipatlas?_t=ZS-8xJ8duA75Fg&_r=1" target="_blank"
+                       style="background: linear-gradient(45deg, #000000, #25f4ee); color: white; padding: 8px 15px; border-radius: 25px; text-decoration: none; font-weight: 600; font-size: 0.9em; transition: all 0.3s ease; box-shadow: 0 4px 8px rgba(37, 244, 238, 0.3);"
+                       onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 12px rgba(37, 244, 238, 0.4)'"
+                       onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 8px rgba(37, 244, 238, 0.3)'">
+                        🎵 TikTok  
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <marquee direction="right">🐍 "נחש התקדמות" מסתובב בתיק העבודות - כל פרויקט הוא שלב בדרך לחדשנות...</marquee>
+    <div class="snake"></div>
+
+    <div class="projects-section">
+        <div class="stats">
+            <h3>📊 סטטיסטיקות התיק</h3>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">24</div>
+                    <div class="stat-label">פרויקטים פעילים</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">21</div>
+                    <div class="stat-label">פרויקטים הושלמו</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">תחומי מומחיות</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">קבצי קוד</div>
+                </div>
+            </div>
+        </div>
+
+        <h2>🎯 פרויקטים מרכזיים - מוכנים לשימוש</h2>
+        <div class="projects-container">
+            <div class="project" onclick="window.open('מבחן דפר/gallery.html', '_blank')">
+                <span class="project-status status-complete">✅ הושלם</span>
+                <h3>📘 אתר מבחן דפ״ר</h3>
+                <p>אתר אינטראקטיבי שבנוי לדמות את מבחני הדפ"ר של צה"ל עם דגש על שימוש חינוכי ולימודי. נועד לשילוב בפלטפורמות כמו מודל או להפעלה ישירה מהמחשב במרחבים חסרי קליטה. פועל גם אופליין למצבי חירום ואזורים מנותקים, עם תכנון עתידי לחיבור API של LMS.</p>
+                <div class="file-count">📁 18 קבצים | עבודה אופליין | LMS integration ready</div>
+                <div class="progress"><div class="progress-bar" style="width: 100%;"></div></div>
+                                    <a href="מבחן דפר/gallery.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+
+            <div class="project" onclick="window.open('ID מפענח ובודק/index.html', '_blank')">
+                <span class="project-status status-complete">✅ הושלם</span>
+                <h3>🛡️ מרכז הבודק המקצועי</h3>
+                <p>מערכת מתקדמת לבדיקה ואימות נתונים ישראליים. 12 כלי בדיקה שונים, 6 מנתחים מתקדמים, ממשק משתמש מקצועי.</p>
+                <div class="file-count">📁 בודקים: ת"ז, טלפון, רכב, דרכון | מנתחים מתקדמים</div>
+                <div class="progress"><div class="progress-bar" style="width: 100%;"></div></div>
+                <a href="ID מפענח ובודק/index.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+
+
+
+            <div class="project" onclick="window.open('לידים מגיבוי ווצאפ/project_gallery.html', '_blank')">
+                <span class="project-status status-complete">✅ הושלם</span>
+                <h3>🪖 מערכת לידים חכמה מגיבויים בווטסאפ</h3>
+                <p>מערכת שפותחה לאיסוף, סינון והפקת לידים רלוונטיים מתוך גיבויים של שיחות וואטסאפ, במטרה לייעל תהליכי גיוס לצה"ל. הממשק מפיק שמות, מספרי טלפון, הקשרים שיחתיים וכיוונים לפנייה אישית תוך כבוד והתאמה תרבותית. כולל תבנית פנייה מותאמת לכל מגזר, ניתוח רגשי של שיחות ותמיכה רב-לשונית.</p>
+                <div class="file-count">📁 גיוס אסטרטגי | ניתוח תרבותי | פוטנציאל מיליון ₪</div>
+                <div class="progress"><div class="progress-bar" style="width: 100%;"></div></div>
+                <a href="לידים מגיבוי ווצאפ/project_gallery.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+
+            <div class="project" onclick="window.open('יצירת תוכן ויראלי לפי טרנדים/project_gallery.html', '_blank')">
+                <span class="project-status status-active">🔥 פעיל</span>
+                <h3>📈 מערכת טרנדים חיה - מפת תודעה בזמן אמת</h3>
+                <p>המערכת בנויה להצגת הטרנדים החמים ביותר בזמן אמת מכל הפלטפורמות המרכזיות – Google Trends, TikTok, ChatGPT ומקורות נוספים. כל מה שחם, כל מה שזז במקום אחד ברור ודינמי. כולל עיבוד לאוטומציות תוכן, זיהוי שילובי-על, דוחות PDF/JSON ותמיכה ב-4 שפות עיקריות. מתוכנן כתשתית לערוץ תוכן טרנדי ולאנשי פרסום.</p>
+                <div class="file-count">📁 דשבורד חי | API integration | יצירת תוכן אוטומטי</div>
+                <div class="progress"><div class="progress-bar" style="width: 80%;"></div></div>
+                <a href="יצירת תוכן ויראלי לפי טרנדים/project_gallery.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+
+            <div class="project" onclick="window.open('עיצובים CSS/gallery.html', '_blank')">
+                <span class="project-status status-complete">✅ הושלם</span>
+                <h3>🧠 השטויות של CSS</h3>
+                <p>זהו אתר דינמי וניסיוני שבו אני בודק, משחק ומדגים את כל ה"שטויות" הקטנות והכיפיות של CSS — אפקטים, הנפשות, מעבר צבעים, תפריטים מוזרים, עיצובים לא שגרתיים. מגרש משחקים לעיצוב בנוי כמחברת אינטראקטיבית עם קטגוריות מסודרות.</p>
+                <div class="file-count">📁 21 עיצובים | אפקטי CSS ניסיוניים | קוד חי עם תצוגה</div>
+                <div class="progress"><div class="progress-bar" style="width: 100%;"></div></div>
+                <a href="עיצובים CSS/gallery.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+        </div>
+
+        <h2>🚀 פרויקטים מתקדמים ומערכות מיוחדות</h2>
+        <div class="projects-container">
+            <div class="project" onclick="window.open('הפלטה של פטלס/גרסה 4 - הפלטה של פטלס סופי/הפלטה של פטלס סופי/index.html', '_blank')">
+                <span class="project-status status-active">🎨 פעיל</span>
+                <h3>🎨 הפלטה של Patlas - צבעים עם עומק וחיוך</h3>
+                <p>אתר ויזואלי־תרבותי המציג פלטות צבעים לפי מגזרים, עונות, רגשות וסגנונות עיצוביים, בהשראת גומיות של פלטה אורתודונטית. כל "פלטה" מדמה חיוך אנושי – שיניים וגומיות – עם משמעויות חזותיות מעולמות עיצוב, יהדות וזהות אישית. כולל קוד צבע להעתקה ישירה ל־HTML/CSS/JS/Python ומתוכנן לתמיכה ב־RTL/LTR.</p>
+                <div class="file-count">📁 4 גרסאות | צבעים תרבותיים | קוד מוכן לשימוש</div>
+                <div class="progress"><div class="progress-bar" style="width: 85%;"></div></div>
+                <a href="הפלטה של פטלס/גרסה 4 - הפלטה של פטלס סופי/הפלטה של פטלס סופי/index.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+
+            <div class="project" onclick="window.open('מפה שמראה לי קמפיינים שעומדים לי הראש/gallery_index.html', '_blank')">
+                <span class="project-status status-active">🗺️ פעיל</span>
+                <h3>🗺️ מיפוי קמפיינים לפי מיקום - שלד מוכן</h3>
+                <p>מפה חכמה ודינמית שמציגה בכל רגע נתון אילו קמפיינים פועלים באילו אזורים: פעילויות בלשכות גיוס, נוכחות הפלג הירושלמי, קמפיינים של גופים משפטיים או דמויות ציבוריות בולטות. השלד מוכן עם ממשק ראשוני ובסיס נתונים, נותר חיבור למפה אינטראקטיבית ועיצוב תצוגה גרפית ברורה לחוויית משתמש מושלמת.</p>
+                <div class="file-count">📁 מפה אינטראקטיבית | ניטור קמפיינים | תצוגה גרפית</div>
+                <div class="progress"><div class="progress-bar" style="width: 75%;"></div></div>
+                <a href="מפה שמראה לי קמפיינים שעומדים לי הראש/gallery_index.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+
+            <div class="project" onclick="window.open('תיקון שם השם ברוסית/gallery.html', '_blank')">
+                <span class="project-status status-active">📚 פעיל</span>
+                <h3>✡️ מתקן השמות הקדושים</h3>
+                <p>מערכת מקיפה לתיקון שמות קדושים ברוסית, תהילים, סידור ותפילות. כולל קריאות זיכרון ומרכיבים אינטראקטיביים.</p>
+                <div class="file-count">📁 152 קבצי תהילים | PWA | מנגנון upload</div>
+                <div class="progress"><div class="progress-bar" style="width: 90%;"></div></div>
+                                    <a href="תיקון שם השם ברוסית/gallery.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+
+            <div class="project" onclick="window.open('מסלול_מלא_מפוצץ/gallery.html', '_blank')">
+                <span class="project-status status-active">⚡ פעיל</span>
+                <h3>🛣️ מסלול מלא מפוצץ</h3>
+                <p>מערכת מסלולים מתקדמת עם ארכיון מסודר של 4 גרסאות, תיעוד מפורט ומבנה פרויקט מקצועי.</p>
+                <div class="file-count">📁 ארכיון מסודר | 4 גרסאות | מבנה מתקדם</div>
+                <div class="progress"><div class="progress-bar" style="width: 70%;"></div></div>
+                <a href="מסלול_מלא_מפוצץ/gallery.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+
+            <div class="project" onclick="window.open('פיצה/pizza_deluxe.html', '_blank')">
+                <span class="project-status status-complete">🍕 הושלם</span>
+                <h3>🍕 תפריט לחנות פיצה</h3>
+                <p>בניית תפריט דיגיטלי לחנות פיצה — מעוצב, מגיב, כולל אנימציות ומעברים חלקים, עם אפשרות להוספת תוספות, מעבר עמודים, סל קניות ופרטי תשלום. טעינה דינמית של תוספות לפי סוג פיצה והתאמת הצעות לפי הבחירה עם מעבר בין מצבים: פתח תפריט > בחר פיצה > הצג תשלום.</p>
+                <div class="file-count">📁 3 גרסאות | טעינה דינמית | סל קניות ותשלום</div>
+                <div class="progress"><div class="progress-bar" style="width: 100%;"></div></div>
+                <a href="פיצה/pizza_deluxe.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+
+
+
+            <div class="project" onclick="window.open('אני על רמקול סימן שאלה/index.html', '_blank')">
+                <span class="project-status status-complete">🔊 הושלם</span>
+                <h3>🔊 בודק אם שמו אותך על רמקול</h3>
+                <p>רעיון יצירתי: כלי שמתחבר לאוזנייה או מיקרופון במחשב, מאזין בזמן אמת לשיחה, ומנסה לנתח לפי רעשים, הד, או תגובת הקול - האם אתה מדבר מול רמקול פתוח. כולל השוואת טון/עוצמה/השהייה וגילוי שינוי פתאומי בווליום + איתור משפטים כמו "שומעים אותך".</p>
+                <div class="file-count">📁 ניתוח אודיו בזמן אמת | הגנה על פרטיות</div>
+                <div class="progress"><div class="progress-bar" style="width: 100%;"></div></div>
+                <a href="אני על רמקול סימן שאלה/index.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+        </div>
+
+        <h2>🎨 פרויקטים נוספים וגרסאות מתקדמות</h2>
+        <div class="projects-container">
+
+
+
+
+
+
+
+
+
+
+
+
+
+        </div>
+
+        <h2>🔧 כלי עזר ומערכות תומכות</h2>
+        <div class="projects-container">
+            <div class="project" onclick="window.open('תחפשני/index.html', '_blank')">
+                <span class="project-status status-complete">🔍 הושלם</span>
+                <h3>🎭 יוצר תבניות פישינג קריליות - חקירה חינוכית</h3>
+                <p>האתר מדגים כיצד ניתן לבנות תבניות פישינג משכנעות באמצעות החלפה מתוחכמת של אותיות קריליות שמזכירות מאוד אותיות לטיניות/עבריות, אך שונות לחלוטין מבחינת קוד Unicode. המטרה: לחשוף את התחכום של תוקפים ולהעלות מודעות אצל משתמשים, ארגונים ומפתחים. כולל מצבי תרגול וכלים לבדיקה עצמית.</p>
+                <div class="file-count">📁 הנדסה חברתית | Unicode manipulation | הדרכה אבטחה</div>
+                <div class="progress"><div class="progress-bar" style="width: 100%;"></div></div>
+                <a href="תחפשני/index.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+
+            <div class="project" onclick="window.open('מפצל קוד מקלוד/index.html', '_blank')">
+                <span class="project-status status-complete">⚙️ הושלם</span>
+                <h3>📂 מפצל קוד מקלאוד לקבצים שצריך</h3>
+                <p>כלי שפיתחתי כדי לחלץ מקוד באונליין (GitHub Gist, Google Drive או כל קובץ ארוך בענן) רק את הקבצים או הפונקציות הרלוונטיים ולהפריד אותם אוטומטית לתיקיות מסודרות. מיון לפי משתנים, function או class עם הפלט לתיקיות נפרדות לפי הקשר.</p>
+                <div class="file-count">📁 ארגון אוטומטי | הפרדת קוד | תיקיות מסודרות</div>
+                <div class="progress"><div class="progress-bar" style="width: 100%;"></div></div>
+                <a href="מפצל קוד מקלוד/index.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+
+            <div class="project" onclick="window.open('מפענח קוד רגשי/index.html', '_blank')">
+                <span class="project-status status-complete">💭 הושלם</span>
+                <h3>🧑‍💻 מנתח את כותב הקוד</h3>
+                <p>כלי שמקבל קטע קוד ומנסה לזהות מי כתב אותו לפי סגנון אישי, שמות משתנים, שימוש בסוגריים, הערות, מבנה לולאות. אלגוריתם שמשווה מול מאגר חתימות קוד קיים וניתוח סגנון כמו ניתוח כתב יד של קוד. בודק שפה, שגיאות, מבנה if/while ואורך שורות.</p>
+                <div class="file-count">📁 זיהוי סגנון קוד | ניתוח חתימות | למידה עצמית</div>
+                <div class="progress"><div class="progress-bar" style="width: 100%;"></div></div>
+                <a href="מפענח קוד רגשי/index.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+        </div>
+
+        <h2>🚀 פרויקטים מתקדמים וחדשניים</h2>
+        <div class="projects-container">
+            <div class="project" onclick="window.open('חממה דיגיטלית/landing_page.html', '_blank')">
+                <span class="project-status status-complete">✅ הושלם</span>
+                <h3>🌱 חממה דיגיטלית</h3>
+                <p>מערכת לגידול משותף של צמחים בזמן אמת - קהילה גלובלית שמתעדת, משתפת ומגדלת יחד. כולל גלריה מלאה ואפקטים ויזואליים.</p>
+                <div class="file-count">📁 גלריה מלאה | דף נחיתה מקצועי | אינטראקטיבי</div>
+                <div class="progress"><div class="progress-bar" style="width: 100%;"></div></div>
+                <a href="חממה דיגיטלית/landing_page.html" class="project-link" target="_blank">פתח פרויקט</a>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding: 20px; background-color: #333; border-radius: 10px;">
+            <h3>🎯 Patlas Innovation Center - Homepage</h3>
+            <p>15 פרויקטים מרכזיים | 8 תחומי מומחיות | 200+ קבצי קוד | חדשנות וטכנולוגיה מתקדמת</p>
+            <p style="font-size: 0.9em; color: #888;">עדכון אחרון: ${new Date().toLocaleDateString('he-IL')}</p>
+        </div>
+    </div>
+
+    <script>
+        // אנימציה דינמית לפס התקדמות
+        document.addEventListener('DOMContentLoaded', function() {
+            const progressBars = document.querySelectorAll('.progress-bar');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const bar = entry.target;
+                        const width = bar.style.width;
+                        bar.style.width = '0%';
+                        setTimeout(() => {
+                            bar.style.width = width;
+                        }, 200);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            progressBars.forEach(bar => observer.observe(bar));
+        });
+
+        // הוספת אפקט hover לפרויקטים
+        document.querySelectorAll('.project').forEach(project => {
+            project.addEventListener('mouseenter', function() {
+                const progressBar = this.querySelector('.progress-bar');
+                if (progressBar) {
+                    progressBar.style.backgroundColor = '#00eeff';
+                }
+            });
+            
+            project.addEventListener('mouseleave', function() {
+                const progressBar = this.querySelector('.progress-bar');
+                if (progressBar) {
+                    progressBar.style.backgroundColor = '#00aaff';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

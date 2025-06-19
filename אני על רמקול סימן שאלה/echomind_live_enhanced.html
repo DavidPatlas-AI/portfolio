@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeMirror-Neshama™ - אורקל הקוד המתקדם</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: #333;
+            direction: rtl;
+            animation: backgroundShift 15s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { 
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); 
+            }
+            50% { 
+                background: linear-gradient(135deg, #764ba2 0%, #f093fb 50%, #667eea 100%); 
+            }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            position: relative;
+        }
+
+        .title {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.4);
+            animation: titlePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            margin-bottom: 8px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .tagline {
+            font-style: italic;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .main-card {
+            background: rgba(255,255,255,0.97);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .intro-text {
+            text-align: center;
+            margin-bottom: 35px;
+            font-size: 1.15rem;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .demo-section {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid #2196f3;
+            text-align: center;
+        }
+
+        .demo-title {
+            font-size: 1.3rem;
+            color: #1565c0;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .demo-btn {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.3);
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.4);
+        }
+
+        .code-section {
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border-right: 5px solid #667eea;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .code-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.1);
+        }
+
+        .code-label {
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.1rem;
+        }
+
+        .label-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .example-btn {
+            background: #ffc107;
+            color: #333;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+        }
+
+        .example-btn:hover {
+            background: #ffb300;
+            transform: scale(1.05);
+        }
+
+        .code-textarea {
+            width: 100%;
+            min-height: 140px;
+            border: 2px solid #dee2e6;
+            border-radius: 12px;
+            padding: 18px;
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+            font-size: 14px;
+            resize: vertical;
+            transition: all 0.3s;
+            direction: ltr;
+            text-align: left;
+            background: rgba(255,255,255,0.9);
+        }
+
+        .code-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.2);
+            background: white;
+        }
+
+        .analyze-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            margin: 30px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            display: none;
+            position: relative;
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite;
+            margin: 0 auto 30px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .loading-steps {
+            font-size: 1rem;
+            color: #888;
+            font-style: italic;
+        }
+
+        .results {
+            display: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 30%, #f093fb 70%, #f5576c 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .results h2 {
+            text-align: center;
+            margin-bottom: 35px;
+            font-size: 2.2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .profile-section {
+            background: rgba(255,255,255,0.12);
+            border-radius: 15px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            margin-bottom: 20px;
+        }
+
+        .profile-item {
+            margin-bottom: 18px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .creativity-score {
+            background: rgba(255,255,255,0.15);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 25px 0;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.1));
+            border: 3px solid rgba(255,255,255,0.5);
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin: 20px auto;
+        }
+
+        .insight-box {
+            background: rgba(255,255,255,0.18);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 25px;
+            border-right: 5px solid rgba(255,255,255,0.6);
+        }
+
+        .insight-box h3 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        .insight-text {
+            font-size: 1.3rem;
+            font-style: italic;
+            line-height: 1.6;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .reset-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.7);
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .reset-btn:hover {
+            background: rgba(255,255,255,0.9);
+            color: #764ba2;
+            transform: translateY(-2px);
+        }
+
+        .tip {
+            background: linear-gradient(135deg, rgba(255,215,0,0.2), rgba(255,165,0,0.1));
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-right: 4px solid #ffd700;
+            border: 1px solid rgba(255,215,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">🧬🔮 CodeMirror-Neshama™</div>
+            <div class="subtitle">מערכת פיענוח קוד מתקדמת ומוח יצירתיות</div>
+            <div class="tagline">"לא רק 'מי אתה' - אלא 'כמה נדיר אתה'"</div>
+        </div>
+
+        <div class="main-card">
+            <div class="intro-text">
+                הכנס קטעי קוד מגוונים וקבל ניתוח מעמיק שיחשוף לא רק את האישיות שלך, אלא גם את <strong>רמת הייחודיות והיצירתיות</strong> של הרעיונות שלך בעולם התכנות
+            </div>
+
+            <div class="demo-section">
+                <div class="demo-title">🎲 רוצה לנסות? השתמש בדוגמאות רנדומליות!</div>
+                <div class="demo-buttons">
+                    <button class="demo-btn" onclick="fillRandomExample()">🎯 מלא דוגמה רנדומלית</button>
+                    <button class="demo-btn" onclick="fillBeginnerExample()">👶 דוגמת מתחיל</button>
+                    <button class="demo-btn" onclick="fillAdvancedExample()">🧠 דוגמת מתקדם</button>
+                    <button class="demo-btn" onclick="clearAllFields()">🧹 נקה הכל</button>
+                </div>
+            </div>
+
+            <div class="tip">
+                🌟 <strong>המערכת מנתחת:</strong> לא רק אישיות, אלא גם רמת נדירות הרעיונות שלך (1:10? 1:1000? 1:מיליון?), סגנון חשיבה ייחודי, ורמת יצירתיות טכנולוגית
+            </div>
+
+            <div class="code-section">
+                <div class="code-label">
+                    <div class="label-content">
+                        <span>🛠️</span>
+                        פונקציה קטנה או פתרון חכם
+                    </div>
+                    <button class="example-btn" onclick="fillExample(1)">דוגמה</button>
+                </div>
+                <textarea class="code-textarea" id="code1" placeholder="הדבק כאן פונקציה שפתרה לך בעיה בצורה מעניינת, או קוד שאתה גאה בו..."></textarea>
+            </div>
+
+            <div class="code-section">
+                <div class="code-label">
+                    <div class="label-content">
+                        <span>🧮</span>
+                        אלגוריתם או לוגיקה מורכבת
+                    </div>
+                    <button class="example-btn" onclick="fillExample(2)">דוגמה</button>
+                </div>
+                <textarea class="code-textarea" id="code2" placeholder="לולאות, תנאים, חישובים - קוד שדרש ממך חשיבה יצירתית..."></textarea>
+            </div>
+
+            <div class="code-section">
+                <div class="code-label">
+                    <div class="label-content">
+                        <span>📱</span>
+                        קוד ממשק או חוויית משתמש
+                    </div>
+                    <button class="example-btn" onclick="fillExample(3)">דוגמה</button>
+                </div>
+                <textarea class="code-textarea" id="code3" placeholder="UI/UX, אנימציות, אינטראקציות - כל דבר שקשור לחוויה..."></textarea>
+            </div>
+
+            <div class="code-section">
+                <div class="code-label">
+                    <div class="label-content">
+                        <span>⚡</span>
+                        קוד מתקדם או טכניקה חדשנית
+                    </div>
+                    <button class="example-btn" onclick="fillExample(4)">דוגמה</button>
+                </div>
+                <textarea class="code-textarea" id="code4" placeholder="API, מיקרו-סרביסים, AI, או כל דבר טכנולוגי מתקדם..."></textarea>
+            </div>
+
+            <div class="code-section">
+                <div class="code-label">
+                    <div class="label-content">
+                        <span>🎯</span>
+                        הפרויקט הכי מיוחד שלך
+                    </div>
+                    <button class="example-btn" onclick="fillExample(5)">דוגמה</button>
+                </div>
+                <textarea class="code-textarea" id="code5" placeholder="הקוד שאתה הכי גאה בו, או משהו שהמציא פתרון ייחודי לבעיה..."></textarea>
+            </div>
+
+            <button class="analyze-btn" onclick="analyzeCode()">
+                🔮✨ פענח את נשמת הקוד ואת רמת הייחודיות שלי
+            </button>
+
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <div class="loading-text">מפענח את DNA הקוד שלך...</div>
+                <div class="loading-steps" id="loadingSteps">סורק תבניות יצירתיות</div>
+            </div>
+
+            <div class="results" id="results">
+                <h2>🎭 דוח נשמת הקוד המלא שלך</h2>
+                <div id="personality-content"></div>
+                <button class="reset-btn" onclick="resetAnalysis()">🔄 נתח קוד אחר</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // דוגמאות קוד פשוטות ובטוחות
+        const examples = {
+            1: [
+                'function sum(a, b) {\n    return a + b;\n}',
+                'const double = x => x * 2;',
+                'function isEven(num) {\n    return num % 2 === 0;\n}'
+            ],
+            2: [
+                'for (let i = 0; i < 10; i++) {\n    console.log(i);\n}',
+                'if (age >= 18) {\n    console.log("Adult");\n} else {\n    console.log("Minor");\n}',
+                'let factorial = 1;\nfor (let i = 1; i <= 5; i++) {\n    factorial *= i;\n}'
+            ],
+            3: [
+                '<button onclick="alert(\'Hello!\')">Click me</button>',
+                'document.getElementById("demo").innerHTML = "Hello World";',
+                'body {\n    background-color: lightblue;\n    color: darkblue;\n}'
+            ],
+            4: [
+                'fetch("/api/data")\n    .then(response => response.json())\n    .then(data => console.log(data));',
+                'async function getData() {\n    const response = await fetch("/api");\n    return response.json();\n}',
+                'const api = {\n    get: (url) => fetch(url),\n    post: (url, data) => fetch(url, {method: "POST", body: data})\n};'
+            ],
+            5: [
+                'class Calculator {\n    add(a, b) { return a + b; }\n    subtract(a, b) { return a - b; }\n}',
+                'const todoApp = {\n    todos: [],\n    add(item) { this.todos.push(item); },\n    remove(index) { this.todos.splice(index, 1); }\n};',
+                'function createCounter() {\n    let count = 0;\n    return {\n        increment: () => ++count,\n        get: () => count\n    };\n}'
+            ]
+        };
+
+        // פונקציות למילוי דוגמאות
+        function fillExample(index) {
+            const codeExamples = examples[index];
+            if (codeExamples) {
+                const randomExample = codeExamples[Math.floor(Math.random() * codeExamples.length)];
+                document.getElementById('code' + index).value = randomExample;
+            }
+        }
+
+        function fillRandomExample() {
+            for (let i = 1; i <= 5; i++) {
+                fillExample(i);
+            }
+        }
+
+        function fillBeginnerExample() {
+            document.getElementById('code1').value = 'function greet(name) {\n    return "Hello, " + name + "!";\n}';
+            document.getElementById('code2').value = 'let sum = 0;\nfor (let i = 1; i <= 100; i++) {\n    sum += i;\n}\nconsole.log(sum);';
+            document.getElementById('code3').value = '<div id="greeting">Welcome!</div>\n<style>\n#greeting { color: blue; font-size: 20px; }\n</style>';
+            document.getElementById('code4').value = 'function fetchData() {\n    return fetch("/api/users")\n        .then(res => res.json())\n        .catch(err => console.error(err));\n}';
+            document.getElementById('code5').value = 'const myApp = {\n    users: [],\n    addUser(user) {\n        this.users.push(user);\n        console.log("User added:", user);\n    }\n};';
+        }
+
+        function fillAdvancedExample() {
+            document.getElementById('code1').value = 'const memoize = fn => {\n    const cache = new Map();\n    return (...args) => {\n        const key = JSON.stringify(args);\n        return cache.has(key) ? cache.get(key) : cache.set(key, fn(...args)).get(key);\n    };\n};';
+            document.getElementById('code2').value = 'function quickSort(arr) {\n    if (arr.length <= 1) return arr;\n    const pivot = arr[Math.floor(arr.length / 2)];\n    const left = arr.filter(x => x < pivot);\n    const right = arr.filter(x => x > pivot);\n    return [...quickSort(left), pivot, ...quickSort(right)];\n}';
+            document.getElementById('code3').value = 'const useLocalStorage = (key, defaultValue) => {\n    const [value, setValue] = useState(() => {\n        const item = localStorage.getItem(key);\n        return item ? JSON.parse(item) : defaultValue;\n    });\n    \n    useEffect(() => {\n        localStorage.setItem(key, JSON.stringify(value));\n    }, [key, value]);\n    \n    return [value, setValue];\n};';
+            document.getElementById('code4').value = 'class EventEmitter {\n    constructor() { this.events = {}; }\n    \n    on(event, callback) {\n        if (!this.events[event]) this.events[event] = [];\n        this.events[event].push(callback);\n    }\n    \n    emit(event, data) {\n        if (this.events[event]) {\n            this.events[event].forEach(cb => cb(data));\n        }\n    }\n}';
+            document.getElementById('code5').value = 'class SmartCache {\n    constructor(maxSize = 100, ttl = 60000) {\n        this.cache = new Map();\n        this.timers = new Map();\n        this.maxSize = maxSize;\n        this.ttl = ttl;\n    }\n    \n    set(key, value) {\n        if (this.cache.size >= this.maxSize) {\n            const firstKey = this.cache.keys().next().value;\n            this.delete(firstKey);\n        }\n        \n        this.cache.set(key, value);\n        \n        if (this.timers.has(key)) {\n            clearTimeout(this.timers.get(key));\n        }\n        \n        const timer = setTimeout(() => this.delete(key), this.ttl);\n        this.timers.set(key, timer);\n    }\n    \n    get(key) {\n        return this.cache.get(key);\n    }\n    \n    delete(key) {\n        this.cache.delete(key);\n        if (this.timers.has(key)) {\n            clearTimeout(this.timers.get(key));\n            this.timers.delete(key);\n        }\n    }\n}';
+        }
+
+        function clearAllFields() {
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById('code' + i).value = '';
+            }
+        }
+
+        function analyzeCode() {
+            const codes = [];
+            for (let i = 1; i <= 5; i++) {
+                const code = document.getElementById('code' + i).value.trim();
+                if (code) codes.push(code);
+            }
+
+            if (codes.length < 2) {
+                alert('יש להכניס לפחות 2 קטעי קוד כדי לקבל ניתוח מעמיק');
+                return;
+            }
+
+            // הצגת מסך טעינה
+            document.querySelector('.analyze-btn').disabled = true;
+            document.getElementById('loading').style.display = 'block';
+
+            // שלבי טעינה
+            const steps = [
+                'סורק תבניות יצירתיות ב־DNA הקוד...',
+                'מנתח רמת נדירות הרעיונות שלך...',
+                'משווה לדפוסי תכנות של מיליוני מתכנתים...',
+                'מעריך רמת חדשנות ויצירתיות...',
+                'בונה פרופיל אישיות מתקדם...',
+                'מחשב ציון ייחודיות אישי...'
+            ];
+
+            let stepIndex = 0;
+            const stepInterval = setInterval(() => {
+                if (stepIndex < steps.length) {
+                    document.getElementById('loadingSteps').textContent = steps[stepIndex];
+                    stepIndex++;
+                }
+            }, 800);
+
+            // סימולציה של ניתוח
+            setTimeout(() => {
+                clearInterval(stepInterval);
+                const analysis = generateAnalysis(codes);
+                displayResults(analysis);
+                
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('results').style.display = 'block';
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+            }, 5000);
+        }
+
+        function generateAnalysis(codes) {
+            let modernFeatures = 0;
+            let comments = 0;
+            let errorHandling = 0;
+            let complexity = 0;
+            let creativity = 0;
+
+            codes.forEach(code => {
+                // ספירת תכונות מודרניות
+                if (code.includes('const ') || code.includes('let ')) modernFeatures++;
+                if (code.includes('=>')) modernFeatures++;
+                if (code.includes('async') || code.includes('await')) modernFeatures++;
+                
+                // ספירת תגובות
+                if (code.includes('//') || code.includes('/*')) comments++;
+                
+                // טיפול בשגיאות
+                if (code.includes('try') || code.includes('catch')) errorHandling++;
+                
+                // מדידת מורכבות
+                complexity += code.split('\n').length;
+                
+                // יצירתיות
+                if (code.includes('class ') || code.includes('function*')) creativity++;
+                if (code.includes('Map') || code.includes('Set')) creativity++;
+                if (code.includes('reduce') || code.includes('filter')) creativity++;
+            });
+
+            // חישוב ציונים
+            const totalScore = modernFeatures * 10 + comments * 5 + errorHandling * 15 + creativity * 20;
+            const creativityScore = Math.min(totalScore, 100);
+            
+            // קביעת פרופיל
+            let age, experience, style, rarity;
+            
+            if (modernFeatures >= 3) {
+                age = '22-28';
+                experience = 'התחלת לתכנת ב-2018-2021';
+                style = 'מתכנת מודרני שעוקב אחרי טרנדים';
+            } else if (modernFeatures >= 1) {
+                age = '25-32'; 
+                experience = 'התחלת לתכנת ב-2015-2018';
+                style = 'מתכנת מאוזן עם ניסיון';
+            } else {
+                age = '28-38';
+                experience = 'התחלת לתכנת ב-2010-2015';
+                style = 'מתכנת קלאסי עם יסודות חזקים';
+            }
+
+            if (creativityScore >= 80) {
+                rarity = '1 ל-1000 - נדיר מאוד!';
+            } else if (creativityScore >= 60) {
+                rarity = '1 ל-100 - לא שגרתי';
+            } else if (creativityScore >= 40) {
+                rarity = '1 ל-20 - מעל הממוצע';
+            } else {
+                rarity = '1 ל-5 - סטנדרטי';
+            }
+
+            return {
+                age,
+                experience,
+                style,
+                creativityScore,
+                rarity,
+                codes: codes.length
+            };
+        }
+
+        function displayResults(analysis) {
+            const insights = [
+                'אתה מתכנת שמעריך קוד נקי ועקבי',
+                'יש לך נטייה לפתרונות יצירתיים ולא שגרתיים',
+                'אתה בוחר באלגנטיות על פני מורכבות מיותרת',
+                'הקוד שלך מעיד על חשיבה מערכתית מתפתחת',
+                'יש לך מאקרו-חשיבה שמתבטאת במיקרו-פתרונות'
+            ];
+            
+            const randomInsight = insights[Math.floor(Math.random() * insights.length)];
+            
+            const content = `
+                <div class="profile-section">
+                    <div class="profile-item">
+                        <strong>🧑 גיל משוער:</strong> ${analysis.age}
+                    </div>
+                    <div class="profile-item">
+                        <strong>📅 תקופת התחלה בתכנות:</strong> ${analysis.experience}
+                    </div>
+                    <div class="profile-item">
+                        <strong>🎯 סגנון תכנות:</strong> ${analysis.style}
+                    </div>
+                    <div class="profile-item">
+                        <strong>🔢 קטעי קוד שנותחו:</strong> ${analysis.codes}
+                    </div>
+                    <div class="profile-item">
+                        <strong>🌟 רמת נדירות:</strong> ${analysis.rarity}
+                    </div>
+                </div>
+
+                <div class="creativity-score">
+                    <h3>ציון יצירתיות וייחודיות</h3>
+                    <div class="score-circle">${analysis.creativityScore}</div>
+                    <p>מתוך 100 נקודות</p>
+                </div>
+
+                <div class="insight-box">
+                    <h3>💡 התובנה המרכזית</h3>
+                    <div class="insight-text">${randomInsight}</div>
+                </div>
+            `;
+
+            document.getElementById('personality-content').innerHTML = content;
+            document.querySelector('.analyze-btn').disabled = false;
+        }
+
+        function resetAnalysis() {
+            document.getElementById('results').style.display = 'none';
+            clearAllFields();
+            document.querySelector('.main-card').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

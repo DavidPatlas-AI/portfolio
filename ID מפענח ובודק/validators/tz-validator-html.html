@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בודק תקינות תעודת זהות ישראלית</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@100;300;400;500;700;900&display=swap');
+        
+        :root {
+            --primary: #FF5252;
+            --secondary: #2C3E50;
+            --success: #26c281;
+            --error: #e74c3c;
+            --light: #F5F7FA;
+            --dark: #2C3E50;
+            --accent: #FFC107;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Heebo', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            margin: 0;
+            padding: 0;
+            direction: rtl;
+            position: relative;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        /* Abstract design elements */
+        body::before, body::after {
+            content: '';
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            z-index: -1;
+        }
+        
+        body::before {
+            background: linear-gradient(135deg, rgba(255, 82, 82, 0.15), rgba(255, 193, 7, 0.15));
+            top: -250px;
+            right: -250px;
+        }
+        
+        body::after {
+            background: linear-gradient(135deg, rgba(38, 194, 129, 0.15), rgba(44, 62, 80, 0.15));
+            bottom: -250px;
+            left: -250px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(44, 62, 80, 0.1);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 30px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.8;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 0;
+            position: relative;
+            text-align: center;
+        }
+        
+        .subtitle {
+            font-weight: 300;
+            opacity: 0.9;
+            margin-top: 8px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .id-input-container {
+            position: relative;
+            margin: 40px 0;
+        }
+        
+        .id-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #ddd;
+            padding: 15px 0;
+            font-size: 1.5rem;
+            font-family: 'Heebo', sans-serif;
+            color: var(--dark);
+            transition: all 0.3s ease;
+            text-align: center;
+            letter-spacing: 5px;
+        }
+        
+        .id-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        .id-input::placeholder {
+            color: #ccc;
+            letter-spacing: normal;
+        }
+        
+        .input-label {
+            position: absolute;
+            top: -25px;
+            right: 0;
+            font-size: 1rem;
+            color: var(--secondary);
+            transition: all 0.3s ease;
+        }
+        
+        .id-input:focus + .input-label, 
+        .id-input:not(:placeholder-shown) + .input-label {
+            color: var(--primary);
+        }
+        
+        .check-button {
+            display: block;
+            width: 180px;
+            margin: 30px auto;
+            padding: 15px 25px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(255, 82, 82, 0.3);
+        }
+        
+        .check-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: all 0.5s ease;
+        }
+        
+        .check-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 82, 82, 0.4);
+        }
+        
+        .check-button:hover::before {
+            left: 100%;
+        }
+        
+        .check-button:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin: 30px 0;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.5s ease;
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .success {
+            background-color: rgba(38, 194, 129, 0.1);
+            border-right: 5px solid var(--success);
+        }
+        
+        .error {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-right: 5px solid var(--error);
+        }
+        
+        .result-heading {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .result-icon {
+            font-size: 1.8rem;
+        }
+        
+        .error-list {
+            text-align: right;
+            list-style-type: none;
+            margin: 15px 0;
+        }
+        
+        .error-item {
+            color: var(--error);
+            margin-bottom: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .error-item::before {
+            content: "\f057";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+        }
+        
+        .calculation {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin: 30px 0;
+            display: none;
+        }
+        
+        .calculation-heading {
+            font-size: 1.3rem;
+            color: var(--secondary);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .calculation-heading i {
+            color: var(--primary);
+        }
+        
+        .steps-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .step {
+            background-color: var(--light);
+            border-radius: 8px;
+            padding: 12px 15px;
+            flex: 1 1 calc(25% - 15px);
+            min-width: 150px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .step:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .step-arrow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 25px 25px 0 0;
+            border-color: var(--primary) transparent transparent transparent;
+            opacity: 0.2;
+        }
+        
+        .summary {
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.05), rgba(255, 82, 82, 0.05));
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+        }
+        
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-label {
+            font-weight: 500;
+            color: var(--secondary);
+        }
+        
+        .summary-value {
+            font-weight: 700;
+            color: var(--primary);
+            background: rgba(255, 82, 82, 0.1);
+            padding: 2px 15px;
+            border-radius: 20px;
+        }
+        
+        .error-highlight {
+            font-weight: 700;
+            color: var(--error);
+            background: rgba(231, 76, 60, 0.1);
+            padding: 2px 15px;
+            border-radius: 20px;
+        }
+        
+        .info-section {
+            background: linear-gradient(135deg, rgba(44, 62, 80, 0.02), rgba(255, 193, 7, 0.05));
+            border-radius: 10px;
+            padding: 25px;
+            margin: 40px 0 20px;
+            position: relative;
+        }
+        
+        .info-section::before {
+            content: '\f05a';
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: white;
+            color: var(--accent);
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-heading {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+        
+        .info-list {
+            padding: 0 20px;
+        }
+        
+        .info-list li {
+            margin-bottom: 10px;
+            position: relative;
+        }
+        
+        .info-list li::marker {
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .digit-display {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 5px;
+        }
+        
+        .digit-box {
+            width: 35px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .digit-index {
+            position: absolute;
+            top: -20px;
+            font-size: 0.7rem;
+            color: #777;
+        }
+        
+        .digit-box.check-digit {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(255, 82, 82, 0.3);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            position: relative;
+        }
+        
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--success), var(--primary));
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                border-radius: 12px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .id-input {
+                font-size: 1.2rem;
+                letter-spacing: 3px;
+            }
+            
+            .steps-container {
+                flex-direction: column;
+            }
+            
+            .step {
+                flex: 1 1 100%;
+            }
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+        
+        /* Special effects */
+        .glow {
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="glow">בודק תקינות תעודת זהות</h1>
+            <p class="subtitle">אלגוריתם מודרני לבדיקת תקינות מספרי תעודת זהות ישראלית</p>
+        </div>
+        
+        <div class="content">
+            <div class="id-input-container">
+                <input type="text" id="idNumber" class="id-input" placeholder="הזן מספר תעודת זהות" maxlength="9">
+                <label for="idNumber" class="input-label">הזן מספר תעודת זהות (9 ספרות)</label>
+            </div>
+            
+            <div id="digitDisplay" class="digit-display">
+                <!-- כאן יוצגו הספרות בזמן אמת -->
+            </div>
+            
+            <button id="checkButton" class="check-button">
+                <i class="fas fa-check-circle"></i> בדוק תקינות
+            </button>
+            
+            <div id="result" class="result">
+                <!-- כאן יוצגו תוצאות הבדיקה -->
+            </div>
+            
+            <div id="calculation" class="calculation">
+                <h3 class="calculation-heading"><i class="fas fa-calculator"></i> פירוט החישוב</h3>
+                
+                <div id="steps" class="steps-container">
+                    <!-- כאן יוצגו שלבי החישוב -->
+                </div>
+                
+                <div id="summary" class="summary">
+                    <!-- כאן יוצג סיכום החישוב -->
+                </div>
+            </div>
+            
+            <div class="info-section">
+                <h3 class="info-heading">אלגוריתם בדיקת תקינות מספר תעודת זהות</h3>
+                <p>תעודות זהות ישראליות מורכבות מ-9 ספרות כאשר הספרה האחרונה היא ספרת ביקורת המחושבת באופן הבא:</p>
+                <ol class="info-list">
+                    <li>מכפילים את הספרות במקומות 0,2,4,6 ב-1</li>
+                    <li>מכפילים את הספרות במקומות 1,3,5,7 ב-2</li>
+                    <li>אם מתקבלת תוצאה דו-ספרתית, מחברים את שתי הספרות</li>
+                    <li>מחברים את כל התוצאות ומחשבים כמה צריך להוסיף כדי להגיע למספר שמתחלק ב-10</li>
+                    <li>ספרת הביקורת היא התוצאה של החישוב הזה (אם התוצאה היא 10, ספרת הביקורת היא 0)</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 מערכת לבדיקת תקינות מספרי תעודת זהות | עוצב בהשראת בצלאל</p>
+        </div>
+    </div>
+
+ stepText = '';
+                    
+                    if (product > 9) {
+                        digitSum = Math.floor(product / 10) + (product % 10);
+                        stepText = `${digit} × ${multiplier} = ${product} → ${Math.floor(product / 10)}+${product % 10} = ${digitSum}`;
+                    } else {
+                        stepText = `${digit} × ${multiplier} = ${product}`;
+                    }
+                    
+                    calculationSteps.push(stepText);
+                    sum += digitSum;
+                }
+                
+                // חישוב ספרת הביקורת
+                const mod = sum % 10;
+                const calculatedCheckDigit = (10 - mod) % 10;
+                const actualCheckDigit = parseInt(idNumber[8]);
+                
+                // בדיקה אם ספרת הביקורת נכונה
+                const isValid = calculatedCheckDigit === actualCheckDigit;
+                
+                if (isValid) {
+                    showSuccess();
+                } else {
+                    showErrors([`ספרת הביקורת שגויה. התקבלה: ${actualCheckDigit}, אמורה להיות: ${calculatedCheckDigit}`]);
+                }
+                
+                // הצגת פרטי החישוב
+                showCalculationDetails(calculationSteps, sum, mod, calculatedCheckDigit, actualCheckDigit);
+            }
+            
+            // פונקציה להצגת הודעת הצלחה
+            function showSuccess() {
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = '<h3>✅ מספר תעודת הזהות תקין!</h3>';
+                resultDiv.style.display = 'block';
+            }
+            
+            // פונקציה להצגת שגיאות
+            function showErrors(errors) {
+                resultDiv.className = 'result error';
+                let errorHtml = '<h3>❌ מספר תעודת הזהות אינו תקין!</h3><ul>';
+                errors.forEach(error => {
+                    errorHtml += `<li class="error-item">${error}</li>`;
+                });
+                errorHtml += '</ul>';
+                resultDiv.innerHTML = errorHtml;
+                resultDiv.style.display = 'block';
+            }
+            
+            // פונקציה להצגת פרטי החישוב
+            function showCalculationDetails(steps, sum, mod, calculatedCheckDigit, actualCheckDigit) {
+                let detailsHtml = '<h3>פירוט החישוב:</h3>';
+                
+                // הצגת שלבי החישוב
+                steps.forEach(step => {
+                    detailsHtml += `<div class="step">${step}</div>`;
+                });
+                
+                // הצגת סיכום החישוב
+                detailsHtml += `
+                    <div class="step"><span class="highlight">סכום הכפולות:</span> ${sum}</div>
+                    <div class="step"><span class="highlight">מודולו 10:</span> ${mod}</div>
+                    <div class="step"><span class="highlight">השלמה ל-10:</span> ${calculatedCheckDigit}</div>
+                    <div class="step"><span class="highlight">ספרת ביקורת מחושבת:</span> ${calculatedCheckDigit}</div>
+                    <div class="step"><span class="highlight">ספרת ביקורת בפועל:</span> ${actualCheckDigit}</div>
+                `;
+                
+                detailsDiv.innerHTML = detailsHtml;
+                detailsDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
