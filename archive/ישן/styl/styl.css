@@ -1,0 +1,25 @@
+h1{
+    width: 200px;
+    height: 100px;
+    background-color: beige;
+    border:red solid;
+    padding: 30px;
+    font-size: 10px;
+    position: adsolute;
+
+    animation-name:filim
+    animation-duration 20s;
+}
+@keyframes filim{
+    /*
+    from {background-color: beige;}
+    to{background-color: green;}
+    */
+    0%{background-color: beige; font-size: 10px;}
+    20%{background-color: green; font-size: 30px;}
+    40%{background-color: blue; font-size: 60px;}
+    60%{background-color: red; font-size: 1px;}
+    80%{background-color: yellow; font-size: 100px;}
+    100%{background-color: beige; font-size: 100px;}
+}
+

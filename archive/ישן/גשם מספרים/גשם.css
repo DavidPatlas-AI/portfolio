@@ -1,0 +1,21 @@
+style>
+body {
+  margin: 0;
+  overflow: hidden;
+  background: rgb(228, 18, 18);
+  color: rgb(209, 4, 155);
+  font-family: monospace;
+}
+.number {
+  position: absolute;
+  font-size: 24px;
+  animation: fall linear infinite;
+}
+@keyframes fall {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(110%);
+  }
+}

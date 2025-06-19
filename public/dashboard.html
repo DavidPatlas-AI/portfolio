@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrendOS Enhanced Dashboard v2.0 - 260 Trend Components</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(45deg, #ff6f61, #de6262, #ff7675);
+      color: white;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .header-title {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .header-subtitle {
+      font-size: 14px;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+
+    .dashboard-info {
+      background: rgba(255,255,255,0.95);
+      margin: 20px;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .info-item {
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 8px;
+      border-left: 4px solid #ff6f61;
+    }
+
+    .info-value {
+      font-weight: bold;
+      color: #ff6f61;
+      font-size: 18px;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .trend-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      flex: 1 1 250px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .trend-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+      transition: left 0.5s;
+    }
+
+    .trend-card:hover::before {
+      left: 100%;
+    }
+
+    .trend-card.selected {
+      background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+      transform: translateY(-8px);
+      box-shadow: 0 8px 30px rgba(255, 105, 97, 0.3);
+    }
+
+    .trend-card:hover {
+      transform: scale(1.05) translateY(-5px);
+    }
+
+    .trend-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 16px;
+      color: #2d3436;
+    }
+
+    .trend-type {
+      font-size: 13px;
+      color: #636e72;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .trend-category {
+      display: inline-block;
+      background: #ff6f61;
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
+    .viral-indicator {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      animation: fireAnimation 1s infinite alternate;
+    }
+
+    @keyframes fireAnimation {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.2); }
+    }
+
+    .controls-section {
+      background: rgba(255,255,255,0.95);
+      margin: 20px;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .control-group {
+      margin-bottom: 20px;
+    }
+
+    .control-label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #2d3436;
+    }
+
+    .continue-button, .wrap-button, .advanced-button {
+      display: inline-block;
+      margin: 10px 5px;
+      background: linear-gradient(45deg, #ff6f61, #de6262);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 16px;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .continue-button:hover, .wrap-button:hover, .advanced-button:hover {
+      background: linear-gradient(45deg, #e05c4f, #c23616);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(224, 92, 79, 0.4);
+    }
+
+    .advanced-button {
+      background: linear-gradient(45deg, #6c5ce7, #a29bfe);
+    }
+
+    .advanced-button:hover {
+      background: linear-gradient(45deg, #5f3dc4, #7048e8);
+    }
+
+    .warning {
+      color: #e74c3c;
+      text-align: center;
+      font-weight: bold;
+      margin: 20px;
+      padding: 15px;
+      background: rgba(231, 76, 60, 0.1);
+      border-radius: 10px;
+      border-left: 4px solid #e74c3c;
+    }
+
+    #userText {
+      display: block;
+      width: calc(100% - 20px);
+      margin: 0 auto 20px;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 2px solid #ddd;
+      transition: border-color 0.3s ease;
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    #userText:focus {
+      outline: none;
+      border-color: #ff6f61;
+      box-shadow: 0 0 0 3px rgba(255, 111, 97, 0.1);
+    }
+
+    #wrappedOutput {
+      margin: 20px auto;
+      padding: 25px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    #languageSelect {
+      display: block;
+      margin: 10px auto;
+      font-size: 16px;
+      padding: 12px 15px;
+      border-radius: 8px;
+      border: 2px solid #ddd;
+      background: white;
+      cursor: pointer;
+    }
+
+    .advanced-panel {
+      background: rgba(255,255,255,0.98);
+      margin: 20px;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      border: 2px solid #6c5ce7;
+      display: none;
+    }
+
+    .advanced-panel.active {
+      display: block;
+      animation: slideIn 0.5s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .quantum-detector {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px 0;
+      text-align: center;
+    }
+
+    .neural-pattern-display {
+      height: 60px;
+      background: #000;
+      border-radius: 8px;
+      position: relative;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+
+    .trend-database-explorer {
+      max-height: 300px;
+      overflow-y: auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      background: #f8f9fa;
+    }
+
+    .trend-item {
+      padding: 8px 12px;
+      margin: 5px 0;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+    }
+
+    .trend-item:hover {
+      background: #e3f2fd;
+      transform: translateX(5px);
+    }
+
+    @media (max-width: 768px) {
+      .header-title {
+        font-size: 22px;
+      }
+      
+      .container {
+        flex-direction: column;
+        padding: 10px;
+      }
+      
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .controls-section, .advanced-panel {
+        margin: 10px;
+        padding: 15px;
+      }
+      
+      #userText {
+        width: calc(100% - 10px);
+      }
+    }
+
+    /* אנימציות מתקדמות */
+    .psycho-active {
+      animation: psychoPulse 2s infinite;
+    }
+
+    @keyframes psychoPulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(255, 105, 97, 0.6); }
+      50% { box-shadow: 0 0 30px rgba(255, 105, 97, 0.9); }
+    }
+
+    .quantum-active {
+      animation: quantumFlicker 1.5s infinite;
+    }
+
+    @keyframes quantumFlicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-title">TrendOS Enhanced Dashboard v2.0</div>
+    <div class="header-subtitle">מערכת ניתוח וזיהוי 260 מרכיבי טרנד אלגוריתמיים</div>
+  </header>
+
+  <div class="dashboard-info">
+    <div style="font-weight: bold; margin-bottom: 10px;">מצב המערכת</div>
+    <div class="info-grid">
+      <div class="info-item">
+        <div class="info-value" id="totalTrends">260</div>
+        <div>טרנדים פעילים</div>
+      </div>
+      <div class="info-item">
+        <div class="info-value" id="selectedCount">0</div>
+        <div>טרנדים נבחרים</div>
+      </div>
+      <div class="info-item">
+        <div class="info-value" id="viralScore">0%</div>
+        <div>פוטנציאל ויראלי</div>
+      </div>
+      <div class="info-item">
+        <div class="info-value" id="conflictLevel">0.0</div>
+        <div>רמת התנגשות</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- כרטיסי טרנד יווצרו דינמית על ידי JavaScript -->
+  <div class="container" id="trendsContainer">
+    <!-- הטרנדים יטענו אוטומטית מהמסד נתונים -->
+  </div>
+
+  <div class="controls-section">
+    <div class="control-group">
+      <label class="control-label">בחירת שפה</label>
+      <select id="languageSelect">
+        <option value="he">עברית</option>
+        <option value="en">English</option>
+        <option value="ru">Русский</option>
+        <option value="ar">العربية</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label class="control-label">הכנס את התוכן שלך</label>
+      <textarea id="userText" placeholder="כתוב כאן את התוכן שלך לעטיפה בטרנדים מתקדמים..."></textarea>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="wrap-button" onclick="wrapContent()">🎯 עטוף בטרנדים מתקדמים</button>
+      <button class="advanced-button" onclick="toggleAdvancedPanel()">🔬 פאנל מתקדם</button>
+      <button class="continue-button" onclick="continueToNext()">➡️ המשך לשלב הבא</button>
+    </div>
+  </div>
+
+  <div id="wrappedOutput" style="display: none;"></div>
+
+  <div id="conflictWarning" class="warning" style="display: none;"></div>
+
+  <!-- פאנל מתקדם -->
+  <div id="advancedPanel" class="advanced-panel">
+    <h3 style="text-align: center; color: #6c5ce7;">🔬 מעבדה מתקדמת לטרנדים</h3>
+    
+    <div class="quantum-detector">
+      <div style="font-weight: bold;">🔮 גלאי טרנדים קוונטיים</div>
+      <div id="quantumStatus">סורק טרנדים בזמן אמת...</div>
+    </div>
+
+    <div style="margin: 20px 0;">
+      <h4>📊 מסד נתוני הטרנדים</h4>
+      <div class="trend-database-explorer" id="trendExplorer">
+        <!-- רשימת הטרנדים תטען כאן -->
+      </div>
+    </div>
+
+    <div style="margin: 20px 0;">
+      <h4>🧠 ניתוח דפוסים נוירולוגיים</h4>
+      <div class="neural-pattern-display" id="neuralDisplay"></div>
+      <div style="font-size: 12px; color: #666;">תנועת העכבר מעל הדף מפעילה ניתוח דפוסים</div>
+    </div>
+
+    <div style="margin: 20px 0;">
+      <h4>💊 טריגרים פסיכולוגיים פעילים</h4>
+      <div id="psychoTriggers" style="font-style: italic; color: #636e72;">
+        אין טריגרים פעילים כרגע
+      </div>
+    </div>
+  </div>
+
+  <script src="../scripts/script.js"></script>
+  
+  <script>
+    // פונקציות UI נוספות
+    function toggleAdvancedPanel() {
+      const panel = document.getElementById('advancedPanel');
+      panel.classList.toggle('active');
+      
+      if (panel.classList.contains('active')) {
+        loadTrendExplorer();
+        startNeuralPatternMonitoring();
+      }
+    }
+
+    function loadTrendExplorer() {
+      const explorer = document.getElementById('trendExplorer');
+      const allTrends = [
+        ...window.TrendOS.database.basicComponents,
+        ...window.TrendOS.database.advancedComponents,
+        ...window.TrendOS.database.secretTechniques
+      ];
+
+      explorer.innerHTML = allTrends.map(trend => `
+        <div class="trend-item" onclick="selectTrendFromExplorer(${trend.id})">
+          <strong>${trend.name}</strong> (${trend.category})
+          <br><small>${trend.description}</small>
+        </div>
+      `).join('');
+    }
+
+    function selectTrendFromExplorer(trendId) {
+      // מוצא את הטרנד במסד הנתונים
+      const allTrends = [
+        ...window.TrendOS.database.basicComponents,
+        ...window.TrendOS.database.advancedComponents,
+        ...window.TrendOS.database.secretTechniques
+      ];
+      
+      const trend = allTrends.find(t => t.id === trendId);
+      if (trend) {
+        // יוצר כרטיס טרנד חדש אם הוא לא קיים
+        const container = document.getElementById('trendsContainer');
+        let existingCard = container.querySelector(`[data-trend-id="${trendId}"]`);
+        
+        if (!existingCard) {
+          createTrendCard(trend, container);
+          existingCard = container.querySelector(`[data-trend-id="${trendId}"]`);
+        }
+        
+        // מדמה לחיצה על הכרטיס
+        existingCard.click();
+        
+        // גלילה לכרטיס
+        existingCard.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+
+    function startNeuralPatternMonitoring() {
+      const display = document.getElementById('neuralDisplay');
+      let patterns = [];
+      
+      setInterval(() => {
+        if (window.TrendOS.selectedTrends().length > 0) {
+          const newPattern = Math.random() * 100;
+          patterns.push(newPattern);
+          if (patterns.length > 50) patterns.shift();
+          
+          const canvas = document.createElement('canvas');
+          canvas.width = display.offsetWidth;
+          canvas.height = 60;
+          const ctx = canvas.getContext('2d');
+          
+          ctx.strokeStyle = '#00ff88';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          
+          patterns.forEach((pattern, index) => {
+            const x = (index / patterns.length) * canvas.width;
+            const y = canvas.height - (pattern / 100) * canvas.height;
+            if (index === 0) {
+              ctx.moveTo(x, y);
+            } else {
+              ctx.lineTo(x, y);
+            }
+          });
+          
+          ctx.stroke();
+          display.innerHTML = '';
+          display.appendChild(canvas);
+        }
+      }, 200);
+    }
+
+    // עדכון תצוגת המידע בזמן אמת
+    setInterval(() => {
+      if (window.TrendOS) {
+        document.getElementById('selectedCount').textContent = window.TrendOS.selectedTrends().length;
+        document.getElementById('viralScore').textContent = window.TrendOS.viralPotential().toFixed(0) + '%';
+        document.getElementById('conflictLevel').textContent = window.TrendOS.conflicts().toFixed(1);
+      }
+    }, 1000);
+
+    // אפקטים ויזואליים מתקדמים
+    document.addEventListener('mousemove', (e) => {
+      if (Math.random() > 0.98) {
+        createAdvancedParticle(e.clientX, e.clientY);
+      }
+    });
+
+    function createAdvancedParticle(x, y) {
+      const particle = document.createElement('div');
+      particle.style.cssText = `
+        position: fixed;
+        left: ${x}px;
+        top: ${y}px;
+        width: 4px;
+        height: 4px;
+        background: linear-gradient(45deg, #ff6f61, #6c5ce7);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 999;
+        animation: particleFloat 2s ease-out forwards;
+      `;
+      
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes particleFloat {
+          0% { transform: scale(1) translateY(0); opacity: 1; }
+          100% { transform: scale(0) translateY(-50px); opacity: 0; }
+        }
+      `;
+      document.head.appendChild(style);
+      
+      document.body.appendChild(particle);
+      setTimeout(() => {
+        particle.remove();
+        style.remove();
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

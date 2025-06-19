@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>מרכז טרנדים - {{ date }}</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body style="background-color: {{ bg_color }};">
+  <div class="container">
+    <div class="section">
+      <h2>📖 סיפור יומי</h2>
+      <p>{{ story }}</p>
+    </div>
+
+    <div class="section">
+      <h2>📌 טיפ לניתוח טרנדים</h2>
+      <p>{{ tip }}</p>
+    </div>
+
+    <div class="section">
+      <h1 style="color: deeppink;">📊 דוח טרנדים – {{ date }}</h1>
+      <ul class="main-list">
+        <li><strong>🎨 צבע טרנדי:</strong> {{ color }}</li>
+        <li><strong>😊 רגש דומיננטי:</strong> {{ emotion }}</li>
+        <li><strong>🐱 חיה סמליתית:</strong> {{ animal }}</li>
+        <li><strong>💪 עוצמת הטרנד:</strong> %</li>
+        <li><strong>💡 מילים חזקות:</strong><br> {{ keywords | join(', ') }}</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>⚙ גרור טרנדים לסרגל למטה</h2>
+      <div id="trend-list">
+        <div class="trend-block" draggable="true" data-type="color">{{ color }}</div>
+        <div class="trend-block" draggable="true" data-type="emotion">{{ emotion }}</div>
+        <div class="trend-block" draggable="true" data-type="animal">{{ animal }}</div>
+        {% for word in keywords %}
+          <div class="trend-block" draggable="true" data-type="keyword">{{ word }}</div>
+        {% endfor %}
+      </div>
+
+      <div class="drop-zone" id="trend-drop">
+        גרור לכאן טרנדים שרלוונטיים היום
+      </div>
+
+      <h2>טבלת התנגשויות</h2>
+      <table id="collision-table">
+        <thead>
+          <tr><th>טרנד 1</th><th>טרנד 2</th><th>סטטוס</th></tr>
+        </thead>
+        <tbody id="collision-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const blocks = document.querySelectorAll('.trend-block');
+    const dropZone = document.getElementById('trend-drop');
+    const collisionTable = document.getElementById('collision-body');
+    let currentTrends = [];
+
+    blocks.forEach(block => {
+      block.addEventListener('dragstart', e => {
+        e.dataTransfer.setData("text/plain", block.textContent);
+        e.dataTransfer.setData("type", block.dataset.type);
+      });
+    });
+
+    dropZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropZone.classList.add('over');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('over');
+    });
+
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('over');
+      const text = e.dataTransfer.getData("text/plain");
+      const type = e.dataTransfer.getData("type");
+
+      const exists = currentTrends.find(t => t.text === text);
+      if (!exists) {
+        currentTrends.push({ text, type });
+        const newElem = document.createElement('span');
+        newElem.className = "trend-block";
+        newElem.textContent = text;
+        dropZone.appendChild(newElem);
+        checkCollisions();
+      }
+    });
+
+    function checkCollisions() {
+      collisionTable.innerHTML = '';
+      for (let i = 0; i < currentTrends.length; i++) {
+        for (let j = i + 1; j < currentTrends.length; j++) {
+          let t1 = currentTrends[i];
+          let t2 = currentTrends[j];
+          let conflict = (t1.type === t2.type) ? "התנגשות!" : "אין בעיה";
+          let row = `<tr><td>${t1.text}</td><td>${t2.text}</td><td>${conflict}</td></tr>`;
+          collisionTable.innerHTML += row;
+        }
+      }
+    }
+  </script>
+</body>
+</html>

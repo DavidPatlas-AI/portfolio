@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TrendOS Dashboard</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style-mobile.css">
+<script src="dashboard_logic.js"></script>
+<button id="selectTop">בחר טרנדים חזקים אוטומטית</button>
+
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #ffecd2, #fcb69f);
+      color: #333;
+    }
+
+    header {
+      background: #ff6f61;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 20px;
+      gap: 20px;
+    }
+
+    .trend-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      flex: 1 1 200px;
+      padding: 15px;
+      text-align: center;
+      transition: transform 0.2s, background-color 0.3s;
+      cursor: pointer;
+    }
+
+    .trend-card.selected {
+      background-color: #d1ffd1;
+    }
+
+    .trend-card:hover {
+      transform: scale(1.05);
+    }
+
+    .trend-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .trend-type {
+      font-size: 14px;
+      color: #777;
+    }
+
+    .continue-button, .wrap-button {
+      display: block;
+      margin: 20px auto;
+      background-color: #ff6f61;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 18px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .continue-button:hover, .wrap-button:hover {
+      background-color: #e05c4f;
+    }
+
+    .warning {
+      color: red;
+      text-align: center;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    #userText {
+      display: block;
+      width: 80%;
+      margin: 30px auto;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    #wrappedOutput {
+      width: 80%;
+      margin: 10px auto;
+      padding: 20px;
+      background: #ffffffc4;
+      border-radius: 10px;
+      border: 1px dashed #888;
+      font-style: italic;
+    }
+
+    #languageSelect {
+      display: block;
+      margin: 10px auto;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 6px;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        font-size: 20px;
+      }
+      .container {
+        flex-direction: column;
+        padding: 10px;
+      }
+      #userText, #wrappedOutput {
+        width: 95%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    לוח טרנדים - TrendOS (דשבורד)
+  </header>
+
+  <div class="container">
+    <div class="trend-card" onclick="toggleTrend(this, 'חתול ורוד')">
+      <div class="trend-title">חתול ורוד</div>
+      <div class="trend-type">ויזואלי רגשי</div>
+    </div>
+    <div class="trend-card" onclick="toggleTrend(this, '47')">
+      <div class="trend-title">47</div>
+      <div class="trend-type">מספר חוזר</div>
+    </div>
+    <div class="trend-card" onclick="toggleTrend(this, 'Emerald Green')">
+      <div class="trend-title">Emerald Green</div>
+      <div class="trend-type">צבע רגוע</div>
+    </div>
+    <div class="trend-card" onclick="toggleTrend(this, 'גולגולת')">
+      <div class="trend-title">גולגולת</div>
+      <div class="trend-type">דימוי עוצמתי</div>
+    </div>
+    <div class="trend-card" onclick="toggleTrend(this, 'טורקיז כהה')">
+      <div class="trend-title">טורקיז כהה</div>
+      <div class="trend-type">צבע דרמטי</div>
+    </div>
+    <div class="trend-card" onclick="toggleTrend(this, 'נמר צהוב')">
+      <div class="trend-title">נמר צהוב</div>
+      <div class="trend-type">חיה דינמית</div>
+    </div>
+    <div class="trend-card" onclick="toggleTrend(this, 'ורוד פוקסיה')">
+      <div class="trend-title">ורוד פוקסיה</div>
+      <div class="trend-type">צבע חזק</div>
+    </div>
+    <div class="trend-card" onclick="toggleTrend(this, 'שחור מטאלי')">
+      <div class="trend-title">שחור מטאלי</div>
+      <div class="trend-type">צבע דרמטי</div>
+    </div>
+  </div>
+
+  <select id="languageSelect">
+    <option value="he">עברית</option>
+    <option value="en">English</option>
+    <option value="ru">Русский</option>
+  </select>
+
+  <textarea id="userText" placeholder="כתוב כאן את התוכן שלך..."></textarea>
+  <button class="wrap-button" onclick="wrapContent()">עטוף את התוכן שלי בטרנדים</button>
+  <div id="wrappedOutput"></div>
+
+  <div id="conflictWarning" class="warning" style="display: none;">
+    ⚠️ קיימת התנגשות בין טרנדים שנבחרו. אנא בחר קומבינציה אחרת.
+  </div>
+
+  <button class="continue-button" onclick="continueToNext()">המשך לשלב הבא</button>
+
+  <script>
+    const selectedTrends = new Set();
+
+    const conflictRules = [
+      ["חתול ורוד", "גולגולת"],
+      ["Emerald Green", "ורוד פוקסיה"],
+      ["נמר צהוב", "שחור מטאלי"],
+      ["47", "טורקיז כהה"]
+    ];
+
+    function toggleTrend(element, trendName) {
+      if (selectedTrends.has(trendName)) {
+        selectedTrends.delete(trendName);
+        element.classList.remove("selected");
+      } else {
+        selectedTrends.add(trendName);
+        element.classList.add("selected");
+      }
+      checkConflicts();
+    }
+
+    function checkConflicts() {
+      let hasConflict = false;
+      for (const [a, b] of conflictRules) {
+        if (selectedTrends.has(a) && selectedTrends.has(b)) {
+          hasConflict = true;
+          break;
+        }
+      }
+      document.getElementById("conflictWarning").style.display = hasConflict ? "block" : "none";
+      return hasConflict;
+    }
+
+    function continueToNext() {
+      if (selectedTrends.size === 0) {
+        alert("אנא בחר לפחות טרנד אחד כדי להמשיך.");
+        return;
+      }
+      if (checkConflicts()) {
+        alert("לא ניתן להמשיך עם קומבינציית טרנדים מתנגשת.");
+        return;
+      }
+      localStorage.setItem("selectedTrends", JSON.stringify([...selectedTrends]));
+      window.location.href = "generate_script.html";
+    }
+
+    function wrapContent() {
+      const text = document.getElementById("userText").value.trim();
+      if (!text) {
+        alert("הכנס טקסט לעטיפה");
+        return;
+      }
+      const trends = [...selectedTrends];
+      const output = trends.length ? `🌟 [${trends.join(' + ')}] 🌟\n` + text + `\n🌟 טרנדים מעלים תוכן 🌟` : text;
+      document.getElementById("wrappedOutput").innerText = output;
+    }
+  </script>
+<!-- ממש לפני </body> -->
+<script src="script.js"></script>
+</body>
+</html>

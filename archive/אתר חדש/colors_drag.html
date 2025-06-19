@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>TrendOS - צבע יומי וגרירה</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      background: linear-gradient(135deg, #fff7cc, #ffd9b3);
+      transition: background 1s ease;
+    }
+    header {
+      background-color: #ffcc00;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .container {
+      display: flex;
+      justify-content: space-around;
+      padding: 30px;
+    }
+    .trend-list, .user-trends {
+      width: 40%;
+      min-height: 300px;
+      border: 2px dashed #ccc;
+      border-radius: 12px;
+      padding: 20px;
+      background-color: #fff;
+    }
+    .trend {
+      padding: 10px;
+      margin: 10px 0;
+      background-color: #e0e0e0;
+      border-radius: 8px;
+      cursor: grab;
+      text-align: center;
+      font-weight: bold;
+    }
+    .highlight {
+      background-color: #c1f0c1 !important;
+    }
+  </style>
+</head>
+<body>
+  <header>ברוך הבא למערכת הטרנדים של TrendOS</header>
+  <div class="container">
+    <div class="trend-list" ondragover="allowDrop(event)" ondrop="drop(event, 'list')">
+      <div class="trend" draggable="true" ondragstart="drag(event)">צהוב 🟨</div>
+      <div class="trend" draggable="true" ondragstart="drag(event)">חתול 🐱</div>
+      <div class="trend" draggable="true" ondragstart="drag(event)">מספר 47 🔢</div>
+      <div class="trend" draggable="true" ondragstart="drag(event)">שמחה 😊</div>
+      <div class="trend" draggable="true" ondragstart="drag(event)">טיקטוק 🎵</div>
+    </div>
+    <div class="user-trends" ondragover="allowDrop(event)" ondrop="drop(event, 'user')">
+      <p>גרור לכאן את הטרנדים שלך</p>
+    </div>
+  </div>
+
+  <script>
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drag(ev) {
+      ev.dataTransfer.setData("text", ev.target.outerHTML);
+    }
+
+    function drop(ev, target) {
+      ev.preventDefault();
+      const data = ev.dataTransfer.getData("text");
+      const dropZone = target === 'user' ? document.querySelector('.user-trends') : document.querySelector('.trend-list');
+      dropZone.innerHTML += data;
+    }
+  </script>
+</body>
+</html>

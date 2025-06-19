@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - גרירת טרנדים ובדיקת התנגשויות</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to left, #fff7cc, #ffd9b3);
+      margin: 0;
+      padding: 20px;
+      direction: rtl;
+    }
+    h1, h3 {
+      text-align: center;
+      color: #333;
+    }
+    .trend-list, .drop-zone {
+      border: 2px dashed #aaa;
+      min-height: 150px;
+      padding: 20px;
+      border-radius: 12px;
+      background: #fff;
+      margin: 20px auto;
+      max-width: 90%;
+    }
+    .trend {
+      display: inline-block;
+      padding: 10px 15px;
+      background-color: #f0f0f0;
+      margin: 5px;
+      border-radius: 8px;
+      cursor: grab;
+      font-weight: bold;
+    }
+    .trend:hover {
+      background-color: #e0e0ff;
+    }
+    .drop-zone.over {
+      background-color: #e6f7ff;
+    }
+    table {
+      border-collapse: collapse;
+      margin: 0 auto;
+      width: 90%;
+    }
+    th, td {
+      border: 1px solid #999;
+      padding: 8px;
+      text-align: center;
+    }
+    .btn {
+      display: block;
+      margin: 30px auto;
+      padding: 12px 30px;
+      font-size: 16px;
+      background-color: #ff9900;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌟 גרור את הטרנדים שלך</h1>
+
+  <div class="trend-list" id="trendSource">
+    <div class="trend" draggable="true">🔥 חם</div>
+    <div class="trend" draggable="true">✨ ויראלי</div>
+    <div class="trend" draggable="true">🎨 עיצוב</div>
+    <div class="trend" draggable="true">🧠 חכם</div>
+    <div class="trend" draggable="true">😱 דרמה</div>
+    <div class="trend" draggable="true">😊 שמחה</div>
+    <div class="trend" draggable="true">😢 עצב</div>
+    <div class="trend" draggable="true">🎬 קליפ</div>
+    <div class="trend" draggable="true">🐱 חתול</div>
+    <div class="trend" draggable="true">🐯 נמר</div>
+    <div class="trend" draggable="true">🦄 חד קרן</div>
+    <div class="trend" draggable="true">💥 גולגולת</div>
+    <div class="trend" draggable="true">🎯 מדויק</div>
+    <div class="trend" draggable="true">🕊️ שלווה</div>
+    <div class="trend" draggable="true">📢 פרסום</div>
+    <div class="trend" draggable="true">47</div>
+    <div class="trend" draggable="true">צהוב</div>
+    <div class="trend" draggable="true">ורוד פוקסיה</div>
+    <div class="trend" draggable="true">שחור מטאלי</div>
+    <div class="trend" draggable="true">Emerald Green</div>
+    <div class="trend" draggable="true">טורקיז כהה</div>
+  </div>
+
+  <h3>🧲 גרור לכאן את הטרנדים שלך</h3>
+  <div class="drop-zone" id="dropZone">טרנדים שלך יופיעו כאן...</div>
+
+  <h3>⚔️ טבלת התנגשויות</h3>
+  <table>
+    <thead><tr><th>טרנד 1</th><th>טרנד 2</th><th>סטטוס</th></tr></thead>
+    <tbody id="collisionTable"></tbody>
+  </table>
+
+  <button class="btn" onclick="goNext()">⏭ המשך לשלב הבא</button>
+
+  <script>
+    const dropZone = document.getElementById('dropZone');
+    const trends = document.querySelectorAll('.trend');
+    const collisionTable = document.getElementById('collisionTable');
+    const selected = new Set();
+
+    const conflicts = {
+      "חתול|גולגולת": "⚠️ רך מול אלים",
+      "Emerald Green|ורוד פוקסיה": "⚠️ ניגוד צבעים",
+      "נמר|שחור מטאלי": "⚠️ חיה עם צבע דרמטי מדי",
+      "47|טורקיז כהה": "⚠️ לא מאוזן",
+    };
+
+    trends.forEach(trend => {
+      trend.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('text/plain', trend.textContent);
+      });
+    });
+
+    dropZone.addEventListener('dragover', e => {
+      e.preventDefault();
+      dropZone.classList.add('over');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('over');
+    });
+
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.classList.remove('over');
+      const text = e.dataTransfer.getData('text/plain');
+      if (!selected.has(text)) {
+        selected.add(text);
+        const el = document.createElement('span');
+        el.className = 'trend';
+        el.textContent = text;
+        dropZone.appendChild(el);
+        checkConflicts();
+      }
+    });
+
+    function checkConflicts() {
+      collisionTable.innerHTML = '';
+      const arr = Array.from(selected);
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = i + 1; j < arr.length; j++) {
+          const key1 = `${arr[i]}|${arr[j]}`;
+          const key2 = `${arr[j]}|${arr[i]}`;
+          const status = conflicts[key1] || conflicts[key2] || "✔️ תקין";
+          const row = `<tr><td>${arr[i]}</td><td>${arr[j]}</td><td>${status}</td></tr>`;
+          collisionTable.innerHTML += row;
+        }
+      }
+    }
+
+    function goNext() {
+      alert("המשך → שלב הבא לא פעיל עדיין בדמו הזה");
+    }
+  </script>
+</body>
+</html>

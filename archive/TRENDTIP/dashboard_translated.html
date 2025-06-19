@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>TrendOS Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    לוח טרנדים - TrendOS
+  </header>
+
+  <div class="container">
+    <div class="trend-card" onclick="toggleTrend(this, '🔥 חם')">
+      <div class="trend-title">🔥 חם</div>
+      <div class="trend-type">ויזואלי רגשי</div>
+    </div>
+    <div class="trend-card" onclick="toggleTrend(this, '✨ ויראלי')">
+      <div class="trend-title">✨ ויראלי</div>
+      <div class="trend-type">דימוי שיווקי</div>
+    </div>
+    <div class="trend-card" onclick="toggleTrend(this, '🎨 עיצוב')">
+      <div class="trend-title">🎨 עיצוב</div>
+      <div class="trend-type">אסתטי</div>
+    </div>
+    <div class="trend-card" onclick="toggleTrend(this, '😊 שמחה')">
+      <div class="trend-title">😊 שמחה</div>
+      <div class="trend-type">רגש חיובי</div>
+    </div>
+  </div>
+
+  <script>
+    const lang = JSON.parse(localStorage.getItem("userProfile"))?.language || "he";
+
+    fetch("trend_translations_extended.json")
+      .then(res => res.json())
+      .then(translations => {
+        document.querySelectorAll(".trend-card").forEach(card => {
+          const titleDiv = card.querySelector(".trend-title");
+          const originalText = titleDiv.innerText;
+          const translated = translations[originalText]?.[lang];
+          if (translated) {
+            titleDiv.innerText = translated;
+          }
+        });
+      });
+  </script>
+</body>
+</html>

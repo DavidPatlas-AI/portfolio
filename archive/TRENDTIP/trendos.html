@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <link rel="stylesheet" href="style-mobile.css">
+  <meta charset="UTF-8">
+  <title>TrendOS - צבע יומי</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background-color: #fff;
+    }
+    .box {
+      padding: 20px;
+      border-radius: 12px;
+      background: #f3f3f3;
+      display: inline-block;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+  </style>
+  <script>
+    window.onload = () => {
+      const data = localStorage.getItem('userProfile');
+      if (data) {
+        const user = JSON.parse(data);
+        document.getElementById('profession').innerText = user.profession;
+        document.getElementById('goal').innerText = user.goal;
+        document.getElementById('platform').innerText = user.platform;
+        document.getElementById('language').innerText = user.language;
+      } else {
+        document.querySelector('.box').innerHTML = 'לא נמצאו נתוני משתמש.';
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="box">
+    <h2>שלום וברוך הבא ל־TrendOS</h2>
+    <p><strong>תחום:</strong> <span id="profession"></span></p>
+    <p><strong>מטרה:</strong> <span id="goal"></span></p>
+    <p><strong>פלטפורמה:</strong> <span id="platform"></span></p>
+    <p><strong>שפה:</strong> <span id="language"></span></p>
+  </div>
+</body>
+</html>

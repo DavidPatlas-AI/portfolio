@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendOS Pro - מערכת ניתוח טרנדים מתקדמת</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- שלב 1: זיהוי משתמש -->
+        <section id="user-identification" class="active-section">
+            <h1>ברוכים הבאים ל-TrendOS Pro</h1>
+            <form id="user-form">
+                <div class="form-group">
+                    <label for="profession">מה התחום שלך?</label>
+                    <select id="profession" required>
+                        <option value="">בחר...</option>
+                        <option value="media">מנהל מדיה</option>
+                        <option value="editor">עורך תוכן</option>
+                        <option value="influencer">משפיען</option>
+                        <option value="designer">מעצב</option>
+                        <option value="marketer">משווק</option>
+                        <option value="researcher">חוקר טרנדים</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="goal">מה אתה רוצה להשיג מהמערכת?</label>
+                    <textarea id="goal" rows="4" placeholder="למשל: ליצור פוסט לטיקטוק, להבין טרנדים חזקים, לעטוף תוכן בטרנדים..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="platform">באיזו פלטפורמה תשתמש?</label>
+                    <select id="platform" required>
+                        <option value="">בחר...</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="facebook">Facebook</option>
+                        <option value="twitter">Twitter</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="language">באיזו שפה?</label>
+                    <select id="language" required>
+                        <option value="he">עברית</option>
+                        <option value="en">English</option>
+                        <option value="ru">Русский</option>
+                    </select>
+                </div>
+
+                <button type="button" id="start-button" class="primary-button">המשך</button>
+            </form>
+        </section>
+
+        <!-- שלב 2: בחירת טרנדים -->
+        <section id="trend-selection" class="hidden-section">
+            <h1>בחר את הטרנדים שלך</h1>
+            <div class="trends-container">
+                <div class="available-trends" id="availableTrends">
+                    <!-- הטרנדים הזמינים יוטענו דרך JavaScript -->
+                </div>
+                <div class="selected-trends" id="selectedTrends">
+                    <p class="empty-message">גרור לכאן את הטרנדים שבחרת</p>
+                </div>
+                <button id="clearTrends" class="secondary-button" style="margin-top:10px;">נקה בחירה</button>
+            </div>
+            <div class="trend-info" id="trendInfo">
+                <!-- מידע על הטרנד הנבחר יופיע כאן -->
+            </div>
+            <button id="continueToScript" class="primary-button">המשך ליצירת תסריט</button>
+        </section>
+
+        <!-- שלב 3: יצירת תסריט -->
+        <section id="script-generation" class="hidden-section">
+            <h1>תסריט מותאם אישית</h1>
+            <div class="script-container">
+                <div class="script-preview" id="scriptPreview">
+                    <!-- התסריט יוצג כאן -->
+                </div>
+                <div class="script-actions">
+                    <button id="copyScript" class="secondary-button">העתק תסריט</button>
+                    <button id="generateNew" class="secondary-button">צור תסריט חדש</button>
+                    <button id="saveScript" class="primary-button">שמור תסריט</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+</html> 

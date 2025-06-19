@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrendOS Pro - מערכת לניתוח וזיהוי טרנדים</title>
+    <link rel="stylesheet" href="../src/css/main.css">
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="main-header">
+            <nav class="nav-bar">
+                <div class="logo">TrendOS Pro</div>
+                <div class="nav-links">
+                    <a href="#" class="active">בית</a>
+                    <a href="reports/index.html">דוחות</a>
+                    <a href="stories/index.html">תסריטים</a>
+                    <a href="tips/index.html">טיפים</a>
+                </div>
+                <div class="user-profile">
+                    <span class="user-name"></span>
+                    <img src="../src/images/default-avatar.png" alt="פרופיל משתמש" class="avatar">
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <section id="user-identification" class="section active">
+                <h2>זיהוי משתמש</h2>
+                <div class="login-form">
+                    <input type="text" id="username" placeholder="שם משתמש">
+                    <input type="password" id="password" placeholder="סיסמה">
+                    <button id="login-btn" class="primary-btn">כניסה</button>
+                </div>
+            </section>
+
+            <section id="trend-selection" class="section">
+                <h2>בחירת טרנדים</h2>
+                <div class="trends-container">
+                    <div class="trends-list">
+                        <!-- הטרנדים יתווספו דינמית דרך JavaScript -->
+                    </div>
+                    <div class="selected-trends">
+                        <h3>טרנדים נבחרים</h3>
+                        <div id="selected-trends-container"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="script-creation" class="section">
+                <h2>יצירת תסריט</h2>
+                <div class="script-builder">
+                    <div class="script-options">
+                        <select id="script-type">
+                            <option value="business">עסקי</option>
+                            <option value="technology">טכנולוגי</option>
+                            <option value="social">חברתי</option>
+                        </select>
+                        <button id="generate-script" class="primary-btn">צור תסריט</button>
+                    </div>
+                    <div id="script-output" class="script-result"></div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>© 2024 TrendOS Pro. כל הזכויות שמורות.</p>
+        </footer>
+    </div>
+
+    <script src="../src/js/main.js" type="module"></script>
+</body>
+</html> 

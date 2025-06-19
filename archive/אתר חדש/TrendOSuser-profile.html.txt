@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>TrendOS - זיהוי משתמש</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #fff7e6;
+      padding: 30px;
+      direction: rtl;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    label {
+      font-weight: bold;
+    }
+    select, input[type=text], textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #ffcc00;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      display: block;
+      margin: auto;
+    }
+  </style>
+  <script>
+    function saveAndRedirect(event) {
+      event.preventDefault();
+      const profession = document.getElementById('profession').value;
+      const goal = document.getElementById('goal').value;
+      const platform = document.getElementById('platform').value;
+      const language = document.getElementById('language').value;
+
+      const userData = {
+        profession,
+        goal,
+        platform,
+        language
+      };
+
+      localStorage.setItem('userProfile', JSON.stringify(userData));
+      window.location.href = 'trendos.html';
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h2>שלום! מי אתה?</h2>
+    <form id="userForm" onsubmit="saveAndRedirect(event)">
+      <label for="profession">מה התחום שלך?</label>
+      <select id="profession" required>
+        <option value="">בחר...</option>
+        <option value="media">מנהל מדיה</option>
+        <option value="editor">עורך תוכן</option>
+        <option value="influencer">משפיען</option>
+        <option value="designer">מעצב</option>
+        <option value="marketer">משווק</option>
+        <option value="researcher">חוקר טרנדים</option>
+      </select>
+
+      <label for="goal">מה אתה רוצה להשיג מהמערכת?</label>
+      <textarea id="goal" rows="4" placeholder="למשל: ליצור פוסט לטיקטוק, להבין טרנדים חזקים, לעטוף תוכן בטרנדים..."></textarea>
+
+      <label for="platform">באיזו פלטפורמה תשתמש?</label>
+      <select id="platform">
+        <option value="">בחר...</option>
+        <option value="tiktok">TikTok</option>
+        <option value="youtube">YouTube</option>
+        <option value="ebay">eBay</option>
+        <option value="landing">דף נחיתה</option>
+        <option value="article">מאמר תוכן</option>
+      </select>
+
+      <label for="language">באיזו שפה?</label>
+      <select id="language">
+        <option value="he">עברית</option>
+        <option value="en">English</option>
+        <option value="ru">Русский</option>
+      </select>
+
+      <button type="submit">המשך</button>
+    </form>
+  </div>
+</body>
+</html>

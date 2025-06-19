@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <link rel="stylesheet" href="style-mobile.css">
+
+  <meta charset="UTF-8">
+  <title>TrendOS - תסריט מותאם</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fdf6e3;
+      padding: 40px;
+      direction: rtl;
+    }
+    .box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+      max-width: 700px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    ul {
+      padding: 0;
+      list-style-type: none;
+    }
+    li {
+      background: #f0f0f0;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .script-output {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: #e8ffe8;
+      border: 2px dashed #66bb6a;
+      border-radius: 10px;
+      white-space: pre-wrap;
+    }
+    .copy-btn {
+      margin: 20px auto;
+      display: block;
+      padding: 10px 20px;
+      background-color: #ff9900;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>הטרנדים שבחרת</h2>
+    <ul id="selectedTrends"></ul>
+
+    <div class="script-output" id="generatedScript">
+      <strong>🎬 תסריט מותאם אישית יופיע כאן...</strong>
+    </div>
+
+    <button class="copy-btn" onclick="copyScript()">📋 העתק את התסריט</button>
+  </div>
+
+  <script>
+    const trends = JSON.parse(localStorage.getItem('selectedTrends')) || [];
+    const userData = JSON.parse(localStorage.getItem('userProfile')) || { language: 'he' };
+    const list = document.getElementById('selectedTrends');
+    const output = document.getElementById('generatedScript');
+
+    trends.forEach(trend => {
+      const li = document.createElement('li');
+      li.textContent = trend;
+      list.appendChild(li);
+    });
+
+    function generateScript(lang = 'he') {
+      const has = t => trends.some(v => v.includes(t));
+
+      if (lang === 'he') {
+        return `היוצר המומלץ של היום:\n\n⚡ זה הולך להיות תוכן ${has('ויראלי') ? 'ויראלי במיוחד' : 'ייחודי'}.
+🎨 בעיצוב ${has('עיצוב') ? 'חדשני ומעורר השראה' : 'פשוט ונעים'}.
+🔥 עם נגיעה של ${has('חם') ? 'חום מגנטי שמשאיר צפייה' : 'סגנון אישי'}.
+📢 מתאים במיוחד ל-${has('פרסום') ? 'מודעות ממומנות' : 'פוסטים אורגניים'}.
+🎯 המסר: "תפוס את תשומת הלב – בדיוק בזמן!"`;
+      } else if (lang === 'en') {
+        return `Today's recommended creator:\n\n⚡ This will be a ${has('ויראלי') ? 'super viral' : 'unique'} piece of content.
+🎨 With a ${has('עיצוב') ? 'creative, inspiring design' : 'simple and clean look'}.
+🔥 A touch of ${has('חם') ? 'magnetic heat to keep viewers watching' : 'personal flair'}.
+📢 Perfect for ${has('פרסום') ? 'paid ads' : 'organic posts'}.
+🎯 Message: "Catch the attention – right on time!"`;
+      } else if (lang === 'ru') {
+        return `Рекомендованный контент на сегодня:\n\n⚡ Это будет ${has('ויראלי') ? 'очень вирусный' : 'уникальный'} контент.
+🎨 Дизайн: ${has('עיצוב') ? 'современный и вдохновляющий' : 'простой и чистый'}.
+🔥 С ноткой ${has('חם') ? 'тепла, которое удержит внимание' : 'личного стиля'}.
+📢 Подходит для ${has('פרסום') ? 'рекламы' : 'органических постов'}.
+🎯 Послание: "Привлеки внимание – вовремя!"`;
+      }
+    }
+
+    if (trends.length > 0) {
+      output.textContent = generateScript(userData.language);
+    } else {
+      output.innerHTML = '<em>לא נבחרו טרנדים עדיין...</em>';
+    }
+
+    function copyScript() {
+      navigator.clipboard.writeText(output.textContent)
+        .then(() => alert('התסריט הועתק לזיכרון'));
+    }
+  </script>
+</body>
+</html>

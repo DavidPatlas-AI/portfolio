@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מנתח WhatsApp - פעמי עתידים</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <h1>🎯 מנתח WhatsApp מתקדם</h1>
+            <h2>פעמי עתידים - מערכת זיהוי לידים אוטומטית</h2>
+            <p class="subtitle">ניתוח חכם של שיחות WhatsApp לזיהוי מועמדים פוטנציאליים</p>
+        </header>
+
+        <!-- שלב 1: הסכמות -->
+        <section class="step" id="step1">
+            <div class="step-header">
+                <span class="step-number">1</span>
+                <h3>🔒 הסכמות נדרשות</h3>
+            </div>
+            <div class="checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="consent1">
+                    <span class="checkmark"></span>
+                    אני מאשר שהקבצים שייכים לי או שיש לי הרשאה מפורשת לנתח אותם
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="consent2">
+                    <span class="checkmark"></span>
+                    אני מבין שהניתוח נועד לזיהוי פוטנציאל לתכנית פעמי עתידים בלבד
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="consent3">
+                    <span class="checkmark"></span>
+                    אני מתחייב לא להשתמש במידע שיתקבל לפגיעה בזכויות אדם
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="consent4">
+                    <span class="checkmark"></span>
+                    אני מבין שהעיבוד מתבצע מקומית בדפדפן ולא נשלח לשרת חיצוני
+                </label>
+            </div>
+            <button id="approveConsents" class="btn-primary" disabled>✅ אישור הסכמות</button>
+        </section>
+
+        <!-- שלב 2: העלאת קבצים -->
+        <section class="step" id="step2">
+            <div class="step-header">
+                <span class="step-number">2</span>
+                <h3>📂 העלאת קבצי WhatsApp</h3>
+            </div>
+            <div class="upload-info">
+                <div class="info-box">
+                    <h4>💡 איך לקבל גיבוי WhatsApp מלא:</h4>
+                    <ol>
+                        <li>פתח את WhatsApp ולך לשיחה שאתה רוצה לנתח</li>
+                        <li>גלול כמה שיותר אחורה בזמן (עד ההתחלה של השיחה)</li>
+                        <li>לחץ על שם איש הקשר/קבוצה למעלה</li>
+                        <li>בחר "ייצא שיחה" → "ללא מדיה"</li>
+                        <li>שלח לעצמך באימייל או שמור במכשיר</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-content">
+                    <div class="upload-icon">📁</div>
+                    <h3>גרור קבצים לכאן או לחץ לבחירה</h3>
+                    <p>תומך בקבצי .txt, .zip (מגיבוי WhatsApp)</p>
+                    <input type="file" id="fileInput" accept=".txt,.zip" multiple hidden>
+                    <button class="btn-secondary" onclick="document.getElementById('fileInput').click()">
+                        📂 בחר קבצים
+                    </button>
+                </div>
+            </div>
+            <div id="filesList" class="files-list"></div>
+            <button id="startAnalysis" class="btn-primary" disabled>🔍 התחל ניתוח מתקדם</button>
+        </section>
+
+        <!-- שלב 3: התקדמות ניתוח -->
+        <section class="step hidden" id="step3">
+            <div class="step-header">
+                <span class="step-number">3</span>
+                <h3>⚡ מעבד את הקבצים...</h3>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text" id="progressText">מתחיל ניתוח...</div>
+                <div class="progress-details" id="progressDetails"></div>
+            </div>
+        </section>
+
+        <!-- שלב 4: תוצאות -->
+        <section class="step hidden" id="step4">
+            <div class="step-header">
+                <span class="step-number">4</span>
+                <h3>📊 תוצאות הניתוח</h3>
+            </div>
+            <div id="resultsContainer"></div>
+        </section>
+    </div>
+
+    <!-- סקריפטים -->
+    <script src="keywords.js"></script>
+    <script src="templates.js"></script>
+    <script src="analyzer.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
