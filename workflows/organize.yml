@@ -1,0 +1,42 @@
+name: ארגון קבצי המאגר
+
+on:
+  workflow_dispatch:  # מאפשר הפעלה ידנית
+  push:
+    branches: [ main ]
+    paths:
+      - 'organize_repo.py'
+      - '.github/workflows/organize.yml'
+
+jobs:
+  organize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: הורדת המאגר
+        uses: actions/checkout@v2
+        
+      - name: הגדרת Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.10'
+          
+      - name: התקנת תלויות
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 pytest
+          
+      - name: הרצת סקריפט הארגון
+        run: python organize_repo.py
+        
+      - name: בדיקת שינויים
+        run: |
+          git status
+          git diff
+          
+      - name: העלאת השינויים
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "ארגון אוטומטי של קבצי המאגר" || echo "אין שינויים לביצוע"
+          git push 

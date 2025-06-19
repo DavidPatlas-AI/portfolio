@@ -1,0 +1,815 @@
+<!DOCTYPE html><html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>תיקון השם - תהילים ותפילות</title>
+  <meta name="description" content="תיקון השם - תהילים ותפילות בעברית. קריאת תהילים, תפילות ושירות אזכרה.">
+  <meta name="keywords" content="תהילים, תפילות, תיקון, שירות אזכרה, יהדות">
+  <meta name="author" content="תיקון השם">
+  <meta property="og:title" content="תיקון השם - תהילים ותפילות">
+  <meta property="og:description" content="תיקון השם - תהילים ותפילות בעברית">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tikun-hashem.com">
+  <link rel="canonical" href="https://tikun-hashem.com">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#4361ee">
+  <link rel="stylesheet" href="styles/css/styles.css">
+  <link rel="stylesheet" href="styles/css/accessibility.css">
+  <link rel="stylesheet" href="styles/css/calendar.css">
+  <link rel="stylesheet" href="src/styles/main.css">
+  <link rel="stylesheet" href="src/styles/dark-mode.css">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&family=Noto+Sans+Hebrew:wght@400;700&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <script src="js/corrector.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/i18n.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/floating-letters.js" defer></script>
+  <script src="js/calendar.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/hebcal@1.0.0/dist/hebcal.min.js"></script>
+  <script src="js/text-correction.js"></script>
+  <script src="js/language-bar.js"></script>
+  <script src="js/debug-checker.js"></script>
+  <script src="js/performance-monitor.js"></script>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --primary-light: #4895ef;
+      --primary-dark: #3a56d4;
+      --background: #f8f9fa;
+      --card: #ffffff;
+      --text: #212529;
+      --text-light: #6c757d;
+      --border: #dee2e6;
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+      --radius: 16px;
+      --header-height: 70px;
+      --bottom-nav-height: 75px;
+      --content-padding: 20px;
+      --font-he: 'Noto Sans Hebrew', sans-serif;
+      --font-ru: 'PT Serif', serif;
+    }
+    
+    body {
+      font-family: var(--font-he);
+      background-color: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 16px;
+      padding-bottom: var(--bottom-nav-height);
+      padding-top: var(--header-height);
+    }
+    
+    [data-lang="ru"] body { font-family: var(--font-ru); }
+    
+    .header {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      height: var(--header-height);
+      background-color: var(--card);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--content-padding);
+      box-shadow: var(--shadow-sm);
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    
+    .header-title {
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--primary);
+    }
+    
+    .hero {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: white;
+      padding: 40px var(--content-padding);
+      border-radius: var(--radius);
+      margin-bottom: 24px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+    }
+    
+    .hero-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .hero-text {
+      font-size: 18px;
+      margin-bottom: 24px;
+      opacity: 0.9;
+    }
+    
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 24px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 16px;
+      min-width: 160px;
+    }
+    
+    .button-primary {
+      background-color: white;
+      color: var(--primary);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .button-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    }
+    
+    .button-outline {
+      background-color: transparent;
+      color: white;
+      border: 2px solid white;
+    }
+    
+    .button-outline:hover {
+      background-color: rgba(255,255,255,0.1);
+      transform: translateY(-2px);
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    .card {
+      background-color: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+      border: 1px solid var(--border);
+    }
+    
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .card-content {
+      padding: 24px;
+    }
+    
+    .card-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--primary);
+    }
+    
+    .card-text {
+      font-size: 15px;
+      color: var(--text-light);
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    
+    .card-icon {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      color: var(--primary);
+      background-color: rgba(67, 97, 238, 0.1);
+      border-radius: 50%;
+      margin-bottom: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .card:hover .card-icon {
+      transform: scale(1.1);
+      background-color: rgba(67, 97, 238, 0.15);
+    }
+    
+    .language-bar {
+      display: flex;
+      background-color: var(--card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--border);
+    }
+    
+    .language-option {
+      flex: 1;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      font-size: 16px;
+    }
+    
+    .language-option:hover {
+      background-color: rgba(67, 97, 238, 0.05);
+    }
+    
+    .language-option.active {
+      background-color: var(--primary);
+      color: white;
+    }
+    
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--bottom-nav-height);
+      background-color: var(--card);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
+      z-index: 100;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
+    }
+    
+    .bottom-nav-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      color: var(--text-light);
+      transition: all 0.3s ease;
+      padding: 12px 0;
+      text-decoration: none;
+    }
+    
+    .bottom-nav-item:hover {
+      color: var(--primary);
+    }
+    
+    .bottom-nav-item.active {
+      color: var(--primary);
+    }
+    
+    .bottom-nav-icon {
+      font-size: 24px;
+    }
+    
+    .bottom-nav-label {
+      font-size: 13px;
+      font-weight: 500;
+    }
+    
+    [data-lang="he"] {
+      font-family: 'Noto Sans Hebrew', 'Rubik', sans-serif;
+      direction: rtl;
+    }
+    
+    [data-lang="ru"] {
+      font-family: 'Noto Sans', sans-serif;
+    }
+    
+    [data-lang="phonetic"] {
+      font-family: 'Rubik', sans-serif;
+    }
+    
+    .disabled, [aria-disabled="true"] {
+      opacity: 0.5 !important;
+      cursor: not-allowed !important;
+      pointer-events: auto !important;
+    }
+    
+    button, .calendar-day {
+      outline: none;
+      transition: box-shadow 0.2s, background 0.2s;
+    }
+    button:focus, .calendar-day:focus {
+      outline: 2px solid var(--color-primary, #0078d7);
+      outline-offset: 2px;
+    }
+    button:hover, .calendar-day:hover {
+      background: #e6f0ff;
+    }
+    button:active, .calendar-day:active {
+      background: #b3d1ff;
+    }
+    
+    .error-field {
+      color: #b71c1c;
+      border: 1px solid #b71c1c;
+      background: url('icons/error.svg') no-repeat left center;
+      padding-left: 20px;
+    }
+  </style>
+</head>
+<body data-lang="he">
+  <header class="header" role="banner">
+    <h1 class="header-title" role="heading" aria-level="1" data-translate="main_title">תיקון השם</h1>
+    <nav role="navigation" aria-label="תפריט ראשי">
+      <button class="menu-toggle" aria-label="פתיחת תפריט" aria-expanded="false" id="menu-toggle-btn">
+        <span class="sr-only">תפריט</span>
+      </button>
+      <div class="language-bar">
+        <div class="language-option active" data-lang="he" data-translate="lang_he">עברית</div>
+        <div class="language-option" data-lang="ru" data-translate="lang_ru">רוסית</div>
+        <div class="language-option" data-lang="phonetic" data-translate="lang_phonetic">תעתיק</div>
+      </div>
+    </nav>
+  </header>
+  
+  <main class="container" role="main">
+    <a href="#main-content" class="skip-link" tabindex="0">דלג לתוכן הראשי</a>
+    <section class="hero floating-letters-container" id="heroSection" aria-labelledby="hero-title">
+      <h2 id="hero-title" class="hero-title" data-translate="hero_title">תהילים ותפילות</h2>
+      <p class="hero-text" data-translate="hero_text">קריאת תהילים ותפילות בעברית</p>
+      <div class="button-group" role="group" aria-label="פעולות ראשיות">
+        <a href="tehilim.html" class="button button-primary" role="button" tabindex="0" aria-label="קריאת תהילים" data-translate="read_psalms">קריאת תהילים</a>
+        <a href="siddur.html" class="button button-outline" role="button" tabindex="0" aria-label="סידור" data-translate="siddur">סידור</a>
+      </div>
+    </section>
+    
+    <section aria-labelledby="language-title">
+      <h2 id="language-title" class="section-title">בחר שפה</h2>
+      <div class="language-bar" role="radiogroup" aria-labelledby="language-title">
+        <div class="language-option" role="radio" aria-checked="false" tabindex="0" data-lang="ru" aria-label="רוסית">רוסית</div>
+        <div class="language-option active" role="radio" aria-checked="true" tabindex="0" data-lang="he" aria-label="עברית">עברית</div>
+      </div>
+    </section>
+    
+    <section aria-labelledby="memorial-title">
+      <h2 id="memorial-title" class="section-title">שירות אזכרה</h2>
+      <form class="memorial-form" role="form" aria-labelledby="memorial-title" autocomplete="off" onsubmit="return false;">
+        <h3 class="form-title">הזן שם נפטר</h3>
+        <div class="form-group">
+          <label for="deceased-name" class="form-label">שם</label>
+          <input type="text" id="deceased-name" class="form-control" aria-required="true" aria-label="שם הנפטר" required tabindex="0">
+        </div>
+        <div class="form-group">
+          <label for="mother-name" class="form-label">שם האם</label>
+          <input type="text" id="mother-name" class="form-control" aria-label="שם האם" tabindex="0">
+        </div>
+        <button type="submit" class="button button-primary" id="memorial-submit" aria-label="המשך" tabindex="0">המשך</button>
+      </form>
+    </section>
+    
+    <section aria-labelledby="features-title">
+      <h2 id="features-title" class="section-title">אפשרויות</h2>
+      
+      <div id="hebrewCalendar" class="hebrew-calendar" aria-label="לוח שנה עברי"></div>
+      
+      <div class="card-grid">
+        <div class="card" role="article" tabindex="0" aria-label="קריאת תהילים">
+          <div class="card-content">
+            <div class="card-icon" aria-hidden="true">📖</div>
+            <h3 class="card-title">קריאת תהילים</h3>
+            <p class="card-text">טקסט מלא של תהילים עם ניווט נוח</p>
+            <div class="card-action">
+              <a href="/tehilim.html" class="card-link" tabindex="0" aria-label="קרא תהילים">קרא</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card" role="article" tabindex="0" aria-label="לעילוי נשמת">
+          <div class="card-content">
+            <div class="card-icon" aria-hidden="true">🕯️</div>
+            <h3 class="card-title">לעילוי נשמת</h3>
+            <p class="card-text">תפילות מיוחדות לעילוי נשמת הנפטרים</p>
+            <div class="card-action">
+              <a href="memorial.html" class="card-link" tabindex="0" aria-label="קרא תפילות">קרא תפילות</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card" role="article" tabindex="0" aria-label="תהילים קי"ט לפי אותיות">
+          <div class="card-content">
+            <div class="card-icon" aria-hidden="true">📅</div>
+            <h3 class="card-title">תהילים קי"ט לפי אותיות</h3>
+            <p class="card-text">קריאת תהילים קי"ט לפי אותיות שם הנפטר</p>
+            <div class="card-action">
+              <a href="psalm119.html" class="card-link" tabindex="0" aria-label="פתח תהילים קי"ט">פתח תהילים</a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card" role="article" tabindex="0" aria-label="סידור">
+          <div class="card-content">
+            <div class="card-icon" aria-hidden="true">📝</div>
+            <h3 class="card-title">סידור</h3>
+            <p class="card-text">תפילות יומיות בשלוש שפות</p>
+            <div class="card-action">
+              <a href="siddur.html" class="card-link" tabindex="0" aria-label="פתח סידור">פתח סידור</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <section aria-labelledby="tools-title">
+      <h2 id="tools-title" class="section-title">כלים נוספים</h2>
+      <div class="tools-grid">
+        <button class="tool-button" id="toggle-name-highlight" aria-pressed="false" aria-label="הדגשת שמות קדושים" tabindex="0" data-translate="highlight_names">הדגשת שמות קדושים</button>
+        <button class="tool-button" id="toggle-dark-mode" aria-pressed="false" aria-label="מצב לילה" tabindex="0" data-translate="dark_mode">מצב לילה</button>
+        <button class="tool-button" id="toggle-font-size" aria-label="גודל טקסט" tabindex="0" data-translate="font_size">גודל טקסט</button>
+        <button class="tool-button" id="toggle-notifications" aria-pressed="false" aria-label="התראות" tabindex="0" data-translate="notifications">התראות</button>
+      </div>
+    </section>
+    <div id="app"></div>
+  </main>
+  
+  <footer role="contentinfo">
+    <p data-translate="footer">© 2024 תיקון השם. כל הזכויות שמורות.</p>
+  </footer>
+  
+  <div id="offline-banner" style="display:none; background:#ffc107; color:#222; text-align:center; padding:10px; font-weight:600; position:fixed; top:0; left:0; right:0; z-index:4000;">אתה במצב Offline — מוצגת גרסה שמורה</div>
+  
+  <script>
+    // --- GLOBAL ERROR HANDLING ---
+    window.onerror = function(message, source, lineno, colno, error) {
+      if (typeof showUserMessage === 'function') showUserMessage('שגיאה: ' + message, 'error', 6000);
+      console.error('Global error:', message, source, lineno, colno, error);
+      return true;
+    };
+    window.onunhandledrejection = function(event) {
+      if (typeof showUserMessage === 'function') showUserMessage('שגיאת Promise: ' + event.reason, 'error', 6000);
+      console.error('Unhandled Promise:', event.reason);
+      return true;
+    };
+    // --- STORAGE SYNC (סנכרון בין טאבים) ---
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'lang') {
+        AppState.actions.setLanguage(e.newValue);
+      }
+      if (e.key === 'darkMode') {
+        const isDark = e.newValue === 'true';
+        AppState.setState({ isDarkMode: isDark });
+        document.body.classList.toggle('dark-mode', isDark);
+      }
+      if (e.key === 'fontSize') {
+        const size = parseInt(e.newValue, 10);
+        if (!isNaN(size)) document.documentElement.style.fontSize = size + 'px';
+      }
+      // ...הוסף כאן סנכרון למועדפים, יארצייטים וכו'...
+    });
+    // --- DOM CACHING ---
+    const languageOptions = Array.from(document.querySelectorAll('.language-option'));
+    const toolButtons = Array.from(document.querySelectorAll('.tool-button'));
+    const cards = Array.from(document.querySelectorAll('.card'));
+    // --- ניהול שפה אחיד ---
+    languageOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        languageOptions.forEach(opt => opt.classList.remove('active'));
+        this.classList.add('active');
+        const selectedLang = this.dataset.lang;
+        localStorage.setItem('lang', selectedLang);
+        if (typeof setLanguage === 'function') setLanguage(selectedLang);
+        AppState.actions.setLanguage(selectedLang);
+      });
+    });
+    // --- נגישות ---
+    ['.button', '.button-primary', '.tool-button', '.card', '.card-link', '.bottom-nav-item', '.language-option', '.menu-toggle'].forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+        if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', el.textContent.trim());
+      });
+    });
+    // --- עטיפת fetch עם dataManager ---
+    async function fetchPsalmsList() {
+      if (window.dataManager && typeof window.dataManager.loadPsalmsList === 'function') {
+        return await window.dataManager.loadPsalmsList();
+      }
+      // fallback
+      return [];
+    }
+    // --- טיפול שגיאות גלובלי כבר קיים למעלה ---
+    // --- שאר הלוגיקה נשארת דומה, אך כל קריאה ל-innerHTML/fetch/localStorage תעבור דרך המנהלים החדשים ---
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadPage(location.hash.slice(1) || 'home');
+    });
+    
+    // --- ניהול שפה אחיד ---
+    document.addEventListener('DOMContentLoaded', function() {
+      // החלפת שפות
+      const languageOptions = document.querySelectorAll('.language-option');
+      languageOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          languageOptions.forEach(opt => opt.classList.remove('active'));
+          this.classList.add('active');
+          const selectedLang = this.dataset.lang;
+          localStorage.setItem('lang', selectedLang);
+          if (typeof setLanguage === 'function') setLanguage(selectedLang);
+          console.log('נבחרה שפה:', selectedLang);
+        });
+      });
+      
+      // שחזור השפה המועדפת בטעינת הדף
+      const savedLang = localStorage.getItem('lang');
+      if (savedLang && typeof setLanguage === 'function') {
+        setLanguage(savedLang);
+      }
+      
+      // טיפול בטופס שם הנפטר
+      const memorialSubmit = document.getElementById('memorial-submit');
+      if (memorialSubmit) {
+        memorialSubmit.addEventListener('click', function(e) {
+          e.preventDefault();
+          const deceasedNameInput = document.getElementById('deceased-name');
+          const motherNameInput = document.getElementById('mother-name');
+          const deceasedName = deceasedNameInput ? sanitizeInput(deceasedNameInput.value.trim()) : '';
+          const motherName = motherNameInput ? sanitizeInput(motherNameInput.value.trim()) : '';
+          if (!deceasedName) {
+            showUserMessage('אנא הזן שם נפטר', 'warning');
+            if (deceasedNameInput) deceasedNameInput.focus();
+            return;
+          }
+          window.location.href = 'psalm119.html?name=' + encodeURIComponent(deceasedName) + '&mother=' + encodeURIComponent(motherName);
+        });
+      }
+      
+      // טיפול בכרטיסיות למעבר מהיר
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('click', function() {
+          const link = this.querySelector('.card-link');
+          if (link) {
+            link.click();
+          }
+        });
+      });
+      
+      // הדגשת שמות קדושים (שימוש ב-correctText מ-js/corrector.js)
+      function highlightDivineNamesInPage() {
+        if (typeof correctText !== 'function') return;
+        document.querySelectorAll('.card-text, .hero-text, .section-title').forEach(el => {
+          if (!el.dataset.originalText) el.dataset.originalText = el.textContent;
+          const result = correctText(el.dataset.originalText, 'hebrew');
+          el.innerHTML = result.html;
+        });
+      }
+      function removeHighlightDivineNamesInPage() {
+        document.querySelectorAll('.card-text, .hero-text, .section-title').forEach(el => {
+          if (el.dataset.originalText) el.textContent = el.dataset.originalText;
+        });
+      }
+      function toggleNameHighlightMode() {
+        document.body.classList.toggle('highlight-names');
+        const btn = document.getElementById('toggle-name-highlight');
+        if (btn) {
+          const isActive = document.body.classList.contains('highlight-names');
+          btn.setAttribute('aria-pressed', isActive);
+          btn.classList.toggle('active', isActive);
+          showUserMessage(isActive ? 'הדגשת שמות הופעלה' : 'הדגשה בוטלה', 'info');
+        }
+        if (document.body.classList.contains('highlight-names')) {
+          highlightDivineNamesInPage();
+        } else {
+          removeHighlightDivineNamesInPage();
+        }
+      }
+      const toggleNameHighlight = document.getElementById('toggle-name-highlight');
+      if (toggleNameHighlight) {
+        toggleNameHighlight.addEventListener('click', toggleNameHighlightMode);
+      }
+      
+      // תמיכה במקלדת: מעבר עם חיצים בין כרטיסיות/כפתורים
+      document.querySelectorAll('.card, .tool-button, .language-option').forEach(el => {
+        el.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+          }
+        });
+      });
+      
+      // טיפול בכפתורי כלים (tool-button)
+      function toggleDarkMode() {
+        document.body.classList.toggle('dark-mode');
+        const btn = document.getElementById('toggle-dark-mode');
+        if (btn) {
+          const isDark = document.body.classList.contains('dark-mode');
+          btn.setAttribute('aria-pressed', isDark);
+          btn.classList.toggle('active', isDark);
+        }
+        showUserMessage(document.body.classList.contains('dark-mode') ? 'מצב לילה הופעל' : 'מצב לילה בוטל', 'info');
+        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+      }
+      function toggleFontSize() {
+        const html = document.documentElement;
+        let size = parseInt(html.style.fontSize || 16);
+        size = size >= 22 ? 16 : size + 2;
+        html.style.fontSize = size + 'px';
+        showUserMessage('גודל הטקסט שונה ל-' + size + 'px', 'info');
+        localStorage.setItem('fontSize', size);
+      }
+      function toggleNotifications() {
+        const btn = document.getElementById('toggle-notifications');
+        if ('Notification' in window) {
+          if (Notification.permission === 'granted') {
+            showUserMessage('התראות כבר מאושרות', 'success');
+          } else if (Notification.permission !== 'denied') {
+            Notification.requestPermission().then(permission => {
+              if (permission === 'granted') {
+                showUserMessage('התראות הופעלו', 'success');
+              } else {
+                showUserMessage('הרשאת התראות נדחתה', 'warning');
+              }
+            });
+          } else {
+            showUserMessage('הרשאת התראות נדחתה', 'warning');
+          }
+        } else {
+          showUserMessage('הדפדפן לא תומך בהתראות', 'error');
+        }
+        if (btn) {
+          btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
+          btn.classList.toggle('active');
+        }
+      }
+      const darkModeBtn = document.getElementById('toggle-dark-mode');
+      if (darkModeBtn) darkModeBtn.addEventListener('click', toggleDarkMode);
+      const fontSizeBtn = document.getElementById('toggle-font-size');
+      if (fontSizeBtn) fontSizeBtn.addEventListener('click', toggleFontSize);
+      const notificationsBtn = document.getElementById('toggle-notifications');
+      if (notificationsBtn) notificationsBtn.addEventListener('click', toggleNotifications);
+      // טעינת העדפות משתמש
+      if (localStorage.getItem('darkMode') === 'true') toggleDarkMode();
+      if (localStorage.getItem('fontSize')) {
+        let fontSize = parseInt(localStorage.getItem('fontSize'), 10);
+        if (!isNaN(fontSize)) document.documentElement.style.fontSize = fontSize + 'px';
+      }
+      // טיפול בכפתורים לא פעילים (placeholders)
+      document.querySelectorAll('.tool-button, .memorial-tool, .button-primary').forEach(btn => {
+        const isAnchor = btn.tagName === 'A' && btn.getAttribute('href');
+        if (!isAnchor && !btn.onclick && !btn.hasAttribute('data-action')) {
+          disableButton(btn);
+        }
+      });
+
+      // חיבור כפתור תפריט (menu-toggle)
+      const menuToggleBtn = document.getElementById('menu-toggle-btn');
+      if (menuToggleBtn) {
+        menuToggleBtn.addEventListener('click', function() {
+          // Toggle menu open/close (implement your menu logic here)
+          const expanded = this.getAttribute('aria-expanded') === 'true';
+          this.setAttribute('aria-expanded', !expanded);
+          showUserMessage(!expanded ? 'התפריט נפתח' : 'התפריט נסגר', 'info');
+          // TODO: Add actual menu open/close logic
+        });
+        menuToggleBtn.title = 'פתח/סגור תפריט';
+      }
+
+      // הוספת tooltip לכל כפתור עם aria-label
+      document.querySelectorAll('button[aria-label], a[aria-label]').forEach(el => {
+        if (!el.title) el.title = el.getAttribute('aria-label');
+      });
+
+      // DEBUG: מצא כפתורים ללא האנדלר
+      document.querySelectorAll('button, a[role="button"]').forEach(btn => {
+        const hasHandler = btn.onclick || btn.hasAttribute('data-action') || btn.id.startsWith('toggle-') || btn.classList.contains('menu-toggle');
+        if (!hasHandler) {
+          console.warn('Button without handler:', btn);
+        }
+      });
+
+      // --- Offline banner ---
+      function showOfflineBanner(show) {
+        const banner = document.getElementById('offline-banner');
+        if (banner) banner.style.display = show ? 'block' : 'none';
+      }
+      function isOnline() { return navigator.onLine; }
+      window.addEventListener('offline', () => {
+        showOfflineBanner(true);
+        showUserMessage('אתה במצב Offline — מוצגת גרסה שמורה', 'warning');
+      });
+      window.addEventListener('online', () => {
+        showOfflineBanner(false);
+        showUserMessage('חזרת למצב Online', 'success');
+      });
+      if (!isOnline()) showOfflineBanner(true);
+    });
+
+    // 1. tabindex ו-aria-label לכל כפתור/קישור/כרטיסיה
+    ['.button', '.button-primary', '.tool-button', '.card', '.card-link', '.bottom-nav-item', '.language-option', '.menu-toggle'].forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+        if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', el.textContent.trim());
+      });
+    });
+    // 2. aria-live="polite" למיכל הודעות
+    const msgContainer = document.querySelector('.user-messages');
+    if (msgContainer && !msgContainer.hasAttribute('aria-live')) {
+      msgContainer.setAttribute('aria-live', 'polite');
+    }
+    // 3. disableButton לכל כפתור placeholder
+    ['.button', '.button-primary', '.tool-button'].forEach(sel => {
+      document.querySelectorAll(sel).forEach(btn => {
+        const isAnchor = btn.tagName === 'A' && btn.getAttribute('href');
+        if (!isAnchor && !btn.onclick && !btn.hasAttribute('data-action')) {
+          disableButton(btn);
+        }
+      });
+    });
+    // 4. בדיקת קיום לכל DOM access
+    function safeGet(id) { return document.getElementById(id) || null; }
+    // דוגמה: const el = safeGet('deceased-name'); if (el) { ... }
+    // 5. כל הודעה למשתמש, fetch, שפה - רק דרך הפונקציות המרכזיות (כבר מיושם)
+    // 6. keydown ל-Enter/Space לכל אלמנט אינטראקטיבי
+    ['.button', '.button-primary', '.tool-button', '.card', '.card-link', '.bottom-nav-item', '.language-option', '.menu-toggle'].forEach(sel => {
+      document.querySelectorAll(sel).forEach(el => {
+        el.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            this.click();
+          }
+        });
+      });
+    });
+
+    function loadScript(src, callback = null) {
+      if (document.querySelector(`script[src="${src}"]`)) {
+        if (callback) callback();
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = src;
+      script.async = true;
+      if (callback) script.onload = callback;
+      document.head.appendChild(script);
+    }
+
+    const AppState = {
+      state: {
+        language: localStorage.getItem('lang') || 'he',
+        isDarkMode: localStorage.getItem('darkMode') === 'true',
+        fontSize: parseInt(localStorage.getItem('fontSize') || '16', 10),
+        // ...עוד
+      },
+      listeners: [],
+      getState() { return this.state; },
+      setState(partialState, persist = true) {
+        this.state = { ...this.state, ...partialState };
+        if (persist) this.persistState();
+        this.notifyListeners();
+      },
+      persistState() {
+        localStorage.setItem('lang', this.state.language);
+        localStorage.setItem('darkMode', this.state.isDarkMode);
+        localStorage.setItem('fontSize', this.state.fontSize);
+        // ...עוד
+      },
+      subscribe(listener) { this.listeners.push(listener); },
+      notifyListeners() { this.listeners.forEach(l => l(this.state)); },
+      actions: {
+        setLanguage(language) {
+          AppState.setState({ language });
+          document.body.setAttribute('data-lang', language);
+          document.documentElement.dir = language === 'he' ? 'rtl' : 'ltr';
+          document.querySelectorAll('.language-option').forEach(option => {
+            option.classList.toggle('active', option.dataset.lang === language);
+          });
+        },
+        toggleDarkMode() {
+          const newDarkMode = !AppState.state.isDarkMode;
+          AppState.setState({ isDarkMode: newDarkMode });
+          document.body.classList.toggle('dark-mode', newDarkMode);
+        }
+        // ...עוד
+      }
+    };
+
+    AppState.actions.setLanguage('ru');
+    AppState.actions.toggleDarkMode();
+    AppState.subscribe(state => { /* עדכן UI */ });
+
+    const performanceMonitor = {
+      metrics: { pageLoadTime: 0, resourceLoadTimes: {}, errors: [] },
+      start() { this.startTime = performance.now(); },
+      end() {
+        this.metrics.pageLoadTime = performance.now() - this.startTime;
+        console.log('Page Load Time:', this.metrics.pageLoadTime);
+      }
+    };
+    performanceMonitor.start();
+    window.addEventListener('load', () => performanceMonitor.end());
+  </script>
+</body>
+</html>
+
