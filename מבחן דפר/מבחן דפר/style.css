@@ -1,0 +1,662 @@
+/* Variables */
+:root {
+    --primary-color: #4361ee;
+    --primary-gradient: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
+    --secondary-color: #7209b7;
+    --secondary-gradient: linear-gradient(135deg, #7209b7 0%, #560bad 100%);
+    --accent-color: #f72585;
+    --accent-gradient: linear-gradient(135deg, #f72585 0%, #b5179e 100%);
+    --success-color: #4cc9f0;
+    --error-color: #f72585;
+    --text-color: #2b2d42;
+    --text-light: #8d99ae;
+    --background-color: #edf2f4;
+    --card-background: #ffffff;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+    --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+    --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 20px;
+    --border-radius-xl: 30px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --font-family: 'Segoe UI', 'Heebo', sans-serif;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    direction: rtl;
+}
+
+body {
+    font-family: var(--font-family);
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    min-height: 100vh;
+}
+
+/* Layout */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Top Bar */
+.top-bar {
+    background: var(--primary-gradient);
+    padding: 1rem 2rem;
+    box-shadow: var(--shadow-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    color: white;
+    backdrop-filter: blur(10px);
+}
+
+.top-bar h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    letter-spacing: -0.5px;
+}
+
+.timer-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255,255,255,0.15);
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius-xl);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.timer-container:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+}
+
+#timer {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Control Panel */
+.control-panel {
+    background: var(--card-background);
+    padding: 2rem;
+    margin: 2rem 0;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-xl);
+    transition: var(--transition);
+}
+
+.control-panel:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl), 0 0 30px rgba(67, 97, 238, 0.1);
+}
+
+.test-type-selector {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 0.75rem;
+    background: var(--background-color);
+    border-radius: var(--border-radius-xl);
+    box-shadow: inset var(--shadow-sm);
+}
+
+.test-type-btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: var(--border-radius-lg);
+    background: transparent;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: 600;
+    flex: 1;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.test-type-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--primary-gradient);
+    opacity: 0;
+    transition: var(--transition);
+    z-index: -1;
+}
+
+.test-type-btn:hover::before {
+    opacity: 0.1;
+}
+
+.test-type-btn.active {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: var(--shadow-lg);
+}
+
+.test-type-btn.active:hover {
+    transform: translateY(-2px);
+}
+
+/* Navigation Buttons */
+.navigation-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.nav-btn {
+    padding: 1.5rem;
+    border: none;
+    border-radius: var(--border-radius-lg);
+    background: var(--card-background);
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-color);
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--primary-gradient);
+    opacity: 0;
+    transition: var(--transition);
+    z-index: 0;
+}
+
+.nav-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
+}
+
+.nav-btn:hover::before {
+    opacity: 1;
+}
+
+.nav-btn > * {
+    position: relative;
+    z-index: 1;
+}
+
+.nav-btn:hover {
+    color: white;
+}
+
+.section-score {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-xl);
+    font-size: 0.9rem;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+}
+
+.nav-btn:hover .section-score {
+    background: rgba(255,255,255,0.2);
+    transform: scale(1.05);
+}
+
+/* Question Windows */
+.window {
+    background: var(--card-background);
+    padding: 2.5rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-xl);
+    margin: 2rem 0;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.window::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.window:hover::before {
+    opacity: 1;
+}
+
+.window:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl), 0 0 30px rgba(67, 97, 238, 0.1);
+}
+
+.window h2 {
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+    position: relative;
+    display: inline-block;
+}
+
+.window h2::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--primary-gradient);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.window:hover h2::after {
+    transform: scaleX(1);
+}
+
+.question {
+    font-size: 1.25rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.8;
+    color: var(--text-color);
+    padding: 1.5rem;
+    background: var(--background-color);
+    border-radius: var(--border-radius-md);
+    box-shadow: inset var(--shadow-sm);
+}
+
+.options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.options button {
+    padding: 1.25rem 2rem;
+    border: 2px solid var(--primary-color);
+    border-radius: var(--border-radius-md);
+    background: transparent;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1.1rem;
+    color: var(--text-color);
+    font-weight: 600;
+    position: relative;
+    overflow: hidden;
+}
+
+.options button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--primary-gradient);
+    opacity: 0;
+    transition: var(--transition);
+    z-index: -1;
+}
+
+.options button:hover::before {
+    opacity: 1;
+}
+
+.options button:hover {
+    color: white;
+    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.result {
+    padding: 1.5rem;
+    border-radius: var(--border-radius-md);
+    margin-top: 2rem;
+    font-weight: 600;
+    animation: slideIn 0.3s ease-out;
+}
+
+.result.correct {
+    background: linear-gradient(135deg, var(--success-color) 0%, #4895ef 100%);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.result.incorrect {
+    background: linear-gradient(135deg, var(--error-color) 0%, #b5179e 100%);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.window {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Tools */
+.tool-window {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--card-background);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-xl);
+    z-index: 1000;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: fadeIn 0.3s ease-out;
+}
+
+/* Score Display */
+.score-display {
+    background: var(--card-background);
+    padding: 2rem;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-xl);
+    text-align: center;
+    margin: 2rem 0;
+    transition: var(--transition);
+}
+
+.score-display:hover {
+    transform: translateY(-3px);
+}
+
+.score-display h3 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.progress-bar {
+    height: 12px;
+    background: var(--background-color);
+    border-radius: var(--border-radius-xl);
+    overflow: hidden;
+    margin: 1.5rem 0;
+    box-shadow: inset var(--shadow-sm);
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: var(--primary-gradient);
+    transition: width 0.5s ease-out;
+}
+
+/* Utility Buttons */
+.utility-buttons, .test-tools {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin: 1.5rem 0;
+}
+
+.util-btn, .tool-btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: var(--border-radius-md);
+    background: var(--background-color);
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--text-color);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.util-btn::before, .tool-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--primary-gradient);
+    opacity: 0;
+    transition: var(--transition);
+    z-index: -1;
+}
+
+.util-btn:hover::before, .tool-btn:hover::before {
+    opacity: 1;
+}
+
+.util-btn:hover, .tool-btn:hover {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+
+    .container {
+        padding: 1rem;
+    }
+
+    .top-bar {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .navigation-buttons {
+        grid-template-columns: 1fr;
+    }
+
+    .utility-buttons, .test-tools {
+        flex-direction: column;
+    }
+
+    .options {
+        grid-template-columns: 1fr;
+    }
+
+    .window {
+        padding: 1.5rem;
+    }
+}
+
+/* RTL Specific */
+[dir="rtl"] .timer-container,
+[dir="rtl"] .nav-btn,
+[dir="rtl"] .util-btn,
+[dir="rtl"] .tool-btn {
+    flex-direction: row-reverse;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Error Notification */
+.error-notification {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background: var(--accent-gradient);
+    color: white;
+    padding: 1.25rem 2.5rem;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-xl);
+    animation: slideIn 0.3s ease-out;
+    z-index: 1000;
+}
+
+/* Calculator Styles */
+.calculator-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+.calculator-grid button {
+    padding: 1rem;
+    font-size: 1.25rem;
+    border: none;
+    background: var(--background-color);
+    color: var(--text-color);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.calculator-grid button:hover {
+    background: var(--primary-gradient);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Drawing Tools */
+.drawing-tools {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.drawing-tools button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    background: var(--background-color);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.drawing-tools button:hover {
+    background: var(--primary-gradient);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Formula Display */
+.formulas-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.formula-category {
+    background: var(--background-color);
+    padding: 1.5rem;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.formula-category h4 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.formula-category p {
+    margin: 0.5rem 0;
+    font-family: 'Courier New', monospace;
+}
+
+function setTestType(type) {
+    const buttons = document.querySelectorAll('.test-type-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+    
+    const selectedButton = document.querySelector(`[data-test-type="${type}"]`);
+    if (selectedButton) {
+        selectedButton.classList.add('active');
+    }
+
+    // עדכון זמן המבחן בהתאם לסוג
+    switch(type) {
+        case 'practice':
+            timeLeft = 45 * 60; // 45 דקות
+            break;
+        case 'real':
+            timeLeft = 20 * 60; // 20 דקות
+            break;
+        case 'quick':
+            timeLeft = 10 * 60; // 10 דקות
+            break;
+    }
+    updateTimerDisplay();
+} 

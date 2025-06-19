@@ -1,0 +1,36 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>מערכת מסלול ממודול 0</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 class="title">🔧 מערכת שליטה אינטראקטיבית</h1>
+
+  <section>
+    <h2>🧠 למידה</h2>
+    <button class="main-btn" onclick="toggleSub('courses')">📘 קורסים</button>
+    <div id="courses" class="sub-buttons hidden">
+      <button onclick="showOutput('HTML ו־CSS')">HTML ו־CSS</button>
+      <button onclick="showOutput('JS – ג'אווה סקריפט')">JavaScript</button>
+      <button onclick="showOutput('שפת C')">שפת C</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>🗓️ לו"ז יומי</h2>
+    <button onclick="showSchedule()">📅 הצג את יום רביעי</button>
+  </section>
+
+  <section>
+    <h2>⚙️ הגדרות מערכת</h2>
+    <button onclick="toggleLanguage()" id="langBtn">🌐 שפה: עברית</button>
+    <button onclick="triggerSOD()">💥 פיצוץ SOD</button>
+  </section>
+
+  <div id="output" class="output-box"></div>
+  <script src="script.js"></script>
+</body>
+</html>

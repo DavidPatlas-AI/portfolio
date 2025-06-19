@@ -1,0 +1,91 @@
+{
+  "name": "מערכת הכנה למבחן דפר",
+  "short_name": "דפר",
+  "description": "מערכת הכנה למבחן דפר עם תמיכה במצב אופליין",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4a90e2",
+  "icons": [
+    {
+      "src": "/icons/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "מסך הבית של האפליקציה"
+    },
+    {
+      "src": "/screenshots/practice.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "platform": "wide",
+      "label": "מסך תרגול שאלות"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "prefer_related_applications": false,
+  "orientation": "any",
+  "lang": "he",
+  "dir": "rtl",
+  "related_applications": [],
+  "shortcuts": [
+    {
+      "name": "תרגול מהיר",
+      "short_name": "תרגול",
+      "description": "התחל תרגול מהיר",
+      "url": "/?mode=quick",
+      "icons": [{ "src": "/icons/practice.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "תרגול פייתון",
+      "short_name": "פייתון",
+      "description": "תרגול תכנות בפייתון",
+      "url": "/?section=programming",
+      "icons": [{ "src": "/icons/python.png", "sizes": "192x192" }]
+    }
+  ],
+  "features": [
+    "Cross Platform",
+    "Offline First",
+    "Responsive",
+    "Fast",
+    "Installable",
+    "Hebrew Support"
+  ],
+  "scope": "/",
+  "serviceworker": {
+    "src": "/sw.js",
+    "scope": "/",
+    "update_via_cache": "none"
+  },
+  "share_target": {
+    "action": "/share-target",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "screenshots",
+          "accept": ["image/png", "image/jpeg"]
+        }
+      ]
+    }
+  }
+} 

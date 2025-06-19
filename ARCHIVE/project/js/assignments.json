@@ -1,0 +1,44 @@
+{
+    "courses": [
+        {
+            "name": "מתמטיקה",
+            "assignments": [
+                {
+                    "title": "תרגיל 1 - אלגברה",
+                    "dueDate": "2024-03-20",
+                    "type": "homework",
+                    "description": "תרגילים 1-5 מהספר",
+                    "status": "pending",
+                    "priority": "high",
+                    "attachments": ["math_book_ch1.pdf"]
+                }
+            ],
+            "exams": [
+                {
+                    "title": "מבחן אמצע",
+                    "date": "2024-04-01",
+                    "topics": ["אלגברה", "גיאומטריה"],
+                    "location": "כיתה 101",
+                    "duration": "120"
+                }
+            ]
+        }
+    ],
+    "general_tasks": [
+        {
+            "title": "הגשת פרויקט סיום",
+            "dueDate": "2024-05-01",
+            "type": "project",
+            "description": "פרויקט מסכם בנושא X",
+            "status": "not_started",
+            "priority": "critical",
+            "milestones": [
+                {
+                    "title": "הגשת הצעה",
+                    "dueDate": "2024-03-15",
+                    "status": "completed"
+                }
+            ]
+        }
+    ]
+} 

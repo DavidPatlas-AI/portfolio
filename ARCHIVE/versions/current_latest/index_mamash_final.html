@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <title>מסלול ממודול 0</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0a0f14;
+            font-family: 'Segoe UI', sans-serif;
+            color: #00ffcc;
+            overflow-x: hidden;
+        }
+
+        #main-console {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .title-glow {
+            font-size: 48px;
+            color: #00ffcc;
+            text-shadow: 0 0 15px #00ffaa;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #77ffe0;
+            margin-bottom: 30px;
+        }
+
+        .button-panel {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        .command-btn {
+            background-color: #00333a;
+            border: 2px solid #00ffcc;
+            color: #00ffcc;
+            padding: 15px 25px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 10px #00ffaa;
+        }
+
+        .command-btn:hover {
+            background-color: #004f5a;
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #00ffcc;
+        }
+
+        .output-section {
+            margin-top: 40px;
+            min-height: 200px;
+            border-top: 1px dashed #00ffcc;
+            padding-top: 20px;
+            font-size: 20px;
+            color: #ffffff;
+        }
+
+        .bus-stop {
+            background-color: #001f1f;
+            border: 2px solid #00ffcc;
+            padding: 20px;
+            border-radius: 12px;
+            display: inline-block;
+            animation: pulseGlow 2s infinite;
+        }
+
+        .bus-line {
+            font-size: 36px;
+            font-weight: bold;
+            color: #ffdd00;
+        }
+
+        .bus-time {
+            font-size: 20px;
+            margin-top: 10px;
+            color: #00ffcc;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 10px #00ffaa; }
+            50% { box-shadow: 0 0 25px #00ffaa; }
+            100% { box-shadow: 0 0 10px #00ffaa; }
+        }
+    </style>
+</head>
+<body>
+    <div id="main-console">
+        <h1 class="title-glow">מסלול ממודול 0</h1>
+        <p class="subtitle">בחר פעולה לביצוע מתוך מערכת הבקרה:</p>
+
+        <div class="button-panel">
+            <button class="command-btn" onclick="activateRandomModule()">רנדומלי</button>
+            <button class="command-btn" onclick="activateOrderedModule()">לפי סדר</button>
+            <button class="command-btn" onclick="activateSOD()">מצב פיצוץ SOD</button>
+            <button class="command-btn" onclick="whyAmIDoingThisRandom()">למה אני עושה את זה? (רנדומלי)</button>
+            <button class="command-btn" onclick="whyAmIDoingThisOrdered()">למה אני עושה את זה? (מסודר)</button>
+            <button class="command-btn" onclick="showBusStop()">תחנת אוטובוס</button>
+        </div>
+
+        <div id="output-area" class="output-section"></div>
+    </div>
+
+    <script>
+        function activateRandomModule() {
+            const output = document.getElementById('output-area');
+            const options = [
+                "מערכת רגשות: ניתוח רגשי פעיל",
+                "מודול לבוש: התאמה לפי תנאי שטח",
+                "חישוב זמן הגעה לבית: מנותח לפי פקקים",
+                "ניטור עייפות: עפעפיים ברמת 62%",
+                "הפתעה יומית: אם הגעת עד פה — סימן שאתה חי",
+                "מה לשתות עכשיו: טורבו קולה בדרך לשיעור",
+                "שיבוץ זמני: סוכן שטח לקו 68"
+            ];
+            const random = options[Math.floor(Math.random() * options.length)];
+            output.innerHTML = `<p>${random}</p>`;
+        }
+
+        function activateOrderedModule() {
+            const output = document.getElementById('output-area');
+            const ordered = [
+                "1. HTML + CSS",
+                "2. JavaScript",
+                "3. Python",
+                "4. בינארית ומדעי המחשב",
+                "5. אנגלית",
+                "6. Packet Tracer",
+                "7. C",
+                "8. השלמה של אנגלית מסמסטר קודם"
+            ];
+            output.innerHTML = "<p><strong>קורסים:</strong><br>" + ordered.join("<br>") + "</p>";
+        }
+
+        function activateSOD() {
+            const output = document.getElementById('output-area');
+            output.innerHTML = "<h2 style='color:red;'>!!! המערכת מתפרקת !!!</h2>";
+            document.body.style.backgroundColor = '#330000';
+            setTimeout(() => {
+                document.body.style.backgroundColor = '#0a0f14';
+            }, 3000);
+        }
+
+        function whyAmIDoingThisRandom() {
+            const output = document.getElementById('output-area');
+            const reasons = [
+                "כי אני אוהב את אשתי",
+                "כי יש לי ארבעה בנים מעצבנים",
+                "כי יש לי עוד אחד בדרך",
+                "כי אני רוצה לשמח את ההורים שלי",
+                "כי בא לי להצליח — הענק עבור השולשת המשפחתית שלי"
+            ];
+            const random = reasons[Math.floor(Math.random() * reasons.length)];
+            output.innerHTML = `<p><strong>למה?</strong><br>${random}</p>`;
+        }
+
+        function whyAmIDoingThisOrdered() {
+            const output = document.getElementById('output-area');
+            const reasons = [
+                "כי אני אוהב את אשתי",
+                "כי יש לי ארבעה בנים מעצבנים",
+                "כי יש לי עוד אחד בדרך",
+                "כי אני רוצה לשמח את ההורים שלי",
+                "כי בא לי להצליח — הענק עבור השולשת המשפחתית שלי"
+            ];
+            output.innerHTML = "<p><strong>למה?</strong><br>" + reasons.join("<br>") + "</p>";
+        }
+
+        function showBusStop() {
+            const output = document.getElementById('output-area');
+            const lines = ["68", "549", "9", "33", "15"];
+            const destinations = ["מכללת טכנולוגית", "מרכזית ירושלים", "גבעת שאול"];
+            const line = lines[Math.floor(Math.random() * lines.length)];
+            const destination = destinations[Math.floor(Math.random() * destinations.length)];
+            const minutes = Math.floor(Math.random() * 12) + 1;
+
+            output.innerHTML = `
+                <div class="bus-stop">
+                    <div class="bus-line">קו ${line}</div>
+                    <div class="bus-time">יעד: ${destination} | זמן הגעה: ${minutes} דקות</div>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>מסלול ממודול 0</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1 class="glow">🎯 מערכת שליטה טכנולוגית</h1>
+  <div id="switch-panel">
+    <div class="switch-block" onclick="handleSwitch('learn')">
+      <span class="label">מה אני לומד</span>
+      <div class="switch" id="learn-switch"></div>
+    </div>
+    <div class="switch-block" onclick="handleSwitch('drink')">
+      <span class="label">מה לשתות</span>
+      <div class="switch" id="drink-switch"></div>
+    </div>
+    <div class="switch-block" onclick="handleSwitch('wear')">
+      <span class="label">מה ללבוש</span>
+      <div class="switch" id="wear-switch"></div>
+    </div>
+    <div class="switch-block" onclick="handleSwitch('mood')">
+      <span class="label">מצב רוח</span>
+      <div class="switch" id="mood-switch"></div>
+    </div>
+    <div class="switch-block" onclick="handleSwitch('sod')">
+      <span class="label">פיצוץ SOD</span>
+      <div class="switch sod" id="sod-switch"></div>
+    </div>
+  </div>
+  <button onclick="toggleLanguage()" class="lang-btn">שנה שפה 🌐</button>
+  <div id="output"></div>
+  <script src="script.js"></script>
+</body>
+</html>

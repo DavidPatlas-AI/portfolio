@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מסלול ממודול 0 - מערכת מלאה</title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Varela+Round&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Typed.js -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+</head>
+<body class="dark-theme">
+    <div class="background-glass"></div>
+    <!-- Header Section -->
+    <header>
+        <h1><i class="fa-solid fa-user-astronaut"></i> מסלול ממודול 0</h1>
+        <div id="typed-strings" style="display:none;">
+            <p>ברוך הבא למערכת!</p>
+            <p>בחר פעולה:</p>
+        </div>
+        <span id="typed"></span>
+        <div class="status-bar" id="statusBar"></div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="feature-list">
+            <!-- למה אני עושה את זה? -->
+            <div class="feature-block">
+                <div class="feature-title"><i class="fa-solid fa-baby"></i> למה אני עושה את זה?</div>
+                <div class="button-pair">
+                    <button class="glass-btn" onclick="showResult('why', 'random', this)">
+                        <i class="fa-solid fa-shuffle"></i> רנדומלי
+                    </button>
+                    <button class="glass-btn" onclick="showResult('why', 'ordered', this)">
+                        <i class="fa-solid fa-list-ol"></i> לפי סדר
+                    </button>
+                </div>
+                <div class="feature-result"></div>
+            </div>
+            <!-- מצב רוח -->
+            <div class="feature-block">
+                <div class="feature-title"><i class="fa-solid fa-face-smile"></i> מצב רוח</div>
+                <div class="button-pair">
+                    <button class="glass-btn" onclick="showResult('mood', 'random', this)">
+                        <i class="fa-solid fa-shuffle"></i> רנדומלי
+                    </button>
+                    <button class="glass-btn" onclick="showResult('mood', 'ordered', this)">
+                        <i class="fa-solid fa-list-ol"></i> לפי סדר
+                    </button>
+                </div>
+                <div class="feature-result"></div>
+            </div>
+            <!-- SOD -->
+            <div class="feature-block">
+                <div class="feature-title"><i class="fa-solid fa-bomb"></i> SOD</div>
+                <button class="explosive glass-btn" onclick="explodeButton(this)">
+                    <i class="fa-solid fa-train"></i> SOD
+                </button>
+                <div class="feature-result"></div>
+            </div>
+            <!-- תחנת אוטובוס -->
+            <div class="feature-block">
+                <div class="feature-title"><i class="fa-solid fa-bus"></i> תחנת אוטובוס</div>
+                <div class="button-pair">
+                    <button class="glass-btn" onclick="showBusStop(this)">
+                        <i class="fa-solid fa-shuffle"></i> רנדומלי
+                    </button>
+                    <button class="glass-btn" onclick="showBusStop(this, true)">
+                        <i class="fa-solid fa-list-ol"></i> לפי סדר
+                    </button>
+                </div>
+                <div class="feature-result"></div>
+            </div>
+            <!-- מזג אוויר -->
+            <div class="feature-block">
+                <div class="feature-title"><i class="fa-solid fa-cloud-sun-rain"></i> מזג אוויר</div>
+                <div class="button-pair">
+                    <button class="glass-btn" onclick="showWeather(this)">
+                        <i class="fa-solid fa-shuffle"></i> רנדומלי
+                    </button>
+                </div>
+                <div class="feature-result"></div>
+            </div>
+            <!-- מה אכלתי בבוקר -->
+            <div class="feature-block">
+                <div class="feature-title"><i class="fa-solid fa-bread-slice"></i> מה אכלתי בבוקר</div>
+                <div class="button-pair">
+                    <button class="glass-btn" onclick="showResult('breakfast', 'random', this)">
+                        <i class="fa-solid fa-shuffle"></i> רנדומלי
+                    </button>
+                </div>
+                <div class="feature-result"></div>
+            </div>
+            <!-- מה אני לומד -->
+            <div class="feature-block">
+                <div class="feature-title">מה אני לומד</div>
+                <div class="button-pair">
+                    <button onclick="showResult('learning', 'random', this)">רנדומלי</button>
+                    <button onclick="showResult('learning', 'ordered', this)">לפי סדר</button>
+                </div>
+                <div class="feature-result"></div>
+            </div>
+            <!-- מה ללבוש -->
+            <div class="feature-block">
+                <div class="feature-title">מה ללבוש</div>
+                <div class="button-pair">
+                    <button onclick="showResult('clothing', 'random', this)">רנדומלי</button>
+                    <button onclick="showResult('clothing', 'ordered', this)">לפי סדר</button>
+                </div>
+                <div class="feature-result"></div>
+            </div>
+            <!-- מה לשתות -->
+            <div class="feature-block">
+                <div class="feature-title">מה לשתות</div>
+                <div class="button-pair">
+                    <button onclick="showResult('drink', 'random', this)">רנדומלי</button>
+                    <button onclick="showResult('drink', 'ordered', this)">לפי סדר</button>
+                </div>
+                <div class="feature-result"></div>
+            </div>
+            <!-- משימה יומית -->
+            <div class="feature-block">
+                <div class="feature-title">משימה יומית</div>
+                <div class="button-pair">
+                    <button onclick="showResult('task', 'random', this)">רנדומלי</button>
+                    <button onclick="showResult('task', 'ordered', this)">לפי סדר</button>
+                </div>
+                <div class="feature-result"></div>
+            </div>
+            <!-- מצב עייפות -->
+            <div class="feature-block">
+                <div class="feature-title">מצב עייפות</div>
+                <div class="button-pair">
+                    <button onclick="showResult('tired', 'random', this)">רנדומלי</button>
+                    <button onclick="showResult('tired', 'ordered', this)">לפי סדר</button>
+                </div>
+                <div class="feature-result">
+                    <div class="energy-bar-bg">
+                        <div class="energy-bar" id="energyBar"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- הפתעה יומית -->
+            <div class="feature-block">
+                <div class="feature-title">הפתעה יומית</div>
+                <div class="button-pair">
+                    <button onclick="showResult('surprise', 'random', this)">רנדומלי</button>
+                    <button onclick="showResult('surprise', 'ordered', this)">לפי סדר</button>
+                </div>
+                <div class="feature-result"></div>
+            </div>
+            <!-- ספירת תלמידים -->
+            <div class="feature-block">
+                <div class="feature-title">ספירת תלמידים</div>
+                <div class="button-pair">
+                    <button onclick="showResult('students', 'random', this)">רנדומלי</button>
+                    <button onclick="showResult('students', 'ordered', this)">לפי סדר</button>
+                </div>
+                <div class="feature-result"></div>
+            </div>
+            <!-- רכבת הזמן -->
+            <div class="feature-block">
+                <div class="feature-title">רכבת הזמן</div>
+                <div class="button-pair">
+                    <button onclick="showResult('timeline', 'random', this)">רנדומלי</button>
+                    <button onclick="showResult('timeline', 'ordered', this)">לפי סדר</button>
+                </div>
+                <div class="feature-result"></div>
+            </div>
+            <!-- שיבוץ צבאי -->
+            <div class="feature-block">
+                <div class="feature-title">שיבוץ צבאי</div>
+                <div class="button-pair">
+                    <button onclick="showResult('army', 'random', this)">רנדומלי</button>
+                    <button onclick="showResult('army', 'ordered', this)">לפי סדר</button>
+                </div>
+                <div class="feature-result"></div>
+            </div>
+            <!-- עץ כפתורים -->
+            <div class="feature-block">
+                <div class="feature-title">עץ כפתורים</div>
+                <button onclick="showTree(this)">פתח עץ</button>
+                <div class="feature-result"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Audio Elements -->
+    <audio id="clickSound" src="assets/sounds/click.mp3"></audio>
+    <audio id="explosionSound" src="assets/sounds/explosion.mp3"></audio>
+    <audio id="narrator" src="assets/sounds/welcome.mp3"></audio>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/content.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערכת הכנה למבחן דפ"ר</title>
+    <meta name="description" content="מערכת אינטראקטיבית להכנה למבחן דפ״ר עם כלי AI מתקדמים">
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#3498db">
+    <link rel="apple-touch-icon" href="/assets/icons/icon-192x192.png">
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <h1>מערכת הכנה למבחן דפ"ר</h1>
+        <div class="timer-container">
+            <span id="timer">45:00</span>
+            <button id="timerControl">התחל</button>
+        </div>
+    </div>
+
+    <!-- Control Panel -->
+    <div class="control-panel">
+        <!-- Test Type Selector -->
+        <div class="test-type-selector">
+            <button class="test-type-btn active" data-type="practice">תרגול חופשי</button>
+            <button class="test-type-btn" data-type="exam">מבחן מלא</button>
+            <button class="test-type-btn" data-type="quick">תרגול מהיר</button>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation-buttons">
+            <!-- Will be populated by JavaScript -->
+        </div>
+
+        <!-- Utility Buttons -->
+        <div class="utility-buttons">
+            <button class="util-btn" onclick="showStats()">סטטיסטיקות</button>
+            <button class="util-btn" onclick="showMarked()">שאלות מסומנות</button>
+            <button class="util-btn" onclick="toggleTips()">טיפים</button>
+            <button class="util-btn" onclick="showMistakes()">ניתוח טעויות</button>
+        </div>
+
+        <!-- Test Tools -->
+        <div class="test-tools">
+            <button class="tool-btn" data-tool="calculator">מחשבון</button>
+            <button class="tool-btn" data-tool="drawingPad">דף טיוטה</button>
+            <button class="tool-btn" data-tool="formulas">נוסחאות</button>
+        </div>
+    </div>
+
+    <!-- Score Display -->
+    <div class="score-display">
+        <!-- Will be populated by JavaScript -->
+    </div>
+
+    <!-- Main Question Window -->
+    <div class="window">
+        <!-- Will be populated by JavaScript -->
+    </div>
+
+    <!-- Tool Windows -->
+    <div id="calculator" class="tool-window" style="display: none;">
+        <h3>מחשבון</h3>
+        <div class="calculator-grid">
+            <!-- Will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <div id="drawingPad" class="tool-window" style="display: none;">
+        <h3>דף טיוטה</h3>
+        <canvas id="drawingCanvas" width="300" height="400"></canvas>
+        <div class="drawing-tools">
+            <input type="color" id="colorPicker" value="#000000">
+            <input type="range" id="brushSize" min="1" max="20" value="5">
+            <button class="clear-drawing">נקה</button>
+        </div>
+    </div>
+
+    <div id="formulas" class="tool-window" style="display: none;">
+        <h3>נוסחאות שימושיות</h3>
+        <div class="formulas-content">
+            <!-- Will be populated by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Offline Support -->
+    <div id="offlineStatus" style="display: none;">
+        אין חיבור לאינטרנט. המערכת פועלת במצב לא מקוון.
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Question Database
+        const questionDatabase = {
+            analogies: [
+                {
+                    question: "רופא : מרפא = מורה : ?",
+                    options: ["מלמד", "כיתה", "תלמיד", "ספר"],
+                    correct: 0,
+                    explanation: "כמו שרופא מרפא, מורה מלמד - זוהי פעולה המאפיינת את בעל המקצוע"
+                },
+                {
+                    question: "עיפרון : נייר = גיר : ?",
+                    options: ["מחק", "לוח", "כתיבה", "צבע"],
+                    correct: 1,
+                    explanation: "כמו שכותבים בעיפרון על נייר, כותבים בגיר על לוח - זהו המשטח המתאים לכלי הכתיבה"
+                },
+                {
+                    question: "מטוס : טייס = אונייה : ?",
+                    options: ["נמל", "ים", "רב חובל", "דייג"],
+                    correct: 2,
+                    explanation: "כמו שטייס מפעיל מטוס, רב חובל מפעיל אונייה - זהו בעל המקצוע האחראי על כלי התחבורה"
+                },
+                {
+                    question: "ספר : סופר = תמונה : ?",
+                    options: ["מסגרת", "צייר", "מוזיאון", "צבע"],
+                    correct: 1,
+                    explanation: "כמו שסופר יוצר ספר, צייר יוצר תמונה - זהו היוצר של היצירה"
+                },
+                {
+                    question: "מפתח : מנעול = סיסמה : ?",
+                    options: ["מחשב", "אבטחה", "גישה", "קובץ"],
+                    correct: 2,
+                    explanation: "כמו שמפתח מאפשר גישה דרך מנעול, סיסמה מאפשרת גישה למערכת"
+                }
+            ],
+            sequences: [
+                {
+                    question: "2, 4, 8, 16, 32, ?",
+                    options: ["48", "64", "96", "128"],
+                    correct: 1,
+                    explanation: "כל מספר מוכפל פי 2"
+                },
+                {
+                    question: "1, 3, 6, 10, 15, ?",
+                    options: ["18", "21", "24", "28"],
+                    correct: 1,
+                    explanation: "מוסיפים מספר עולה: +2, +3, +4, +5, +6"
+                },
+                {
+                    question: "1, 4, 9, 16, 25, ?",
+                    options: ["30", "36", "49", "64"],
+                    correct: 1,
+                    explanation: "מספרים ריבועיים: 1², 2², 3², 4², 5², 6²"
+                }
+            ],
+            shapes: [
+                {
+                    question: "משולש_מעגל_ריבוע_משולש_מעגל_?",
+                    options: ["משולש", "מעגל", "ריבוע", "מחומש"],
+                    correct: 2,
+                    explanation: "הסדרה חוזרת על עצמה כל 3 צורות"
+                }
+            ],
+            quantitative: [
+                {
+                    question: "אם 3 פועלים מסיימים עבודה ב-6 שעות, כמה שעות ייקח ל-2 פועלים לסיים את אותה העבודה?",
+                    options: ["6", "8", "9", "12"],
+                    correct: 2,
+                    explanation: "נשתמש ביחס הפוך: (3 פועלים × 6 שעות = 2 פועלים × X שעות) => X = (3×6)/2 = 9"
+                },
+                {
+                    question: "20% מ-80 הוא:",
+                    options: ["12", "16", "20", "24"],
+                    correct: 1,
+                    explanation: "20% = 0.2, לכן 0.2 × 80 = 16"
+                }
+            ],
+            logic: [
+                {
+                    question: "כל הציפורים יכולות לעוף. יש חיות שיכולות לעוף. האם המסקנה 'כל החיות שיכולות לעוף הן ציפורים' נכונה?",
+                    options: ["נכון", "לא נכון"],
+                    correct: 1,
+                    explanation: "זוהי טעות לוגית נפוצה. יש חיות שאינן ציפורים שיכולות לעוף (למשל, עטלפים)"
+                }
+            ]
+        };
+
+        // State management
+        let currentState = {
+            currentSection: null,
+            currentQuestionIndex: 0,
+            score: {
+                analogies: 0,
+                sequences: 0,
+                shapes: 0,
+                quantitative: 0,
+                logic: 0
+            },
+            totalQuestions: {
+                analogies: questionDatabase.analogies.length,
+                sequences: questionDatabase.sequences.length,
+                shapes: questionDatabase.shapes.length,
+                quantitative: questionDatabase.quantitative.length,
+                logic: questionDatabase.logic.length
+            },
+            markedQuestions: new Set(),
+            testType: 'practice',
+            timeLeft: 45 * 60,
+            timerInterval: null,
+            isTimerRunning: false
+        };
+
+        // Calculator class
+        class Calculator {
+            constructor() {
+                this.currentValue = 0;
+                this.memory = 0;
+                this.lastOperation = null;
+                this.newNumber = true;
+            }
+
+            clear() {
+                this.currentValue = 0;
+                this.memory = 0;
+                this.lastOperation = null;
+                this.newNumber = true;
+                this.updateDisplay();
+            }
+
+            digit(num) {
+                if (this.newNumber) {
+                    this.currentValue = num;
+                    this.newNumber = false;
+                } else {
+                    this.currentValue = this.currentValue * 10 + num;
+                }
+                this.updateDisplay();
+            }
+
+            operation(op) {
+                if (this.lastOperation) {
+                    this.calculate();
+                }
+                this.memory = this.currentValue;
+                this.lastOperation = op;
+                this.newNumber = true;
+            }
+
+            calculate() {
+                if (!this.lastOperation) return;
+
+                switch (this.lastOperation) {
+                    case '+':
+                        this.currentValue = this.memory + this.currentValue;
+                        break;
+                    case '-':
+                        this.currentValue = this.memory - this.currentValue;
+                        break;
+                    case '*':
+                        this.currentValue = this.memory * this.currentValue;
+                        break;
+                    case '/':
+                        if (this.currentValue !== 0) {
+                            this.currentValue = this.memory / this.currentValue;
+                        } else {
+                            alert('אין לחלק באפס!');
+                            this.clear();
+                            return;
+                        }
+                        break;
+                }
+
+                this.lastOperation = null;
+                this.newNumber = true;
+                this.updateDisplay();
+            }
+
+            updateDisplay() {
+                const display = document.querySelector('.calculator-display');
+                if (display) {
+                    display.textContent = this.currentValue;
+                }
+            }
+        }
+
+        let calculator = new Calculator();
+
+        // Initialize the application
+        function initializeApp() {
+            console.log('מאתחל מערכת...');
+            setupEventListeners();
+            setupNavigationButtons();
+            setupTools();
+            updateScoreDisplay();
+            console.log('המערכת מוכנה לשימוש!');
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Test type selection
+            document.querySelectorAll('.test-type-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    document.querySelectorAll('.test-type-btn').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    currentState.testType = button.dataset.type;
+                    resetTest();
+                });
+            });
+
+            // Timer control
+            document.getElementById('timerControl')?.addEventListener('click', toggleTimer);
+
+            // Tools toggle
+            document.querySelectorAll('.tool-btn').forEach(button => {
+                button.addEventListener('click', () => toggleTool(button.dataset.tool));
+            });
+        }
+
+        // Setup navigation buttons
+        function setupNavigationButtons() {
+            const sections = ['analogies', 'sequences', 'shapes', 'quantitative', 'logic'];
+            const container = document.querySelector('.navigation-buttons');
+            
+            container.innerHTML = '';
+            
+            sections.forEach(section => {
+                const button = document.createElement('button');
+                button.className = 'nav-btn';
+                button.dataset.section = section;
+                button.innerHTML = `
+                    ${getSectionTitle(section)}
+                    <span class="section-score">
+                        ${currentState.score[section]}/${currentState.totalQuestions[section]}
+                    </span>
+                `;
+                
+                button.addEventListener('click', () => loadSection(section));
+                container.appendChild(button);
+            });
+        }
+
+        // Load section
+        function loadSection(section) {
+            currentState.currentSection = section;
+            currentState.currentQuestionIndex = 0;
+            showQuestion();
+            updateScoreDisplay();
+        }
+
+        // Show question
+        function showQuestion() {
+            const section = currentState.currentSection;
+            const index = currentState.currentQuestionIndex;
+            const question = questionDatabase[section][index];
+
+            if (!question) return;
+
+            const window = document.querySelector('.window');
+            window.style.display = 'block';
+            window.innerHTML = `
+                <h2>${getSectionTitle(section)} - שאלה ${index + 1}/${currentState.totalQuestions[section]}</h2>
+                <div class="question">${question.question}</div>
+                <div class="options">
+                    ${getOptionsHTML(question)}
+                </div>
+                <div class="result" style="display: none;"></div>
+                <button class="mark-btn" data-index="${index}">
+                    ${currentState.markedQuestions.has(index) ? 'הסר סימון' : 'סמן לחזרה'}
+                </button>
+            `;
+
+            // Add event listeners to options
+            document.querySelectorAll('.options button').forEach((button, i) => {
+                button.addEventListener('click', () => checkAnswer(i));
+            });
+
+            // Add event listener to mark button
+            document.querySelector('.mark-btn').addEventListener('click', toggleMarkQuestion);
+        }
+
+        // Check answer
+        function checkAnswer(selectedIndex) {
+            const section = currentState.currentSection;
+            const question = questionDatabase[section][currentState.currentQuestionIndex];
+            const resultDiv = document.querySelector('.window .result');
+            
+            const isCorrect = selectedIndex === question.correct;
+
+            if (isCorrect) {
+                currentState.score[section]++;
+                resultDiv.className = 'result correct';
+                resultDiv.textContent = 'נכון! ' + question.explanation;
+            } else {
+                resultDiv.className = 'result incorrect';
+                resultDiv.textContent = 'לא נכון. ' + question.explanation;
+            }
+
+            resultDiv.style.display = 'block';
+            updateScoreDisplay();
+            
+            // Move to next question after delay
+            setTimeout(() => {
+                if (currentState.currentQuestionIndex < currentState.totalQuestions[section] - 1) {
+                    currentState.currentQuestionIndex++;
+                    showQuestion();
+                } else {
+                    showSectionSummary();
+                }
+            }, 2000);
+        }
+
+        // Timer functions
+        function toggleTimer() {
+            if (currentState.isTimerRunning) {
+                stopTimer();
+            } else {
+                startTimer();
+            }
+        }
+
+        function startTimer() {
+            if (currentState.timerInterval) clearInterval(currentState.timerInterval);
+            
+            currentState.isTimerRunning = true;
+            document.getElementById('timerControl').textContent = 'עצור';
+            
+            currentState.timerInterval = setInterval(() => {
+                currentState.timeLeft--;
+                updateTimerDisplay();
+                
+                if (currentState.timeLeft <= 0) {
+                    stopTimer();
+                    alert('הזמן נגמר!');
+                }
+            }, 1000);
+        }
+
+        function stopTimer() {
+            if (currentState.timerInterval) {
+                clearInterval(currentState.timerInterval);
+                currentState.timerInterval = null;
+            }
+            currentState.isTimerRunning = false;
+            document.getElementById('timerControl').textContent = 'התחל';
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(currentState.timeLeft / 60);
+            const seconds = currentState.timeLeft % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Setup tools
+        function setupTools() {
+            setupCalculator();
+            setupDrawingPad();
+            setupFormulas();
+        }
+
+        function setupCalculator() {
+            const calculatorWindow = document.getElementById('calculator');
+            let grid = calculatorWindow.querySelector('.calculator-grid');
+            
+            if (!grid) {
+                grid = document.createElement('div');
+                grid.className = 'calculator-grid';
+                
+                // Add display
+                const display = document.createElement('div');
+                display.className = 'calculator-display';
+                display.textContent = '0';
+                calculatorWindow.appendChild(display);
+                calculatorWindow.appendChild(grid);
+            }
+            
+            const buttons = [
+                'C', '±', '%', '÷',
+                '7', '8', '9', '×',
+                '4', '5', '6', '-',
+                '1', '2', '3', '+',
+                '0', '.', '=', '='
+            ];
+
+            grid.innerHTML = '';
+            buttons.forEach(btn => {
+                const button = document.createElement('button');
+                button.textContent = btn;
+                button.addEventListener('click', () => handleCalculatorInput(btn));
+                grid.appendChild(button);
+            });
+        }
+
+        function handleCalculatorInput(input) {
+            if (!isNaN(input)) {
+                calculator.digit(parseInt(input));
+            } else {
+                switch (input) {
+                    case 'C':
+                        calculator.clear();
+                        break;
+                    case '+':
+                    case '-':
+                    case '×':
+                    case '÷':
+                        const op = input === '×' ? '*' : input === '÷' ? '/' : input;
+                        calculator.operation(op);
+                        break;
+                    case '=':
+                        calculator.calculate();
+                        break;
+                }
+            }
+        }
+
+        function setupDrawingPad() {
+            const canvas = document.getElementById('drawingCanvas');
+            if (!canvas) return;
+
+            const context = canvas.getContext('2d');
+            let isDrawing = false;
+            let lastX = 0;
+            let lastY = 0;
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            function startDrawing(e) {
+                isDrawing = true;
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                context.beginPath();
+                context.moveTo(lastX, lastY);
+                context.lineTo(e.offsetX, e.offsetY);
+                context.stroke();
+                [lastX, lastY] = [e.offsetX, e.offsetY];
+            }
+
+            function stopDrawing() {
+                isDrawing = false;
+            }
+
+            // Clear drawing
+            document.querySelector('.clear-drawing')?.addEventListener('click', () => {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+            });
+
+            // Color picker
+            document.getElementById('colorPicker')?.addEventListener('change', (e) => {
+                context.strokeStyle = e.target.value;
+            });
+
+            // Brush size
+            document.getElementById('brushSize')?.addEventListener('input', (e) => {
+                context.lineWidth = e.target.value;
+            });
+        }
+
+        function setupFormulas() {
+            const container = document.querySelector('#formulas .formulas-content');
+            if (!container) return;
+
+            const formulas = {
+                'אחוזים': [
+                    'אחוז = חלק / שלם × 100',
+                    'חלק = שלם × אחוז / 100'
+                ],
+                'יחס': [
+                    'a:b = c:d → a×d = b×c',
+                    'יחס הפוך: a×x = b×y'
+                ],
+                'מהירות': [
+                    'מהירות = דרך / זמן',
+                    'דרך = מהירות × זמן',
+                    'זמן = דרך / מהירות'
+                ]
+            };
+
+            let html = '';
+            for (const [category, formulaList] of Object.entries(formulas)) {
+                html += `
+                    <div class="formula-category">
+                        <h4>${category}</h4>
+                        ${formulaList.map(formula => `<p>${formula}</p>`).join('')}
+                    </div>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // Utility functions
+        function getSectionTitle(section) {
+            const titles = {
+                analogies: 'אנלוגיות מילוליות',
+                sequences: 'השלמת סדרות',
+                shapes: 'סדרות צורות',
+                quantitative: 'חשיבה כמותית',
+                logic: 'היסקים לוגיים'
+            };
+            return titles[section];
+        }
+
+        function getOptionsHTML(question) {
+            if (question.options) {
+                return question.options
+                    .map((option, i) => `<button data-index="${i}">${option}</button>`)
+                    .join('');
+            }
+            return '<p>אין אפשרויות זמינות</p>';
+        }
+
+        function toggleMarkQuestion(e) {
+            const index = Number(e.target.dataset.index);
+            if (currentState.markedQuestions.has(index)) {
+                currentState.markedQuestions.delete(index);
+                e.target.textContent = 'סמן לחזרה';
+            } else {
+                currentState.markedQuestions.add(index);
+                e.target.textContent = 'הסר סימון';
+            }
+        }
+
+        function toggleTool(toolId) {
+            const toolWindows = document.querySelectorAll('.tool-window');
+            toolWindows.forEach(window => {
+                if (window.id === toolId) {
+                    window.style.display = window.style.display === 'none' ? 'block' : 'none';
+                } else {
+                    window.style.display = 'none';
+                }
+            });
+        }
+
+        function updateScoreDisplay() {
+            const totalScore = Object.values(currentState.score).reduce((a, b) => a + b, 0);
+            const totalQuestions = Object.values(currentState.totalQuestions).reduce((a, b) => a + b, 0);
+            const percentage = Math.round((totalScore / totalQuestions) * 100);
+
+            document.querySelector('.score-display').innerHTML = `
+                <h3>ציון כולל: ${percentage}%</h3>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width: ${percentage}%"></div>
+                </div>
+                <p>${totalScore} מתוך ${totalQuestions} שאלות נכונות</p>
+            `;
+            
+            setupNavigationButtons(); // Update section scores
+        }
+
+        function showSectionSummary() {
+            const section = currentState.currentSection;
+            const score = currentState.score[section];
+            const total = currentState.totalQuestions[section];
+            const percentage = Math.round((score / total) * 100);
+
+            document.querySelector('.window').innerHTML = `
+                <h2>סיכום ${getSectionTitle(section)}</h2>
+                <div class="summary">
+                    <p>ציון: ${percentage}%</p>
+                    <p>${score} מתוך ${total} שאלות נכונות</p>
+                    <button onclick="loadSection('${section}')">נסה שוב</button>
+                    <button onclick="document.querySelector('.window').style.display='none'">סגור</button>
+                </div>
+            `;
+        }
+
+        function resetTest() {
+            currentState.score = {
+                analogies: 0,
+                sequences: 0,
+                shapes: 0,
+                quantitative: 0,
+                logic: 0
+            };
+            currentState.markedQuestions.clear();
+            currentState.currentQuestionIndex = 0;
+            currentState.timeLeft = 45 * 60;
+            stopTimer();
+            updateTimerDisplay();
+            updateScoreDisplay();
+            document.querySelector('.window').style.display = 'none';
+        }
+
+        // Global functions for buttons
+        function showStats() {
+            const totalScore = Object.values(currentState.score).reduce((a, b) => a + b, 0);
+            const totalQuestions = Object.values(currentState.totalQuestions).reduce((a, b) => a + b, 0);
+            alert(`סטטיסטיקות כוללות:\nשאלות נכונות: ${totalScore}/${totalQuestions}\nאחוז הצלחה: ${Math.round((totalScore/totalQuestions)*100)}%`);
+        }
+
+        function showMarked() {
+            if (currentState.markedQuestions.size === 0) {
+                alert('אין שאלות מסומנות');
+            } else {
+                alert(`יש לך ${currentState.markedQuestions.size} שאלות מסומנות לחזרה`);
+            }
+        }
+
+        function toggleTips() {
+            const tips = [
+                "קרא את השאלה בעינים קמצניות לפני שאתה עונה",
+                "אל תיתקע על שאלה אחת - עבור הלאה וחזור אליה",
+                "השתמש בכלי העזר - מחשבון ודף טיוטה",
+                "נהל את הזמן שלך - 45 דקות עוברות מהר",
+                "תרגל כל יום כמה דקות למקסם התוצאות"
+            ];
+            alert("טיפים למבחן:\n" + tips.join("\n"));
+        }
+
+        function showMistakes() {
+            alert("ניתוח טעויות יהיה זמין אחרי שתפתור כמה שאלות");
+        }
+
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('מאתחל מערכת...');
+            initializeApp();
+        });
+    </script>
+</body>
+</html> 

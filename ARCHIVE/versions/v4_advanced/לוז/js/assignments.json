@@ -1,0 +1,51 @@
+{
+    "courses": [
+        {
+            "name": "מודול 0",
+            "assignments": [
+                {
+                    "title": "תרגיל 1",
+                    "description": "בניית דף HTML בסיסי",
+                    "dueDate": "2024-05-10",
+                    "priority": "גבוהה",
+                    "status": "completed"
+                },
+                {
+                    "title": "תרגיל 2",
+                    "description": "עיצוב עם CSS",
+                    "dueDate": "2024-05-15",
+                    "priority": "בינונית",
+                    "status": "pending"
+                }
+            ]
+        },
+        {
+            "name": "JavaScript",
+            "assignments": [
+                {
+                    "title": "תרגיל 3",
+                    "description": "פונקציות בסיסיות",
+                    "dueDate": "2024-05-20",
+                    "priority": "גבוהה",
+                    "status": "pending"
+                }
+            ]
+        }
+    ],
+    "general_tasks": [
+        {
+            "title": "הכנת מצגת",
+            "description": "מצגת סיכום פרויקט",
+            "dueDate": "2024-05-25",
+            "priority": "גבוהה",
+            "status": "not_started"
+        },
+        {
+            "title": "למידה לבחינה",
+            "description": "חזרה על החומר",
+            "dueDate": "2024-05-30",
+            "priority": "גבוהה",
+            "status": "not_started"
+        }
+    ]
+} 
