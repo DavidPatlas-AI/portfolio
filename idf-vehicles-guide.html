@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>ATAL | EV & Autonomous – המדריך המלא + דשבורד</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,500;14..32,700;14..32,800&family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{background:#0b0f0c;font-family:'Rubik','Inter',sans-serif;color:#ebf5e8;direction:rtl;transition:background 0.2s,color 0.2s}
+    body.light{background:#ecebe4;color:#1e2a1a}
+    body.light .card,body.light .stat,body.light .chip,body.light .modal-card{background:#ffffff;border-color:#cbd5b5;color:#1e2a1a}
+    body.light .card-title{color:#2c4a2e}
+    .bg-pattern{position:fixed;inset:0;background:repeating-linear-gradient(45deg,rgba(70,90,55,0.08) 0px,rgba(70,90,55,0.08) 2px,transparent 2px,transparent 8px);pointer-events:none;z-index:0}
+    .container{max-width:1500px;margin:0 auto;padding:1rem 1.5rem 2.5rem;position:relative;z-index:2}
+    header{text-align:center;margin-bottom:2rem}
+    .badge{background:#2c3a21;display:inline-block;padding:6px 18px;border-radius:40px;font-size:0.75rem;color:#cdc48e;margin-bottom:1rem}
+    h1{font-size:clamp(1.8rem,6vw,3rem);background:linear-gradient(135deg,#eef5e6,#c7dbb1);-webkit-background-clip:text;background-clip:text;color:transparent;margin-bottom:0.75rem}
+    .stats-bar{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin:1rem 0}
+    .stat{background:#141c0f;padding:6px 18px;border-radius:48px;border:1px solid #38462a;font-size:0.85rem}
+    /* tabs */
+    .tabs{display:flex;gap:8px;justify-content:center;border-bottom:1px solid #3b4c2c;margin:25px 0 20px;flex-wrap:wrap}
+    .tab-btn{background:transparent;border:none;padding:8px 24px;font-weight:700;color:#b1c7a0;cursor:pointer;border-radius:40px;font-family:inherit;font-size:0.9rem;transition:0.2s}
+    .tab-btn.active{background:#ddcc8c;color:#121b0c}
+    .tab-pane{display:none}
+    .tab-pane.active-pane{display:block}
+    .filters-panel{background:#10190c;border-radius:28px;padding:16px;margin:18px 0;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+    .filter-group{display:flex;gap:8px;align-items:center;background:#1c2516;padding:5px 12px;border-radius:40px}
+    .filter-group select,.filter-group input{background:#2a3820;border:none;color:#eaf5e0;padding:6px 12px;border-radius:40px;font-family:inherit}
+    .vehicle-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px;margin-top:20px}
+    .card{background:linear-gradient(145deg,#131c0e,#0e140a);border-radius:32px;border:1px solid #2f3c24;overflow:hidden;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s}
+    .card:hover{transform:translateY(-6px);box-shadow:0 20px 32px -16px black;border-color:#6a8950}
+    .card-img{height:160px;background:#1d2a18;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .card-img img{width:100%;height:100%;object-fit:cover}
+    .card-content{padding:16px}
+    .card-title{font-size:1.4rem;font-weight:800;margin-bottom:6px}
+    .card-cat{font-size:0.7rem;color:#cdbc7a;margin-bottom:8px}
+    .status{display:inline-block;padding:3px 12px;border-radius:30px;font-size:0.7rem;font-weight:700;margin-top:8px}
+    .status-active{background:#2c6e2c;color:#d9ffcf}
+    .status-dev{background:#9b6f2b;color:#fff0cf}
+    .status-retired{background:#5c3e2a;color:#ffcfb3}
+    .comparison-table{overflow-x:auto;margin:20px 0}
+    table{width:100%;border-collapse:collapse;background:#111b0d;border-radius:20px;overflow:hidden}
+    th{background:#2c3a21;padding:12px;text-align:right;cursor:pointer;user-select:none}
+    td{padding:12px;border-bottom:1px solid #2f3c24;text-align:right}
+    tr:hover td{background:#1a2613}
+    .timeline{display:flex;overflow-x:auto;gap:20px;padding:20px 0}
+    .timeline-node{background:#1c2a14;border-radius:28px;min-width:180px;padding:14px;border:1px solid #3b4c2c}
+    .timeline-node .year{font-size:1.4rem;font-weight:800;color:#ddcc8c}
+    #map{height:420px;border-radius:28px;margin:20px 0;z-index:1}
+    .video-gallery{display:flex;gap:16px;flex-wrap:wrap;margin:20px 0}
+    .video-card{background:#1c2a14;border-radius:28px;padding:12px;width:300px}
+    .video-card iframe{width:100%;border-radius:16px;border:none}
+    .video-card p{margin-top:8px;font-weight:600}
+    .dashboard-cards{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:28px}
+    .dashboard-card{background:#1c2617;border-radius:28px;padding:18px;flex:1;min-width:140px;text-align:center;border:1px solid #3b4c2c;font-size:1.1rem;font-weight:700}
+    .btn-primary{background:#ddcc8c;border:none;padding:8px 20px;border-radius:40px;font-weight:700;cursor:pointer;font-family:inherit;color:#121b0c}
+    .btn-secondary{background:#2e3c23;border:none;padding:8px 20px;border-radius:40px;font-weight:700;cursor:pointer;font-family:inherit;color:#e3f0d3;margin-left:8px}
+    .news-feed{background:#101a0c;border-radius:28px;padding:16px;margin:20px 0;border:1px solid #3b4c2c}
+    .news-item{padding:10px 0;border-bottom:1px solid #2f3c24;font-size:0.9rem}
+    .contribute-form{background:#101a0c;border-radius:28px;padding:24px;border:1px solid #3b4c2c}
+    .contribute-form input{display:block;width:100%;margin:10px 0;padding:10px 16px;background:#1c2516;border:1px solid #3b4c2c;border-radius:40px;color:#f0f7e8;font-family:inherit;font-size:0.9rem}
+    .charts-row{display:flex;gap:24px;flex-wrap:wrap;justify-content:center;margin:20px 0}
+    .chart-wrap{background:#1c2617;border-radius:28px;padding:16px;flex:1;min-width:280px;max-width:480px}
+    footer{text-align:center;margin-top:40px;color:#7b8f66;border-top:1px solid #27331e;padding-top:24px}
+    @media(max-width:700px){.filters-panel{flex-direction:column;align-items:stretch}.charts-row{flex-direction:column}}
+  </style>
+</head>
+<body>
+<div class="bg-pattern"></div>
+<div class="container">
+  <header>
+    <div class="badge">⚡ ATAL · EV & AUTONOMOUS FLEET</div>
+    <h1>רכבים חשמליים, אוטונומיים & היברידיים<br>צה"ל – דשבורד מלא</h1>
+    <div class="stats-bar" id="globalStats"></div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:10px;flex-wrap:wrap">
+      <button id="darkModeToggle" class="btn-secondary">🌓 מצב לילה/יום</button>
+      <button id="exportPDFBtn" class="btn-secondary">📄 ייצוא PDF</button>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="gallery">🚗 גלריה וגיליון</button>
+    <button class="tab-btn" data-tab="compare">📊 השוואה מתקדמת</button>
+    <button class="tab-btn" data-tab="timeline">📅 ציר זמן</button>
+    <button class="tab-btn" data-tab="map">🗺️ מפה טקטית</button>
+    <button class="tab-btn" data-tab="videos">🎥 וידאו</button>
+    <button class="tab-btn" data-tab="dashboard">📈 דשבורד מנהלים</button>
+    <button class="tab-btn" data-tab="contribute">✏️ תרום רכב</button>
+  </div>
+
+  <!-- GALLERY -->
+  <div id="galleryPane" class="tab-pane active-pane">
+    <div class="filters-panel">
+      <div class="filter-group">
+        <span>🔍</span>
+        <input type="text" id="searchGlobal" placeholder="שם / יצרן">
+      </div>
+      <div class="filter-group">
+        <span>🏷️ סטטוס</span>
+        <select id="statusFilter">
+          <option value="all">הכל</option>
+          <option value="פעיל">פעיל</option>
+          <option value="מבצעי">מבצעי</option>
+          <option value="הוצא">הוצא משימוש</option>
+          <option value="פיתוח">בפיתוח</option>
+          <option value="ניסוי">ניסוי</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span>🔋 טווח מינימלי (ק"מ)</span>
+        <input type="number" id="rangeMin" placeholder="0" value="0" style="width:80px">
+      </div>
+      <div class="filter-group">
+        <span>⚡ הנעה</span>
+        <select id="propulsionFilter">
+          <option value="all">הכל</option>
+          <option value="חשמלי">חשמלי מלא</option>
+          <option value="היברידי">היברידי</option>
+          <option value="פלאג-אין">פלאג-אין</option>
+        </select>
+      </div>
+      <button id="resetFilters" class="btn-primary">איפוס</button>
+    </div>
+    <div id="resultCount" style="text-align:center;color:#b1c7a0;margin:8px 0"></div>
+    <div id="vehiclesGrid" class="vehicle-grid"></div>
+  </div>
+
+  <!-- COMPARISON TABLE -->
+  <div id="comparePane" class="tab-pane">
+    <p style="margin:12px 0;color:#a1b592">לחץ על כותרת עמודה למיון ↕</p>
+    <div class="comparison-table">
+      <table id="compareTable">
+        <thead>
+          <tr>
+            <th data-col="he">רכב</th>
+            <th data-col="cat">קטגוריה</th>
+            <th data-col="range">טווח (ק"מ)</th>
+            <th data-col="speed">מהירות (קמ"ש)</th>
+            <th data-col="payload">נשיאה</th>
+            <th data-col="year">שנה</th>
+            <th data-col="status">סטטוס</th>
+          </tr>
+        </thead>
+        <tbody id="compareBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div id="timelinePane" class="tab-pane">
+    <div class="timeline" id="timelineContainer"></div>
+  </div>
+
+  <!-- MAP -->
+  <div id="mapPane" class="tab-pane">
+    <div id="map"></div>
+    <p style="margin-top:10px;color:#a1b592;font-size:0.85rem">📍 מיקומי פריסה אופייניים – צפון, מרכז, רצועת עזה ובסיס ATAL</p>
+  </div>
+
+  <!-- VIDEOS -->
+  <div id="videosPane" class="tab-pane">
+    <div class="video-gallery" id="videoGallery"></div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboardPane" class="tab-pane">
+    <div class="dashboard-cards" id="dashboardCards"></div>
+    <div class="charts-row">
+      <div class="chart-wrap"><canvas id="statusChart"></canvas></div>
+      <div class="chart-wrap"><canvas id="manufacturerChart"></canvas></div>
+    </div>
+    <div class="news-feed">
+      <h4 style="margin-bottom:10px">📰 עדכוני ATAL</h4>
+      <div id="newsList"></div>
+    </div>
+  </div>
+
+  <!-- CONTRIBUTE -->
+  <div id="contributePane" class="tab-pane">
+    <div class="contribute-form">
+      <h3 style="margin-bottom:16px">➕ הוספת רכב חדש (נשמר מקומית)</h3>
+      <input type="text" id="newHe" placeholder="שם עברי *">
+      <input type="text" id="newEn" placeholder="שם לועזי">
+      <input type="text" id="newCat" placeholder="קטגוריה (למשל: UGV חשמלי)">
+      <input type="text" id="newMaker" placeholder="יצרן">
+      <input type="number" id="newRange" placeholder="טווח בק&quot;מ">
+      <input type="text" id="newStatus" placeholder="סטטוס (פעיל / בפיתוח / הוצא)">
+      <input type="text" id="newImg" placeholder="כתובת תמונה (URL)">
+      <button id="addVehicleBtn" class="btn-primary" style="margin-top:12px">➕ שמור רכב</button>
+      <p id="contributeMsg" style="margin-top:12px;color:#9ab87a"></p>
+    </div>
+  </div>
+
+  <footer>
+    <p>🔍 מקורות: מפרט ATAL, דו"חות מערכת הביטחון, רשיונות יבוא, הודעות רשמיות. תמונות להמחשה (Wikimedia).</p>
+  </footer>
+</div>
+
+<script>
+// ---------- נתוני רכבים ----------
+const baseVehicles = [
+  { he:"ATeMM", en:"All-Terrain Electric Mission Module", cat:"נגרר רובוטי", role:"לוגיסטיקה אוטונומית", maker:"פלסן", status:"פעיל", year:2024, range:100, payload:"3 טון", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Plasan_ATeMM.jpg/800px-Plasan_ATeMM.jpg", speed:80, propulsion:"חשמלי", vid:"dQw4w9WgXcQ" },
+  { he:"תלתן (Taltan)", en:"Autonomous Convoy", cat:"שיירות אוטונומיות", role:"אספקה אוטונומית", maker:"רפאל/אלביט", status:"מבצעי", year:2025, range:200, payload:"ציוד לוגיסטי", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/IDF_autonomous_M113.jpg/800px-IDF_autonomous_M113.jpg", speed:60, propulsion:"היברידי", vid:"dQw4w9WgXcQ" },
+  { he:"Ziesel", en:"Ziesel UGV", cat:"UGV חשמלי", role:"תקיפה / ספייק", maker:"Roboteam / IAI", status:"מבצעי", year:2021, range:80, payload:"טילי ספייק", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Probot_UGV.jpg/800px-Probot_UGV.jpg", speed:25, propulsion:"חשמלי", vid:"dQw4w9WgXcQ" },
+  { he:"Rex MK II", en:"Rex MK II", cat:"UGV חשמלי", role:"חבלה / ביון", maker:"IAI", status:"פעיל", year:2022, range:300, payload:"450 ק\"ג", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/IAI_REX.jpg/800px-IAI_REX.jpg", speed:65, propulsion:"חשמלי", vid:"dQw4w9WgXcQ" },
+  { he:"Mia Robotics", en:"Mia UGV", cat:"UGV חשמלי", role:"נשיאת ציוד / כטב\"מ", maker:"Mia Robotics", status:"פעיל", year:2023, range:200, payload:"225 ק\"ג", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Mia_UGV.jpg/800px-Mia_UGV.jpg", speed:40, propulsion:"חשמלי", vid:"dQw4w9WgXcQ" },
+  { he:"Shadowfax", en:"Shadowfax UGV", cat:"UGV חשמלי", role:"סיור חמוש", maker:"רכבות תעשייה", status:"פעיל", year:2022, range:120, payload:"מקלע 0.5", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/UGV_Shadowfax.jpg/800px-UGV_Shadowfax.jpg", speed:30, propulsion:"חשמלי", vid:"dQw4w9WgXcQ" },
+  { he:"AIR DrN-600", en:"AIR eVTOL", cat:"כלי טיס חשמלי", role:"מטען 100 ק\"ג", maker:"AIR", status:"בפיתוח", year:2026, range:120, payload:"100 ק\"ג", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/AIR_One_eVTOL.jpg/800px-AIR_One_eVTOL.jpg", speed:155, propulsion:"חשמלי", vid:"dQw4w9WgXcQ" },
+  { he:"Carmel", en:"Carmel Future Vehicle", cat:"רכב קרבי היברידי", role:"רכב עתידי", maker:"מנת\"ק", status:"מו\"פ", year:2026, range:500, payload:"2 אנשי צוות", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Carmel_Future_Vehicle.jpg/800px-Carmel_Future_Vehicle.jpg", speed:90, propulsion:"היברידי", vid:"dQw4w9WgXcQ" },
+  { he:"Hoshen", en:"Hoshen 2026-2030", cat:"רכבים אוטונומיים", role:"UGV קרבי", maker:"ATAL", status:"בתכנון", year:2026, range:300, payload:"משוריין", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/IDF_future_combat_vehicle.jpg/800px-IDF_future_combat_vehicle.jpg", speed:80, propulsion:"חשמלי", vid:"dQw4w9WgXcQ" },
+  { he:"טנק היברידי", en:"Hybrid MBT", cat:"טנק היברידי", role:"טנק קרב עיקרי", maker:"מנת\"ק", status:"ניסוי", year:2024, range:400, payload:"סוללות ליתיום", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5b/Merkava_Mk4_Barak.jpg/800px-Merkava_Mk4_Barak.jpg", speed:60, propulsion:"היברידי", vid:"dQw4w9WgXcQ" },
+  { he:"MG ZS (הוצא משימוש)", en:"MG ZS EV", cat:"רכב מנהלים", role:"רכב פנאי", maker:"SAIC", status:"הוצא משימוש", year:2023, range:320, payload:"5 נוסעים", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/MG_ZS_EV_2022.jpg/800px-MG_ZS_EV_2022.jpg", speed:150, propulsion:"חשמלי", vid:"dQw4w9WgXcQ" },
+  { he:"BYD Atto 3 (הוצא)", en:"BYD Atto 3", cat:"רכב מנהלים", role:"רכב מנהלים", maker:"BYD", status:"הוצא משימוש", year:2024, range:420, payload:"5 נוסעים", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/BYD_Atto_3_IMG_001.jpg/800px-BYD_Atto_3_IMG_001.jpg", speed:160, propulsion:"חשמלי", vid:"dQw4w9WgXcQ" },
+  { he:"Toyota Corolla Hybrid", en:"Corolla Hybrid", cat:"רכב מנהלים היברידי", role:"רכב מנהלים", maker:"Toyota", status:"פעיל", year:2023, range:900, payload:"5 נוסעים", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/99/Toyota_Corolla_2023_Hybrid.jpg/800px-Toyota_Corolla_2023_Hybrid.jpg", speed:180, propulsion:"היברידי", vid:"dQw4w9WgXcQ" },
+  { he:"RobDozer", en:"Robotic D9", cat:"דחפור אוטונומי", role:"פינוי מטענים", maker:"IAI / קטרפילר", status:"מבצעי", year:2021, range:250, payload:"דחפור כבד", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/IDF_D9_armored_bulldozer.jpg/800px-IDF_D9_armored_bulldozer.jpg", speed:45, propulsion:"חשמלי", vid:"dQw4w9WgXcQ" },
+  { he:"Chery Tiggo 8 (הוצא)", en:"Chery Tiggo 8", cat:"רכב מנהלים חשמלי", role:"רכב פנאי", maker:"Chery", status:"הוצא משימוש", year:2024, range:350, payload:"7 מושבים", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Chery_Tiggo_8_Pro_MAX.jpg/800px-Chery_Tiggo_8_Pro_MAX.jpg", speed:170, propulsion:"פלאג-אין", vid:"dQw4w9WgXcQ" },
+  { he:"Oshkosh FMTV Electric", en:"Oshkosh FMTV e", cat:"משאית חשמלית", role:"הובלה צבאית", maker:"Oshkosh", status:"בחינה", year:2025, range:250, payload:"10 טון", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Oshkosh_FMTV.jpg/800px-Oshkosh_FMTV.jpg", speed:90, propulsion:"חשמלי", vid:"dQw4w9WgXcQ" },
+  { he:"Zero FX", en:"Zero Motorcycles FX", cat:"אופנוע חשמלי", role:"סיור שקט", maker:"Zero Motorcycles", status:"מבצעי", year:2021, range:140, payload:"סיור / אח\"מ", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Zero_FX_2019.jpg/800px-Zero_FX_2019.jpg", speed:130, propulsion:"חשמלי", vid:"dQw4w9WgXcQ" },
+  { he:"Rivian R1T", en:"Rivian R1T", cat:"טנדר חשמלי", role:"לוגיסטיקה קלה", maker:"Rivian", status:"בחינה", year:2024, range:480, payload:"1.1 טון", img:"https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Rivian_R1T.jpg/800px-Rivian_R1T.jpg", speed:180, propulsion:"חשמלי", vid:"dQw4w9WgXcQ" }
+];
+
+const fallback = "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/IDF_Merkava_4_Barak.jpg/800px-IDF_Merkava_4_Barak.jpg";
+let customVehicles = JSON.parse(localStorage.getItem("atal_custom") || "[]");
+let vehicles = [...baseVehicles, ...customVehicles];
+
+let compareSortCol = null, compareSortAsc = true;
+
+function getStatusClass(st) {
+  if (st.includes("פעיל") || st.includes("מבצעי")) return "status-active";
+  if (st.includes("פיתוח") || st.includes("מו\"פ") || st.includes("ניסוי") || st.includes("תכנון") || st.includes("חינה")) return "status-dev";
+  return "status-retired";
+}
+
+function getFiltered() {
+  const search = (document.getElementById("searchGlobal")?.value || "").toLowerCase();
+  const statusF = document.getElementById("statusFilter")?.value || "all";
+  const rangeMin = parseInt(document.getElementById("rangeMin")?.value) || 0;
+  const prop = document.getElementById("propulsionFilter")?.value || "all";
+  return vehicles.filter(v =>
+    (!search || v.he.toLowerCase().includes(search) || v.en.toLowerCase().includes(search) || v.maker.toLowerCase().includes(search)) &&
+    (statusF === "all" || v.status.includes(statusF)) &&
+    (v.range >= rangeMin) &&
+    (prop === "all" || v.propulsion === prop)
+  );
+}
+
+function renderGallery() {
+  const filtered = getFiltered();
+  document.getElementById("resultCount").innerHTML = `🔋 מציגים <strong>${filtered.length}</strong> כלים מתוך ${vehicles.length}`;
+  const grid = document.getElementById("vehiclesGrid");
+  if (!grid) return;
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div style="text-align:center;grid-column:1/-1;padding:60px;color:#7b8f66">🚫 לא נמצאו רכבים. נסה חיפוש אחר.</div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map(v => `
+    <div class="card" onclick="showDetails(${JSON.stringify(v).replace(/"/g,'&quot;')})">
+      <div class="card-img"><img src="${v.img}" alt="${v.he}" loading="lazy" onerror="this.src='${fallback}'"></div>
+      <div class="card-content">
+        <div class="card-title">${v.he}</div>
+        <div class="card-cat">${v.cat} · ${v.maker}</div>
+        <div>🔋 ${v.range} ק"מ &nbsp;|&nbsp; ⚡ ${v.propulsion}</div>
+        <div class="status ${getStatusClass(v.status)}">${v.status}</div>
+      </div>
+    </div>`).join("");
+}
+
+function showDetails(v) {
+  alert(`${v.he} | ${v.en}\nיצרן: ${v.maker}\nקטגוריה: ${v.cat}\nסטטוס: ${v.status}\nטווח: ${v.range} ק"מ\nמהירות: ${v.speed} קמ"ש\nנשיאה: ${v.payload}`);
+}
+
+function renderCompare() {
+  const body = document.getElementById("compareBody");
+  if (!body) return;
+  let data = [...vehicles];
+  if (compareSortCol) {
+    data.sort((a, b) => {
+      let va = a[compareSortCol], vb = b[compareSortCol];
+      if (typeof va === "number") return compareSortAsc ? va - vb : vb - va;
+      return compareSortAsc ? String(va).localeCompare(String(vb), "he") : String(vb).localeCompare(String(va), "he");
+    });
+  }
+  body.innerHTML = data.map(v => `
+    <tr>
+      <td>${v.he}</td>
+      <td>${v.cat}</td>
+      <td>${v.range}</td>
+      <td>${v.speed}</td>
+      <td>${v.payload}</td>
+      <td>${v.year}</td>
+      <td><span class="status ${getStatusClass(v.status)}">${v.status}</span></td>
+    </tr>`).join("");
+}
+
+document.querySelectorAll("#compareTable th").forEach(th => {
+  th.addEventListener("click", () => {
+    const col = th.dataset.col;
+    if (compareSortCol === col) compareSortAsc = !compareSortAsc;
+    else { compareSortCol = col; compareSortAsc = true; }
+    renderCompare();
+  });
+});
+
+function renderTimeline() {
+  const container = document.getElementById("timelineContainer");
+  if (!container) return;
+  const sorted = [...vehicles].sort((a, b) => a.year - b.year);
+  container.innerHTML = sorted.map(v => `
+    <div class="timeline-node">
+      <div class="year">${v.year}</div>
+      <div style="font-weight:700;margin:4px 0">${v.he}</div>
+      <div style="font-size:0.75rem;color:#cdbc7a">${v.cat}</div>
+      <span class="status ${getStatusClass(v.status)}">${v.status}</span>
+    </div>`).join("");
+}
+
+let mapInitialized = false;
+function initMap() {
+  if (!document.getElementById("map") || mapInitialized) return;
+  const map = L.map("map").setView([31.5, 34.8], 7);
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", { attribution: "CartoDB" }).addTo(map);
+  const points = [
+    [33.1, 35.6, "גבול צפון – Ziesel, Shadowfax"],
+    [31.3, 34.5, "רצועת עזה – RobDozer, Rex MK II"],
+    [31.9, 34.8, "בסיס ATAL – מרכז לוגיסטי"],
+    [30.8, 34.9, "נגב – ניסויי טנק היברידי"],
+  ];
+  points.forEach(([lat, lng, label]) => L.marker([lat, lng]).addTo(map).bindPopup(label));
+  mapInitialized = true;
+}
+
+function renderVideos() {
+  const gal = document.getElementById("videoGallery");
+  if (!gal) return;
+  gal.innerHTML = vehicles.slice(0, 8).map(v => `
+    <div class="video-card">
+      <iframe width="276" height="156" src="https://www.youtube.com/embed/${v.vid}" allowfullscreen loading="lazy"></iframe>
+      <p>${v.he}</p>
+    </div>`).join("");
+}
+
+let statusChartInst = null, makerChartInst = null;
+function renderDashboard() {
+  const active = vehicles.filter(v => v.status.includes("פעיל") || v.status.includes("מבצעי")).length;
+  const dev = vehicles.filter(v => v.status.includes("פיתוח") || v.status.includes("מו\"פ") || v.status.includes("ניסוי") || v.status.includes("תכנון") || v.status.includes("חינה")).length;
+  const retired = vehicles.filter(v => v.status.includes("הוצא")).length;
+  document.getElementById("dashboardCards").innerHTML = `
+    <div class="dashboard-card">🟢<br>מבצעי / פעיל<br><strong>${active}</strong></div>
+    <div class="dashboard-card">🔧<br>בפיתוח / ניסוי<br><strong>${dev}</strong></div>
+    <div class="dashboard-card">⛔<br>הוצא משימוש<br><strong>${retired}</strong></div>
+    <div class="dashboard-card">⚡<br>סה"כ רכבים<br><strong>${vehicles.length}</strong></div>`;
+
+  const ctx1 = document.getElementById("statusChart")?.getContext("2d");
+  if (ctx1) {
+    if (statusChartInst) statusChartInst.destroy();
+    statusChartInst = new Chart(ctx1, { type:"pie", data:{ labels:["פעיל/מבצעי","בפיתוח","הוצא"], datasets:[{ data:[active,dev,retired], backgroundColor:["#2c6e2c","#9b6f2b","#5c3e2a"] }] }, options:{ plugins:{ legend:{ labels:{ color:"#ebf5e8" } } } } });
+  }
+
+  const makerCount = vehicles.reduce((acc, v) => { acc[v.maker]=(acc[v.maker]||0)+1; return acc; }, {});
+  const top = Object.entries(makerCount).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const ctx2 = document.getElementById("manufacturerChart")?.getContext("2d");
+  if (ctx2) {
+    if (makerChartInst) makerChartInst.destroy();
+    makerChartInst = new Chart(ctx2, { type:"bar", data:{ labels:top.map(e=>e[0]), datasets:[{ label:"דגמים", data:top.map(e=>e[1]), backgroundColor:"#ddcc8c" }] }, options:{ plugins:{ legend:{ labels:{ color:"#ebf5e8" } } }, scales:{ x:{ ticks:{ color:"#ebf5e8" } }, y:{ ticks:{ color:"#ebf5e8" }, beginAtZero:true } } } });
+  }
+
+  document.getElementById("newsList").innerHTML = [
+    "📢 2025: יחידת תלתן נכנסה לפעילות מלאה",
+    "🔋 2026: ניסויי eVTOL AIR DrN-600 מתוכננים",
+    "⚠️ 2024: הוצאת רכבים סיניים עקב חשש סייבר",
+    "🚀 2024: אופנוע Zero FX נכנס לשירות מבצעי",
+    "🔬 2025: תוכנית Hoshen UGV אושרה לתקציב"
+  ].map(n => `<div class="news-item">${n}</div>`).join("");
+}
+
+function addVehicle() {
+  const newHe = document.getElementById("newHe").value.trim();
+  if (!newHe) { document.getElementById("contributeMsg").innerText = "⚠️ שם עברי הוא שדה חובה."; return; }
+  const v = {
+    he: newHe,
+    en: document.getElementById("newEn").value || "",
+    cat: document.getElementById("newCat").value || "כלי חדש",
+    role: "", maker: document.getElementById("newMaker").value || "לא ידוע",
+    status: document.getElementById("newStatus").value || "פעיל",
+    year: 2025,
+    range: parseInt(document.getElementById("newRange").value) || 100,
+    payload: "", img: document.getElementById("newImg").value || fallback,
+    speed: 80, propulsion: "חשמלי", vid: "dQw4w9WgXcQ"
+  };
+  customVehicles.push(v);
+  localStorage.setItem("atal_custom", JSON.stringify(customVehicles));
+  vehicles = [...baseVehicles, ...customVehicles];
+  renderGallery(); renderCompare(); renderTimeline();
+  document.getElementById("contributeMsg").innerText = "✅ הרכב נוסף בהצלחה!";
+  ["newHe","newEn","newCat","newMaker","newRange","newStatus","newImg"].forEach(id => { document.getElementById(id).value=""; });
+}
+
+function updateGlobalStats() {
+  document.getElementById("globalStats").innerHTML = `
+    <div class="stat"><strong>⚙️ ${vehicles.length}</strong> פלטפורמות</div>
+    <div class="stat"><strong>🔋 ${vehicles.filter(v=>v.cat.includes("UGV")).length}</strong> UGV אוטונומיים</div>
+    <div class="stat"><strong>🚁 ${vehicles.filter(v=>v.cat.includes("טיס")).length}</strong> כלי טיס חשמליים</div>`;
+}
+
+// ---- TAB SWITCHING ----
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const target = btn.dataset.tab;
+    document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active-pane"));
+    document.getElementById(target + "Pane").classList.add("active-pane");
+    if (target === "map") initMap();
+    if (target === "dashboard") renderDashboard();
+    if (target === "compare") renderCompare();
+    if (target === "timeline") renderTimeline();
+    if (target === "videos") renderVideos();
+  });
+});
+
+// ---- FILTER EVENTS ----
+["searchGlobal","statusFilter","rangeMin","propulsionFilter"].forEach(id => {
+  document.getElementById(id)?.addEventListener("input", renderGallery);
+  document.getElementById(id)?.addEventListener("change", renderGallery);
+});
+document.getElementById("resetFilters")?.addEventListener("click", () => {
+  document.getElementById("searchGlobal").value="";
+  document.getElementById("statusFilter").value="all";
+  document.getElementById("rangeMin").value="0";
+  document.getElementById("propulsionFilter").value="all";
+  renderGallery();
+});
+
+// ---- DARK MODE ----
+document.getElementById("darkModeToggle").addEventListener("click", () => document.body.classList.toggle("light"));
+
+// ---- PDF EXPORT ----
+document.getElementById("exportPDFBtn").addEventListener("click", () => {
+  html2canvas(document.querySelector(".container")).then(canvas => {
+    const imgData = canvas.toDataURL("image/png");
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF("p","mm","a4");
+    pdf.addImage(imgData,"PNG",10,10,190,0);
+    pdf.save("ATAL_Fleet.pdf");
+  });
+});
+
+// ---- CONTRIBUTE ----
+document.getElementById("addVehicleBtn").addEventListener("click", addVehicle);
+
+// ---- INIT ----
+updateGlobalStats();
+renderGallery();
+</script>
+</body>
+</html>
