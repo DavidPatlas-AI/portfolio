@@ -1,815 +1,829 @@
-<!DOCTYPE html><html lang="he" dir="rtl">
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>תיקון השם - תהילים ותפילות</title>
-  <meta name="description" content="תיקון השם - תהילים ותפילות בעברית. קריאת תהילים, תפילות ושירות אזכרה.">
-  <meta name="keywords" content="תהילים, תפילות, תיקון, שירות אזכרה, יהדות">
-  <meta name="author" content="תיקון השם">
-  <meta property="og:title" content="תיקון השם - תהילים ותפילות">
-  <meta property="og:description" content="תיקון השם - תהילים ותפילות בעברית">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://tikun-hashem.com">
-  <link rel="canonical" href="https://tikun-hashem.com">
-  <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#4361ee">
-  <link rel="stylesheet" href="styles/css/styles.css">
-  <link rel="stylesheet" href="styles/css/accessibility.css">
-  <link rel="stylesheet" href="styles/css/calendar.css">
-  <link rel="stylesheet" href="src/styles/main.css">
-  <link rel="stylesheet" href="src/styles/dark-mode.css">
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&family=Noto+Sans+Hebrew:wght@400;700&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
-  <script src="js/corrector.js"></script>
-  <script src="js/utils.js"></script>
-  <script src="js/i18n.js" defer></script>
-  <script src="js/main.js" defer></script>
-  <script src="js/floating-letters.js" defer></script>
-  <script src="js/calendar.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/hebcal@1.0.0/dist/hebcal.min.js"></script>
-  <script src="js/text-correction.js"></script>
-  <script src="js/language-bar.js"></script>
-  <script src="js/debug-checker.js"></script>
-  <script src="js/performance-monitor.js"></script>
-  <style>
-    :root {
-      --primary: #4361ee;
-      --primary-light: #4895ef;
-      --primary-dark: #3a56d4;
-      --background: #f8f9fa;
-      --card: #ffffff;
-      --text: #212529;
-      --text-light: #6c757d;
-      --border: #dee2e6;
-      --shadow-sm: 0 2px 8px rgba(0,0,0,0.05);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-      --radius: 16px;
-      --header-height: 70px;
-      --bottom-nav-height: 75px;
-      --content-padding: 20px;
-      --font-he: 'Noto Sans Hebrew', sans-serif;
-      --font-ru: 'PT Serif', serif;
-    }
-    
-    body {
-      font-family: var(--font-he);
-      background-color: var(--background);
-      color: var(--text);
-      line-height: 1.6;
-      font-size: 16px;
-      padding-bottom: var(--bottom-nav-height);
-      padding-top: var(--header-height);
-    }
-    
-    [data-lang="ru"] body { font-family: var(--font-ru); }
-    
-    .header {
-      position: fixed;
-      top: 0;
-      right: 0;
-      left: 0;
-      height: var(--header-height);
-      background-color: var(--card);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 var(--content-padding);
-      box-shadow: var(--shadow-sm);
-      z-index: 100;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-    }
-    
-    .header-title {
-      font-weight: 700;
-      font-size: 24px;
-      color: var(--primary);
-    }
-    
-    .hero {
-      background: linear-gradient(135deg, var(--primary), var(--primary-light));
-      color: white;
-      padding: 40px var(--content-padding);
-      border-radius: var(--radius);
-      margin-bottom: 24px;
-      text-align: center;
-      box-shadow: var(--shadow-md);
-    }
-    
-    .hero-title {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 16px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .hero-text {
-      font-size: 18px;
-      margin-bottom: 24px;
-      opacity: 0.9;
-    }
-    
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 14px 24px;
-      border-radius: var(--radius);
-      font-weight: 600;
-      text-decoration: none;
-      cursor: pointer;
-      transition: background 0.2s;
-      font-size: 16px;
-      min-width: 160px;
-    }
-    
-    .button-primary {
-      background-color: white;
-      color: var(--primary);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    
-    .button-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-    }
-    
-    .button-outline {
-      background-color: transparent;
-      color: white;
-      border: 2px solid white;
-    }
-    
-    .button-outline:hover {
-      background-color: rgba(255,255,255,0.1);
-      transform: translateY(-2px);
-    }
-    
-    .button-group {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    
-    .card {
-      background-color: var(--card);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: var(--shadow-sm);
-      transition: all 0.3s ease;
-      border: 1px solid var(--border);
-    }
-    
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-md);
-    }
-    
-    .card-content {
-      padding: 24px;
-    }
-    
-    .card-title {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 12px;
-      color: var(--primary);
-    }
-    
-    .card-text {
-      font-size: 15px;
-      color: var(--text-light);
-      margin-bottom: 20px;
-      line-height: 1.5;
-    }
-    
-    .card-icon {
-      width: 60px;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 28px;
-      color: var(--primary);
-      background-color: rgba(67, 97, 238, 0.1);
-      border-radius: 50%;
-      margin-bottom: 16px;
-      transition: all 0.3s ease;
-    }
-    
-    .card:hover .card-icon {
-      transform: scale(1.1);
-      background-color: rgba(67, 97, 238, 0.15);
-    }
-    
-    .language-bar {
-      display: flex;
-      background-color: var(--card);
-      border-radius: var(--radius);
-      overflow: hidden;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border);
-    }
-    
-    .language-option {
-      flex: 1;
-      padding: 16px;
-      text-align: center;
-      cursor: pointer;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      font-size: 16px;
-    }
-    
-    .language-option:hover {
-      background-color: rgba(67, 97, 238, 0.05);
-    }
-    
-    .language-option.active {
-      background-color: var(--primary);
-      color: white;
-    }
-    
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: var(--bottom-nav-height);
-      background-color: var(--card);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      box-shadow: 0 -2px 8px rgba(0,0,0,0.08);
-      z-index: 100;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border-top: 1px solid var(--border);
-    }
-    
-    .bottom-nav-item {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      color: var(--text-light);
-      transition: all 0.3s ease;
-      padding: 12px 0;
-      text-decoration: none;
-    }
-    
-    .bottom-nav-item:hover {
-      color: var(--primary);
-    }
-    
-    .bottom-nav-item.active {
-      color: var(--primary);
-    }
-    
-    .bottom-nav-icon {
-      font-size: 24px;
-    }
-    
-    .bottom-nav-label {
-      font-size: 13px;
-      font-weight: 500;
-    }
-    
-    [data-lang="he"] {
-      font-family: 'Noto Sans Hebrew', 'Rubik', sans-serif;
-      direction: rtl;
-    }
-    
-    [data-lang="ru"] {
-      font-family: 'Noto Sans', sans-serif;
-    }
-    
-    [data-lang="phonetic"] {
-      font-family: 'Rubik', sans-serif;
-    }
-    
-    .disabled, [aria-disabled="true"] {
-      opacity: 0.5 !important;
-      cursor: not-allowed !important;
-      pointer-events: auto !important;
-    }
-    
-    button, .calendar-day {
-      outline: none;
-      transition: box-shadow 0.2s, background 0.2s;
-    }
-    button:focus, .calendar-day:focus {
-      outline: 2px solid var(--color-primary, #0078d7);
-      outline-offset: 2px;
-    }
-    button:hover, .calendar-day:hover {
-      background: #e6f0ff;
-    }
-    button:active, .calendar-day:active {
-      background: #b3d1ff;
-    }
-    
-    .error-field {
-      color: #b71c1c;
-      border: 1px solid #b71c1c;
-      background: url('icons/error.svg') no-repeat left center;
-      padding-left: 20px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>David Patlas — Developer & Digital Creator</title>
+<style>
+  :root {
+    --gold: #f5c842;
+    --gold2: #e0a820;
+    --dark: #0a0a0f;
+    --dark2: #111118;
+    --card: #16161f;
+    --card2: #1e1e2e;
+    --text: #e8e8f0;
+    --muted: #8888aa;
+    --accent: #7c6af5;
+    --green: #4ade80;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Segoe UI', 'Arial Hebrew', Arial, sans-serif;
+    line-height: 1.7;
+    transition: direction 0.2s;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top:0; right:0; left:0; z-index:100;
+    background: rgba(10,10,15,0.93);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(245,200,66,0.12);
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.85rem 2.5rem; gap: 1rem;
+  }
+  .nav-logo { font-size:1.2rem; font-weight:800; color:var(--gold); white-space:nowrap; }
+  .nav-links { display:flex; gap:1.8rem; list-style:none; }
+  .nav-links a { color:var(--muted); text-decoration:none; font-size:0.88rem; transition:color .2s; }
+  .nav-links a:hover { color:var(--gold); }
+  .lang-switcher { display:flex; gap:0.4rem; flex-shrink:0; }
+  .lang-btn {
+    padding:0.3rem 0.75rem; border-radius:7px; font-size:0.78rem; font-weight:700;
+    border:1.5px solid rgba(255,255,255,0.12); background:transparent; color:var(--muted);
+    cursor:pointer; transition:all .2s;
+  }
+  .lang-btn.active { border-color:var(--gold); color:var(--gold); background:rgba(245,200,66,0.1); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,106,245,0.16) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 40% at 15% 85%, rgba(245,200,66,0.07) 0%, transparent 60%),
+                var(--dark);
+    padding: 6rem 1.5rem 3rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.018'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/svg%3E");
+    pointer-events:none;
+  }
+  .hero-inner { position:relative; z-index:1; }
+
+  /* Profile photo */
+  .hero-photo-wrap { position:relative; display:inline-block; margin-bottom:1.6rem; }
+  .hero-photo {
+    width:128px; height:128px; border-radius:50%; object-fit:cover;
+    border:3px solid var(--gold);
+    box-shadow: 0 0 0 7px rgba(245,200,66,0.13), 0 12px 40px rgba(0,0,0,0.55);
+  }
+  .hero-photo-ring {
+    position:absolute; inset:-9px; border-radius:50%;
+    border:2px dashed rgba(245,200,66,0.3);
+    animation: spin 20s linear infinite;
+  }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .hero-photo-badge {
+    position:absolute; bottom:5px; left:5px;
+    background:var(--green); color:#000; font-size:0.63rem; font-weight:800;
+    padding:0.12rem 0.5rem; border-radius:99px; border:2px solid var(--dark);
+  }
+  .avatar-fallback {
+    width:128px; height:128px; border-radius:50%;
+    background: linear-gradient(135deg,#7c6af5,#f5c842);
+    display:none; align-items:center; justify-content:center;
+    font-size:2.6rem; font-weight:800; color:#000;
+    border:3px solid var(--gold); margin:0 auto;
+  }
+
+  .hero-badge {
+    display:inline-block;
+    background:rgba(124,106,245,0.18); border:1px solid rgba(124,106,245,0.35);
+    color:var(--accent); padding:0.32rem 1rem; border-radius:99px;
+    font-size:0.82rem; margin-bottom:1.1rem;
+  }
+  h1.hero-title { font-size: clamp(2.4rem,6vw,4.5rem); font-weight:900; line-height:1.1; margin-bottom:0.9rem; }
+  h1.hero-title span { color:var(--gold); }
+  .hero-sub { font-size:clamp(0.95rem,2vw,1.2rem); color:var(--muted); max-width:620px; margin:0 auto 0.9rem; }
+  .hero-tagline { font-size:0.98rem; color:var(--accent); margin-bottom:2.2rem; font-style:italic; }
+
+  .hero-stats { display:flex; gap:2.5rem; justify-content:center; flex-wrap:wrap; margin-bottom:2.4rem; }
+  .stat .num { font-size:2rem; font-weight:900; color:var(--gold); display:block; }
+  .stat .lbl { font-size:0.78rem; color:var(--muted); }
+
+  .btns { display:flex; gap:0.9rem; justify-content:center; flex-wrap:wrap; }
+  .btn {
+    padding:0.72rem 1.7rem; border-radius:9px; font-size:0.93rem; font-weight:700;
+    cursor:pointer; text-decoration:none; transition:all .2s;
+    display:inline-flex; align-items:center; gap:0.45rem;
+  }
+  .btn-gold { background:var(--gold); color:#000; }
+  .btn-gold:hover { background:var(--gold2); transform:translateY(-2px); box-shadow:0 6px 20px rgba(245,200,66,0.35); }
+  .btn-outline { border:1.5px solid rgba(255,255,255,0.18); color:var(--text); background:transparent; }
+  .btn-outline:hover { border-color:var(--gold); color:var(--gold); transform:translateY(-2px); }
+
+  /* ── SECTION ── */
+  section { padding:5rem 1.5rem; }
+  .container { max-width:1080px; margin:0 auto; }
+  .sec-title { font-size:clamp(1.6rem,3vw,2.1rem); font-weight:900; margin-bottom:0.4rem; }
+  .sec-title span { color:var(--gold); }
+  .divider { width:46px; height:3px; background:var(--gold); border-radius:2px; margin:0.6rem 0 0.9rem; }
+  .sec-sub { color:var(--muted); margin-bottom:2.8rem; font-size:0.93rem; }
+
+  /* ── ABOUT ── */
+  .about-grid { display:grid; grid-template-columns:1fr 1fr; gap:3rem; align-items:start; }
+  @media(max-width:680px){ .about-grid{grid-template-columns:1fr;} }
+  .about-text p { color:var(--muted); margin-bottom:0.85rem; font-size:1.02rem; }
+  .about-text p strong { color:var(--text); }
+  .chips { display:flex; flex-wrap:wrap; gap:0.55rem; margin-top:1.4rem; }
+  .chip {
+    background:var(--card2); border:1px solid rgba(255,255,255,0.08);
+    color:var(--text); padding:0.27rem 0.8rem; border-radius:6px; font-size:0.8rem;
+  }
+  .chip.gold { border-color:rgba(245,200,66,0.38); color:var(--gold); }
+  .about-card {
+    background:var(--card); border:1px solid rgba(255,255,255,0.07);
+    border-radius:16px; padding:1.8rem;
+  }
+  .about-card h3 { color:var(--gold); margin-bottom:1rem; font-size:1rem; font-weight:800; }
+  .tl-item { display:flex; gap:0.7rem; margin-bottom:1rem; }
+  .tl-dot { width:8px; height:8px; border-radius:50%; background:var(--gold); margin-top:8px; flex-shrink:0; }
+  .tl-item p { font-size:0.86rem; color:var(--muted); }
+  .tl-item p strong { color:var(--text); display:block; }
+
+  /* ── CHANNELS ── */
+  .ch-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1.2rem; }
+  .ch-card {
+    background:var(--card); border:1px solid rgba(255,255,255,0.07);
+    border-radius:14px; padding:1.4rem; text-decoration:none;
+    transition:all .25s; display:flex; flex-direction:column; gap:0.65rem;
+  }
+  .ch-card:hover { transform:translateY(-4px); border-color:var(--gold); box-shadow:0 8px 28px rgba(245,200,66,0.1); }
+  .ch-icon { font-size:1.9rem; }
+  .ch-name { font-size:0.97rem; font-weight:800; color:var(--text); }
+  .ch-handle { font-size:0.8rem; color:var(--muted); }
+  .ch-desc { font-size:0.83rem; color:var(--muted); line-height:1.55; }
+
+  /* ── PROJECTS ── */
+  .filter-row { display:flex; flex-wrap:wrap; gap:0.55rem; margin-bottom:2.4rem; }
+  .fbtn {
+    padding:0.38rem 1rem; border-radius:99px; border:1.5px solid rgba(255,255,255,0.11);
+    background:transparent; color:var(--muted); font-size:0.83rem; cursor:pointer; transition:all .2s;
+  }
+  .fbtn.active,.fbtn:hover { border-color:var(--gold); color:var(--gold); background:rgba(245,200,66,0.07); }
+  .proj-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(295px,1fr)); gap:1.2rem; }
+  .proj-card {
+    background:var(--card); border:1px solid rgba(255,255,255,0.07);
+    border-radius:14px; padding:1.35rem; transition:all .25s;
+    display:flex; flex-direction:column; gap:0.55rem; position:relative; overflow:hidden;
+  }
+  .proj-card::before {
+    content:''; position:absolute; top:0; right:0; left:0; height:2px;
+    background:linear-gradient(90deg,var(--accent),var(--gold)); opacity:0; transition:.25s;
+  }
+  .proj-card:hover { transform:translateY(-3px); border-color:rgba(124,106,245,0.28); box-shadow:0 8px 26px rgba(124,106,245,0.1); }
+  .proj-card:hover::before { opacity:1; }
+  .proj-cat { font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+  .proj-head { display:flex; justify-content:space-between; align-items:flex-start; gap:0.5rem; }
+  .proj-name { font-size:0.97rem; font-weight:800; color:var(--text); }
+  .badge { font-size:0.68rem; padding:0.18rem 0.55rem; border-radius:99px; font-weight:700; white-space:nowrap; }
+  .live { background:rgba(74,222,128,0.13); color:var(--green); border:1px solid rgba(74,222,128,0.3); }
+  .wip  { background:rgba(251,191,36,0.13); color:#fbbf24; border:1px solid rgba(251,191,36,0.28); }
+  .proj-desc { font-size:0.83rem; color:var(--muted); flex:1; line-height:1.55; }
+  .proj-tags { display:flex; flex-wrap:wrap; gap:0.38rem; }
+  .tag { font-size:0.7rem; padding:0.13rem 0.5rem; background:rgba(124,106,245,0.11); color:var(--accent); border-radius:5px; }
+  .proj-links { display:flex; gap:0.55rem; margin-top:0.2rem; }
+  .plink {
+    font-size:0.78rem; padding:0.32rem 0.75rem; border-radius:7px;
+    text-decoration:none; transition:all .2s; display:inline-flex; align-items:center; gap:0.3rem;
+  }
+  .plink.demo { background:var(--gold); color:#000; font-weight:700; }
+  .plink.demo:hover { background:var(--gold2); }
+  .plink.gh { border:1px solid rgba(255,255,255,0.14); color:var(--muted); }
+  .plink.gh:hover { border-color:var(--accent); color:var(--accent); }
+  .proj-card.hidden { display:none; }
+
+  /* ── CONTACT ── */
+  .contact-box {
+    background:linear-gradient(135deg,var(--card2),rgba(124,106,245,0.08));
+    border:1px solid rgba(124,106,245,0.22); border-radius:20px;
+    padding:3rem 2rem; text-align:center;
+  }
+  .contact-box h3 { font-size:1.8rem; font-weight:900; margin-bottom:0.7rem; }
+  .contact-box p { color:var(--muted); margin-bottom:2rem; font-size:1rem; }
+  .contact-links { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+
+  /* ── FOOTER ── */
+  footer {
+    background:var(--dark2); border-top:1px solid rgba(255,255,255,0.06);
+    text-align:center; padding:1.8rem; color:var(--muted); font-size:0.83rem;
+  }
+  footer span { color:var(--gold); }
+
+  /* ── REVEAL ── */
+  .reveal { opacity:0; transform:translateY(22px); transition:opacity .6s,transform .6s; }
+  .reveal.visible { opacity:1; transform:none; }
+</style>
 </head>
-<body data-lang="he">
-  <header class="header" role="banner">
-    <h1 class="header-title" role="heading" aria-level="1" data-translate="main_title">תיקון השם</h1>
-    <nav role="navigation" aria-label="תפריט ראשי">
-      <button class="menu-toggle" aria-label="פתיחת תפריט" aria-expanded="false" id="menu-toggle-btn">
-        <span class="sr-only">תפריט</span>
-      </button>
-      <div class="language-bar">
-        <div class="language-option active" data-lang="he" data-translate="lang_he">עברית</div>
-        <div class="language-option" data-lang="ru" data-translate="lang_ru">רוסית</div>
-        <div class="language-option" data-lang="phonetic" data-translate="lang_phonetic">תעתיק</div>
-      </div>
-    </nav>
-  </header>
-  
-  <main class="container" role="main">
-    <a href="#main-content" class="skip-link" tabindex="0">דלג לתוכן הראשי</a>
-    <section class="hero floating-letters-container" id="heroSection" aria-labelledby="hero-title">
-      <h2 id="hero-title" class="hero-title" data-translate="hero_title">תהילים ותפילות</h2>
-      <p class="hero-text" data-translate="hero_text">קריאת תהילים ותפילות בעברית</p>
-      <div class="button-group" role="group" aria-label="פעולות ראשיות">
-        <a href="tehilim.html" class="button button-primary" role="button" tabindex="0" aria-label="קריאת תהילים" data-translate="read_psalms">קריאת תהילים</a>
-        <a href="siddur.html" class="button button-outline" role="button" tabindex="0" aria-label="סידור" data-translate="siddur">סידור</a>
-      </div>
-    </section>
-    
-    <section aria-labelledby="language-title">
-      <h2 id="language-title" class="section-title">בחר שפה</h2>
-      <div class="language-bar" role="radiogroup" aria-labelledby="language-title">
-        <div class="language-option" role="radio" aria-checked="false" tabindex="0" data-lang="ru" aria-label="רוסית">רוסית</div>
-        <div class="language-option active" role="radio" aria-checked="true" tabindex="0" data-lang="he" aria-label="עברית">עברית</div>
-      </div>
-    </section>
-    
-    <section aria-labelledby="memorial-title">
-      <h2 id="memorial-title" class="section-title">שירות אזכרה</h2>
-      <form class="memorial-form" role="form" aria-labelledby="memorial-title" autocomplete="off" onsubmit="return false;">
-        <h3 class="form-title">הזן שם נפטר</h3>
-        <div class="form-group">
-          <label for="deceased-name" class="form-label">שם</label>
-          <input type="text" id="deceased-name" class="form-control" aria-required="true" aria-label="שם הנפטר" required tabindex="0">
-        </div>
-        <div class="form-group">
-          <label for="mother-name" class="form-label">שם האם</label>
-          <input type="text" id="mother-name" class="form-control" aria-label="שם האם" tabindex="0">
-        </div>
-        <button type="submit" class="button button-primary" id="memorial-submit" aria-label="המשך" tabindex="0">המשך</button>
-      </form>
-    </section>
-    
-    <section aria-labelledby="features-title">
-      <h2 id="features-title" class="section-title">אפשרויות</h2>
-      
-      <div id="hebrewCalendar" class="hebrew-calendar" aria-label="לוח שנה עברי"></div>
-      
-      <div class="card-grid">
-        <div class="card" role="article" tabindex="0" aria-label="קריאת תהילים">
-          <div class="card-content">
-            <div class="card-icon" aria-hidden="true">📖</div>
-            <h3 class="card-title">קריאת תהילים</h3>
-            <p class="card-text">טקסט מלא של תהילים עם ניווט נוח</p>
-            <div class="card-action">
-              <a href="/tehilim.html" class="card-link" tabindex="0" aria-label="קרא תהילים">קרא</a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="card" role="article" tabindex="0" aria-label="לעילוי נשמת">
-          <div class="card-content">
-            <div class="card-icon" aria-hidden="true">🕯️</div>
-            <h3 class="card-title">לעילוי נשמת</h3>
-            <p class="card-text">תפילות מיוחדות לעילוי נשמת הנפטרים</p>
-            <div class="card-action">
-              <a href="memorial.html" class="card-link" tabindex="0" aria-label="קרא תפילות">קרא תפילות</a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="card" role="article" tabindex="0" aria-label="תהילים קי"ט לפי אותיות">
-          <div class="card-content">
-            <div class="card-icon" aria-hidden="true">📅</div>
-            <h3 class="card-title">תהילים קי"ט לפי אותיות</h3>
-            <p class="card-text">קריאת תהילים קי"ט לפי אותיות שם הנפטר</p>
-            <div class="card-action">
-              <a href="psalm119.html" class="card-link" tabindex="0" aria-label="פתח תהילים קי"ט">פתח תהילים</a>
-            </div>
-          </div>
-        </div>
-        
-        <div class="card" role="article" tabindex="0" aria-label="סידור">
-          <div class="card-content">
-            <div class="card-icon" aria-hidden="true">📝</div>
-            <h3 class="card-title">סידור</h3>
-            <p class="card-text">תפילות יומיות בשלוש שפות</p>
-            <div class="card-action">
-              <a href="siddur.html" class="card-link" tabindex="0" aria-label="פתח סידור">פתח סידור</a>
-            </div>
-          </div>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <span class="nav-logo">⚡ David Patlas</span>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#about"    data-i18n="nav_about">אודות</a></li>
+    <li><a href="#channels" data-i18n="nav_channels">ערוצים</a></li>
+    <li><a href="#projects" data-i18n="nav_projects">פרויקטים</a></li>
+    <li><a href="#contact"  data-i18n="nav_contact">צור קשר</a></li>
+  </ul>
+  <div class="lang-switcher">
+    <button class="lang-btn active" onclick="setLang('he')">עב</button>
+    <button class="lang-btn"        onclick="setLang('en')">EN</button>
+    <button class="lang-btn"        onclick="setLang('ru')">РУ</button>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-photo-wrap">
+      <img class="hero-photo" src="https://github.com/DavidPatlas-AI.png" alt="David Patlas"
+           onerror="this.style.display='none';document.getElementById('av').style.display='flex'">
+      <div class="avatar-fallback" id="av">DP</div>
+      <div class="hero-photo-ring"></div>
+      <span class="hero-photo-badge" data-i18n="available">✓ זמין</span>
+    </div>
+
+    <div class="hero-badge" data-i18n="hero_badge">🚀 מפתח · יוצר דיגיטלי · מנהל רשתות</div>
+    <h1 class="hero-title">David <span>Patlas</span></h1>
+    <p class="hero-sub" data-i18n="hero_sub">בונה פלטפורמות חינוכיות, כלי AI ומשחקים — ומנהל נוכחות דיגיטלית רב-ערוצית בעברית, רוסית ואנגלית</p>
+    <p class="hero-tagline" data-i18n="hero_tagline">"קוד שמשרת קהילה — זה הפרויקט האמיתי"</p>
+
+    <div class="hero-stats">
+      <div class="stat"><span class="num">52+</span><span class="lbl" data-i18n="stat_projects">פרויקטים</span></div>
+      <div class="stat"><span class="num">24</span><span class="lbl" data-i18n="stat_ready">מוכנים לפרסום</span></div>
+      <div class="stat"><span class="num">3</span><span class="lbl" data-i18n="stat_langs">שפות</span></div>
+      <div class="stat"><span class="num">4</span><span class="lbl" data-i18n="stat_channels">ערוצי תוכן</span></div>
+    </div>
+
+    <div class="btns">
+      <a href="#projects" class="btn btn-gold" data-i18n="btn_projects">📂 הפרויקטים שלי</a>
+      <a href="#channels" class="btn btn-outline" data-i18n="btn_channels">📺 ערוצי התוכן</a>
+      <a href="https://github.com/DavidPatlas-AI" target="_blank" class="btn btn-outline">🐙 GitHub</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="container reveal">
+    <p class="sec-title"><span data-i18n="about_title">על עצמי</span></p>
+    <div class="divider"></div>
+    <p class="sec-sub" data-i18n="about_sub">מי אני ומה אני בונה</p>
+    <div class="about-grid">
+      <div class="about-text">
+        <p data-i18n="about_p1">שלום! אני <strong>דוד פטלס</strong> — מפתח Full Stack, יוצר תוכן דיגיטלי ומנהל נוכחות מקוונת.</p>
+        <p data-i18n="about_p2">בניתי עשרות פרויקטים: <strong>פלטפורמות חינוכיות לקהילה החרדית</strong>, כלי AI, משחקי HTML5, ויג'טים לשולחן העבודה, כלי CRM ושיווק — ועוד.</p>
+        <p data-i18n="about_p3">במקביל לפיתוח, אני מנהל את <strong>הנוכחות הדיגיטלית</strong> של ערוץ YouTube, אתר, TikTok וטוויטר — עם תוכן תורני ויהודי בעברית, רוסית ואנגלית. אני מאמין שטכנולוגיה חזקה היא זו שמשרתת קהילה אמיתית.</p>
+        <div class="chips">
+          <span class="chip gold">HTML5 / CSS3</span>
+          <span class="chip gold">JavaScript</span>
+          <span class="chip gold">Python</span>
+          <span class="chip gold">React / TSX</span>
+          <span class="chip gold">Electron</span>
+          <span class="chip gold">Node.js</span>
+          <span class="chip">Netlify</span>
+          <span class="chip">AI / ML</span>
+          <span class="chip">Rainmeter</span>
+          <span class="chip">WhatsApp Bot</span>
+          <span class="chip" data-i18n="chip_social">ניהול רשתות</span>
+          <span class="chip" data-i18n="chip_ui">עיצוב UI/UX</span>
         </div>
       </div>
-    </section>
-    
-    <section aria-labelledby="tools-title">
-      <h2 id="tools-title" class="section-title">כלים נוספים</h2>
-      <div class="tools-grid">
-        <button class="tool-button" id="toggle-name-highlight" aria-pressed="false" aria-label="הדגשת שמות קדושים" tabindex="0" data-translate="highlight_names">הדגשת שמות קדושים</button>
-        <button class="tool-button" id="toggle-dark-mode" aria-pressed="false" aria-label="מצב לילה" tabindex="0" data-translate="dark_mode">מצב לילה</button>
-        <button class="tool-button" id="toggle-font-size" aria-label="גודל טקסט" tabindex="0" data-translate="font_size">גודל טקסט</button>
-        <button class="tool-button" id="toggle-notifications" aria-pressed="false" aria-label="התראות" tabindex="0" data-translate="notifications">התראות</button>
+      <div>
+        <div class="about-card">
+          <h3 data-i18n="timeline_title">⚡ ציר הזמן</h3>
+          <div class="tl-item"><div class="tl-dot"></div>
+            <p><strong data-i18n="tl1_title">2025–2026 — פיתוח נרחב</strong>
+            <span data-i18n="tl1_desc">סמסטר של יצירה: 24+ פרויקטים — AI, חינוך, כלים ומשחקים</span></p></div>
+          <div class="tl-item"><div class="tl-dot"></div>
+            <p><strong data-i18n="tl2_title">2024–2025 — פלטפורמות</strong>
+            <span data-i18n="tl2_desc">מתמטיקה לחרדים, מסלול רכב, האלגוריתם שחזר בתשובה</span></p></div>
+          <div class="tl-item"><div class="tl-dot"></div>
+            <p><strong data-i18n="tl3_title">2023+ — ניהול דיגיטלי</strong>
+            <span data-i18n="tl3_desc">ניהול YouTube, TikTok, אתר וטוויטר בשלוש שפות</span></p></div>
+          <div class="tl-item"><div class="tl-dot"></div>
+            <p><strong data-i18n="tl4_title">לימודים — פעמי עתידים</strong>
+            <span data-i18n="tl4_desc">תכנות, Python, רשתות תקשורת ופיתוח ווב</span></p></div>
+        </div>
       </div>
-    </section>
-    <div id="app"></div>
-  </main>
-  
-  <footer role="contentinfo">
-    <p data-translate="footer">© 2024 תיקון השם. כל הזכויות שמורות.</p>
-  </footer>
-  
-  <div id="offline-banner" style="display:none; background:#ffc107; color:#222; text-align:center; padding:10px; font-weight:600; position:fixed; top:0; left:0; right:0; z-index:4000;">אתה במצב Offline — מוצגת גרסה שמורה</div>
-  
-  <script>
-    // --- GLOBAL ERROR HANDLING ---
-    window.onerror = function(message, source, lineno, colno, error) {
-      if (typeof showUserMessage === 'function') showUserMessage('שגיאה: ' + message, 'error', 6000);
-      console.error('Global error:', message, source, lineno, colno, error);
-      return true;
-    };
-    window.onunhandledrejection = function(event) {
-      if (typeof showUserMessage === 'function') showUserMessage('שגיאת Promise: ' + event.reason, 'error', 6000);
-      console.error('Unhandled Promise:', event.reason);
-      return true;
-    };
-    // --- STORAGE SYNC (סנכרון בין טאבים) ---
-    window.addEventListener('storage', function(e) {
-      if (e.key === 'lang') {
-        AppState.actions.setLanguage(e.newValue);
-      }
-      if (e.key === 'darkMode') {
-        const isDark = e.newValue === 'true';
-        AppState.setState({ isDarkMode: isDark });
-        document.body.classList.toggle('dark-mode', isDark);
-      }
-      if (e.key === 'fontSize') {
-        const size = parseInt(e.newValue, 10);
-        if (!isNaN(size)) document.documentElement.style.fontSize = size + 'px';
-      }
-      // ...הוסף כאן סנכרון למועדפים, יארצייטים וכו'...
-    });
-    // --- DOM CACHING ---
-    const languageOptions = Array.from(document.querySelectorAll('.language-option'));
-    const toolButtons = Array.from(document.querySelectorAll('.tool-button'));
-    const cards = Array.from(document.querySelectorAll('.card'));
-    // --- ניהול שפה אחיד ---
-    languageOptions.forEach(option => {
-      option.addEventListener('click', function() {
-        languageOptions.forEach(opt => opt.classList.remove('active'));
-        this.classList.add('active');
-        const selectedLang = this.dataset.lang;
-        localStorage.setItem('lang', selectedLang);
-        if (typeof setLanguage === 'function') setLanguage(selectedLang);
-        AppState.actions.setLanguage(selectedLang);
-      });
-    });
-    // --- נגישות ---
-    ['.button', '.button-primary', '.tool-button', '.card', '.card-link', '.bottom-nav-item', '.language-option', '.menu-toggle'].forEach(sel => {
-      document.querySelectorAll(sel).forEach(el => {
-        if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
-        if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', el.textContent.trim());
-      });
-    });
-    // --- עטיפת fetch עם dataManager ---
-    async function fetchPsalmsList() {
-      if (window.dataManager && typeof window.dataManager.loadPsalmsList === 'function') {
-        return await window.dataManager.loadPsalmsList();
-      }
-      // fallback
-      return [];
-    }
-    // --- טיפול שגיאות גלובלי כבר קיים למעלה ---
-    // --- שאר הלוגיקה נשארת דומה, אך כל קריאה ל-innerHTML/fetch/localStorage תעבור דרך המנהלים החדשים ---
+    </div>
+  </div>
+</section>
 
-    document.addEventListener('DOMContentLoaded', () => {
-      loadPage(location.hash.slice(1) || 'home');
-    });
-    
-    // --- ניהול שפה אחיד ---
-    document.addEventListener('DOMContentLoaded', function() {
-      // החלפת שפות
-      const languageOptions = document.querySelectorAll('.language-option');
-      languageOptions.forEach(option => {
-        option.addEventListener('click', function() {
-          languageOptions.forEach(opt => opt.classList.remove('active'));
-          this.classList.add('active');
-          const selectedLang = this.dataset.lang;
-          localStorage.setItem('lang', selectedLang);
-          if (typeof setLanguage === 'function') setLanguage(selectedLang);
-          console.log('נבחרה שפה:', selectedLang);
-        });
-      });
-      
-      // שחזור השפה המועדפת בטעינת הדף
-      const savedLang = localStorage.getItem('lang');
-      if (savedLang && typeof setLanguage === 'function') {
-        setLanguage(savedLang);
-      }
-      
-      // טיפול בטופס שם הנפטר
-      const memorialSubmit = document.getElementById('memorial-submit');
-      if (memorialSubmit) {
-        memorialSubmit.addEventListener('click', function(e) {
-          e.preventDefault();
-          const deceasedNameInput = document.getElementById('deceased-name');
-          const motherNameInput = document.getElementById('mother-name');
-          const deceasedName = deceasedNameInput ? sanitizeInput(deceasedNameInput.value.trim()) : '';
-          const motherName = motherNameInput ? sanitizeInput(motherNameInput.value.trim()) : '';
-          if (!deceasedName) {
-            showUserMessage('אנא הזן שם נפטר', 'warning');
-            if (deceasedNameInput) deceasedNameInput.focus();
-            return;
-          }
-          window.location.href = 'psalm119.html?name=' + encodeURIComponent(deceasedName) + '&mother=' + encodeURIComponent(motherName);
-        });
-      }
-      
-      // טיפול בכרטיסיות למעבר מהיר
-      const cards = document.querySelectorAll('.card');
-      cards.forEach(card => {
-        card.addEventListener('click', function() {
-          const link = this.querySelector('.card-link');
-          if (link) {
-            link.click();
-          }
-        });
-      });
-      
-      // הדגשת שמות קדושים (שימוש ב-correctText מ-js/corrector.js)
-      function highlightDivineNamesInPage() {
-        if (typeof correctText !== 'function') return;
-        document.querySelectorAll('.card-text, .hero-text, .section-title').forEach(el => {
-          if (!el.dataset.originalText) el.dataset.originalText = el.textContent;
-          const result = correctText(el.dataset.originalText, 'hebrew');
-          el.innerHTML = result.html;
-        });
-      }
-      function removeHighlightDivineNamesInPage() {
-        document.querySelectorAll('.card-text, .hero-text, .section-title').forEach(el => {
-          if (el.dataset.originalText) el.textContent = el.dataset.originalText;
-        });
-      }
-      function toggleNameHighlightMode() {
-        document.body.classList.toggle('highlight-names');
-        const btn = document.getElementById('toggle-name-highlight');
-        if (btn) {
-          const isActive = document.body.classList.contains('highlight-names');
-          btn.setAttribute('aria-pressed', isActive);
-          btn.classList.toggle('active', isActive);
-          showUserMessage(isActive ? 'הדגשת שמות הופעלה' : 'הדגשה בוטלה', 'info');
-        }
-        if (document.body.classList.contains('highlight-names')) {
-          highlightDivineNamesInPage();
-        } else {
-          removeHighlightDivineNamesInPage();
-        }
-      }
-      const toggleNameHighlight = document.getElementById('toggle-name-highlight');
-      if (toggleNameHighlight) {
-        toggleNameHighlight.addEventListener('click', toggleNameHighlightMode);
-      }
-      
-      // תמיכה במקלדת: מעבר עם חיצים בין כרטיסיות/כפתורים
-      document.querySelectorAll('.card, .tool-button, .language-option').forEach(el => {
-        el.addEventListener('keydown', function(e) {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            this.click();
-          }
-        });
-      });
-      
-      // טיפול בכפתורי כלים (tool-button)
-      function toggleDarkMode() {
-        document.body.classList.toggle('dark-mode');
-        const btn = document.getElementById('toggle-dark-mode');
-        if (btn) {
-          const isDark = document.body.classList.contains('dark-mode');
-          btn.setAttribute('aria-pressed', isDark);
-          btn.classList.toggle('active', isDark);
-        }
-        showUserMessage(document.body.classList.contains('dark-mode') ? 'מצב לילה הופעל' : 'מצב לילה בוטל', 'info');
-        localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-      }
-      function toggleFontSize() {
-        const html = document.documentElement;
-        let size = parseInt(html.style.fontSize || 16);
-        size = size >= 22 ? 16 : size + 2;
-        html.style.fontSize = size + 'px';
-        showUserMessage('גודל הטקסט שונה ל-' + size + 'px', 'info');
-        localStorage.setItem('fontSize', size);
-      }
-      function toggleNotifications() {
-        const btn = document.getElementById('toggle-notifications');
-        if ('Notification' in window) {
-          if (Notification.permission === 'granted') {
-            showUserMessage('התראות כבר מאושרות', 'success');
-          } else if (Notification.permission !== 'denied') {
-            Notification.requestPermission().then(permission => {
-              if (permission === 'granted') {
-                showUserMessage('התראות הופעלו', 'success');
-              } else {
-                showUserMessage('הרשאת התראות נדחתה', 'warning');
-              }
-            });
-          } else {
-            showUserMessage('הרשאת התראות נדחתה', 'warning');
-          }
-        } else {
-          showUserMessage('הדפדפן לא תומך בהתראות', 'error');
-        }
-        if (btn) {
-          btn.setAttribute('aria-pressed', btn.getAttribute('aria-pressed') === 'true' ? 'false' : 'true');
-          btn.classList.toggle('active');
-        }
-      }
-      const darkModeBtn = document.getElementById('toggle-dark-mode');
-      if (darkModeBtn) darkModeBtn.addEventListener('click', toggleDarkMode);
-      const fontSizeBtn = document.getElementById('toggle-font-size');
-      if (fontSizeBtn) fontSizeBtn.addEventListener('click', toggleFontSize);
-      const notificationsBtn = document.getElementById('toggle-notifications');
-      if (notificationsBtn) notificationsBtn.addEventListener('click', toggleNotifications);
-      // טעינת העדפות משתמש
-      if (localStorage.getItem('darkMode') === 'true') toggleDarkMode();
-      if (localStorage.getItem('fontSize')) {
-        let fontSize = parseInt(localStorage.getItem('fontSize'), 10);
-        if (!isNaN(fontSize)) document.documentElement.style.fontSize = fontSize + 'px';
-      }
-      // טיפול בכפתורים לא פעילים (placeholders)
-      document.querySelectorAll('.tool-button, .memorial-tool, .button-primary').forEach(btn => {
-        const isAnchor = btn.tagName === 'A' && btn.getAttribute('href');
-        if (!isAnchor && !btn.onclick && !btn.hasAttribute('data-action')) {
-          disableButton(btn);
-        }
-      });
+<!-- ══ CHANNELS ══ -->
+<section id="channels" style="background:var(--dark2);">
+  <div class="container reveal">
+    <p class="sec-title"><span data-i18n="channels_title">ערוצי תוכן</span></p>
+    <div class="divider"></div>
+    <p class="sec-sub" data-i18n="channels_sub">נוכחות דיגיטלית רב-ערוצית שאני בונה ומנהל</p>
+    <div class="ch-grid">
+      <a class="ch-card" href="https://www.youtube.com/channel/UCYg7xpzYX85wh5cptQhYR0g" target="_blank">
+        <span class="ch-icon">📺</span>
+        <span class="ch-name">YouTube — Tzvi Patlas</span>
+        <span class="ch-handle">@tzvipatlas</span>
+        <span class="ch-desc" data-i18n="ch_yt">שיעורי תורה, פרשת שבוע ומשניות — ברוסית ועברית. בניתי ומנהל את כל התוכן הדיגיטלי.</span>
+      </a>
+      <a class="ch-card" href="https://zvi-patlas.com" target="_blank">
+        <span class="ch-icon">🌐</span>
+        <span class="ch-name">zvi-patlas.com</span>
+        <span class="ch-handle" data-i18n="ch_site_handle">פלטפורמת לימוד יהודית</span>
+        <span class="ch-desc" data-i18n="ch_site">אתר לימוד תורה עם שיעורים, מאמרים וספרי פרדס — פיתחתי ואני מנהל.</span>
+      </a>
+      <a class="ch-card" href="https://www.tiktok.com/@tzvipatlas" target="_blank">
+        <span class="ch-icon">🎵</span>
+        <span class="ch-name">TikTok</span>
+        <span class="ch-handle">@tzvipatlas</span>
+        <span class="ch-desc" data-i18n="ch_tt">תוכן יהודי קצר לקהל רחב — עורך, מפיק ומנהל.</span>
+      </a>
+      <a class="ch-card" href="https://x.com/zeuzonsher" target="_blank">
+        <span class="ch-icon">𝕏</span>
+        <span class="ch-name">Twitter / X</span>
+        <span class="ch-handle">@zeuzonsher</span>
+        <span class="ch-desc" data-i18n="ch_x">פרויקטים, מחשבות על AI ופיתוח — לקהל הטכני.</span>
+      </a>
+      <a class="ch-card" href="https://storied-alfajores-6f10d2.netlify.app/" target="_blank">
+        <span class="ch-icon">🏗️</span>
+        <span class="ch-name">Patlas Innovation Center</span>
+        <span class="ch-handle" data-i18n="ch_pic_handle">תיק עבודות קודם</span>
+        <span class="ch-desc" data-i18n="ch_pic">34+ פרויקטים מוצגים — אתר תיק עבודות שבניתי.</span>
+      </a>
+      <a class="ch-card" href="https://github.com/DavidPatlas-AI" target="_blank">
+        <span class="ch-icon">🐙</span>
+        <span class="ch-name">GitHub</span>
+        <span class="ch-handle">DavidPatlas-AI</span>
+        <span class="ch-desc" data-i18n="ch_gh">כלים, משחקים, AI וחינוך — קוד פתוח לקהילה.</span>
+      </a>
+    </div>
+  </div>
+</section>
 
-      // חיבור כפתור תפריט (menu-toggle)
-      const menuToggleBtn = document.getElementById('menu-toggle-btn');
-      if (menuToggleBtn) {
-        menuToggleBtn.addEventListener('click', function() {
-          // Toggle menu open/close (implement your menu logic here)
-          const expanded = this.getAttribute('aria-expanded') === 'true';
-          this.setAttribute('aria-expanded', !expanded);
-          showUserMessage(!expanded ? 'התפריט נפתח' : 'התפריט נסגר', 'info');
-          // TODO: Add actual menu open/close logic
-        });
-        menuToggleBtn.title = 'פתח/סגור תפריט';
-      }
+<!-- ══ PROJECTS ══ -->
+<section id="projects">
+  <div class="container reveal">
+    <p class="sec-title"><span data-i18n="proj_title">הפרויקטים שלי</span></p>
+    <div class="divider"></div>
+    <p class="sec-sub" data-i18n="proj_sub">52+ פרויקטים — ממשחקים וכלי AI ועד פלטפורמות חינוכיות שלמות</p>
+    <div class="filter-row">
+      <button class="fbtn active" onclick="filter('all',this)"   data-i18n="f_all">🔥 הכל</button>
+      <button class="fbtn"        onclick="filter('flag',this)"  data-i18n="f_flag">🚀 דגל</button>
+      <button class="fbtn"        onclick="filter('ai',this)"    data-i18n="f_ai">🤖 AI</button>
+      <button class="fbtn"        onclick="filter('games',this)" data-i18n="f_games">🎮 משחקים</button>
+      <button class="fbtn"        onclick="filter('jewish',this)"data-i18n="f_jewish">✡️ יהודי</button>
+      <button class="fbtn"        onclick="filter('edu',this)"   data-i18n="f_edu">📚 חינוך</button>
+      <button class="fbtn"        onclick="filter('biz',this)"   data-i18n="f_biz">💼 עסקים</button>
+      <button class="fbtn"        onclick="filter('dev',this)"   data-i18n="f_dev">🛠️ כלי מפתחים</button>
+    </div>
+    <div class="proj-grid" id="proj-grid">
 
-      // הוספת tooltip לכל כפתור עם aria-label
-      document.querySelectorAll('button[aria-label], a[aria-label]').forEach(el => {
-        if (!el.title) el.title = el.getAttribute('aria-label');
-      });
+      <!-- FLAGSHIP -->
+      <div class="proj-card" data-cat="flag">
+        <div class="proj-cat" data-i18n="cat_flag">🚀 פרויקט דגל</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="p1_name">מתמטיקה לחרדים</span><span class="badge live">🟢 Live</span></div>
+        <p class="proj-desc" data-i18n="p1_desc">פלטפורמת מתמטיקה מלאה לקהילה החרדית — 90+ שיעורים, אנימציות, GeoGebra, מבחנים ו-PWA.</p>
+        <div class="proj-tags"><span class="tag">HTML5</span><span class="tag">GeoGebra</span><span class="tag">PWA</span><span class="tag">Netlify</span></div>
+        <div class="proj-links">
+          <a href="https://math-haredim.netlify.app" target="_blank" class="plink demo">▶ Demo</a>
+          <a href="https://github.com/DavidPatlas-AI/math-haredim" target="_blank" class="plink gh">GitHub</a>
+        </div>
+      </div>
 
-      // DEBUG: מצא כפתורים ללא האנדלר
-      document.querySelectorAll('button, a[role="button"]').forEach(btn => {
-        const hasHandler = btn.onclick || btn.hasAttribute('data-action') || btn.id.startsWith('toggle-') || btn.classList.contains('menu-toggle');
-        if (!hasHandler) {
-          console.warn('Button without handler:', btn);
-        }
-      });
+      <div class="proj-card" data-cat="flag">
+        <div class="proj-cat" data-i18n="cat_flag">🚀 פרויקט דגל</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="p2_name">מסלול רכב</span><span class="badge live">🟢 Live</span></div>
+        <p class="proj-desc" data-i18n="p2_desc">קורס מכונאות רכב אינטראקטיבי — מאגר 19,000+ דגמי רכב, מוסך חי ולימוד בווצאפ-בוט.</p>
+        <div class="proj-tags"><span class="tag">HTML</span><span class="tag">Node.js</span><span class="tag">WhatsApp Bot</span><span class="tag">Netlify</span></div>
+        <div class="proj-links">
+          <a href="https://maslul-rechev-2026.netlify.app" target="_blank" class="plink demo">▶ Demo</a>
+        </div>
+      </div>
 
-      // --- Offline banner ---
-      function showOfflineBanner(show) {
-        const banner = document.getElementById('offline-banner');
-        if (banner) banner.style.display = show ? 'block' : 'none';
-      }
-      function isOnline() { return navigator.onLine; }
-      window.addEventListener('offline', () => {
-        showOfflineBanner(true);
-        showUserMessage('אתה במצב Offline — מוצגת גרסה שמורה', 'warning');
-      });
-      window.addEventListener('online', () => {
-        showOfflineBanner(false);
-        showUserMessage('חזרת למצב Online', 'success');
-      });
-      if (!isOnline()) showOfflineBanner(true);
-    });
+      <div class="proj-card" data-cat="flag">
+        <div class="proj-cat" data-i18n="cat_flag">🚀 פרויקט דגל</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="p3_name">האלגוריתם שחזר בתשובה</span><span class="badge live">🟢 GitHub</span></div>
+        <p class="proj-desc" data-i18n="p3_desc">תוסף דפדפן + אגנט AI בסגנון קליפי — מסווג פוסטים בפיד ולוחץ "לא מעניין" אוטומטית.</p>
+        <div class="proj-tags"><span class="tag">Electron</span><span class="tag">Chrome Ext.</span><span class="tag">AI</span><span class="tag">Node.js</span></div>
+        <div class="proj-links">
+          <a href="https://github.com/DavidPatlas-AI/teshuva-algorithm" target="_blank" class="plink demo">▶ GitHub</a>
+        </div>
+      </div>
 
-    // 1. tabindex ו-aria-label לכל כפתור/קישור/כרטיסיה
-    ['.button', '.button-primary', '.tool-button', '.card', '.card-link', '.bottom-nav-item', '.language-option', '.menu-toggle'].forEach(sel => {
-      document.querySelectorAll(sel).forEach(el => {
-        if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
-        if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', el.textContent.trim());
-      });
-    });
-    // 2. aria-live="polite" למיכל הודעות
-    const msgContainer = document.querySelector('.user-messages');
-    if (msgContainer && !msgContainer.hasAttribute('aria-live')) {
-      msgContainer.setAttribute('aria-live', 'polite');
-    }
-    // 3. disableButton לכל כפתור placeholder
-    ['.button', '.button-primary', '.tool-button'].forEach(sel => {
-      document.querySelectorAll(sel).forEach(btn => {
-        const isAnchor = btn.tagName === 'A' && btn.getAttribute('href');
-        if (!isAnchor && !btn.onclick && !btn.hasAttribute('data-action')) {
-          disableButton(btn);
-        }
-      });
-    });
-    // 4. בדיקת קיום לכל DOM access
-    function safeGet(id) { return document.getElementById(id) || null; }
-    // דוגמה: const el = safeGet('deceased-name'); if (el) { ... }
-    // 5. כל הודעה למשתמש, fetch, שפה - רק דרך הפונקציות המרכזיות (כבר מיושם)
-    // 6. keydown ל-Enter/Space לכל אלמנט אינטראקטיבי
-    ['.button', '.button-primary', '.tool-button', '.card', '.card-link', '.bottom-nav-item', '.language-option', '.menu-toggle'].forEach(sel => {
-      document.querySelectorAll(sel).forEach(el => {
-        el.addEventListener('keydown', function(e) {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            this.click();
-          }
-        });
-      });
-    });
+      <div class="proj-card" data-cat="flag jewish">
+        <div class="proj-cat" data-i18n="cat_flag">🚀 פרויקט דגל</div>
+        <div class="proj-head"><span class="proj-name">YomiWidget</span><span class="badge live">🟢 Live</span></div>
+        <p class="proj-desc" data-i18n="p4_desc">ויג'ט שולחן עבודה: תאריך עברי, פרשת שבוע, זמני היום (Hebcal API) ושעון דיגיטלי.</p>
+        <div class="proj-tags"><span class="tag">Python</span><span class="tag">Rainmeter</span><span class="tag">Hebcal API</span></div>
+        <div class="proj-links">
+          <a href="https://github.com/DavidPatlas-AI" target="_blank" class="plink gh">GitHub</a>
+        </div>
+      </div>
 
-    function loadScript(src, callback = null) {
-      if (document.querySelector(`script[src="${src}"]`)) {
-        if (callback) callback();
-        return;
-      }
-      const script = document.createElement('script');
-      script.src = src;
-      script.async = true;
-      if (callback) script.onload = callback;
-      document.head.appendChild(script);
-    }
+      <!-- AI -->
+      <div class="proj-card" data-cat="ai jewish">
+        <div class="proj-cat" data-i18n="cat_ai">🤖 כלי AI</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="p5_name">בודק אתרוגים</span><span class="badge wip">🟡 בקרוב</span></div>
+        <p class="proj-desc" data-i18n="p5_desc">זיהוי פסולים, כתמים ואיכות אתרוגים בעזרת Computer Vision.</p>
+        <div class="proj-tags"><span class="tag">AI</span><span class="tag">Computer Vision</span><span class="tag">HTML</span></div>
+      </div>
 
-    const AppState = {
-      state: {
-        language: localStorage.getItem('lang') || 'he',
-        isDarkMode: localStorage.getItem('darkMode') === 'true',
-        fontSize: parseInt(localStorage.getItem('fontSize') || '16', 10),
-        // ...עוד
-      },
-      listeners: [],
-      getState() { return this.state; },
-      setState(partialState, persist = true) {
-        this.state = { ...this.state, ...partialState };
-        if (persist) this.persistState();
-        this.notifyListeners();
-      },
-      persistState() {
-        localStorage.setItem('lang', this.state.language);
-        localStorage.setItem('darkMode', this.state.isDarkMode);
-        localStorage.setItem('fontSize', this.state.fontSize);
-        // ...עוד
-      },
-      subscribe(listener) { this.listeners.push(listener); },
-      notifyListeners() { this.listeners.forEach(l => l(this.state)); },
-      actions: {
-        setLanguage(language) {
-          AppState.setState({ language });
-          document.body.setAttribute('data-lang', language);
-          document.documentElement.dir = language === 'he' ? 'rtl' : 'ltr';
-          document.querySelectorAll('.language-option').forEach(option => {
-            option.classList.toggle('active', option.dataset.lang === language);
-          });
-        },
-        toggleDarkMode() {
-          const newDarkMode = !AppState.state.isDarkMode;
-          AppState.setState({ isDarkMode: newDarkMode });
-          document.body.classList.toggle('dark-mode', newDarkMode);
-        }
-        // ...עוד
-      }
-    };
+      <div class="proj-card" data-cat="ai">
+        <div class="proj-cat" data-i18n="cat_ai">🤖 כלי AI</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="p6_name">מזהה רגשות</span><span class="badge wip">🟡 בקרוב</span></div>
+        <p class="proj-desc" data-i18n="p6_desc">כלי NLP לזיהוי רגשות בטקסט עברי — ניתוח סנטימנט עם ממשק נקי.</p>
+        <div class="proj-tags"><span class="tag">AI</span><span class="tag">NLP</span><span class="tag">Hebrew</span></div>
+      </div>
 
-    AppState.actions.setLanguage('ru');
-    AppState.actions.toggleDarkMode();
-    AppState.subscribe(state => { /* עדכן UI */ });
+      <div class="proj-card" data-cat="ai">
+        <div class="proj-cat" data-i18n="cat_ai">🤖 כלי AI</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="p7_name">ID מפענח ובודק</span><span class="badge wip">🟡 בקרוב</span></div>
+        <p class="proj-desc" data-i18n="p7_desc">סריקה וניתוח תעודות זהות ישראליות — React, OCR, ממשק RTL מלא.</p>
+        <div class="proj-tags"><span class="tag">React</span><span class="tag">OCR</span><span class="tag">AI</span></div>
+      </div>
 
-    const performanceMonitor = {
-      metrics: { pageLoadTime: 0, resourceLoadTimes: {}, errors: [] },
-      start() { this.startTime = performance.now(); },
-      end() {
-        this.metrics.pageLoadTime = performance.now() - this.startTime;
-        console.log('Page Load Time:', this.metrics.pageLoadTime);
-      }
-    };
-    performanceMonitor.start();
-    window.addEventListener('load', () => performanceMonitor.end());
-  </script>
+      <div class="proj-card" data-cat="ai">
+        <div class="proj-cat" data-i18n="cat_ai">🤖 כלי AI</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="p8_name">מערכת אימון מודל</span><span class="badge wip">🟡 בקרוב</span></div>
+        <p class="proj-desc" data-i18n="p8_desc">ממשק עברי לאימון מודלי ML — עיבוד תמונות, Python ו-BAT scripts.</p>
+        <div class="proj-tags"><span class="tag">Python</span><span class="tag">ML</span><span class="tag">AI</span></div>
+      </div>
+
+      <!-- GAMES -->
+      <div class="proj-card" data-cat="games">
+        <div class="proj-cat" data-i18n="cat_games">🎮 משחק</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pg1_name">הכל בכסף</span><span class="badge live">🟢 מוכן</span></div>
+        <p class="proj-desc" data-i18n="pg1_desc">משחק ניחוש מחירים לכל המשפחה — כמה עולה המוצר? חינוכי ומהנה.</p>
+        <div class="proj-tags"><span class="tag">HTML5</span><span class="tag">JS</span><span class="tag">JSON</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="games">
+        <div class="proj-cat" data-i18n="cat_games">🎮 משחק</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pg2_name">פארק שעשועים RCT</span><span class="badge live">🟢 מוכן</span></div>
+        <p class="proj-desc" data-i18n="pg2_desc">בונה פארק שעשועים בסגנון RollerCoaster Tycoon — ישירות בדפדפן, ללא plugins.</p>
+        <div class="proj-tags"><span class="tag">HTML5 Canvas</span><span class="tag">JS</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="games">
+        <div class="proj-cat" data-i18n="cat_games">🎮 משחק</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pg3_name">פטלס משחקים</span><span class="badge live">🟢 מוכן</span></div>
+        <p class="proj-desc" data-i18n="pg3_desc">אוסף משחקי HTML5 — אסטרואידים, ברייקאוט, נינג'ה פרוט, נחש, זיכרון ועוד.</p>
+        <div class="proj-tags"><span class="tag">HTML5</span><span class="tag">Canvas</span><span class="tag">JS</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="games">
+        <div class="proj-cat" data-i18n="cat_games">🎮 משחק</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pg4_name">רחפנים — Cable Vitality</span><span class="badge wip">🟡 בקרוב</span></div>
+        <p class="proj-desc" data-i18n="pg4_desc">סימולציית פיזיקה של רחפנים וכבלים — מנוע פיזיקה ב-Canvas.</p>
+        <div class="proj-tags"><span class="tag">Physics</span><span class="tag">Canvas</span><span class="tag">HTML</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="games edu">
+        <div class="proj-cat" data-i18n="cat_games">🎮 משחק</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pg5_name">משחקים דיגיטליים לילדים</span><span class="badge live">🟢 מוכן</span></div>
+        <p class="proj-desc" data-i18n="pg5_desc">חבילת משחקים חינוכיים לילדים בעברית — לגן ולבית ספר.</p>
+        <div class="proj-tags"><span class="tag">HTML</span><span class="tag">Kids</span><span class="tag">Hebrew</span></div>
+      </div>
+
+      <!-- JEWISH -->
+      <div class="proj-card" data-cat="jewish">
+        <div class="proj-cat" data-i18n="cat_jewish">✡️ כלי יהודי</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pj1_name">שופר</span><span class="badge live">🟢 מוכן</span></div>
+        <p class="proj-desc" data-i18n="pj1_desc">תקיעות אודיו, מידע הלכתי לחגי תשרי — React עם MP3 ועיצוב חגיגי.</p>
+        <div class="proj-tags"><span class="tag">React</span><span class="tag">Audio</span><span class="tag">Judaism</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="jewish">
+        <div class="proj-cat" data-i18n="cat_jewish">✡️ כלי יהודי</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pj2_name">תיקון שם השם ברוסית</span><span class="badge wip">🟡 בקרוב</span></div>
+        <p class="proj-desc" data-i18n="pj2_desc">כלי ייחודי לתיקון כתיב שם ה' בספרים ברוסית — לקהל הדובר רוסית.</p>
+        <div class="proj-tags"><span class="tag">HTML</span><span class="tag">Judaism</span><span class="tag">Russian</span></div>
+      </div>
+
+      <!-- EDU -->
+      <div class="proj-card" data-cat="edu">
+        <div class="proj-cat" data-i18n="cat_edu">📚 חינוך</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pe1_name">שזם נשימות</span><span class="badge live">🟢 מוכן</span></div>
+        <p class="proj-desc" data-i18n="pe1_desc">טיימר נשימות מודרך בעברית — רגיעה, מדיטציה ומיינדפולנס. עיצוב מינימליסטי.</p>
+        <div class="proj-tags"><span class="tag">HTML</span><span class="tag">Animation</span><span class="tag">Wellness</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="edu jewish">
+        <div class="proj-cat" data-i18n="cat_edu">📚 חינוך</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pe2_name">ניהול משק בית חרדי</span><span class="badge wip">🟡 בקרוב</span></div>
+        <p class="proj-desc" data-i18n="pe2_desc">תוכנה offline לניהול תקציב — מותאמת למגזר החרדי, עובדת ללא אינטרנט.</p>
+        <div class="proj-tags"><span class="tag">Python</span><span class="tag">HTML</span><span class="tag">Offline</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="edu">
+        <div class="proj-cat" data-i18n="cat_edu">📚 חינוך</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pe3_name">ספר דיגיטלי אינטראקטיבי</span><span class="badge wip">🟡 בקרוב</span></div>
+        <p class="proj-desc" data-i18n="pe3_desc">פלטפורמת ספר דיגיטלי עם אודיו ותמיכה בריבוי שפות.</p>
+        <div class="proj-tags"><span class="tag">HTML</span><span class="tag">Audio</span><span class="tag">Multi-lang</span></div>
+      </div>
+
+      <!-- BIZ -->
+      <div class="proj-card" data-cat="biz">
+        <div class="proj-cat" data-i18n="cat_biz">💼 כלי עסקים</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pb1_name">לידים מגיבוי ווצאפ</span><span class="badge live">🟢 מוכן</span></div>
+        <p class="proj-desc" data-i18n="pb1_desc">חילוץ לידים מגיבוי WhatsApp — כלי CRM אוטומטי לעסקים קטנים.</p>
+        <div class="proj-tags"><span class="tag">HTML</span><span class="tag">CRM</span><span class="tag">WhatsApp</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="biz">
+        <div class="proj-cat" data-i18n="cat_biz">💼 כלי עסקים</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pb2_name">מחולל קבצי CRM</span><span class="badge live">🟢 מוכן</span></div>
+        <p class="proj-desc" data-i18n="pb2_desc">יצירה אוטומטית של קבצי CRM — ייצוא, סינון וניהול אנשי קשר בלחיצה.</p>
+        <div class="proj-tags"><span class="tag">HTML</span><span class="tag">CRM</span><span class="tag">Automation</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="biz">
+        <div class="proj-cat" data-i18n="cat_biz">💼 כלי עסקים</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pb3_name">מחולל מייל + Aliasing</span><span class="badge live">🟢 מוכן</span></div>
+        <p class="proj-desc" data-i18n="pb3_desc">יצירת כתובות מייל עם + לסינון ספאם ולסדר — מהיר, פשוט ופרטי.</p>
+        <div class="proj-tags"><span class="tag">HTML</span><span class="tag">Privacy</span></div>
+      </div>
+
+      <!-- DEV -->
+      <div class="proj-card" data-cat="dev">
+        <div class="proj-cat" data-i18n="cat_dev">🛠️ כלי מפתח</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pd1_name">מנתח קוד אמיתי</span><span class="badge live">🟢 מוכן</span></div>
+        <p class="proj-desc" data-i18n="pd1_desc">פירוק וניתוח קוד בעומק — זיהוי דפוסים, בעיות ומבנה. לכל שפת תכנות.</p>
+        <div class="proj-tags"><span class="tag">HTML</span><span class="tag">DevTools</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="dev">
+        <div class="proj-cat" data-i18n="cat_dev">🛠️ כלי מפתח</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pd2_name">מפצל קוד מקלוד</span><span class="badge live">🟢 מוכן</span></div>
+        <p class="proj-desc" data-i18n="pd2_desc">מפצל קבצי קוד גדולים מ-Claude — לניהול חכם של תגובות ארוכות.</p>
+        <div class="proj-tags"><span class="tag">HTML</span><span class="tag">Claude</span><span class="tag">AI Tools</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="dev">
+        <div class="proj-cat" data-i18n="cat_dev">🛠️ כלי מפתח</div>
+        <div class="proj-head"><span class="proj-name">CyberOS Platform</span><span class="badge live">🟢 מוכן</span></div>
+        <p class="proj-desc" data-i18n="pd3_desc">פלטפורמת פרויקטים מאוחדת בסגנון OS — ממשק ניהול לכל הכלים.</p>
+        <div class="proj-tags"><span class="tag">HTML</span><span class="tag">Platform</span><span class="tag">UI</span></div>
+      </div>
+
+      <div class="proj-card" data-cat="dev">
+        <div class="proj-cat" data-i18n="cat_dev">🛠️ כלי מפתח</div>
+        <div class="proj-head"><span class="proj-name" data-i18n="pd4_name">אוסף עיצובי CSS</span><span class="badge live">🟢 מוכן</span></div>
+        <p class="proj-desc" data-i18n="pd4_desc">77 אפקטים ועיצובי CSS — אנימציות, כרטיסים, גרדיאנטים. קוד מוכן לשימוש.</p>
+        <div class="proj-tags"><span class="tag">CSS</span><span class="tag">Design</span><span class="tag">Frontend</span></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact" style="background:var(--dark2);">
+  <div class="container reveal">
+    <div class="contact-box">
+      <h3 data-i18n="contact_title">בואו <span style="color:var(--gold)">נשתף פעולה</span></h3>
+      <p data-i18n="contact_sub">מחפש מפתח שגם יוצר תוכן? יש פרויקט? רוצה לשתף פעולה?<br>אני כאן.</p>
+      <div class="contact-links">
+        <a href="mailto:susp4514@gmail.com" class="btn btn-gold" data-i18n="contact_email">✉️ שלח מייל</a>
+        <a href="https://github.com/DavidPatlas-AI" target="_blank" class="btn btn-outline">🐙 GitHub</a>
+        <a href="https://x.com/zeuzonsher" target="_blank" class="btn btn-outline">𝕏 Twitter</a>
+        <a href="https://zvi-patlas.com" target="_blank" class="btn btn-outline">🌐 zvi-patlas.com</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 <span>David Patlas</span> · <span data-i18n="footer_txt">מפתח · יוצר · מנהל דיגיטלי</span></p>
+</footer>
+
+<script>
+// ══ TRANSLATIONS ══
+const T = {
+  he: {
+    dir: 'rtl', lang: 'he',
+    nav_about:'אודות', nav_channels:'ערוצים', nav_projects:'פרויקטים', nav_contact:'צור קשר',
+    available:'✓ זמין',
+    hero_badge:'🚀 מפתח · יוצר דיגיטלי · מנהל רשתות',
+    hero_sub:'בונה פלטפורמות חינוכיות, כלי AI ומשחקים — ומנהל נוכחות דיגיטלית רב-ערוצית בעברית, רוסית ואנגלית',
+    hero_tagline:'"קוד שמשרת קהילה — זה הפרויקט האמיתי"',
+    stat_projects:'פרויקטים', stat_ready:'מוכנים לפרסום', stat_langs:'שפות', stat_channels:'ערוצי תוכן',
+    btn_projects:'📂 הפרויקטים שלי', btn_channels:'📺 ערוצי התוכן',
+    about_title:'על עצמי', about_sub:'מי אני ומה אני בונה',
+    about_p1:'שלום! אני <strong>דוד פטלס</strong> — מפתח Full Stack, יוצר תוכן דיגיטלי ומנהל נוכחות מקוונת.',
+    about_p2:'בניתי עשרות פרויקטים: <strong>פלטפורמות חינוכיות לקהילה החרדית</strong>, כלי AI, משחקי HTML5, ויג\'טים לשולחן העבודה, כלי CRM ושיווק — ועוד.',
+    about_p3:'במקביל לפיתוח, אני מנהל את <strong>הנוכחות הדיגיטלית</strong> של ערוץ YouTube, אתר, TikTok וטוויטר — עם תוכן תורני ויהודי בעברית, רוסית ואנגלית. אני מאמין שטכנולוגיה חזקה היא זו שמשרתת קהילה אמיתית.',
+    chip_social:'ניהול רשתות', chip_ui:'עיצוב UI/UX',
+    timeline_title:'⚡ ציר הזמן',
+    tl1_title:'2025–2026 — פיתוח נרחב', tl1_desc:'סמסטר של יצירה: 24+ פרויקטים — AI, חינוך, כלים ומשחקים',
+    tl2_title:'2024–2025 — פלטפורמות', tl2_desc:'מתמטיקה לחרדים, מסלול רכב, האלגוריתם שחזר בתשובה',
+    tl3_title:'2023+ — ניהול דיגיטלי', tl3_desc:'ניהול YouTube, TikTok, אתר וטוויטר בשלוש שפות',
+    tl4_title:'לימודים — פעמי עתידים', tl4_desc:'תכנות, Python, רשתות תקשורת ופיתוח ווב',
+    channels_title:'ערוצי תוכן', channels_sub:'נוכחות דיגיטלית רב-ערוצית שאני בונה ומנהל',
+    ch_yt:'שיעורי תורה, פרשת שבוע ומשניות — ברוסית ועברית. בניתי ומנהל את כל התוכן הדיגיטלי.',
+    ch_site_handle:'פלטפורמת לימוד יהודית', ch_site:'אתר לימוד תורה עם שיעורים, מאמרים וספרי פרדס — פיתחתי ואני מנהל.',
+    ch_tt:'תוכן יהודי קצר לקהל רחב — עורך, מפיק ומנהל.',
+    ch_x:'פרויקטים, מחשבות על AI ופיתוח — לקהל הטכני.',
+    ch_pic_handle:'תיק עבודות קודם', ch_pic:'34+ פרויקטים מוצגים — אתר תיק עבודות שבניתי.',
+    ch_gh:'כלים, משחקים, AI וחינוך — קוד פתוח לקהילה.',
+    proj_title:'הפרויקטים שלי', proj_sub:'52+ פרויקטים — ממשחקים וכלי AI ועד פלטפורמות חינוכיות שלמות',
+    f_all:'🔥 הכל', f_flag:'🚀 דגל', f_ai:'🤖 AI', f_games:'🎮 משחקים',
+    f_jewish:'✡️ יהודי', f_edu:'📚 חינוך', f_biz:'💼 עסקים', f_dev:'🛠️ כלי מפתחים',
+    cat_flag:'🚀 פרויקט דגל', cat_ai:'🤖 כלי AI', cat_games:'🎮 משחק', cat_jewish:'✡️ כלי יהודי', cat_edu:'📚 חינוך', cat_biz:'💼 כלי עסקים', cat_dev:'🛠️ כלי מפתח',
+    p1_name:'מתמטיקה לחרדים', p1_desc:'פלטפורמת מתמטיקה מלאה לקהילה החרדית — 90+ שיעורים, אנימציות, GeoGebra, מבחנים ו-PWA.',
+    p2_name:'מסלול רכב', p2_desc:'קורס מכונאות רכב אינטראקטיבי — מאגר 19,000+ דגמי רכב, מוסך חי ולימוד בווצאפ-בוט.',
+    p3_name:'האלגוריתם שחזר בתשובה', p3_desc:'תוסף דפדפן + אגנט AI בסגנון קליפי — מסווג פוסטים בפיד ולוחץ "לא מעניין" אוטומטית.',
+    p4_desc:'ויג\'ט שולחן עבודה: תאריך עברי, פרשת שבוע, זמני היום (Hebcal API) ושעון דיגיטלי.',
+    p5_name:'בודק אתרוגים', p5_desc:'זיהוי פסולים, כתמים ואיכות אתרוגים בעזרת Computer Vision.',
+    p6_name:'מזהה רגשות', p6_desc:'כלי NLP לזיהוי רגשות בטקסט עברי — ניתוח סנטימנט עם ממשק נקי.',
+    p7_name:'ID מפענח ובודק', p7_desc:'סריקה וניתוח תעודות זהות ישראליות — React, OCR, ממשק RTL מלא.',
+    p8_name:'מערכת אימון מודל', p8_desc:'ממשק עברי לאימון מודלי ML — עיבוד תמונות, Python ו-BAT scripts.',
+    pg1_name:'הכל בכסף', pg1_desc:'משחק ניחוש מחירים לכל המשפחה — כמה עולה המוצר? חינוכי ומהנה.',
+    pg2_name:'פארק שעשועים RCT', pg2_desc:'בונה פארק שעשועים בסגנון RollerCoaster Tycoon — ישירות בדפדפן, ללא plugins.',
+    pg3_name:'פטלס משחקים', pg3_desc:'אוסף משחקי HTML5 — אסטרואידים, ברייקאוט, נינג\'ה פרוט, נחש, זיכרון ועוד.',
+    pg4_name:'רחפנים — Cable Vitality', pg4_desc:'סימולציית פיזיקה של רחפנים וכבלים — מנוע פיזיקה ב-Canvas.',
+    pg5_name:'משחקים דיגיטליים לילדים', pg5_desc:'חבילת משחקים חינוכיים לילדים בעברית — לגן ולבית ספר.',
+    pj1_name:'שופר', pj1_desc:'תקיעות אודיו, מידע הלכתי לחגי תשרי — React עם MP3 ועיצוב חגיגי.',
+    pj2_name:'תיקון שם השם ברוסית', pj2_desc:'כלי ייחודי לתיקון כתיב שם ה\' בספרים ברוסית — לקהל הדובר רוסית.',
+    pe1_name:'שזם נשימות', pe1_desc:'טיימר נשימות מודרך בעברית — רגיעה, מדיטציה ומיינדפולנס. עיצוב מינימליסטי.',
+    pe2_name:'ניהול משק בית חרדי', pe2_desc:'תוכנה offline לניהול תקציב — מותאמת למגזר החרדי, עובדת ללא אינטרנט.',
+    pe3_name:'ספר דיגיטלי אינטראקטיבי', pe3_desc:'פלטפורמת ספר דיגיטלי עם אודיו ותמיכה בריבוי שפות.',
+    pb1_name:'לידים מגיבוי ווצאפ', pb1_desc:'חילוץ לידים מגיבוי WhatsApp — כלי CRM אוטומטי לעסקים קטנים.',
+    pb2_name:'מחולל קבצי CRM', pb2_desc:'יצירה אוטומטית של קבצי CRM — ייצוא, סינון וניהול אנשי קשר בלחיצה.',
+    pb3_name:'מחולל מייל + Aliasing', pb3_desc:'יצירת כתובות מייל עם + לסינון ספאם ולסדר — מהיר, פשוט ופרטי.',
+    pd1_name:'מנתח קוד אמיתי', pd1_desc:'פירוק וניתוח קוד בעומק — זיהוי דפוסים, בעיות ומבנה. לכל שפת תכנות.',
+    pd2_name:'מפצל קוד מקלוד', pd2_desc:'מפצל קבצי קוד גדולים מ-Claude — לניהול חכם של תגובות ארוכות.',
+    pd3_desc:'פלטפורמת פרויקטים מאוחדת בסגנון OS — ממשק ניהול לכל הכלים.',
+    pd4_name:'אוסף עיצובי CSS', pd4_desc:'77 אפקטים ועיצובי CSS — אנימציות, כרטיסים, גרדיאנטים. קוד מוכן לשימוש.',
+    contact_title:'בואו <span style="color:var(--gold)">נשתף פעולה</span>',
+    contact_sub:'מחפש מפתח שגם יוצר תוכן? יש פרויקט? רוצה לשתף פעולה?<br>אני כאן.',
+    contact_email:'✉️ שלח מייל',
+    footer_txt:'מפתח · יוצר · מנהל דיגיטלי',
+  },
+  en: {
+    dir: 'ltr', lang: 'en',
+    nav_about:'About', nav_channels:'Channels', nav_projects:'Projects', nav_contact:'Contact',
+    available:'✓ Available',
+    hero_badge:'🚀 Developer · Digital Creator · Social Media Manager',
+    hero_sub:'Building educational platforms, AI tools and games — managing a multi-channel digital presence in Hebrew, Russian and English',
+    hero_tagline:'"Code that serves a community — that\'s the real project"',
+    stat_projects:'Projects', stat_ready:'Ready to publish', stat_langs:'Languages', stat_channels:'Content channels',
+    btn_projects:'📂 My Projects', btn_channels:'📺 My Channels',
+    about_title:'About Me', about_sub:'Who I am and what I build',
+    about_p1:'Hi! I\'m <strong>David Patlas</strong> — Full Stack Developer, digital content creator, and online presence manager.',
+    about_p2:'I\'ve built dozens of projects: <strong>educational platforms for the Haredi community</strong>, AI tools, HTML5 games, desktop widgets, CRM tools, and more.',
+    about_p3:'Alongside coding, I manage a <strong>full digital presence</strong> — YouTube, website, TikTok and Twitter — with Torah and Jewish content in Hebrew, Russian and English. I believe the most powerful tech is tech that serves a real community.',
+    chip_social:'Social Media Mgmt', chip_ui:'UI/UX Design',
+    timeline_title:'⚡ Timeline',
+    tl1_title:'2025–2026 — Heavy Development', tl1_desc:'A semester of creation: 24+ projects — AI, education, tools and games',
+    tl2_title:'2024–2025 — Platforms', tl2_desc:'Math for Haredim, Car Course, The Algorithm That Repented',
+    tl3_title:'2023+ — Digital Management', tl3_desc:'Managing YouTube, TikTok, website and Twitter in three languages',
+    tl4_title:'Studies — Paamei Atid', tl4_desc:'Programming, Python, networking and web development',
+    channels_title:'Content Channels', channels_sub:'A multi-channel digital presence I build and manage',
+    ch_yt:'Torah lessons, weekly Parasha and Mishna — in Russian and Hebrew. I built and manage all the digital content.',
+    ch_site_handle:'Jewish Learning Platform', ch_site:'Torah study website with lessons, articles and Pardes books — I developed and manage it.',
+    ch_tt:'Short Jewish content for a broad audience — I edit, produce and manage.',
+    ch_x:'Projects, thoughts on AI and development — for the tech audience.',
+    ch_pic_handle:'Previous Portfolio', ch_pic:'34+ projects showcased — a portfolio site I built.',
+    ch_gh:'Tools, games, AI and education — open source for the community.',
+    proj_title:'My Projects', proj_sub:'52+ projects — from games and AI tools to full educational platforms',
+    f_all:'🔥 All', f_flag:'🚀 Flagship', f_ai:'🤖 AI', f_games:'🎮 Games',
+    f_jewish:'✡️ Jewish', f_edu:'📚 Education', f_biz:'💼 Business', f_dev:'🛠️ Dev Tools',
+    cat_flag:'🚀 Flagship', cat_ai:'🤖 AI Tool', cat_games:'🎮 Game', cat_jewish:'✡️ Jewish Tool', cat_edu:'📚 Education', cat_biz:'💼 Business Tool', cat_dev:'🛠️ Dev Tool',
+    p1_name:'Math for Haredim', p1_desc:'Full math platform for the Haredi community — 90+ lessons, animations, GeoGebra, quizzes and PWA.',
+    p2_name:'Car Mechanics Course', p2_desc:'Interactive car mechanics course in Hebrew — 19,000+ car models database, live garage, WhatsApp bot.',
+    p3_name:'The Algorithm That Repented', p3_desc:'Browser extension + AI agent (Clippy-style) — classifies posts and clicks "Not Interested" automatically.',
+    p4_desc:'Desktop widget: Hebrew date, weekly Parasha, daily prayer times (Hebcal API) and digital clock.',
+    p5_name:'Etrog Checker', p5_desc:'AI-powered detection of defects and quality issues in etrogim using Computer Vision.',
+    p6_name:'Emotion Identifier', p6_desc:'NLP tool for detecting emotions in Hebrew text — sentiment analysis with clean UI.',
+    p7_name:'ID Decoder & Checker', p7_desc:'Scan and analyze Israeli ID documents — React, OCR, full RTL interface.',
+    p8_name:'Model Training System', p8_desc:'Hebrew UI for training ML models — image processing, Python and BAT scripts.',
+    pg1_name:'It\'s All About Money', pg1_desc:'Price guessing game for the whole family — how much does this product cost? Educational and fun.',
+    pg2_name:'Theme Park RCT Builder', pg2_desc:'Build a theme park RollerCoaster Tycoon-style — directly in the browser, no plugins.',
+    pg3_name:'Patlas Games Collection', pg3_desc:'HTML5 games collection — Asteroids, Breakout, Ninja Fruit, Snake, Memory and more.',
+    pg4_name:'Drones — Cable Vitality', pg4_desc:'Physics simulation of drones and cables — Canvas physics engine.',
+    pg5_name:'Digital Kids Games', pg5_desc:'Educational games package for children in Hebrew — for kindergarten and school.',
+    pj1_name:'Shofar', pj1_desc:'Shofar audio blasts, halachic info for High Holidays — React with MP3 and festive design.',
+    pj2_name:"God's Name Russian Fixer", pj2_desc:"Unique tool to fix spelling of God's name in Russian books — for Russian-speaking Jewish community.",
+    pe1_name:'Breathing Timer', pe1_desc:'Guided breathing timer in Hebrew — relaxation, meditation, mindfulness. Minimalist design.',
+    pe2_name:'Haredi Household Manager', pe2_desc:'Offline budget management software — tailored for the Haredi community, no internet required.',
+    pe3_name:'Interactive Digital Book', pe3_desc:'Digital book platform with audio and multilingual support.',
+    pb1_name:'WhatsApp Leads Extractor', pb1_desc:'Extract leads from WhatsApp backup — automated CRM tool for small businesses.',
+    pb2_name:'CRM File Generator', pb2_desc:'Automatically generate CRM files — export, filter and manage contacts in one click.',
+    pb3_name:'Email + Aliasing Generator', pb3_desc:'Generate email addresses with + for spam filtering and organization — fast, simple, private.',
+    pd1_name:'Real Code Analyzer', pd1_desc:'Deep code breakdown and analysis — detect patterns, issues and structure. For any language.',
+    pd2_name:'Claude Code Splitter', pd2_desc:'Split large code files from Claude — smart management of long responses.',
+    pd3_desc:'Unified project platform in OS style — management interface for all tools.',
+    pd4_name:'CSS Designs Collection', pd4_desc:'77 CSS effects and designs — animations, cards, gradients. Ready-to-use code.',
+    contact_title:'Let\'s <span style="color:var(--gold)">Collaborate</span>',
+    contact_sub:'Looking for a developer who also creates content? Have a project? Want to collaborate?<br>I\'m here.',
+    contact_email:'✉️ Send Email',
+    footer_txt:'Developer · Creator · Digital Manager',
+  },
+  ru: {
+    dir: 'ltr', lang: 'ru',
+    nav_about:'Обо мне', nav_channels:'Каналы', nav_projects:'Проекты', nav_contact:'Контакт',
+    available:'✓ Доступен',
+    hero_badge:'🚀 Разработчик · Контент-криэйтор · SMM менеджер',
+    hero_sub:'Создаю образовательные платформы, AI инструменты и игры — управляю цифровым присутствием на иврите, русском и английском',
+    hero_tagline:'"Код, который служит сообществу — это настоящий проект"',
+    stat_projects:'Проектов', stat_ready:'Готовы к публикации', stat_langs:'Языка', stat_channels:'Канала',
+    btn_projects:'📂 Мои проекты', btn_channels:'📺 Мои каналы',
+    about_title:'Обо мне', about_sub:'Кто я и что создаю',
+    about_p1:'Привет! Я <strong>Давид Патлас</strong> — Full Stack разработчик, создатель цифрового контента и менеджер онлайн-присутствия.',
+    about_p2:'Создал десятки проектов: <strong>образовательные платформы для харедим</strong>, AI инструменты, HTML5 игры, виджеты рабочего стола, CRM инструменты и многое другое.',
+    about_p3:'Параллельно с разработкой управляю <strong>цифровым присутствием</strong> — YouTube, сайт, TikTok и Twitter — с торой и еврейским контентом на иврите, русском и английском. Верю, что лучшие технологии служат реальному сообществу.',
+    chip_social:'SMM управление', chip_ui:'UI/UX дизайн',
+    timeline_title:'⚡ Хронология',
+    tl1_title:'2025–2026 — Активная разработка', tl1_desc:'Семестр творчества: 24+ проекта — AI, образование, инструменты и игры',
+    tl2_title:'2024–2025 — Платформы', tl2_desc:'Математика для харедим, Курс автомеханики, Алгоритм раскаяния',
+    tl3_title:'2023+ — Цифровой менеджмент', tl3_desc:'Управление YouTube, TikTok, сайтом и Twitter на трёх языках',
+    tl4_title:'Учёба — Пааамей Атид', tl4_desc:'Программирование, Python, сети и веб-разработка',
+    channels_title:'Контент-каналы', channels_sub:'Многоканальное цифровое присутствие, которое я создаю и управляю',
+    ch_yt:'Уроки Торы, недельная Парasha и Мишна — на русском и иврите. Я создал и управляю всем цифровым контентом.',
+    ch_site_handle:'Еврейская платформа обучения', ch_site:'Сайт изучения Торы с уроками, статьями и книгами Пардес — разработал и управляю.',
+    ch_tt:'Короткий еврейский контент для широкой аудитории — редактирую, создаю и управляю.',
+    ch_x:'Проекты, мысли об AI и разработке — для технической аудитории.',
+    ch_pic_handle:'Предыдущее портфолио', ch_pic:'34+ представленных проекта — сайт-портфолио, который я создал.',
+    ch_gh:'Инструменты, игры, AI и образование — открытый код для сообщества.',
+    proj_title:'Мои проекты', proj_sub:'52+ проекта — от игр и AI инструментов до полноценных образовательных платформ',
+    f_all:'🔥 Все', f_flag:'🚀 Флагман', f_ai:'🤖 AI', f_games:'🎮 Игры',
+    f_jewish:'✡️ Еврейские', f_edu:'📚 Образование', f_biz:'💼 Бизнес', f_dev:'🛠️ Для разрабов',
+    cat_flag:'🚀 Флагман', cat_ai:'🤖 AI инструмент', cat_games:'🎮 Игра', cat_jewish:'✡️ Еврейский', cat_edu:'📚 Образование', cat_biz:'💼 Бизнес инструмент', cat_dev:'🛠️ Для разработчика',
+    p1_name:'Математика для харедим', p1_desc:'Полная платформа математики для харедим — 90+ уроков, анимации, GeoGebra, тесты и PWA.',
+    p2_name:'Курс автомеханики', p2_desc:'Интерактивный курс автомеханики на иврите — база 19 000+ моделей авто, живая мастерская, WhatsApp бот.',
+    p3_name:'Алгоритм раскаяния', p3_desc:'Расширение браузера + AI агент (в стиле Клиппи) — классифицирует посты и жмёт "Не интересует" автоматически.',
+    p4_desc:'Виджет рабочего стола: еврейская дата, недельная Пaraша, времена дня (Hebcal API) и цифровые часы.',
+    p5_name:'Проверщик этрогов', p5_desc:'AI-определение дефектов и качества этрогов с помощью Computer Vision.',
+    p6_name:'Определитель эмоций', p6_desc:'NLP инструмент для определения эмоций в тексте на иврите — анализ тональности с чистым UI.',
+    p7_name:'Дешифровщик удостоверений', p7_desc:'Сканирование и анализ израильских удостоверений — React, OCR, полный RTL интерфейс.',
+    p8_name:'Система обучения моделей', p8_desc:'Интерфейс на иврите для обучения ML моделей — обработка изображений, Python и BAT скрипты.',
+    pg1_name:'Всё о деньгах', pg1_desc:'Игра угадывания цен для всей семьи — сколько стоит этот товар? Образовательная и весёлая.',
+    pg2_name:'Парк развлечений RCT', pg2_desc:'Строй парк аттракционов в стиле RollerCoaster Tycoon — прямо в браузере, без плагинов.',
+    pg3_name:'Коллекция игр Патлас', pg3_desc:'Коллекция HTML5 игр — Астероиды, Брейкаут, Фрукты ниндзя, Змейка, Память и другие.',
+    pg4_name:'Дроны — Cable Vitality', pg4_desc:'Физическая симуляция дронов и кабелей — физический движок на Canvas.',
+    pg5_name:'Цифровые игры для детей', pg5_desc:'Пакет образовательных игр для детей на иврите — для детсада и школы.',
+    pj1_name:'Шофар', pj1_desc:'Звуки шофара, halachic информация для праздников — React с MP3 и праздничным дизайном.',
+    pj2_name:'Исправитель имени Б-га по-русски', pj2_desc:'Уникальный инструмент для исправления написания имени Б-га в русских книгах.',
+    pe1_name:'Таймер дыхания', pe1_desc:'Управляемый таймер дыхания на иврите — расслабление, медитация, майндфулнесс. Минималистичный дизайн.',
+    pe2_name:'Менеджер хозяйства харедим', pe2_desc:'Офлайн ПО для управления бюджетом — адаптировано для харедим, без интернета.',
+    pe3_name:'Интерактивная цифровая книга', pe3_desc:'Платформа цифровой книги с аудио и многоязыковой поддержкой.',
+    pb1_name:'Экстрактор лидов из WhatsApp', pb1_desc:'Извлечение лидов из резервной копии WhatsApp — автоматический CRM инструмент для малого бизнеса.',
+    pb2_name:'Генератор CRM файлов', pb2_desc:'Автоматическая генерация CRM файлов — экспорт, фильтрация и управление контактами.',
+    pb3_name:'Генератор Email + Aliasing', pb3_desc:'Создание email адресов с + для фильтрации спама — быстро, просто, приватно.',
+    pd1_name:'Настоящий анализатор кода', pd1_desc:'Глубокая разбивка и анализ кода — обнаружение паттернов, проблем и структуры. Для любого языка.',
+    pd2_name:'Разделитель кода Claude', pd2_desc:'Разделение больших файлов кода из Claude — умное управление длинными ответами.',
+    pd3_desc:'Единая платформа проектов в стиле ОС — интерфейс управления всеми инструментами.',
+    pd4_name:'Коллекция CSS дизайнов', pd4_desc:'77 CSS эффектов и дизайнов — анимации, карточки, градиенты. Готовый код.',
+    contact_title:'Давайте <span style="color:var(--gold)">сотрудничать</span>',
+    contact_sub:'Ищете разработчика, который ещё и создаёт контент? Есть проект? Хотите сотрудничать?<br>Я здесь.',
+    contact_email:'✉️ Написать',
+    footer_txt:'Разработчик · Создатель · Цифровой менеджер',
+  }
+};
+
+let currentLang = 'he';
+
+function setLang(lang) {
+  currentLang = lang;
+  const t = T[lang];
+  document.documentElement.setAttribute('dir', t.dir);
+  document.documentElement.setAttribute('lang', t.lang);
+
+  // update lang buttons
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  // update all i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+
+  // update page title
+  const titles = { he: 'דוד פטלס — מפתח ויוצר דיגיטלי', en: 'David Patlas — Developer & Creator', ru: 'Давид Патлас — Разработчик и Криэйтор' };
+  document.title = titles[lang];
+}
+
+// filter projects
+function filter(cat, btn) {
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.proj-card').forEach(c => {
+    if (cat === 'all') { c.classList.remove('hidden'); return; }
+    (c.dataset.cat || '').includes(cat) ? c.classList.remove('hidden') : c.classList.add('hidden');
+  });
+}
+
+// scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
+</script>
 </body>
 </html>
-
