@@ -86,7 +86,7 @@ body>*:not(.bg-mesh):not(.bg-glow):not(.bg-stars){position:relative;z-index:1;}
   width:1.15em;height:1.15em;stroke-width:2.2px;flex-shrink:0;
 }
 html[lang="en"] .sec-title,html[lang="en"] h1.ht,html[lang="ru"] .sec-title,html[lang="ru"] h1.ht{font-family:var(--display),var(--body),sans-serif;}
-section{scroll-margin-top:var(--nav-h);}
+section{scroll-margin-top:calc(var(--nav-h) + 3.5rem);}
 .skip-link{
   position:absolute;top:-100px;left:50%;transform:translateX(-50%);
   background:var(--accent);color:#fff;padding:.6rem 1.2rem;border-radius:8px;
@@ -350,9 +350,13 @@ h1.ht{
 }
 h1.ht .gold{
   font-family:var(--hand),cursive;font-weight:700;
-  font-size:1.22em;color:var(--gold);display:inline-block;
+  font-size:1.22em;display:inline-block;
   transform:rotate(-2.5deg);margin-inline-start:.1em;
-  text-shadow:0 2px 24px rgba(245,200,66,.25);
+  background:linear-gradient(105deg,var(--gold) 0%,#fff6d0 35%,var(--gold2) 55%,var(--gold) 100%);
+  background-size:220% auto;-webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+  animation:gold-shimmer 5s ease-in-out infinite;
+  filter:drop-shadow(0 2px 12px rgba(245,200,66,.35));
 }
 h1.ht .dim{color:var(--text);}
 .hero-lead{
@@ -514,6 +518,29 @@ section{padding:5rem 1.5rem;}
   color:#fff;border-color:transparent;
   box-shadow:0 3px 12px rgba(91,79,207,0.3);
 }
+.archive-strip{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:1rem;
+  margin-bottom:2rem;padding:1rem 1.2rem;border-radius:16px;
+  background:rgba(124,106,245,.08);border:1.5px solid rgba(124,106,245,.22);
+}
+.archive-strip-head{display:flex;align-items:flex-start;gap:.75rem;flex:1;min-width:200px;}
+.archive-strip-ico{
+  width:2.5rem;height:2.5rem;border-radius:12px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(245,200,66,.15),rgba(124,106,245,.2));
+  border:1px solid var(--border);
+}
+.archive-strip-ico svg{width:1.2rem;height:1.2rem;color:var(--gold);}
+.archive-strip-head strong{display:block;font-size:.95rem;margin-bottom:.15rem;}
+.archive-strip-head p{font-size:.8rem;color:var(--muted);line-height:1.45;margin:0;}
+.archive-strip-links{display:flex;flex-wrap:wrap;gap:.5rem;}
+.archive-link{
+  display:inline-flex;align-items:center;gap:.35rem;padding:.45rem .9rem;border-radius:10px;
+  font-size:.78rem;font-weight:800;text-decoration:none;color:var(--text);
+  background:var(--bg2);border:1.5px solid var(--border);transition:all .2s;
+}
+.archive-link:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-1px);}
+.archive-link svg{width:1em;height:1em;color:var(--accent);}
 .proj-catalog{display:flex;flex-direction:column;gap:2.75rem;}
 .cat-block.hidden{display:none;}
 .cat-head{
@@ -570,6 +597,30 @@ section{padding:5rem 1.5rem;}
 .plink.gh{background:rgba(91,79,207,0.07);color:var(--accent);border:1.5px solid rgba(91,79,207,0.18);}
 .plink.gh svg{width:.9em;height:.9em;}
 .plink.gh:hover{background:rgba(91,79,207,0.14);}
+.plink.vers{background:rgba(245,200,66,0.07);color:var(--gold);border:1.5px solid rgba(245,200,66,0.2);cursor:pointer;font-family:var(--body);}
+.plink.vers:hover{background:rgba(245,200,66,0.15);transform:translateY(-1px);}
+#versionsModal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.72);backdrop-filter:blur(14px);}
+#versionsModal.open{display:flex;}
+.versions-box{background:var(--bg2);border:1.5px solid var(--border);border-radius:20px;max-width:560px;width:92%;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);}
+.versions-header{padding:1.3rem 1.6rem .9rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.versions-title{font-size:1.1rem;font-weight:800;color:var(--gold);display:flex;align-items:center;gap:.5rem;}
+.versions-close{background:none;border:none;color:var(--muted);cursor:pointer;padding:.35rem;border-radius:8px;transition:.2s;line-height:1;}
+.versions-close:hover{color:var(--text);background:rgba(255,255,255,0.08);}
+.versions-body{padding:1.2rem 1.6rem 1.6rem;overflow-y:auto;flex:1;}
+.versions-gh-btn{display:flex;align-items:center;gap:.5rem;padding:.65rem 1.2rem;background:rgba(91,79,207,0.09);border:1.5px solid rgba(91,79,207,0.22);border-radius:10px;color:var(--accent);font-weight:700;text-decoration:none;font-size:.88rem;transition:.2s;margin-bottom:1.3rem;}
+.versions-gh-btn:hover{background:rgba(91,79,207,0.18);transform:translateY(-1px);}
+.ver-timeline{display:flex;flex-direction:column;}
+.ver-item{display:grid;grid-template-columns:70px 16px 1fr;gap:0 .8rem;position:relative;}
+.ver-line{width:2px;background:var(--border);margin:1.45rem auto 0;min-height:2rem;}
+.ver-item:last-child .ver-line{display:none;}
+.ver-dot{width:10px;height:10px;border-radius:50%;background:var(--accent);margin-top:1.38rem;border:2px solid var(--bg2);flex-shrink:0;}
+.ver-item:first-child .ver-dot{background:var(--gold);width:12px;height:12px;margin-top:1.32rem;}
+.ver-date{text-align:start;padding-top:1.2rem;font-size:.72rem;color:var(--muted);font-family:var(--mono);line-height:1.3;}
+.ver-content{padding:.9rem 0 1.2rem;}
+.ver-badge{display:inline-block;background:rgba(124,106,245,0.13);color:var(--accent);border:1px solid rgba(124,106,245,0.28);border-radius:6px;padding:.1rem .45rem;font-size:.7rem;font-family:var(--mono);font-weight:700;margin-bottom:.3rem;}
+.ver-item:first-child .ver-badge{background:rgba(245,200,66,0.1);color:var(--gold);border-color:rgba(245,200,66,0.28);}
+.ver-label{font-weight:700;font-size:.88rem;margin-bottom:.2rem;}
+.ver-desc{font-size:.8rem;color:var(--muted);line-height:1.55;}
 .proj-card.hidden{display:none;}
 .proj-card[data-open-preview],.proj-card[data-contact]{cursor:pointer;}
 .proj-card[data-open-preview] .plink.gh{position:relative;z-index:2;}
@@ -881,9 +932,138 @@ html.js-anim .reveal:nth-child(3){animation-delay:.1s;}
 @keyframes reveal-in{from{opacity:.4;transform:translateY(14px)}to{opacity:1;transform:none}}
 .plink.home-pg{background:rgba(245,200,66,0.06);color:var(--gold);border:1.5px solid rgba(245,200,66,0.22);font-size:0.75rem;padding:0.32rem 0.7rem;}
 .plink.home-pg:hover{background:rgba(245,200,66,0.15);}
+
+/* ── WOW INTRO ── */
+#wowIntro{
+  position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%,#1a1545 0%,#050508 70%);
+  transition:opacity .85s cubic-bezier(.4,0,.2,1),visibility .85s,transform 1s cubic-bezier(.4,0,.2,1);
+}
+#wowIntro.done{opacity:0;visibility:hidden;pointer-events:none;transform:scale(1.04);}
+#introCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.intro-core{position:relative;z-index:2;text-align:center;padding:2rem;}
+.intro-logo{
+  font-family:var(--display);font-size:clamp(2.4rem,8vw,4.2rem);font-weight:800;
+  letter-spacing:-.04em;line-height:1;margin-bottom:1.2rem;
+  animation:intro-logo-in 1s cubic-bezier(.22,1,.36,1) both;
+}
+.intro-logo span{
+  font-family:var(--hand),cursive;color:var(--gold);font-size:1.15em;
+  display:inline-block;transform:rotate(-3deg);
+  text-shadow:0 0 40px rgba(245,200,66,.45);
+}
+.intro-counter{
+  display:flex;align-items:baseline;justify-content:center;gap:.35rem;
+  margin-bottom:.65rem;animation:intro-fade-up .8s .35s cubic-bezier(.22,1,.36,1) both;
+}
+.intro-counter span{
+  font-family:var(--display);font-size:clamp(3rem,12vw,5.5rem);font-weight:800;
+  background:var(--grad1);-webkit-background-clip:text;background-clip:text;color:transparent;
+  line-height:1;
+}
+.intro-counter small{font-size:.95rem;color:var(--muted);font-weight:700;}
+.intro-flash{
+  font-family:var(--mono);font-size:.82rem;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--accent2);min-height:1.4em;
+  animation:intro-fade-up .8s .55s cubic-bezier(.22,1,.36,1) both;
+}
+.intro-ring{
+  width:120px;height:120px;margin:1.4rem auto 0;position:relative;
+  animation:intro-fade-up .8s .7s cubic-bezier(.22,1,.36,1) both;
+}
+.intro-ring svg{width:100%;height:100%;transform:rotate(-90deg);}
+.intro-ring circle{fill:none;stroke-width:3;stroke-linecap:round;}
+.intro-ring .ring-bg{stroke:rgba(255,255,255,.08);}
+.intro-ring .ring-fg{
+  stroke:url(#introGrad);stroke-dasharray:283;stroke-dashoffset:283;
+  animation:intro-ring 2.2s cubic-bezier(.4,0,.2,1) forwards;
+}
+.intro-skip{
+  position:absolute;bottom:2rem;inset-inline:0;margin:auto;width:max-content;
+  border:none;background:rgba(255,255,255,.06);color:var(--muted);
+  font:inherit;font-size:.8rem;font-weight:800;padding:.55rem 1.2rem;border-radius:99px;
+  cursor:pointer;border:1px solid var(--border);z-index:3;transition:all .2s;
+}
+.intro-skip:hover{color:var(--gold);border-color:rgba(245,200,66,.4);background:rgba(245,200,66,.08);}
+@keyframes intro-logo-in{from{opacity:0;transform:translateY(28px) scale(.92)}to{opacity:1;transform:none}}
+@keyframes intro-fade-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes intro-ring{to{stroke-dashoffset:0}}
+body.intro-active{overflow:hidden;}
+body.intro-active nav,body.intro-active .hero,body.intro-active .app-dock{opacity:0;pointer-events:none;}
+body.intro-active #wowIntro{pointer-events:auto;}
+body.intro-revealed nav,body.intro-revealed .hero,body.intro-revealed .app-dock{
+  opacity:1;transition:opacity .7s ease .15s;
+}
+body.intro-revealed .hero-content>*{animation:hero-stagger .75s cubic-bezier(.22,1,.36,1) both;}
+body.intro-revealed .hero-visual{animation:hero-photo-in 1s cubic-bezier(.22,1,.36,1) .25s both;}
+body.intro-revealed .hero-content>*:nth-child(1){animation-delay:.12s;}
+body.intro-revealed .hero-content>*:nth-child(2){animation-delay:.2s;}
+body.intro-revealed .hero-content>*:nth-child(3){animation-delay:.28s;}
+body.intro-revealed .hero-content>*:nth-child(4){animation-delay:.36s;}
+body.intro-revealed .hero-content>*:nth-child(5){animation-delay:.44s;}
+body.intro-revealed .hero-content>*:nth-child(6){animation-delay:.52s;}
+body.intro-revealed .hero-content>*:nth-child(7){animation-delay:.6s;}
+body.intro-revealed .hero-content>*:nth-child(8){animation-delay:.68s;}
+@keyframes hero-stagger{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes hero-photo-in{from{opacity:0;transform:perspective(900px) rotateY(-12deg) scale(.88)}to{opacity:1;transform:none}}
+@keyframes gold-shimmer{0%,100%{background-position:0% center}50%{background-position:100% center}}
+.hero-particles{
+  position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;
+}
+.hero-spotlight{
+  display:flex;gap:.65rem;justify-content:center;flex-wrap:wrap;
+  margin:0 auto 1.6rem;max-width:520px;
+}
+html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
+.spot-card{
+  flex:1;min-width:140px;max-width:168px;position:relative;border-radius:14px;overflow:hidden;
+  text-decoration:none;aspect-ratio:16/10;border:1px solid rgba(245,200,66,.2);
+  box-shadow:0 12px 32px rgba(0,0,0,.35);transition:transform .25s,box-shadow .25s;
+}
+.spot-card:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 18px 40px rgba(124,106,245,.35);}
+.spot-card img{width:100%;height:100%;object-fit:cover;display:block;}
+.spot-glow{
+  position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(5,5,8,.92));
+  pointer-events:none;
+}
+.spot-info{
+  position:absolute;inset-inline:.45rem;bottom:.4rem;z-index:2;
+  font-size:.68rem;font-weight:800;color:#fff;display:flex;align-items:center;gap:.3rem;
+}
+.spot-info em{font-style:normal;font-size:1rem;}
+.scroll-cue{
+  position:absolute;bottom:1.2rem;left:50%;transform:translateX(-50%);
+  width:28px;height:44px;border-radius:99px;border:2px solid rgba(245,200,66,.35);
+  display:flex;align-items:flex-start;justify-content:center;padding-top:8px;
+  text-decoration:none;opacity:.7;transition:opacity .2s,border-color .2s;
+  animation:scroll-bob 2s ease-in-out infinite;
+}
+.scroll-cue:hover{opacity:1;border-color:var(--gold);}
+.scroll-cue-dot{
+  width:5px;height:5px;border-radius:50%;background:var(--gold);
+  animation:scroll-dot 2s ease-in-out infinite;
+}
+@keyframes scroll-bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(6px)}}
+@keyframes scroll-dot{0%{opacity:1;transform:translateY(0)}70%{opacity:0;transform:translateY(14px)}100%{opacity:0;transform:translateY(0)}}
+.hero-hand.typing::after{content:'|';animation:blink-cursor .7s step-end infinite;margin-inline-start:2px;color:var(--gold);}
+@keyframes blink-cursor{50%{opacity:0}}
+@media(max-width:900px){.hero-spotlight{max-width:100%}.scroll-cue{display:none}}
 </style>
 </head>
 <body>
+<div id="wowIntro" aria-hidden="true">
+  <canvas id="introCanvas" aria-hidden="true"></canvas>
+  <div class="intro-core">
+    <div class="intro-logo">David <span>Patlas</span></div>
+    <div class="intro-counter"><span id="introCount">0</span><small data-i18n="intro_projects">פרויקטים</small></div>
+    <p class="intro-flash" id="introFlash">AI · חינוך · משחקים</p>
+    <div class="intro-ring" aria-hidden="true">
+      <svg viewBox="0 0 100 100"><defs><linearGradient id="introGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f5c842"/><stop offset="100%" stop-color="#7c6af5"/></linearGradient></defs><circle class="ring-bg" cx="50" cy="50" r="45"/><circle class="ring-fg" cx="50" cy="50" r="45"/></svg>
+    </div>
+  </div>
+  <button type="button" class="intro-skip" id="introSkip" data-i18n="intro_skip">דלג ›</button>
+</div>
+<canvas id="heroParticles" class="hero-particles" aria-hidden="true"></canvas>
 <div class="bg-mesh" aria-hidden="true"></div>
 <div class="bg-stars" aria-hidden="true"></div>
 <div class="bg-glow a" aria-hidden="true"></div>
@@ -933,10 +1113,11 @@ html.js-anim .reveal:nth-child(3){animation-delay:.1s;}
         <p class="hero-hand" data-i18n="hero_tagline">קוד שמשרת קהילה</p>
         <div class="stats">
           <div class="stat"><span class="n">52+</span><span class="l" data-i18n="s1">פרויקטים</span></div>
-          <div class="stat"><span class="n">36</span><span class="l" data-i18n="s1b">פעילים בתיק</span></div>
+          <div class="stat"><span class="n" id="statCatalog" data-count="40">40</span><span class="l" data-i18n="s1b">פעילים בתיק</span></div>
           <div class="stat"><span class="n">3</span><span class="l" data-i18n="s3">שפות</span></div>
           <div class="stat"><span class="n">8</span><span class="l" data-i18n="s1c">תחומי מומחיות</span></div>
         </div>
+        <div class="hero-spotlight" id="heroSpotlight" aria-label="פרויקטים חיים"></div>
         <div class="app-launcher" aria-label="קיצורי דרך">
           <button type="button" class="launch-tile t-flag" onclick="quickFilter('flag')"><i data-lucide="rocket"></i><span data-i18n="ff">דגל</span></button>
           <button type="button" class="launch-tile t-ai" onclick="quickFilter('ai')"><i data-lucide="brain"></i><span data-i18n="fai">AI</span></button>
@@ -970,6 +1151,7 @@ html.js-anim .reveal:nth-child(3){animation-delay:.1s;}
       </div>
     </div>
   </div>
+  <a href="#about" class="scroll-cue" aria-label="גלול למטה"><span class="scroll-cue-dot"></span></a>
 </section>
 
 <!-- ABOUT -->
@@ -981,8 +1163,8 @@ html.js-anim .reveal:nth-child(3){animation-delay:.1s;}
     <div class="about-grid">
       <div class="about-text">
         <p data-i18n="ab_p1">שלום! אני <strong>דוד פטלס</strong> — מפתח Full Stack, יוצר תוכן דיגיטלי ומנהל נוכחות מקוונת.</p>
-        <p data-i18n="ab_p2">בניתי עשרות פרויקטים: <strong>פלטפורמות חינוכיות לקהילה החרדית</strong>, כלי AI, משחקי HTML5, ויג'טים לשולחן העבודה, כלי CRM ושיווק — ועוד.</p>
-        <p data-i18n="ab_p3">במקביל לפיתוח, אני מנהל את <strong>הנוכחות הדיגיטלית</strong> של ערוץ YouTube, אתר, TikTok וטוויטר — עם תוכן תורני ויהודי בעברית, רוסית ואנגלית. אני מאמין שטכנולוגיה חזקה היא זו שמשרתת קהילה אמיתית.</p>
+        <p data-i18n="ab_p2">בניתי עשרות פרויקטים: <strong>פלטפורמות חינוכיות לקהילה החרדית</strong>, כלי AI, משחקי HTML5, ויג'טים, כלי CRM ושיווק — ועוד.</p>
+        <p data-i18n="ab_p3">במקביל לפיתוח, אני מנהל את <strong>הנוכחות הדיגיטלית</strong> — YouTube, אתר, TikTok וטוויטר — עם תוכן תורני ויהודי בעברית, רוסית ואנגלית.</p>
         <div class="skill-grid" aria-label="טכנולוגיות">
           <div class="skill-tile"><i data-lucide="code-2"></i><span>HTML/JS</span></div>
           <div class="skill-tile"><i data-lucide="braces"></i><span>React</span></div>
@@ -1036,7 +1218,7 @@ html.js-anim .reveal:nth-child(3){animation-delay:.1s;}
         <span class="ch-handle">@zeuzonsher</span>
         <span class="ch-desc" data-i18n="cx">פרויקטים ומחשבות על AI ופיתוח.</span>
       </a>
-      <a class="ch-card" href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/" data-preview-title="ארכיון פרויקטים">
+      <a class="ch-card" href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/" data-preview-title="ארכיון פרויקטים" data-i18n-preview="archive_title">
         <span class="ch-icon"><i data-lucide="archive"></i></span>
         <span class="ch-name" data-i18n="cpic_name">ארכיון פרויקטים</span>
         <span class="ch-handle" data-i18n="cpic_h">גרסה קודמת</span>
@@ -1057,7 +1239,7 @@ html.js-anim .reveal:nth-child(3){animation-delay:.1s;}
   <div class="container reveal">
     <div class="sec-label">✦ <span data-i18n="lv_label">חי ב-Netlify</span></div>
     <p class="sec-title" data-i18n="lv_title">אתרים <span>חיים</span></p>
-    <p class="sec-sub" data-i18n="lv_sub">פרויקטים חיים — לחץ לתצוגה מקדימה</p>
+    <p class="sec-sub" data-i18n="lv_sub">פרויקטים חיים — לחיצה פותחת בדפדפן</p>
     <div class="live-showcase">
       <a class="live-card" href="#" data-open-preview="https://teshuva-algorithm.netlify.app" data-preview-title="האלגוריתם שחזר בתשובה">
         <div class="live-thumb"><img src="https://teshuva-algorithm.netlify.app/og-image.png" alt="האלגוריתם שחזר בתשובה" loading="lazy" onerror="thumbFallback(this,'brain')"></div>
@@ -1101,6 +1283,20 @@ html.js-anim .reveal:nth-child(3){animation-delay:.1s;}
       <button class="fbtn" data-cat="biz" onclick="filter('biz',this)"><i data-lucide="briefcase"></i><span data-i18n="fb">עסקים</span></button>
       <button class="fbtn" data-cat="dev" onclick="filter('dev',this)"><i data-lucide="wrench"></i><span data-i18n="fd">כלים</span></button>
       <button class="fbtn" data-cat="live" onclick="filter('live',this)"><i data-lucide="globe"></i><span data-i18n="fl">חי</span></button>
+    </div>
+    <div class="archive-strip reveal">
+      <div class="archive-strip-head">
+        <span class="archive-strip-ico"><i data-lucide="archive"></i></span>
+        <div>
+          <strong data-i18n="arch_title">ארכיון מלא</strong>
+          <p data-i18n="arch_sub">41+ בתיק · 52+ בארכיון — גרסאות, גלריות ומסמכי תכנון</p>
+        </div>
+      </div>
+      <div class="archive-strip-links">
+        <a href="#" class="archive-link" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/" data-preview-title="ארכיון פרויקטים" data-i18n-preview="archive_title"><i data-lucide="folder-open"></i><span data-i18n="arch_full">כל הפרויקטים</span></a>
+        <a href="#" class="archive-link" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/project_gallery.html" data-preview-title="גלריית כלים" data-i18n-preview="arch_gallery"><i data-lucide="layout-grid"></i><span data-i18n="arch_gallery">גלריית כלים</span></a>
+        <a href="#" class="archive-link" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/about/portfolio.html" data-preview-title="תיק מפורט" data-i18n-preview="arch_about"><i data-lucide="file-text"></i><span data-i18n="arch_about">תיק מפורט</span></a>
+      </div>
     </div>
     <div class="proj-catalog" id="projGrid">
       <div class="proj-loading" id="projLoading"><i data-lucide="loader-circle"></i><span data-i18n="loading">טוען פרויקטים...</span></div>
@@ -1166,9 +1362,9 @@ html.js-anim .reveal:nth-child(3){animation-delay:.1s;}
 
 <script>
 const T={
-he:{s1b:'פעילים בתיק',s1c:'תחומי מומחיות',dir:'rtl',lang:'he',skip:'דלג לתוכן',search_ph:'חפש פרויקט...',loading:'טוען פרויקטים...',no_results:'לא נמצאו פרויקטים — נסה מסנן או חיפוש אחר',show_all:'הצג הכל',show_all_n:'הצג את כל הפרויקטים',filter_cat:'מסנן: {c}',filter_search:'חיפוש: "{q}"',count:'מציג {n} מתוך {t} פרויקטים',cat_n:'{n} פרויקטים',co_wa:'WhatsApp',pv_open:'פתח',pv_newtab:'פתח בדפדפן',pv_loading:'טוען אתר...',pv_blocked:'לא ניתן להציג כאן — לחץ לפתיחה בדפדפן',pv_reload:'רענן',pv_close:'סגור',pv_contact:'צור קשר',pv_home:'עמוד פרויקט',theme_day:'מצב יום',theme_night:'מצב לילה',theme_lbl_day:'יום',theme_lbl_night:'לילה',dock_home:'בית',dock_apps:'אפליקציות',dock_live:'חי',dock_channels:'ערוצים',nav_home:'בית',nav_about:'אודות',nav_channels:'ערוצים',nav_live:'חי',nav_projects:'פרויקטים',nav_contact:'צור קשר',lv_label:'חי ב-Netlify',lv_title:'אתרים <span>חיים</span>',lv_sub:'פרויקטים חיים — לחיצה פותחת בדפדפן',lv_d1:'פלטפורמת מתמטיקה מלאה — 90+ שיעורים ו-PWA',lv_d2:'קורס מכונאות — 19,000+ רכבים, מוסך חי, בוט ווצאפ',lv_d3:'דף נחיתה עם דמו אינטראקטיבי — שקיפות אלגוריתמית בעברית',available:'זמין',photo_title:'משפחת Patlas',photo_sub:'אבא ל-5 · קוד שמשרת בית וקהילה',photo_family:'אבא ל-5',chip_creator:'יוצר',chip_langs:'3 שפות',hero_lead:'פלטפורמות חינוכיות · AI · משחקים',hero_tagline:'קוד שמשרת קהילה',s1:'פרויקטים',s2:'מוכנים לפרסום',s3:'שפות',s4:'ערוצי תוכן',b1:'הפרויקטים שלי',b2:'ערוצי התוכן',ab_label:'אודות',ab_title:'מי <span>אני</span>',ab_sub:'מפתח שגם יוצר — ויוצר שגם מפתח',ab_p1:'שלום! אני <strong>דוד פטלס</strong> — מפתח Full Stack, יוצר תוכן דיגיטלי ומנהל נוכחות מקוונת.',ab_p2:'בניתי עשרות פרויקטים: <strong>פלטפורמות חינוכיות לקהילה החרדית</strong>, כלי AI, משחקי HTML5, ויג\'טים, CRM ועוד.',ab_p3:'אני מנהל ערוץ YouTube, אתר, TikTok וטוויטר — עם תוכן תורני ויהודי בעברית, רוסית ואנגלית.',tl_h:'ציר הזמן',tl1t:'2025–2026 — פיתוח נרחב',tl1d:'24+ פרויקטים — AI, חינוך, כלים ומשחקים',tl2t:'2024–2025 — פלטפורמות',tl2d:'מתמטיקה לחרדים, מסלול רכב, האלגוריתם שחזר בתשובה',tl3t:'2023+ — ניהול דיגיטלי',tl3d:'YouTube, TikTok, אתר וטוויטר — בשלוש שפות',tl4t:'לימודים — פעמי עתידים',tl4d:'Python, רשתות תקשורת ופיתוח ווב',ch_label:'ערוצים',ch_title:'נוכחות <span>דיגיטלית</span>',ch_sub:'כל הערוצים שאני בונה ומנהל',cyt:'שיעורי תורה, פרשת שבוע ומשניות ברוסית ועברית — בניתי ומנהל.',csite_h:'פלטפורמת לימוד יהודית',csite:'שיעורים, מאמרים וספרי פרדס — פיתחתי ואני מנהל.',ctt:'תוכן יהודי קצר לקהל רחב — עורך ומנהל.',cx:'פרויקטים ומחשבות על AI ופיתוח.',cpic_name:'ארכיון פרויקטים',cpic_h:'גרסה קודמת',cpic:'אוסף פרויקטים נוספים — לינק לארכיון',cgh:'כלים, AI, משחקים וחינוך — קוד פתוח.',pr_label:'פרויקטים',pr_title:'מה <span>בניתי</span>',pr_sub:'52+ פרויקטים · AI · חינוך · משחקים · <a href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/" data-preview-title="ארכיון פרויקטים" style="color:var(--accent);font-weight:700;">תיק מלא →</a>',fa:'הכל',ff:'דגל',fai:'AI',fg:'משחקים',fj:'יהודי',fe:'חינוך',fb:'עסקים',fd:'כלי מפתחים',fl:'חי',cf:'פרויקט דגל',cai:'כלי AI',cg:'משחק',cj:'כלי יהודי',ce:'חינוך',cb:'עסקים',cd:'כלי מפתח',n1:'מתמטיקה לחרדים',d1:'פלטפורמת מתמטיקה מלאה — 90+ שיעורים, GeoGebra, מבחנים ו-PWA.',n2:'מסלול רכב',d2:'קורס מכונאות — 19,000+ רכבים, מוסך חי, בוט ווצאפ.',n3:'האלגוריתם שחזר בתשובה',d3:'תוסף דפדפן + אגנט AI — מסביר למה ראית כל פוסט, שקיפות אלגוריתמית בעברית.',d4:'ויג\'ט שולחן עבודה: תאריך עברי, פרשה, זמני היום.',n5:'בודק אתרוגים',d5:'זיהוי פסולים וכתמים — Computer Vision.',n6:'מזהה רגשות',d6:'NLP לזיהוי רגשות בטקסט עברי.',n7:'ID מפענח ובודק',d7:'סריקה וניתוח ת.ז. ישראליות — React, OCR.',n8:'מערכת אימון מודל',d8:'ממשק עברי לאימון מודלי ML.',n9:'הכל בכסף',d9:'משחק ניחוש מחירים לכל המשפחה.',n10:'פארק שעשועים RCT',d10:'בונה פארק שעשועים RCT — בדפדפן.',n11:'פטלס משחקים',d11:'אוסף HTML5 — אסטרואידים, ברייקאוט, סנייק ועוד.',n12:'משחקים לילדים',d12:'חבילת משחקים חינוכיים בעברית לגן ולבית ספר.',n13:'שופר',d13:'תקיעות אודיו ומידע הלכתי לחגי תשרי.',n14:'תיקון שם השם ברוסית',d14:'כלי לתיקון כתיב שם ה\' בספרים ברוסית.',n15:'שזם נשימות',d15:'טיימר נשימות מודרך — מיינדפולנס ורגיעה.',n16:'ניהול משק בית חרדי',d16:'תוכנה offline לניהול תקציב למגזר החרדי.',n17:'לידים מגיבוי ווצאפ',d17:'חילוץ לידים מגיבוי WhatsApp — CRM אוטומטי.',n18:'מחולל קבצי CRM',d18:'יצירה אוטומטית של קבצי CRM.',n19:'מחולל מייל + Alias',d19:'כתובות מייל עם + לסינון ספאם.',n20:'מנתח קוד אמיתי',d20:'פירוק וניתוח קוד לעומק.',n21:'מפצל קוד מקלוד',d21:'פיצול קבצי קוד גדולים מ-Claude.',d22:'פלטפורמת ניהול פרויקטים מאוחדת.',n23:'אוסף עיצובי CSS',d23:'77 אפקטי CSS — אנימציות, כרטיסים, גרדיאנטים.',co_t:'בואו נבנה משהו <span style="text-decoration:underline;text-decoration-color:rgba(255,255,255,0.4);">יחד</span>',co_s:'מחפש מפתח שגם יוצר תוכן? יש פרויקט? רוצה לשתף פעולה? אני כאן.',co_email:'שלח מייל',ft:'מפתח · יוצר · מנהל דיגיטלי'},
-en:{s1b:'Active in portfolio',s1c:'Expertise areas',dir:'ltr',lang:'en',skip:'Skip to content',search_ph:'Search projects...',loading:'Loading projects...',no_results:'No projects found — try another filter or search',show_all:'Show all',show_all_n:'Show all projects',filter_cat:'Filter: {c}',filter_search:'Search: "{q}"',count:'Showing {n} of {t} projects',cat_n:'{n} projects',co_wa:'WhatsApp',pv_open:'Open',pv_newtab:'Open in browser',pv_loading:'Loading site...',pv_blocked:'Cannot preview here — open in browser',pv_reload:'Reload',pv_close:'Close',pv_contact:'Contact',pv_home:'Project home',theme_day:'Light mode',theme_night:'Dark mode',theme_lbl_day:'Day',theme_lbl_night:'Night',dock_home:'Home',dock_apps:'Apps',dock_live:'Live',dock_channels:'Channels',nav_home:'Home',nav_about:'About',nav_channels:'Channels',nav_live:'Live',nav_projects:'Projects',nav_contact:'Contact',lv_label:'Live on Netlify',lv_title:'Live <span>Sites</span>',lv_sub:'Live projects — click opens in your browser',lv_d1:'Full math platform — 90+ lessons and PWA',lv_d2:'Mechanics course — 19,000+ cars, live garage, WhatsApp bot',lv_d3:'Landing page with interactive demo — algorithm transparency in Hebrew',available:'Available',photo_title:'The Patlas Family',photo_sub:'Father of 5 · Code that serves home & community',photo_family:'Father of 5',chip_creator:'Creator',chip_langs:'3 langs',hero_lead:'Education · AI · Games',hero_tagline:'Code that serves community',s1:'Projects',s2:'Ready to publish',s3:'Languages',s4:'Content channels',b1:'My Projects',b2:'My Channels',ab_label:'About',ab_title:'Who <span>I Am</span>',ab_sub:'Developer who creates — creator who develops',ab_p1:'Hi! I\'m <strong>David Patlas</strong> — Full Stack Developer, digital content creator and online presence manager.',ab_p2:'I\'ve built dozens of projects: <strong>educational platforms for the Haredi community</strong>, AI tools, HTML5 games, desktop widgets, CRM tools and more.',ab_p3:'I manage a full digital presence — YouTube, website, TikTok and Twitter — with Jewish content in Hebrew, Russian and English.',tl_h:'Timeline',tl1t:'2025–2026 — Heavy Development',tl1d:'24+ projects — AI, education, tools and games',tl2t:'2024–2025 — Platforms',tl2d:'Math for Haredim, Car Course, The Algorithm That Repented',tl3t:'2023+ — Digital Management',tl3d:'YouTube, TikTok, website and Twitter in three languages',tl4t:'Studies — Paamei Atid',tl4d:'Python, networking and web development',ch_label:'Channels',ch_title:'Digital <span>Presence</span>',ch_sub:'All channels I build and manage',cyt:'Torah lessons, weekly Parasha and Mishna in Russian and Hebrew — I built and manage.',csite_h:'Jewish Learning Platform',csite:'Torah study website with lessons, articles and Pardes books.',ctt:'Short Jewish content for a wide audience.',cx:'Projects and thoughts on AI and development.',cpic_name:'Project Archive',cpic_h:'Earlier version',cpic:'Additional projects — archive link',cgh:'Tools, AI, games and education — open source.',pr_label:'Projects',pr_title:'What I <span>Built</span>',pr_sub:'52+ projects · AI · education · games · <a href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/" data-preview-title="ארכיון פרויקטים" style="color:var(--accent);font-weight:700;">full portfolio →</a>',pr_full:'Full portfolio (34+ projects) →',fa:'All',ff:'Flagship',fai:'AI',fg:'Games',fj:'Jewish',fe:'Education',fb:'Business',fd:'Dev Tools',fl:'Live',cf:'Flagship',cai:'AI Tool',cg:'Game',cj:'Jewish Tool',ce:'Education',cb:'Business Tool',cd:'Dev Tool',n1:'Math for Haredim',d1:'Full math platform — 90+ lessons, GeoGebra, quizzes and PWA for the Haredi community.',n2:'Car Mechanics Course',d2:'Interactive course — 19,000+ cars, live garage, WhatsApp bot.',n3:'The Algorithm That Repented',d3:'Browser extension + AI agent — explains why you saw every post, algorithm transparency in Hebrew.',d4:'Desktop widget: Hebrew date, Parasha, daily prayer times.',n5:'Etrog Checker',d5:'AI detection of defects and quality in etrogim.',n6:'Emotion Identifier',d6:'NLP for emotion detection in Hebrew text.',n7:'ID Decoder & Checker',d7:'Scan and analyze Israeli IDs — React, OCR.',n8:'Model Training System',d8:'Hebrew UI for training ML models.',n9:'It\'s All About Money',d9:'Price guessing game for the whole family.',n10:'Theme Park RCT Builder',d10:'Build a theme park RCT-style — in the browser.',n11:'Patlas Games Collection',d11:'HTML5 collection — Asteroids, Breakout, Snake and more.',n12:'Digital Kids Games',d12:'Educational Hebrew games for kindergarten and school.',n13:'Shofar',d13:'Shofar audio and halachic info for High Holidays.',n14:"God's Name Russian Fixer",d14:"Fix spelling of God's name in Russian books.",n15:'Breathing Timer',d15:'Guided breathing timer — mindfulness and relaxation.',n16:'Haredi Household Manager',d16:'Offline budget management for the Haredi community.',n17:'WhatsApp Leads Extractor',d17:'Extract leads from WhatsApp backup — automated CRM.',n18:'CRM File Generator',d18:'Automatically generate CRM files.',n19:'Email + Aliasing Generator',d19:'Email addresses with + for spam filtering.',n20:'Real Code Analyzer',d20:'Deep code breakdown and analysis.',n21:'Claude Code Splitter',d21:'Split large code files from Claude.',d22:'Unified project management platform.',n23:'CSS Designs Collection',d23:'77 CSS effects — animations, cards, gradients.',co_t:'Let\'s Build Something <span style="text-decoration:underline;text-decoration-color:rgba(255,255,255,0.4);">Together</span>',co_s:'Looking for a developer who also creates content? Have a project? I\'m here.',co_email:'Send Email',ft:'Developer · Creator · Digital Manager'},
-ru:{s1b:'Активных в портфолио',s1c:'Областей экспертизы',dir:'ltr',lang:'ru',skip:'Перейти к содержанию',search_ph:'Поиск проектов...',loading:'Загрузка проектов...',no_results:'Проекты не найдены — попробуйте другой фильтр',show_all:'Показать все',show_all_n:'Показать все проекты',filter_cat:'Фильтр: {c}',filter_search:'Поиск: "{q}"',count:'Показано {n} из {t} проектов',cat_n:'{n} проектов',co_wa:'WhatsApp',pv_open:'Открыть',pv_newtab:'Открыть в браузере',pv_loading:'Загрузка...',pv_blocked:'Нельзя показать здесь — откройте в браузере',pv_reload:'Обновить',pv_close:'Закрыть',pv_contact:'Контакт',pv_home:'Главная',theme_day:'Дневной режим',theme_night:'Ночной режим',theme_lbl_day:'День',theme_lbl_night:'Ночь',dock_home:'Главная',dock_apps:'Приложения',dock_live:'Live',dock_channels:'Каналы',nav_home:'Главная',nav_about:'Обо мне',nav_channels:'Каналы',nav_live:'Live',nav_projects:'Проекты',nav_contact:'Контакт',lv_label:'Live на Netlify',lv_title:'Живые <span>сайты</span>',lv_sub:'Живые проекты — клик открывает в браузере',lv_d1:'Платформа математики — 90+ уроков и PWA',lv_d2:'Курс механики — 19 000+ авто, живая мастерская, WhatsApp бот',lv_d3:'Лендинг с интерактивным демо — прозрачность алгоритмов на иврите',available:'Доступен',photo_title:'Семья Патлас',photo_sub:'Отец пятерых · Код для дома и общины',photo_family:'Отец пятерых',chip_creator:'Криэйтор',chip_langs:'3 языка',hero_lead:'Образование · AI · Игры',hero_tagline:'Код для сообщества',s1:'Проектов',s2:'Готовы к публикации',s3:'Языка',s4:'Канала',b1:'Мои проекты',b2:'Мои каналы',ab_label:'Обо мне',ab_title:'Кто <span>я</span>',ab_sub:'Разработчик, который создаёт — и создатель, который разрабатывает',ab_p1:'Привет! Я <strong>Давид Патлас</strong> — Full Stack разработчик, создатель цифрового контента и менеджер онлайн-присутствия.',ab_p2:'Создал десятки проектов: <strong>образовательные платформы для харедим</strong>, AI инструменты, HTML5 игры, CRM инструменты и многое другое.',ab_p3:'Управляю YouTube, сайтом, TikTok и Twitter — с еврейским контентом на иврите, русском и английском.',tl_h:'Хронология',tl1t:'2025–2026 — Активная разработка',tl1d:'24+ проекта — AI, образование, инструменты и игры',tl2t:'2024–2025 — Платформы',tl2d:'Математика для харедим, Курс автомеханики, Алгоритм раскаяния',tl3t:'2023+ — Цифровой менеджмент',tl3d:'YouTube, TikTok, сайт и Twitter на трёх языках',tl4t:'Учёба — Пааамей Атид',tl4d:'Python, сети и веб-разработка',ch_label:'Каналы',ch_title:'Цифровое <span>присутствие</span>',ch_sub:'Все каналы, которые я создаю и управляю',cyt:'Уроки Торы, недельная Параша и Мишна на русском и иврите — создал и управляю.',csite_h:'Еврейская платформа обучения',csite:'Уроки, статьи и книги Пардес — разработал и управляю.',ctt:'Короткий еврейский контент для широкой аудитории.',cx:'Проекты и мысли об AI и разработке.',cpic_name:'Архив проектов',cpic_h:'Ранняя версия',cpic:'Дополнительные проекты — ссылка на архив',cgh:'Инструменты, AI, игры и образование — открытый код.',pr_label:'Проекты',pr_title:'Что я <span>создал</span>',pr_sub:'52+ проекта · AI · образование · игры · <a href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/" data-preview-title="ארכיון פרויקטים" style="color:var(--accent);font-weight:700;">портфолио →</a>',pr_full:'Полное портфолио (34+ проекта) →',fa:'Все',ff:'Флагман',fai:'AI',fg:'Игры',fj:'Еврейские',fe:'Образование',fb:'Бизнес',fd:'Для разрабов',fl:'Live',cf:'Флагман',cai:'AI инструмент',cg:'Игра',cj:'Еврейский',ce:'Образование',cb:'Бизнес инструмент',cd:'Для разработчика',n1:'Математика для харедим',d1:'Полная платформа — 90+ уроков, GeoGebra, тесты и PWA.',n2:'Курс автомеханики',d2:'Интерактивный курс — 19 000+ авто, живая мастерская, WhatsApp бот.',n3:'Алгоритм раскаяния',d3:'Расширение браузера + AI агент — объясняет, почему вы видели каждый пост.',d4:'Виджет рабочего стола: еврейская дата, Параша, времена дня.',n5:'Проверщик этрогов',d5:'AI определение дефектов в этрогах.',n6:'Определитель эмоций',d6:'NLP для эмоций в тексте на иврите.',n7:'Дешифровщик удостоверений',d7:'Анализ израильских удостоверений — React, OCR.',n8:'Система обучения моделей',d8:'Интерфейс на иврите для ML моделей.',n9:'Всё о деньгах',d9:'Игра угадывания цен для всей семьи.',n10:'Парк развлечений RCT',d10:'Строй парк аттракционов — прямо в браузере.',n11:'Коллекция игр Патлас',d11:'HTML5 — Астероиды, Брейкаут, Змейка и другие.',n12:'Цифровые игры для детей',d12:'Образовательные игры на иврите.',n13:'Шофар',d13:'Звуки шофара и информация для праздников.',n14:'Исправитель имени Б-га по-русски',d14:'Исправление написания имени Б-га в русских книгах.',n15:'Таймер дыхания',d15:'Таймер дыхания — расслабление и майндфулнесс.',n16:'Менеджер хозяйства харедим',d16:'Офлайн ПО для бюджета для харедим.',n17:'Экстрактор лидов WhatsApp',d17:'Лиды из резервной копии WhatsApp — CRM автоматически.',n18:'Генератор CRM файлов',d18:'Автоматическая генерация CRM файлов.',n19:'Генератор Email + Alias',d19:'Email адреса с + для фильтрации спама.',n20:'Настоящий анализатор кода',d20:'Глубокий анализ кода для любого языка.',n21:'Разделитель кода Claude',d21:'Разделение больших файлов кода из Claude.',d22:'Единая платформа управления проектами.',n23:'Коллекция CSS дизайнов',d23:'77 CSS эффектов — анимации, карточки, градиенты.',co_t:'Давайте создадим что-то <span style="text-decoration:underline;text-decoration-color:rgba(255,255,255,0.4);">вместе</span>',co_s:'Ищете разработчика, который создаёт контент? Есть проект? Я здесь.',co_email:'Написать',ft:'Разработчик · Создатель · Цифровой менеджер'}
+he:{s1b:'פעילים בתיק',s1c:'תחומי מומחיות',dir:'rtl',lang:'he',skip:'דלג לתוכן',intro_skip:'דלג ›',intro_projects:'פרויקטים',intro_flash:'AI · חינוך · משחקים · יהדות',search_ph:'חפש פרויקט...',loading:'טוען פרויקטים...',no_results:'לא נמצאו פרויקטים — נסה מסנן או חיפוש אחר',show_all:'הצג הכל',show_all_n:'הצג את כל הפרויקטים',filter_cat:'מסנן: {c}',filter_search:'חיפוש: "{q}"',count:'מציג {n} מתוך {t} פרויקטים',cat_n:'{n} פרויקטים',co_wa:'WhatsApp',pv_open:'פתח',pv_newtab:'פתח בדפדפן',pv_loading:'טוען אתר...',pv_blocked:'לא ניתן להציג כאן — לחץ לפתיחה בדפדפן',pv_reload:'רענן',pv_close:'סגור',pv_contact:'צור קשר',pv_home:'עמוד פרויקט',theme_day:'מצב יום',theme_night:'מצב לילה',theme_lbl_day:'יום',theme_lbl_night:'לילה',dock_home:'בית',dock_apps:'אפליקציות',dock_live:'חי',dock_channels:'ערוצים',nav_home:'בית',nav_about:'אודות',nav_channels:'ערוצים',nav_live:'חי',nav_projects:'פרויקטים',nav_contact:'צור קשר',lv_label:'חי ב-Netlify',lv_title:'אתרים <span>חיים</span>',lv_sub:'פרויקטים חיים — לחיצה פותחת בדפדפן',lv_d1:'פלטפורמת מתמטיקה מלאה — 90+ שיעורים ו-PWA',lv_d2:'קורס מכונאות — 19,000+ רכבים, מוסך חי, בוט ווצאפ',lv_d3:'דף נחיתה עם דמו אינטראקטיבי — שקיפות אלגוריתמית בעברית',available:'זמין',photo_title:'משפחת Patlas',photo_sub:'אבא ל-5 · קוד שמשרת בית וקהילה',photo_family:'אבא ל-5',chip_creator:'יוצר',chip_langs:'3 שפות',hero_lead:'פלטפורמות חינוכיות · AI · משחקים',hero_tagline:'קוד שמשרת קהילה',s1:'פרויקטים',s2:'מוכנים לפרסום',s3:'שפות',s4:'ערוצי תוכן',b1:'הפרויקטים שלי',b2:'ערוצי התוכן',ab_label:'אודות',ab_title:'מי <span>אני</span>',ab_sub:'מפתח שגם יוצר — ויוצר שגם מפתח',ab_p1:'שלום! אני <strong>דוד פטלס</strong> — מפתח Full Stack, יוצר תוכן דיגיטלי ומנהל נוכחות מקוונת.',ab_p2:'בניתי עשרות פרויקטים: <strong>פלטפורמות חינוכיות לקהילה החרדית</strong>, כלי AI, משחקי HTML5, ויג\'טים, כלי CRM ושיווק — ועוד.',ab_p3:'במקביל לפיתוח, אני מנהל את <strong>הנוכחות הדיגיטלית</strong> — YouTube, אתר, TikTok וטוויטר — עם תוכן תורני ויהודי בעברית, רוסית ואנגלית.',archive_title:'ארכיון פרויקטים',arch_title:'ארכיון מלא',arch_sub:'42+ בתיק · 52+ בארכיון — גרסאות, גלריות ומסמכי תכנון',arch_full:'כל הפרויקטים',arch_gallery:'גלריית כלים',arch_about:'תיק מפורט',pv_versions:'גירסאות',pv_versions_title:'היסטוריית גירסאות',vers_gh:'ראה קוד מלא ב-GitHub',vers_close:'סגור',tl_h:'ציר הזמן',tl1t:'2025–2026 — פיתוח נרחב',tl1d:'42+ פרויקטים בתיק — AI, חינוך, כלים ומשחקים',tl2t:'2024–2025 — פלטפורמות',tl2d:'מתמטיקה לחרדים, מסלול רכב, האלגוריתם שחזר בתשובה',tl3t:'2023+ — ניהול דיגיטלי',tl3d:'YouTube, TikTok, אתר וטוויטר — בשלוש שפות',tl4t:'לימודים — פעמי עתידים',tl4d:'Python, רשתות תקשורת ופיתוח ווב',ch_label:'ערוצים',ch_title:'נוכחות <span>דיגיטלית</span>',ch_sub:'כל הערוצים שאני בונה ומנהל',cyt:'שיעורי תורה, פרשת שבוע ומשניות ברוסית ועברית — בניתי ומנהל.',csite_h:'פלטפורמת לימוד יהודית',csite:'שיעורים, מאמרים וספרי פרדס — פיתחתי ואני מנהל.',ctt:'תוכן יהודי קצר לקהל רחב — עורך ומנהל.',cx:'פרויקטים ומחשבות על AI ופיתוח.',cpic_name:'ארכיון פרויקטים',cpic_h:'גרסה קודמת',cpic:'אוסף פרויקטים נוספים — לינק לארכיון',cgh:'כלים, AI, משחקים וחינוך — קוד פתוח.',pr_label:'פרויקטים',pr_title:'מה <span>בניתי</span>',pr_sub:'52+ פרויקטים · AI · חינוך · משחקים · <a href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/" data-preview-title="ארכיון פרויקטים" style="color:var(--accent);font-weight:700;">ארכיון →</a>',fa:'הכל',ff:'דגל',fai:'AI',fg:'משחקים',fj:'יהודי',fe:'חינוך',fb:'עסקים',fd:'כלי מפתחים',fl:'חי',cf:'פרויקט דגל',cai:'כלי AI',cg:'משחק',cj:'כלי יהודי',ce:'חינוך',cb:'עסקים',cd:'כלי מפתח',n1:'מתמטיקה לחרדים',d1:'פלטפורמת מתמטיקה מלאה — 90+ שיעורים, GeoGebra, מבחנים ו-PWA.',n2:'מסלול רכב',d2:'קורס מכונאות — 19,000+ רכבים, מוסך חי, בוט ווצאפ.',n3:'האלגוריתם שחזר בתשובה',d3:'תוסף דפדפן + אגנט AI — מסביר למה ראית כל פוסט, שקיפות אלגוריתמית בעברית.',d4:'ויג\'ט שולחן עבודה: תאריך עברי, פרשה, זמני היום.',n5:'בודק אתרוגים',d5:'זיהוי פסולים וכתמים — Computer Vision.',n6:'מזהה רגשות',d6:'NLP לזיהוי רגשות בטקסט עברי.',n7:'ID מפענח ובודק',d7:'סריקה וניתוח ת.ז. ישראליות — React, OCR.',n8:'מערכת אימון מודל',d8:'ממשק עברי לאימון מודלי ML.',n9:'הכל בכסף',d9:'משחק ניחוש מחירים לכל המשפחה.',n10:'פארק שעשועים RCT',d10:'בונה פארק שעשועים RCT — בדפדפן.',n11:'פטלס משחקים',d11:'אוסף HTML5 — אסטרואידים, ברייקאוט, סנייק ועוד.',n12:'משחקים לילדים',d12:'חבילת משחקים חינוכיים בעברית לגן ולבית ספר.',n13:'שופר',d13:'תקיעות אודיו ומידע הלכתי לחגי תשרי.',n14:'תיקון שם השם ברוסית',d14:'כלי לתיקון כתיב שם ה\' בספרים ברוסית.',n15:'שזם נשימות',d15:'טיימר נשימות מודרך — מיינדפולנס ורגיעה.',n16:'ניהול משק בית חרדי',d16:'תוכנה offline לניהול תקציב למגזר החרדי.',n17:'לידים מגיבוי ווצאפ',d17:'חילוץ לידים מגיבוי WhatsApp — CRM אוטומטי.',n18:'מחולל קבצי CRM',d18:'יצירה אוטומטית של קבצי CRM.',n19:'מחולל מייל + Alias',d19:'כתובות מייל עם + לסינון ספאם.',n20:'מנתח קוד אמיתי',d20:'פירוק וניתוח קוד לעומק.',n21:'מפצל קוד מקלוד',d21:'פיצול קבצי קוד גדולים מ-Claude.',d22:'פלטפורמת ניהול פרויקטים מאוחדת.',n23:'אוסף עיצובי CSS',d23:'77 אפקטי CSS — אנימציות, כרטיסים, גרדיאנטים.',co_t:'בואו נבנה משהו <span style="text-decoration:underline;text-decoration-color:rgba(255,255,255,0.4);">יחד</span>',co_s:'מחפש מפתח שגם יוצר תוכן? יש פרויקט? רוצה לשתף פעולה? אני כאן.',co_email:'שלח מייל',ft:'מפתח · יוצר · מנהל דיגיטלי'},
+en:{s1b:'Active in portfolio',s1c:'Expertise areas',dir:'ltr',lang:'en',skip:'Skip to content',intro_skip:'Skip ›',intro_projects:'projects',intro_flash:'AI · Education · Games · Jewish',search_ph:'Search projects...',loading:'Loading projects...',no_results:'No projects found — try another filter or search',show_all:'Show all',show_all_n:'Show all projects',filter_cat:'Filter: {c}',filter_search:'Search: "{q}"',count:'Showing {n} of {t} projects',cat_n:'{n} projects',co_wa:'WhatsApp',pv_open:'Open',pv_newtab:'Open in browser',pv_loading:'Loading site...',pv_blocked:'Cannot preview here — open in browser',pv_reload:'Reload',pv_close:'Close',pv_contact:'Contact',pv_home:'Project home',theme_day:'Light mode',theme_night:'Dark mode',theme_lbl_day:'Day',theme_lbl_night:'Night',dock_home:'Home',dock_apps:'Apps',dock_live:'Live',dock_channels:'Channels',nav_home:'Home',nav_about:'About',nav_channels:'Channels',nav_live:'Live',nav_projects:'Projects',nav_contact:'Contact',lv_label:'Live on Netlify',lv_title:'Live <span>Sites</span>',lv_sub:'Live projects — click opens in your browser',lv_d1:'Full math platform — 90+ lessons and PWA',lv_d2:'Mechanics course — 19,000+ cars, live garage, WhatsApp bot',lv_d3:'Landing page with interactive demo — algorithm transparency in Hebrew',available:'Available',photo_title:'The Patlas Family',photo_sub:'Father of 5 · Code that serves home & community',photo_family:'Father of 5',chip_creator:'Creator',chip_langs:'3 langs',hero_lead:'Education · AI · Games',hero_tagline:'Code that serves community',s1:'Projects',s2:'Ready to publish',s3:'Languages',s4:'Content channels',b1:'My Projects',b2:'My Channels',ab_label:'About',ab_title:'Who <span>I Am</span>',ab_sub:'Developer who creates — creator who develops',ab_p1:'Hi! I\'m <strong>David Patlas</strong> — Full Stack Developer, digital content creator and online presence manager.',ab_p2:'I\'ve built dozens of projects: <strong>educational platforms for the Haredi community</strong>, AI tools, HTML5 games, widgets, CRM and marketing tools — and more.',ab_p3:'Alongside development, I manage a <strong>digital presence</strong> — YouTube, website, TikTok and Twitter — with Jewish content in Hebrew, Russian and English.',archive_title:'Project Archive',arch_title:'Full archive',arch_sub:'42+ in portfolio · 52+ in archive — versions, galleries & docs',arch_full:'All projects',arch_gallery:'Tools gallery',arch_about:'Detailed portfolio',pv_versions:'Versions',pv_versions_title:'Version history',vers_gh:'View full code on GitHub',vers_close:'Close',tl_h:'Timeline',tl1t:'2025–2026 — Heavy Development',tl1d:'42+ projects in portfolio — AI, education, tools and games',tl2t:'2024–2025 — Platforms',tl2d:'Math for Haredim, Car Course, The Algorithm That Repented',tl3t:'2023+ — Digital Management',tl3d:'YouTube, TikTok, website and Twitter in three languages',tl4t:'Studies — Paamei Atid',tl4d:'Python, networking and web development',ch_label:'Channels',ch_title:'Digital <span>Presence</span>',ch_sub:'All channels I build and manage',cyt:'Torah lessons, weekly Parasha and Mishna in Russian and Hebrew — I built and manage.',csite_h:'Jewish Learning Platform',csite:'Torah study website with lessons, articles and Pardes books.',ctt:'Short Jewish content for a wide audience.',cx:'Projects and thoughts on AI and development.',cpic_name:'Project Archive',cpic_h:'Earlier version',cpic:'Additional projects — archive link',cgh:'Tools, AI, games and education — open source.',pr_label:'Projects',pr_title:'What I <span>Built</span>',pr_sub:'52+ projects · AI · education · games · <a href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/" data-preview-title="Project Archive" style="color:var(--accent);font-weight:700;">archive →</a>',pr_full:'Full portfolio (34+ projects) →',fa:'All',ff:'Flagship',fai:'AI',fg:'Games',fj:'Jewish',fe:'Education',fb:'Business',fd:'Dev Tools',fl:'Live',cf:'Flagship',cai:'AI Tool',cg:'Game',cj:'Jewish Tool',ce:'Education',cb:'Business Tool',cd:'Dev Tool',n1:'Math for Haredim',d1:'Full math platform — 90+ lessons, GeoGebra, quizzes and PWA for the Haredi community.',n2:'Car Mechanics Course',d2:'Interactive course — 19,000+ cars, live garage, WhatsApp bot.',n3:'The Algorithm That Repented',d3:'Browser extension + AI agent — explains why you saw every post, algorithm transparency in Hebrew.',d4:'Desktop widget: Hebrew date, Parasha, daily prayer times.',n5:'Etrog Checker',d5:'AI detection of defects and quality in etrogim.',n6:'Emotion Identifier',d6:'NLP for emotion detection in Hebrew text.',n7:'ID Decoder & Checker',d7:'Scan and analyze Israeli IDs — React, OCR.',n8:'Model Training System',d8:'Hebrew UI for training ML models.',n9:'It\'s All About Money',d9:'Price guessing game for the whole family.',n10:'Theme Park RCT Builder',d10:'Build a theme park RCT-style — in the browser.',n11:'Patlas Games Collection',d11:'HTML5 collection — Asteroids, Breakout, Snake and more.',n12:'Digital Kids Games',d12:'Educational Hebrew games for kindergarten and school.',n13:'Shofar',d13:'Shofar audio and halachic info for High Holidays.',n14:"God's Name Russian Fixer",d14:"Fix spelling of God's name in Russian books.",n15:'Breathing Timer',d15:'Guided breathing timer — mindfulness and relaxation.',n16:'Haredi Household Manager',d16:'Offline budget management for the Haredi community.',n17:'WhatsApp Leads Extractor',d17:'Extract leads from WhatsApp backup — automated CRM.',n18:'CRM File Generator',d18:'Automatically generate CRM files.',n19:'Email + Aliasing Generator',d19:'Email addresses with + for spam filtering.',n20:'Real Code Analyzer',d20:'Deep code breakdown and analysis.',n21:'Claude Code Splitter',d21:'Split large code files from Claude.',d22:'Unified project management platform.',n23:'CSS Designs Collection',d23:'77 CSS effects — animations, cards, gradients.',co_t:'Let\'s Build Something <span style="text-decoration:underline;text-decoration-color:rgba(255,255,255,0.4);">Together</span>',co_s:'Looking for a developer who also creates content? Have a project? I\'m here.',co_email:'Send Email',ft:'Developer · Creator · Digital Manager'},
+ru:{s1b:'Активных в портфолио',s1c:'Областей экспертизы',dir:'ltr',lang:'ru',skip:'Перейти к содержанию',intro_skip:'Пропустить ›',intro_projects:'проектов',intro_flash:'AI · Образование · Игры · Иудаизм',search_ph:'Поиск проектов...',loading:'Загрузка проектов...',no_results:'Проекты не найдены — попробуйте другой фильтр',show_all:'Показать все',show_all_n:'Показать все проекты',filter_cat:'Фильтр: {c}',filter_search:'Поиск: "{q}"',count:'Показано {n} из {t} проектов',cat_n:'{n} проектов',co_wa:'WhatsApp',pv_open:'Открыть',pv_newtab:'Открыть в браузере',pv_loading:'Загрузка...',pv_blocked:'Нельзя показать здесь — откройте в браузере',pv_reload:'Обновить',pv_close:'Закрыть',pv_contact:'Контакт',pv_home:'Главная',theme_day:'Дневной режим',theme_night:'Ночной режим',theme_lbl_day:'День',theme_lbl_night:'Ночь',dock_home:'Главная',dock_apps:'Приложения',dock_live:'Live',dock_channels:'Каналы',nav_home:'Главная',nav_about:'Обо мне',nav_channels:'Каналы',nav_live:'Live',nav_projects:'Проекты',nav_contact:'Контакт',lv_label:'Live на Netlify',lv_title:'Живые <span>сайты</span>',lv_sub:'Живые проекты — клик открывает в браузере',lv_d1:'Платформа математики — 90+ уроков и PWA',lv_d2:'Курс механики — 19 000+ авто, живая мастерская, WhatsApp бот',lv_d3:'Лендинг с интерактивным демо — прозрачность алгоритмов на иврите',available:'Доступен',photo_title:'Семья Патлас',photo_sub:'Отец пятерых · Код для дома и общины',photo_family:'Отец пятерых',chip_creator:'Криэйтор',chip_langs:'3 языка',hero_lead:'Образование · AI · Игры',hero_tagline:'Код для сообщества',s1:'Проектов',s2:'Готовы к публикации',s3:'Языка',s4:'Канала',b1:'Мои проекты',b2:'Мои каналы',ab_label:'Обо мне',ab_title:'Кто <span>я</span>',ab_sub:'Разработчик, который создаёт — и создатель, который разрабатывает',ab_p1:'Привет! Я <strong>Давид Патлас</strong> — Full Stack разработчик, создатель цифрового контента и менеджер онлайн-присутствия.',ab_p2:'Создал десятки проектов: <strong>образовательные платформы для харедим</strong>, AI инструменты, HTML5 игры, виджеты, CRM и маркетинг — и многое другое.',ab_p3:'Параллельно с разработкой управляю <strong>цифровым присутствием</strong> — YouTube, сайт, TikTok и Twitter — с еврейским контентом на иврите, русском и английском.',archive_title:'Архив проектов',arch_title:'Полный архив',arch_sub:'42+ в портфолио · 52+ в архиве — версии, галереи и документы',arch_full:'Все проекты',arch_gallery:'Галерея инструментов',arch_about:'Подробное портфолио',pv_versions:'Версии',pv_versions_title:'История версий',vers_gh:'Полный код на GitHub',vers_close:'Закрыть',tl_h:'Хронология',tl1t:'2025–2026 — Активная разработка',tl1d:'42+ проекта в портфолио — AI, образование, инструменты и игры',tl2t:'2024–2025 — Платформы',tl2d:'Математика для харедим, Курс автомеханики, Алгоритм раскаяния',tl3t:'2023+ — Цифровой менеджмент',tl3d:'YouTube, TikTok, сайт и Twitter на трёх языках',tl4t:'Учёба — Пааамей Атид',tl4d:'Python, сети и веб-разработка',ch_label:'Каналы',ch_title:'Цифровое <span>присутствие</span>',ch_sub:'Все каналы, которые я создаю и управляю',cyt:'Уроки Торы, недельная Параша и Мишна на русском и иврите — создал и управляю.',csite_h:'Еврейская платформа обучения',csite:'Уроки, статьи и книги Пардес — разработал и управляю.',ctt:'Короткий еврейский контент для широкой аудитории.',cx:'Проекты и мысли об AI и разработке.',cpic_name:'Архив проектов',cpic_h:'Ранняя версия',cpic:'Дополнительные проекты — ссылка на архив',cgh:'Инструменты, AI, игры и образование — открытый код.',pr_label:'Проекты',pr_title:'Что я <span>создал</span>',pr_sub:'52+ проекта · AI · образование · игры · <a href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/" data-preview-title="Архив проектов" style="color:var(--accent);font-weight:700;">архив →</a>',pr_full:'Полное портфолио (34+ проекта) →',fa:'Все',ff:'Флагман',fai:'AI',fg:'Игры',fj:'Еврейские',fe:'Образование',fb:'Бизнес',fd:'Для разрабов',fl:'Live',cf:'Флагман',cai:'AI инструмент',cg:'Игра',cj:'Еврейский',ce:'Образование',cb:'Бизнес инструмент',cd:'Для разработчика',n1:'Математика для харедим',d1:'Полная платформа — 90+ уроков, GeoGebra, тесты и PWA.',n2:'Курс автомеханики',d2:'Интерактивный курс — 19 000+ авто, живая мастерская, WhatsApp бот.',n3:'Алгоритм раскаяния',d3:'Расширение браузера + AI агент — объясняет, почему вы видели каждый пост.',d4:'Виджет рабочего стола: еврейская дата, Параша, времена дня.',n5:'Проверщик этрогов',d5:'AI определение дефектов в этрогах.',n6:'Определитель эмоций',d6:'NLP для эмоций в тексте на иврите.',n7:'Дешифровщик удостоверений',d7:'Анализ израильских удостоверений — React, OCR.',n8:'Система обучения моделей',d8:'Интерфейс на иврите для ML моделей.',n9:'Всё о деньгах',d9:'Игра угадывания цен для всей семьи.',n10:'Парк развлечений RCT',d10:'Строй парк аттракционов — прямо в браузере.',n11:'Коллекция игр Патлас',d11:'HTML5 — Астероиды, Брейкаут, Змейка и другие.',n12:'Цифровые игры для детей',d12:'Образовательные игры на иврите.',n13:'Шофар',d13:'Звуки шофара и информация для праздников.',n14:'Исправитель имени Б-га по-русски',d14:'Исправление написания имени Б-га в русских книгах.',n15:'Таймер дыхания',d15:'Таймер дыхания — расслабление и майндфулнесс.',n16:'Менеджер хозяйства харедим',d16:'Офлайн ПО для бюджета для харедим.',n17:'Экстрактор лидов WhatsApp',d17:'Лиды из резервной копии WhatsApp — CRM автоматически.',n18:'Генератор CRM файлов',d18:'Автоматическая генерация CRM файлов.',n19:'Генератор Email + Alias',d19:'Email адреса с + для фильтрации спама.',n20:'Настоящий анализатор кода',d20:'Глубокий анализ кода для любого языка.',n21:'Разделитель кода Claude',d21:'Разделение больших файлов кода из Claude.',d22:'Единая платформа управления проектами.',n23:'Коллекция CSS дизайнов',d23:'77 CSS эффектов — анимации, карточки, градиенты.',co_t:'Давайте создадим что-то <span style="text-decoration:underline;text-decoration-color:rgba(255,255,255,0.4);">вместе</span>',co_s:'Ищете разработчика, который создаёт контент? Есть проект? Я здесь.',co_email:'Написать',ft:'Разработчик · Создатель · Цифровой менеджер'}
 };
 
 /* Merged project catalog — portfolio.html */
@@ -1182,124 +1378,234 @@ function picPath(path) {
 const PROJECT_CATALOG = [
   { id:'math', icon:'🎓', cat:['flag','edu','jewish','live'], status:'live', demo:'https://math-haredim.netlify.app', preview:'https://math-haredim.netlify.app/banners/banner-2.png', gh:'https://github.com/DavidPatlas-AI/math-haredim', featured:1,
     name:{he:'מתמטיקה לחרדים',en:'Math for Haredim',ru:'Математика для харедим'},
-    desc:{he:'פלטפורמת מתמטיקה מלאה — 90+ שיעורים, GeoGebra, מבחנים ו-PWA.',en:'Full math platform — 90+ lessons, GeoGebra, quizzes and PWA.',ru:'90+ уроков, GeoGebra, тесты и PWA.'}, tags:['HTML5','GeoGebra','PWA'] },
-  { id:'maslul', icon:'🔧', cat:['flag','edu','live'], status:'live', demo:'https://maslul-rechev-2026.netlify.app', preview:'https://maslul-rechev-2026.netlify.app/assets/hero-command-center-2026.png', featured:1,
+    desc:{he:'פלטפורמת מתמטיקה מלאה — 90+ שיעורים, GeoGebra, מבחנים ו-PWA.',en:'Full math platform — 90+ lessons, GeoGebra, quizzes and PWA.',ru:'90+ уроков, GeoGebra, тесты и PWA.'}, tags:['HTML5','GeoGebra','PWA'],
+    versions:[
+      {v:'v3.0',date:'יוני 2026',label:'PWA + מבחנים',desc:'הפיכה ל-Progressive Web App, מאגר מבחנים עם ציונים, תמיכה אופליין מלאה.'},
+      {v:'v2.0',date:'ינואר 2026',label:'GeoGebra + 90 שיעורים',desc:'שילוב GeoGebra אינטראקטיבי, הרחבה ל-90+ שיעורים, דשבורד למורים.'},
+      {v:'v1.0',date:'יולי 2025',label:'השקה',desc:'פלטפורמה בסיסית עם 30 שיעורי מתמטיקה לקהילה החרדית.'}
+    ]},
+  { id:'maslul', icon:'🔧', cat:['flag','edu','live'], status:'live', demo:'https://maslul-rechev-2026.netlify.app', preview:'https://maslul-rechev-2026.netlify.app/assets/hero-command-center-2026.png', gh:'https://github.com/DavidPatlas-AI/maslul-rechev', featured:1,
     name:{he:'מסלול רכב',en:'Car Mechanics Course',ru:'Курс автомеханики'},
-    desc:{he:'קורס מכונאות — 19,000+ רכבים, מוסך חי, בוט ווצאפ.',en:'19,000+ cars, live garage, WhatsApp bot.',ru:'19 000+ авто, живая мастерская, WhatsApp бот.'}, tags:['Node.js','WhatsApp','Netlify'] },
+    desc:{he:'קורס מכונאות — 19,000+ רכבים, מוסך חי, בוט ווצאפ.',en:'19,000+ cars, live garage, WhatsApp bot.',ru:'19 000+ авто, живая мастерская, WhatsApp бот.'}, tags:['Node.js','WhatsApp','Netlify'],
+    versions:[
+      {v:'v2026.2',date:'מאי 2026',label:'Command Center + 19,000 רכבים',desc:'מרכז פיקוד חדש, מאגר 19,000 רכבים, מוסך חי עם תזמון תורות ובוט ווצאפ.'},
+      {v:'v2026.1',date:'פברואר 2026',label:'קורס מכונאות מורחב',desc:'95 פרקים אינטראקטיביים, שאלות ותשובות, מבחנים עם ציונים.'},
+      {v:'v2025',date:'ספטמבר 2025',label:'השקה ראשונה',desc:'קורס בסיסי למכונאות רכב — HTML5 סטטי.'}
+    ]},
   { id:'teshuva', icon:'📎', cat:['flag','ai','dev','live'], status:'live', demo:'https://teshuva-algorithm.netlify.app', preview:'https://teshuva-algorithm.netlify.app/og-image.png', gh:'https://github.com/DavidPatlas-AI/teshuva-algorithm', featured:1,
     name:{he:'האלגוריתם שחזר בתשובה',en:'The Algorithm That Repented',ru:'Алгоритм раскаяния'},
-    desc:{he:'שקיפות אלגוריתמית — מסביר למה ראית כל פוסט, בעברית.',en:'Algorithm transparency — explains every feed item in Hebrew.',ru:'Прозрачность алгоритмов на иврите.'}, tags:['Electron','Chrome Ext.','AI'] },
-  { id:'yomi', icon:'🕍', cat:['flag','jewish','dev'], status:'live', url:'adhd_home',
+    desc:{he:'שקיפות אלגוריתמית — מסביר למה ראית כל פוסט, בעברית.',en:'Algorithm transparency — explains every feed item in Hebrew.',ru:'Прозрачность алгоритмов на иврите.'}, tags:['Electron','Chrome Ext.','AI'],
+    versions:[
+      {v:'v2.0',date:'אפריל 2026',label:'קליפי + דמו אינטראקטיבי',desc:'מסכת קליפי, אנימציה, דף נחיתה מלא עם הסבר חזותי על האלגוריתם.'},
+      {v:'v1.5',date:'ינואר 2026',label:'תוסף Chrome',desc:'תוסף Chrome שמנתח את ה-feed בזמן אמת ומסביר כל פוסט.'},
+      {v:'v1.0',date:'אוגוסט 2025',label:'השקה — Electron',desc:'אפליקציית Electron ראשונה שמדגימה שקיפות אלגוריתמית בעברית.'}
+    ]},
+  { id:'yomi', icon:'🕍', cat:['flag','jewish','dev'], status:'live', url:'adhd_home/index.html', gh:'https://github.com/DavidPatlas-AI/YomiWidget',
     name:{he:'YomiWidget',en:'YomiWidget',ru:'YomiWidget'},
-    desc:{he:'ויג\'ט שולחן עבודה: תאריך עברי, פרשה, זמני היום.',en:'Desktop widget: Hebrew date, Parasha, zmanim.',ru:'Виджет: дата, Параша, зманим.'}, tags:['Python','Rainmeter','Hebcal'] },
-  { id:'dapor', icon:'📘', cat:['flag','edu'], status:'live', url:'מבחן דפר/gallery.html',
+    desc:{he:'ויג\'ט שולחן עבודה: תאריך עברי, פרשה, זמני היום.',en:'Desktop widget: Hebrew date, Parasha, zmanim.',ru:'Виджет: дата, Параша, зманим.'}, tags:['Python','Rainmeter','Hebcal'],
+    versions:[
+      {v:'v3.0',date:'יוני 2026',label:'זמני יום + פרשה חי',desc:'הוספת zmanim (עלות, הנץ, שקיעה, צאת), פרשת השבוע חי מ-Hebcal API.'},
+      {v:'v2.0',date:'ינואר 2026',label:'עברית מלאה',desc:'תמיכה מלאה בעברית ב-Rainmeter, תאריך עברי מ-Hebcal.'},
+      {v:'v1.0',date:'2025',label:'השקה',desc:'ויג\'ט בסיסי עם שעון ותאריך לועזי.'}
+    ]},
+  { id:'dapor', icon:'📘', cat:['flag','edu'], status:'live', url:'מבחן דפר/gallery.html', gh:'https://github.com/DavidPatlas-AI/dapper-test',
     name:{he:'אתר מבחן דפ״ר',en:'IDF Dapor Exam Simulator',ru:'Симулятор экзамена ЦАХАЛ'},
-    desc:{he:'מבחני דפ"ר אינטראקטיביים — עובד גם אופליין.',en:'Interactive Dapor exams — works offline.',ru:'Интерактивные экзамены — офлайн.'}, tags:['HTML5','Offline','LMS'] },
-  { id:'idcheck', icon:'🛡️', cat:['flag','ai','biz'], status:'live', url:'ID מפענח ובודק/index.html',
+    desc:{he:'מבחני דפ"ר אינטראקטיביים — עובד גם אופליין.',en:'Interactive Dapor exams — works offline.',ru:'Интерактивные экзамены — офлайн.'}, tags:['HTML5','Offline','LMS'],
+    versions:[
+      {v:'v2.0',date:'מרץ 2026',label:'גלריה מלאה + אופליין',desc:'ממשק גלריה, תמיכה אופליין מלאה, 200+ שאלות מבחן דפ"ר.'},
+      {v:'v1.0',date:'2025',label:'השקה',desc:'סימולטור מבחן דפ"ר בסיסי.'}
+    ]},
+  { id:'idcheck', icon:'🛡️', cat:['flag','ai','biz'], status:'live', url:'ID מפענח ובודק/index.html', gh:'https://github.com/DavidPatlas-AI/human-vs-ai-detector',
     name:{he:'מרכז הבודק המקצועי',en:'ID & Data Validator Hub',ru:'Центр проверки данных'},
-    desc:{he:'12 כלי בדיקה — ת"ז, טלפון, רכב, דרכון.',en:'12 validators — ID, phone, car, passport.',ru:'12 валидаторов — удостоверения, телефон, авто.'}, tags:['React','OCR','Validators'] },
-  { id:'trends', icon:'📈', cat:['flag','ai','biz'], status:'live', url:'ARCHIVE/TrendOS_Pro/public/index.html', home:'ARCHIVE/TrendOS_Pro/src/index.html',
+    desc:{he:'12 כלי בדיקה — ת"ז, טלפון, רכב, דרכון.',en:'12 validators — ID, phone, car, passport.',ru:'12 валидаторов — удостоверения, телефон, авто.'}, tags:['React','OCR','Validators'],
+    versions:[
+      {v:'v3.0',date:'יוני 2026',label:'12 כלים',desc:'12 כלי בדיקה: ת"ז, טלפון, לוחית רישוי, דרכון, IBAN ועוד.'},
+      {v:'v2.0',date:'פברואר 2026',label:'OCR + זיהוי תמונה',desc:'הוספת OCR לסריקת ת"ז מתמונות.'},
+      {v:'v1.0',date:'2025',label:'השקה',desc:'5 כלי בדיקה בסיסיים.'}
+    ]},
+  { id:'trends', icon:'📈', cat:['flag','ai','biz'], status:'live', url:'יצירת תוכן ויראלי לפי טרנדים/project_gallery.html',
     name:{he:'מערכת טרנדים חיה',en:'Live Trends OS',ru:'Живая система трендов'},
-    desc:{he:'מפת תודעה בזמן אמת — Google, TikTok, ChatGPT.',en:'Real-time trend map across platforms.',ru:'Карта трендов в реальном времени.'}, tags:['Trends','API','Content'] },
-  { id:'etrog', icon:'🍋', cat:['ai','jewish'], status:'live', url:'בודק אתרוגים/index.html',
+    desc:{he:'מפת תודעה + תוכן ויראלי — Google, TikTok, ChatGPT, אוטומציה, דוחות PDF/JSON ו-4 שפות.',en:'Trend map + viral content — Google, TikTok, ChatGPT, automation, PDF/JSON reports.',ru:'Тренды + виральный контент — Google, TikTok, ChatGPT, автоматизация, PDF/JSON.'}, tags:['Trends','Viral','API'],
+    versions:[
+      {v:'v2.0',date:'יוני 2026',label:'גרסה מאוחדת',desc:'נקודת כניסה אחת — גלריית TrendOS עם כל הכלים הפעילים.'},
+      {v:'v1.0',date:'2025',label:'השקה',desc:'מעקב טרנדים בסיסי.'}
+    ]},
+
+  { id:'etrog', icon:'🍋', cat:['ai','jewish'], status:'live', url:'בודק אתרוגים/index.html', gh:'https://github.com/DavidPatlas-AI/etrog-ai-studio',
     name:{he:'בודק אתרוגים',en:'Etrog Checker',ru:'Проверщик этрогов'},
-    desc:{he:'זיהוי פסולים וכתמים — Computer Vision.',en:'AI defect detection for etrogim.',ru:'AI определение дефектов.'}, tags:['AI','CV'] },
-  { id:'emotion', icon:'😊', cat:['ai'], status:'live', url:'מזהה רגשות/index.html', home:'מזהה רגשות/homepage.html',
+    desc:{he:'זיהוי פסולים וכתמים — Computer Vision.',en:'AI defect detection for etrogim.',ru:'AI определение дефектов.'}, tags:['AI','CV'],
+    versions:[
+      {v:'v2.0',date:'יוני 2026',label:'Computer Vision מלא',desc:'זיהוי אוטומטי של פסולים, כתמים, חזזית — דיוק 94%.'},
+      {v:'v1.0',date:'2025',label:'השקה',desc:'בדיקה בסיסית לפי קטגוריות.'}
+    ]},
+  { id:'emotion', icon:'😊', cat:['ai'], status:'live', url:'מזהה רגשות/index.html', gh:'https://github.com/DavidPatlas-AI/student-emotional-tracker',
     name:{he:'מזהה רגשות',en:'Emotion Identifier',ru:'Определитель эмоций'},
-    desc:{he:'זיהוי רגשות במצלמה ובטקסט עברי.',en:'Emotion detection via camera and Hebrew NLP.',ru:'Эмоции через камеру и NLP.'}, tags:['NLP','Camera'] },
-  { id:'polygraph', icon:'🔍', cat:['ai'], status:'live', url:'פוליגרף דיגיטלי/index.html', home:'פוליגרף דיגיטלי/homepage.html',
+    desc:{he:'VibeCheck Pro — זיהוי רגשות בזמן אמת, מצלמה, קול ו-AI.',en:'VibeCheck Pro — real-time emotions, camera, voice and AI.',ru:'VibeCheck Pro — эмоции, камера, голос и AI.'}, tags:['NLP','Camera'],
+    versions:[
+      {v:'v3.0',date:'יוני 2026',label:'VibeCheck Pro מאוחד',desc:'גרסה אחת — מצלמה, מיקרופון, ניתוח קול, גלריה ועוזר תוכן.'},
+      {v:'v1.0',date:'2025',label:'השקה',desc:'ניתוח טקסט בסיסי לרגשות.'}
+    ]},
+  { id:'polygraph', icon:'🔍', cat:['ai'], status:'live', url:'פוליגרף דיגיטלי/index.html',
     name:{he:'פוליגרף דיגיטלי',en:'Digital Polygraph',ru:'Цифровой полиграф'},
-    desc:{he:'ניתוח אמת ושקר — מחקרים וכלים מתקדמים.',en:'Truth analysis with research tools.',ru:'Анализ правдивости.'}, tags:['AI','Research'] },
-  { id:'mltrain', icon:'🧠', cat:['ai'], status:'wip', contact:1,
+    desc:{he:'פוליגרף חי מאוחד — מצלמה, מיקרופון, שאלות וניתוח ביומטרי.',en:'Unified live polygraph — camera, mic, questions and biometrics.',ru:'Единый полиграф — камера, микрофон, биометрия.'}, tags:['AI','Research'],
+    versions:[
+      {v:'v2.0',date:'יוני 2026',label:'גרסה מאוחדת',desc:'שילוב enhanced + detector — מצלמה חיה, מיקרופון, 4 קטגוריות שאלות, מחקרי PDF.'},
+      {v:'v1.0',date:'2025',label:'השקה',desc:'ממשק ויזואלי לניתוח אמת/שקר.'}
+    ]},
+  { id:'mltrain', icon:'🧠', cat:['ai'], status:'wip', contact:1, gh:'https://github.com/DavidPatlas-AI/ml-training-system',
     name:{he:'מערכת אימון מודל',en:'ML Training System',ru:'Обучение ML моделей'},
-    desc:{he:'ממשק עברי לאימון מודלי ML.',en:'Hebrew UI for training ML models.',ru:'Интерфейс на иврите для ML.'}, tags:['Python','ML'] },
-  { id:'money', icon:'💰', cat:['games','edu'], status:'live', demo:GALLERY_URL,
+    desc:{he:'ממשק עברי לאימון מודלי ML.',en:'Hebrew UI for training ML models.',ru:'Интерфейс на иврите для ML.'}, tags:['Python','ML'],
+    versions:[
+      {v:'v1.0',date:'2025',label:'פרוטוטייפ',desc:'ממשק ראשוני לאימון מודלי ML בעברית — בפיתוח.'}
+    ]},
+  { id:'money', icon:'💰', cat:['games','edu'], status:'live', url:'הכל בכסף/index.html',
     name:{he:'הכל בכסף',en:'It\'s All About Money',ru:'Всё о деньгах'},
-    desc:{he:'משחק ניחוש מחירים לכל המשפחה.',en:'Price guessing game for the family.',ru:'Игра угадывания цен.'}, tags:['HTML5','Kids'] },
-  { id:'rct', icon:'🎢', cat:['games'], status:'live', demo:GALLERY_URL,
+    desc:{he:'משחק ניחוש מחירים לכל המשפחה.',en:'Price guessing game for the family.',ru:'Игра угадывания цен.'}, tags:['HTML5','Kids'],
+    versions:[{v:'v2.0',date:'2026',label:'מחירי 2026',desc:'עדכון מחירים ריאליים, ניקוד, רמות קושי.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'משחק ניחוש מחירים בסיסי.'}]},
+  { id:'rct', icon:'🎢', cat:['games'], status:'live', url:'בונה פארק שעשועים/index.html',
     name:{he:'פארק שעשועים RCT',en:'RCT Theme Park Builder',ru:'Парк RCT'},
-    desc:{he:'בונה פארק שעשועים — בדפדפן.',en:'Build a theme park in the browser.',ru:'Строй парк в браузере.'}, tags:['Canvas','JS'] },
-  { id:'patlasgames', icon:'🎮', cat:['games'], status:'live', demo:GALLERY_URL,
+    desc:{he:'בונה פארק שעשועים — בדפדפן.',en:'Build a theme park in the browser.',ru:'Строй парк в браузере.'}, tags:['Canvas','JS'],
+    versions:[{v:'v1.5',date:'2026',label:'פיזיקה + Canvas',desc:'סימולציית פיזיקה ריאלית, canvas מתקדם.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'בונה פארק ראשוני.'}]},
+  { id:'patlasgames', icon:'🎮', cat:['games'], status:'live', url:'פטלס משחקים/index.html',
     name:{he:'פטלס משחקים',en:'Patlas Games',ru:'Игры Патлас'},
-    desc:{he:'אוסף HTML5 — אסטרואידים, ברייקאוט, סנייק.',en:'HTML5 collection — Asteroids, Breakout, Snake.',ru:'HTML5 — Астероиды, Змейка.'}, tags:['HTML5','Canvas'] },
-  { id:'kidsgames', icon:'👶', cat:['games','edu'], status:'live', demo:GALLERY_URL,
+    desc:{he:'אוסף HTML5 — אסטרואידים, ברייקאוט, סנייק.',en:'HTML5 collection — Asteroids, Breakout, Snake.',ru:'HTML5 — Астероиды, Змейка.'}, tags:['HTML5','Canvas'],
+    versions:[{v:'v3.0',date:'2026',label:'10+ משחקים',desc:'אוסף מורחב — אסטרואידים, ברייקאוט, סנייק, פאזל ועוד.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'3 משחקים ראשונים.'}]},
+  { id:'kidsgames', icon:'👶', cat:['games','edu'], status:'live', url:'משחקים לילדים/index.html',
     name:{he:'משחקים לילדים',en:'Kids Digital Games',ru:'Игры для детей'},
-    desc:{he:'משחקים חינוכיים בעברית.',en:'Educational Hebrew games.',ru:'Образовательные игры.'}, tags:['HTML','Kids'] },
+    desc:{he:'משחקים חינוכיים בעברית.',en:'Educational Hebrew games.',ru:'Образовательные игры.'}, tags:['HTML','Kids'],
+    versions:[{v:'v2.0',date:'2026',label:'גן + כיתה א',desc:'חבילת משחקים לגן ולכיתה א — מספרים, אותיות, ידע כללי.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'3 משחקים לגן חובה.'}]},
   { id:'cables', icon:'🔌', cat:['games'], status:'live', url:'משחק כבלים/digital_connections_lab.html',
     name:{he:'משחק כבלים',en:'Cable Connections Game',ru:'Игра с кабелями'},
-    desc:{he:'חיבורים דיגיטליים — חשיבה לוגית.',en:'Digital connections puzzle.',ru:'Головоломка с кабелями.'}, tags:['Puzzle','Logic'] },
-  { id:'shofar', icon:'📯', cat:['jewish'], status:'live', demo:GALLERY_URL,
+    desc:{he:'חיבורים דיגיטליים — חשיבה לוגית.',en:'Digital connections puzzle.',ru:'Головоломка с кабелями.'}, tags:['Puzzle','Logic'],
+    versions:[{v:'v1.5',date:'2026',label:'מעבדה דיגיטלית',desc:'30 חידות חדשות, רמות מורחבות, מצב time attack.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'פאזל חיבורים בסיסי.'}]},
+  { id:'shofar', icon:'📯', cat:['jewish'], status:'live', url:'שופר/index.html',
     name:{he:'שופר',en:'Shofar',ru:'Шофар'},
-    desc:{he:'תקיעות אודיו ומידע הלכתי.',en:'Shofar audio and halachic info.',ru:'Звуки шофара.'}, tags:['React','Audio'] },
+    desc:{he:'תקיעות אודיו ומידע הלכתי.',en:'Shofar audio and halachic info.',ru:'Звуки шофара.'}, tags:['React','Audio'],
+    versions:[{v:'v2.0',date:'אלול 2025',label:'תקיעות + הלכה',desc:'30 צלילי שופר, מידע הלכתי לחגים, מצב הדרכה.'},
+               {v:'v1.0',date:'2024',label:'השקה',desc:'תקיעות בסיסיות.'}]},
   { id:'hashem', icon:'✡️', cat:['jewish'], status:'live', url:'תיקון שם השם ברוסית/gallery.html',
     name:{he:'מתקן השמות הקדושים',en:'Holy Names Fixer (Russian)',ru:'Исправитель имён Б-га'},
-    desc:{he:'תיקון שם ה\' בספרים ברוסית — 152 קבצי תהילים.',en:'Fix God\'s name in Russian books — PWA.',ru:'Исправление на русском — PWA.'}, tags:['PWA','Russian'] },
-  { id:'breath', icon:'🫁', cat:['edu'], status:'live', url:'שזם נשימות/index.html', home:'שזם נשימות/homepage.html',
+    desc:{he:'תיקון שם ה\' בספרים ברוסית — 152 קבצי תהילים.',en:'Fix God\'s name in Russian books — PWA.',ru:'Исправление на русском — PWA.'}, tags:['PWA','Russian'],
+    versions:[
+      {v:'v3.0',date:'2026',label:'152 קבצי תהילים',desc:'תיקון שלם של ספר תהילים + סידור ברוסית — PWA אופליין.'},
+      {v:'v2.0',date:'2025',label:'מאגר שמות',desc:'אלפי שמות עם תיקונים, ממשק שלוש שפות.'},
+      {v:'v1.0',date:'2024',label:'השקה',desc:'כלי בסיסי לתיקון שם ה\' ברוסית.'}
+    ]},
+  { id:'breath', icon:'🫁', cat:['edu'], status:'live', url:'שזם נשימות/next_gen_biometric_system.html',
     name:{he:'שזם נשימות',en:'Breathing Timer',ru:'Таймер дыхания'},
-    desc:{he:'טיימר נשימות מודרך — ביומטריה.',en:'Guided breathing — biometric dashboard.',ru:'Дыхание и биометрия.'}, tags:['Wellness','Bio'] },
-  { id:'greenhouse', icon:'🌱', cat:['edu'], status:'live', url:'חממה דיגיטלית/index.html', home:'חממה דיגיטלית/landing_page.html', preview:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=800&q=80',
+    desc:{he:'מערכת ביומטרית דור הבא — AI, מצלמה, אווטאר 3D ו-IoT.',en:'Next-gen biometric system — AI, camera, 3D avatar and IoT.',ru:'Биометрия нового поколения — AI, камера, 3D.'}, tags:['Wellness','Bio'],
+    versions:[{v:'v3.0',date:'יוני 2026',label:'דור הבא מאוחד',desc:'גרסה אחת — AI, Computer Vision, אווטאר תלת-ממדי, IoT ו-AR/VR.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'טיימר נשימות בסיסי.'}]},
+  { id:'greenhouse', icon:'🌱', cat:['edu'], status:'live', url:'חממה דיגיטלית/landing_page.html', preview:'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=800&q=80',
     name:{he:'חממה דיגיטלית',en:'Digital Greenhouse',ru:'Цифровая теплица'},
-    desc:{he:'גידול צמחים בקהילה גלובלית בזמן אמת.',en:'Community plant growing in real time.',ru:'Совместное выращивание растений.'}, tags:['React','Community'] },
-  { id:'dapor-schedule', icon:'🎯', cat:['edu'], status:'live', url:'מסלול_מלא_מפוצץ/gallery.html',
-    name:{he:'לוז יומי רנדומלי',en:'Random Daily Scheduler',ru:'Случайный распорядок дня'},
-    desc:{he:'לוח זמנים יומי מגוון ואוטומטי.',en:'Auto-generated varied daily schedule.',ru:'Автоматический план дня.'}, tags:['HTML','Productivity'] },
+    desc:{he:'גידול צמחים בקהילה גלובלית בזמן אמת.',en:'Community plant growing in real time.',ru:'Совместное выращивание растений.'}, tags:['React','Community'],
+    versions:[{v:'v2.0',date:'2026',label:'קהילה גלובלית',desc:'גידול שיתופי בזמן אמת עם משתמשים ברחבי העולם.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'סימולטור גידול צמחים בסיסי.'}]},
+  { id:'dapor-schedule', icon:'🎯', cat:['edu'], status:'live', url:'מסלול_מלא_מפוצץ/gallery.html', gh:'https://github.com/DavidPatlas-AI/full-learning-route',
+    name:{he:'מסלול ממודול 0 — לוז יומי',en:'Module 0 Route — Daily Scheduler',ru:'Маршрут модуля 0'},
+    desc:{he:'מערכת לוז אינטראקטיבית — כפתורים רנדומליים ומסודרים, מזג אוויר, SOD, עייפות ועץ תפריטים.',en:'Interactive schedule — random/ordered buttons, weather, SOD burst, fatigue meter, menu tree.',ru:'Интерактивный распорядок — кнопки, погода, SOD, усталость, дерево меню.'}, tags:['HTML','Productivity','Interactive'],
+    versions:[
+      {v:'v3.0',date:'2026',label:'מסלול ממודול 0',desc:'30+ כפתורים: מזג אוויר, SOD מתפוצץ, רכבת זמן, מצב רוח, לו"ז יומי — עיצוב עתידני.'},
+      {v:'v2.0',date:'2026',label:'מסלול מלא מפוצץ',desc:'לוז מלא עם 50+ אפשרויות, רנדומיזציה חכמה, יצוא ל-PDF.'},
+      {v:'v1.0',date:'2025',label:'השקה',desc:'לוז יומי בסיסי עם כפתור רנדומלי.'}]},
+  { id:'digibook', icon:'📖', cat:['edu','jewish'], status:'wip', contact:1,
+    name:{he:'ספר דיגיטלי אינטראקטיבי',en:'Interactive Digital Book',ru:'Интерактивная книга'},
+    desc:{he:'פלטפורמת ספר דיגיטלי עם אודיו, ניווט ותמיכה בריבוי שפות.',en:'Digital book platform with audio, navigation and multi-language support.',ru:'Цифровая книга с аудио и мультиязычностью.'}, tags:['Audio','Multi-lang','Edu'],
+    versions:[{v:'v1.0',date:'בפיתוח',label:'פרוטוטייפ',desc:'ספר דיגיטלי עם קריינות וניווט רב-לשוני — בפיתוח.'}]},
   { id:'budget', icon:'🏠', cat:['edu','jewish'], status:'wip', contact:1,
     name:{he:'ניהול משק בית חרדי',en:'Haredi Budget Manager',ru:'Бюджет для харедим'},
-    desc:{he:'ניהול תקציב offline למגזר החרדי.',en:'Offline budget for Haredi households.',ru:'Офлайн бюджет.'}, tags:['Python','Offline'] },
+    desc:{he:'ניהול תקציב offline למגזר החרדי.',en:'Offline budget for Haredi households.',ru:'Офлайн бюджет.'}, tags:['Python','Offline'],
+    versions:[{v:'v1.0',date:'בפיתוח',label:'פרוטוטייפ',desc:'תוכנה offline לניהול תקציב — בפיתוח.'}]},
   { id:'leads', icon:'🪖', cat:['biz'], status:'live', url:'לידים מגיבוי ווצאפ/project_gallery.html',
     name:{he:'לידים חכמים מווטסאפ',en:'WhatsApp Leads CRM',ru:'Лиды из WhatsApp'},
-    desc:{he:'זיהוי לידים מגיבוי — 500+ מילות מפתח.',en:'Smart leads from WhatsApp backup.',ru:'Умные лиды из резервной копии.'}, tags:['CRM','WhatsApp'] },
-  { id:'crmgen', icon:'⚙️', cat:['biz'], status:'live', url:'מחולל קבצי CRM/gallery.html',
+    desc:{he:'חילוץ לידים מגיבוי ווצאפ — 500+ מילות מפתח, תבניות פנייה מותאמות וייצוא לאקסל.',en:'Extract leads from WhatsApp backup — 500+ keywords, outreach templates, Excel export.',ru:'Лиды из WhatsApp — 500+ ключевых слов, шаблоны, экспорт в Excel.'}, tags:['CRM','WhatsApp'],
+    versions:[{v:'v2.0',date:'2026',label:'500+ מילות מפתח',desc:'זיהוי חכם של לידים מגיבוי WhatsApp — 500 מילות מפתח, ייצוא לאקסל.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'חילוץ לידים בסיסי מגיבוי.'}]},
+  { id:'crmgen', icon:'⚙️', cat:['biz'], status:'live', url:'מחולל קבצי CRM/crm_generator_ultimate.html',
     name:{he:'מחולל קבצי CRM',en:'CRM File Generator',ru:'Генератор CRM'},
-    desc:{he:'13 גרסאות — BAT, PowerShell, Python.',en:'13 versions — automation file generator.',ru:'13 версий автоматизации.'}, tags:['Automation','CRM'] },
+    desc:{he:'13 גרסאות — BAT, PowerShell, Python.',en:'13 versions — automation file generator.',ru:'13 версий автоматизации.'}, tags:['Automation','CRM'],
+    versions:[{v:'v13',date:'2026',label:'13 גרסאות',desc:'BAT, PowerShell, Python, JS — יצירה אוטומטית של מבנה CRM מותאם אישית.'},
+               {v:'v1',date:'2025',label:'השקה',desc:'מחולל BAT בסיסי.'}]},
   { id:'emailplus', icon:'📧', cat:['biz'], status:'live', url:'מחולל מייל עם + עבור סדר וספאם/email_generator_clean.html',
     name:{he:'מחולל מייל + Alias',en:'Email + Alias Generator',ru:'Email + Alias'},
-    desc:{he:'כתובות מייל עם + לסינון ספאם.',en:'Plus-addressing for spam filtering.',ru:'Адреса с + для спама.'}, tags:['Privacy','Email'] },
-  { id:'pizza', icon:'🍕', cat:['biz','games'], status:'live', url:'פיצה/pizza_deluxe.html',
+    desc:{he:'כתובות מייל עם + לסינון ספאם.',en:'Plus-addressing for spam filtering.',ru:'Адреса с + для спама.'}, tags:['Privacy','Email'],
+    versions:[{v:'v2.0',date:'2026',label:'סינון ספאם',desc:'מחולל כתובות עם plus-addressing, ניהול alias, ייצוא.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'מחולל בסיסי.'}]},
+  { id:'pizza', icon:'🍕', cat:['biz','games'], status:'live', url:'פיצה/pizza_ultimate.html', gh:'https://github.com/DavidPatlas-AI/pizza-project',
     name:{he:'תפריט פיצה דיגיטלי',en:'Digital Pizza Menu',ru:'Цифровое меню пиццы'},
-    desc:{he:'תפריט מגיב עם סל קניות ותשלום.',en:'Responsive menu with cart & checkout.',ru:'Меню с корзиной и оплатой.'}, tags:['UI','E-commerce'] },
-  { id:'palette', icon:'🎨', cat:['dev'], status:'live', url:'הפלטה של פטלס/גרסה 4 - הפלטה של פטלס סופי/הפלטה של פטלס סופי/index.html',
+    desc:{he:'תפריט מגיב עם סל קניות ותשלום.',en:'Responsive menu with cart & checkout.',ru:'Меню с корзиной и оплатой.'}, tags:['UI','E-commerce'],
+    versions:[{v:'v3.0',date:'יוני 2026',label:'Ultimate מאוחד',desc:'שילוב deluxe + ultimate — תפריט מלא, סל קניות ותשלום.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'תפריט סטטי.'}]},
+  { id:'palette', icon:'🎨', cat:['dev'], status:'live', url:'הפלטה של פטלס/גרסה 4 - הפלטה של פטלס סופי/הפלטה של פטלס סופי/index.html', gh:'https://github.com/DavidPatlas-AI/patlas-palette',
     name:{he:'הפלטה של Patlas',en:'Patlas Color Palette',ru:'Палитра Patlas'},
-    desc:{he:'פלטות צבעים תרבותיות עם קוד מוכן.',en:'Cultural color palettes with copy-paste code.',ru:'Культурные палитры с кодом.'}, tags:['Design','RTL'] },
+    desc:{he:'פלטות צבעים תרבותיות עם קוד מוכן.',en:'Cultural color palettes with copy-paste code.',ru:'Культурные палитры с кодом.'}, tags:['Design','RTL'],
+    versions:[{v:'v4.0',date:'2026',label:'גרסה סופית',desc:'4 פלטות תרבותיות, RTL מלא, קוד מוכן להעתקה, ייצוא CSS/Tailwind.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'פלטה ראשונית.'}]},
   { id:'csslib', icon:'✨', cat:['dev'], status:'live', url:'עיצובים CSS/gallery.html',
     name:{he:'אוסף עיצובי CSS',en:'CSS Design Lab',ru:'CSS лаборатория'},
-    desc:{he:'77+ אפקטים — אנימציות, כרטיסים, גרדיאנטים.',en:'77+ CSS effects and animations.',ru:'77+ CSS эффектов.'}, tags:['CSS','Design'] },
-  { id:'codemap', icon:'🗺️', cat:['biz'], status:'live', url:'מפה שמראה לי קמפיינים שעומדים לי הראש/gallery_index.html',
+    desc:{he:'77+ אפקטים — אנימציות, כרטיסים, גרדיאנטים.',en:'77+ CSS effects and animations.',ru:'77+ CSS эффектов.'}, tags:['CSS','Design'],
+    versions:[{v:'v3.0',date:'2026',label:'77+ אפקטים',desc:'77 אפקטי CSS — אנימציות, כרטיסים, גרדיאנטים, neon, glassmorphism.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'20 אפקטים ראשונים.'}]},
+  { id:'codemap', icon:'🗺️', cat:['biz'], status:'live', url:'מפה שמראה לי קמפיינים שעומדים לי הראש/gallery_index.html', gh:'https://github.com/DavidPatlas-AI/campaign-map',
     name:{he:'מיפוי קמפיינים',en:'Campaign Map',ru:'Карта кампаний'},
-    desc:{he:'מפה חכמה של קמפיינים לפי אזור.',en:'Smart campaign map by region.',ru:'Карта кампаний по регионам.'}, tags:['Map','Data'] },
-  { id:'echo', icon:'🔊', cat:['ai'], status:'live', url:'אני על רמקול סימן שאלה/echomind_live_enhanced.html',
+    desc:{he:'מפה חכמה של קמפיינים לפי אזור.',en:'Smart campaign map by region.',ru:'Карта кампаний по регионам.'}, tags:['Map','Data'],
+    versions:[{v:'v2.0',date:'2026',label:'מפה חיה',desc:'מפת קמפיינים אינטראקטיבית לפי אזור גיאוגרפי, תקציב וסטטוס.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'טבלת קמפיינים בסיסית.'}]},
+  { id:'echo', icon:'🔊', cat:['ai'], status:'live', url:'אני על רמקול סימן שאלה/echomind_live_enhanced.html', gh:'https://github.com/DavidPatlas-AI/speaker-question-mark',
     name:{he:'בודק רמקול',en:'Speaker Echo Detector',ru:'Детектор эха'},
-    desc:{he:'מזהה אם מדברים מול רמקול פתוח.',en:'Detects open-speaker echo in calls.',ru:'Обнаружение эха динамика.'}, tags:['Audio','Privacy'] },
-  { id:'phish', icon:'🎭', cat:['dev','edu'], status:'live', url:'תחפשני/index.html',
+    desc:{he:'מזהה אם מדברים מול רמקול פתוח.',en:'Detects open-speaker echo in calls.',ru:'Обнаружение эха динамика.'}, tags:['Audio','Privacy'],
+    versions:[{v:'v2.0',date:'2026',label:'EchoMind Live',desc:'זיהוי echo בזמן אמת, התראות, מצב שיחה.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'בדיקת רמקול בסיסית.'}]},
+  { id:'phish', icon:'🎭', cat:['dev','edu'], status:'live', url:'תחפשני/index.html', gh:'https://github.com/DavidPatlas-AI/find-me-app',
     name:{he:'תחפשני — פישינג קרילי',en:'Cyrillic Phishing Lab',ru:'Кириллический фишинг'},
-    desc:{he:'הדרכת אבטחה — Unicode homoglyphs.',en:'Security education — homoglyph phishing.',ru:'Обучение безопасности.'}, tags:['Security','Unicode'] },
+    desc:{he:'הדרכת אבטחה — Unicode homoglyphs.',en:'Security education — homoglyph phishing.',ru:'Обучение безопасности.'}, tags:['Security','Unicode'],
+    versions:[{v:'v2.0',date:'2026',label:'Homoglyph Lab',desc:'מאגר 500+ homoglyphs, כלי ניתוח URL, הדרכת אבטחה.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'הדגמה בסיסית של פישינג קרילי.'}]},
   { id:'codesplit', icon:'📂', cat:['dev'], status:'live', url:'מפצל קוד מקלוד/index.html',
     name:{he:'מפצל קוד מקלוד',en:'Claude Code Splitter',ru:'Разделитель кода Claude'},
-    desc:{he:'פיצול קבצי קוד גדולים לתיקיות.',en:'Split large cloud code into folders.',ru:'Разделение больших файлов.'}, tags:['Claude','DevTools'] },
+    desc:{he:'פיצול קבצי קוד גדולים לתיקיות.',en:'Split large cloud code into folders.',ru:'Разделение больших файлов.'}, tags:['Claude','DevTools'],
+    versions:[{v:'v2.0',date:'2026',label:'פיצול חכם',desc:'פיצול אוטומטי לתיקיות עם שמות קבצים חכמים.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'מפצל קוד בסיסי.'}]},
   { id:'codeauth', icon:'🧑‍💻', cat:['dev','ai'], status:'live', url:'מפענח קוד רגשי/index.html',
     name:{he:'מנתח קוד אמיתי',en:'Code Authorship Analyzer',ru:'Анализатор кода'},
-    desc:{he:'מי כתב את הקוד? ניתוח סגנון.',en:'Who wrote this code? Style analysis.',ru:'Кто написал код?'}, tags:['DevTools','AI'] },
-  { id:'codekids', icon:'👶', cat:['dev','edu'], status:'live', url:'מְנַתֵּחַ קוֹד אֲמִתִּי/index.html', home:'מְנַתֵּחַ קוֹד אֲמִתִּי/homepage.html',
+    desc:{he:'מי כתב את הקוד? ניתוח סגנון.',en:'Who wrote this code? Style analysis.',ru:'Кто написал код?'}, tags:['DevTools','AI'],
+    versions:[{v:'v2.0',date:'2026',label:'ניתוח סגנון + AI',desc:'זיהוי מחבר לפי סגנון קוד, השוואה בין מפתחים, ניתוח "קוד רגשי".'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'ניתוח קוד בסיסי.'}]},
+  { id:'codekids', icon:'👶', cat:['dev','edu'], status:'live', url:'מְנַתֵּחַ קוֹד אֲמִתִּי/final_kids_decoder.html',
     name:{he:'מנתח קוד לילדים',en:'Kids Code Analyzer',ru:'Анализатор для детей'},
-    desc:{he:'25 גרסאות — לימוד תכנות לילדים.',en:'25 versions — coding for kids.',ru:'25 версий для детей.'}, tags:['Kids','Education'] },
-  { id:'cyberos', icon:'💻', cat:['dev'], status:'live', demo:GALLERY_URL,
+    desc:{he:'מנתח קוד לילדים — גרסה סופית מאוחדת.',en:'Kids code analyzer — unified final version.',ru:'Анализатор кода для детей — финальная версия.'}, tags:['Kids','Education'],
+    versions:[{v:'v2.0',date:'יוני 2026',label:'final_kids_decoder',desc:'גרסה מאוחדת אחת — ממשק ידידותי לילדים עם ניתוח קוד מלא.'},
+               {v:'v1',date:'2025',label:'השקה',desc:'גרסה ראשונה לניתוח קוד Python לילדים.'}]},
+  { id:'cyberos', icon:'💻', cat:['dev'], status:'live', url:'CyberOS/index.html',
     name:{he:'CyberOS Platform',en:'CyberOS Platform',ru:'CyberOS Platform'},
-    desc:{he:'פלטפורמת ניהול פרויקטים בסגנון OS.',en:'OS-style unified project hub.',ru:'Платформа в стиле OS.'}, tags:['Platform','HTML'] },
+    desc:{he:'פלטפורמת ניהול פרויקטים בסגנון OS.',en:'OS-style unified project hub.',ru:'Платформа в стиле OS.'}, tags:['Platform','HTML'],
+    versions:[{v:'v2.0',date:'2026',label:'OS מלא',desc:'ממשק OS מאוחד לכל הפרויקטים — dock, windows, apps.'},
+               {v:'v1.0',date:'2025',label:'השקה',desc:'פלטפורמה בסיסית.'}]},
   { id:'etrog-studio', icon:'🍋', cat:['ai','jewish'], status:'wip', gh:'https://github.com/DavidPatlas-AI/etrog-ai-studio',
     name:{he:'סטודיו אתרוגים AI',en:'Etrog AI Studio',ru:'Студия Этрогов AI'},
-    desc:{he:'AI Studio מתקדם לניתוח ובדיקת כשרות אתרוגים — Computer Vision.',en:'Advanced AI studio for etrog kashrut inspection using Computer Vision.',ru:'AI студия для проверки кашрута этрогов — Computer Vision.'}, tags:['AI','CV','Jewish'] },
+    desc:{he:'AI Studio מתקדם לניתוח ובדיקת כשרות אתרוגים — Computer Vision.',en:'Advanced AI studio for etrog kashrut inspection using Computer Vision.',ru:'AI студия для проверки кашрута этрогов — Computer Vision.'}, tags:['AI','CV','Jewish'],
+    versions:[{v:'v1.0',date:'בפיתוח',label:'פרוטוטייפ',desc:'סטודיו AI לניתוח אתרוגים — Computer Vision ובדיקת כשרות.'}] },
   { id:'green-farm', icon:'🌿', cat:['ai','edu'], status:'wip', gh:'https://github.com/DavidPatlas-AI/green-tech-farm',
     name:{he:'חווה ירוקה — Green Tech Farm',en:'Green Tech Farm VR',ru:'Грін Тек Фарм VR'},
-    desc:{he:'פלטפורמת חקלאות חכמה — חוויית VR, ניהול חממות וסימולציות.',en:'Smart agriculture platform — VR experience, greenhouse management and simulations.',ru:'Умное сельское хозяйство — VR, теплицы и симуляции.'}, tags:['VR','AgriTech','AI'] },
-  { id:'cablevitality', icon:'🚁', cat:['games','dev'], status:'wip', gh:'https://github.com/DavidPatlas-AI/cable-vitality',
+    desc:{he:'פלטפורמת חקלאות חכמה — חוויית VR, ניהול חממות וסימולציות.',en:'Smart agriculture platform — VR experience, greenhouse management and simulations.',ru:'Умное сельское хозяйство — VR, теплицы и симуляции.'}, tags:['VR','AgriTech','AI'],
+    versions:[{v:'v1.0',date:'בפיתוח',label:'פרוטוטייפ',desc:'חקלאות חכמה עם VR, ניהול חממות וסימולציות.'}] },
+  { id:'cablevitality', icon:'🚁', cat:['games','dev'], status:'live', url:'CableVitality/index.html', gh:'https://github.com/DavidPatlas-AI/cable-vitality',
     name:{he:'CableVitality — רחפן קשור',en:'CableVitality — Tethered Drone',ru:'CableVitality — привязной дрон'},
-    desc:{he:'פורטל סימולציות רחפן קשור — פיזיקה, משחקים, מחקר ומאגר משתנים.',en:'Tethered drone simulation hub — physics engine, games, research and variable database.',ru:'Симулятор привязного дрона — физика, игры, исследования.'}, tags:['Physics','Simulation','JS'] },
+    desc:{he:'פורטל סימולציות רחפן קשור — פיזיקה, משחקים, מחקר ומאגר משתנים.',en:'Tethered drone simulation hub — physics engine, games, research and variable database.',ru:'Симулятор привязного дрона — физика, игры, исследования.'}, tags:['Physics','Simulation','JS'],
+    versions:[{v:'v1.0',date:'בפיתוח',label:'פרוטוטייפ',desc:'מנוע פיזיקה לרחפן קשור, משחקים ומחקר.'}] },
   { id:'diykids', icon:'🔬', cat:['edu','biz'], status:'wip', contact:1,
     name:{he:'מעבדת DIY — ערכות לילדים',en:'DIY Kids Lab',ru:'DIY Лаборатория для детей'},
-    desc:{he:'חנות ערכות יצירה וטכנולוגיה לילדים — אלקטרוניקה, לחמה ורובוטיקה.',en:'DIY kits shop for kids — electronics, soldering and robotics products.',ru:'Магазин DIY наборов — электроника, пайка, робототехника.'}, tags:['DIY','Kids','E-commerce'] },
+    desc:{he:'חנות ערכות יצירה וטכנולוגיה לילדים — אלקטרוניקה, לחמה ורובוטיקה.',en:'DIY kits shop for kids — electronics, soldering and robotics products.',ru:'Магазин DIY наборов — электроника, пайка, робототехника.'}, tags:['DIY','Kids','E-commerce'],
+    versions:[{v:'v1.0',date:'בפיתוח',label:'פרוטוטייפ',desc:'חנות ערכות DIY לילדים — אלקטרוניקה ורובוטיקה.'}] },
   { id:'mahat', icon:'📐', cat:['edu'], status:'wip', contact:1,
     name:{he:'קורס מה"ט — הכנה למתמטיקה',en:'Mahat Math Prep Course',ru:'Курс Махат — математика'},
-    desc:{he:'קורס הכנה למבחני מה"ט במתמטיקה — שיעורים, תרגול ומבחנים.',en:'Math prep course for Mahat exams — lessons, practice and tests.',ru:'Подготовка к экзаменам Махат по математике.'}, tags:['Mahat','Math','Edu'] }
+    desc:{he:'קורס הכנה למבחני מה"ט במתמטיקה — שיעורים, תרגול ומבחנים.',en:'Math prep course for Mahat exams — lessons, practice and tests.',ru:'Подготовка к экзаменам Махат по математике.'}, tags:['Mahat','Math','Edu'],
+    versions:[{v:'v1.0',date:'בפיתוח',label:'בפיתוח',desc:'קורס הכנה למבחני מה"ט — שיעורים, תרגול ומבחנים.'}] }
 ];
 
 [
@@ -1329,7 +1635,7 @@ function thumbFallback(img,icon){
 function quickFilter(cat){
   const btn=document.querySelector('.fbtn[data-cat="'+cat+'"]');
   if(btn)filter(cat,btn);
-  document.getElementById('projects')?.scrollIntoView({behavior:'smooth',block:'start'});
+  scrollToSection('projects');
 }
 function resetFilters(){
   searchQuery='';
@@ -1368,11 +1674,12 @@ function revealVisible(){
 const THUMB_THEMES = {
   math:{h:42,h2:28,s:78,pattern:'grid'},maslul:{h:205,h2:225,s:72,pattern:'grid'},teshuva:{h:265,h2:290,s:70,pattern:'waves'},
   yomi:{h:38,h2:52,s:68,pattern:'dots'},dapor:{h:215,h2:195,s:65,pattern:'grid'},idcheck:{h:195,h2:220,s:74,pattern:'waves'},
-  trends:{h:280,h2:310,s:68,pattern:'waves'},etrog:{h:48,h2:35,s:76,pattern:'dots'},emotion:{h:330,h2:350,s:72,pattern:'dots'},
+  trends:{h:280,h2:310,s:68,pattern:'waves'},viral:{h:15,h2:35,s:82,pattern:'waves'},etrog:{h:48,h2:35,s:76,pattern:'dots'},emotion:{h:330,h2:350,s:72,pattern:'dots'},
   polygraph:{h:250,h2:270,s:66,pattern:'grid'},mltrain:{h:275,h2:295,s:70,pattern:'waves'},money:{h:45,h2:30,s:80,pattern:'dots'},
   rct:{h:315,h2:335,s:74,pattern:'waves'},patlasgames:{h:260,h2:285,s:72,pattern:'grid'},kidsgames:{h:340,h2:320,s:68,pattern:'dots'},
   cables:{h:200,h2:180,s:70,pattern:'grid'},shofar:{h:32,h2:45,s:72,pattern:'waves'},hashem:{h:40,h2:55,s:65,pattern:'dots'},
   breath:{h:175,h2:195,s:68,pattern:'waves'},greenhouse:{h:125,h2:145,s:72,pattern:'dots'},'dapor-schedule':{h:355,h2:330,s:70,pattern:'grid'},
+  digibook:{h:38,h2:55,s:65,pattern:'grid'},
   budget:{h:30,h2:42,s:66,pattern:'dots'},leads:{h:145,h2:165,s:74,pattern:'grid'},crmgen:{h:210,h2:230,s:68,pattern:'grid'},
   emailplus:{h:220,h2:240,s:70,pattern:'waves'},pizza:{h:8,h2:25,s:78,pattern:'dots'},palette:{h:300,h2:320,s:76,pattern:'waves'},
   csslib:{h:285,h2:305,s:72,pattern:'grid'},codemap:{h:165,h2:185,s:70,pattern:'grid'},echo:{h:240,h2:260,s:68,pattern:'waves'},
@@ -1404,6 +1711,8 @@ const THUMB_SVG = {
   breath:'<path d="M3 12c2-4 5-6 9-6s7 2 9 6c-2 4-5 6-9 6s-7-2-9-6z"/><path d="M12 6v12"/>',
   greenhouse:'<path d="M7 20h10"/><path d="M12 20V10"/><path d="M12 10C9 6 5 5 5 9c0 3 3 4 7 1 4 3 7 2 7-1 0-4-4-3-7 1z"/>',
   'dapor-schedule':'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/>',
+  viral:'<path d="M12 2c1 3 4 5.5 4 9a4 4 0 0 1-8 0c0-3.5 3-6 4-9z"/><path d="M8 14l-2 6M16 14l2 6"/><path d="M12 11v3"/>',
+  digibook:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/><path d="M8 7h8M8 11h5"/>',
   budget:'<path d="M3 11l9-7 9 7v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
   leads:'<path d="M21 15a4 4 0 0 1-5 3.9"/><path d="M3 15a4 4 0 0 0 5 3.9"/><path d="M12 12a4 4 0 0 0-4-4 5 5 0 1 0 5 5z"/><path d="M8 20v-2a4 4 0 0 1 8 0v2"/>',
   crmgen:'<circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
@@ -1469,6 +1778,7 @@ function sortProjects(a, b) {
 function projectUrl(p) {
   if (p.demo) return p.demo;
   if (p.url) return picPath(p.url);
+  if (p.gh) return p.gh;
   return null;
 }
 
@@ -1484,14 +1794,11 @@ function esc(s) {
 let previewCurrentUrl = '', previewFrameTimer = null;
 function openInNewTab(url){
   if(!url)return false;
-  try{
-    const w=window.open(url,'_blank','noopener,noreferrer');
-    if(w)return true;
-  }catch(e){}
   const a=document.createElement('a');
   a.href=url;
   a.target='_blank';
   a.rel='noopener noreferrer';
+  a.referrerPolicy='no-referrer';
   a.style.display='none';
   document.body.appendChild(a);
   a.click();
@@ -1540,11 +1847,12 @@ function buildProjectCard(p, t) {
   const thumb = previewBlock(p, url, t);
   const isContact = p.contact && !url;
   const demoBtn = url
-    ? `<span class="plink demo"><i data-lucide="play"></i>${t.pv_open||'פתח'}</span>`
-    : isContact ? `<span class="plink demo"><i data-lucide="mail"></i>${t.pv_contact||'צור קשר'}</span>` : '';
+    ? `<a class="plink demo" href="${esc(url)}" rel="noopener" onclick="event.stopPropagation();event.preventDefault();openInNewTab(this.href);"><i data-lucide="play"></i>${t.pv_open||'פתח'}</a>`
+    : isContact ? `<button class="plink demo" onclick="event.stopPropagation();openContact(this.dataset.contactName)" data-contact-name="${esc(name)}"><i data-lucide="mail"></i>${t.pv_contact||'צור קשר'}</button>` : '';
+  const versBtn = `<button class="plink vers" onclick="event.stopPropagation();openVersions('${p.id}')" title="${esc(t.pv_versions_title||'היסטוריית גירסאות')}"><i data-lucide="clock-3"></i><span>${esc(t.pv_versions||'גירסאות')}</span></button>`;
   const hUrl = homeUrl(p);
-  const homeBtn = hUrl ? `<a class="plink home-pg" href="${esc(hUrl)}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="${t.pv_home||'עמוד פרויקט'}"><i data-lucide="house"></i><span>${t.pv_home||'עמוד'}</span></a>` : '';
-  const ghBtn = p.gh ? `<a class="plink gh" href="${esc(p.gh)}" target="_blank" rel="noopener" onclick="event.stopPropagation()"><i data-lucide="github"></i>GitHub</a>` : '';
+  const homeBtn = hUrl ? `<a class="plink home-pg" href="${esc(hUrl)}" rel="noopener" onclick="event.stopPropagation();event.preventDefault();openInNewTab(this.href);" title="${t.pv_home||'עמוד פרויקט'}"><i data-lucide="house"></i><span>${t.pv_home||'עמוד'}</span></a>` : '';
+  const ghBtn = p.gh ? `<a class="plink gh" href="${esc(p.gh)}" rel="noopener" onclick="event.stopPropagation();event.preventDefault();openInNewTab(this.href);"><i data-lucide="github"></i>GitHub</a>` : '';
   const tags = (p.tags || []).map(tag => `<span class="tag">${esc(tag)}</span>`).join('');
   const featured = p.featured ? ' featured' : '';
   const demoAttr = url ? ' data-demo="1"' : '';
@@ -1562,7 +1870,7 @@ function buildProjectCard(p, t) {
     <span class="proj-cat">${esc(catLabel)}</span>
     <p class="proj-desc">${esc(desc)}</p>
     <div class="proj-tags">${tags}</div>
-    <div class="proj-links">${demoBtn}${homeBtn}${ghBtn}</div>
+    <div class="proj-links">${demoBtn}${homeBtn}${versBtn}${ghBtn}</div>
   </article>`;
 }
 
@@ -1617,10 +1925,23 @@ function setLang(l,btn){
     const k=el.dataset.i18n;
     if(t[k]!==undefined)el.innerHTML=t[k];
   });
-  const ph=document.getElementById('projSearch');
-  if(ph&&t.search_ph)ph.placeholder=t.search_ph;
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const k=el.dataset.i18nPh;
+    if(t[k]!==undefined)el.placeholder=t[k];
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el=>{
+    const k=el.dataset.i18nAria;
+    if(t[k]!==undefined)el.setAttribute('aria-label',t[k]);
+  });
+  document.querySelectorAll('[data-open-preview][data-i18n-preview]').forEach(el=>{
+    const k=el.dataset.i18nPreview;
+    if(t[k]!==undefined)el.dataset.previewTitle=t[k];
+  });
   document.title={he:'דוד פטלס — מפתח ויוצר',en:'David Patlas — Developer & Creator',ru:'Давид Патлас — Разработчик'}[l];
+  const flash=document.getElementById('introFlash');
+  if(flash&&t.intro_flash)flash.textContent=t.intro_flash;
   renderProjects();
+  if(introDone)buildHeroSpotlight();
   updateCount();
   syncThemeBtns();
   refreshIcons();
@@ -1709,7 +2030,9 @@ function toggleTheme(){
 }
 function goHome(e){
   if(e)e.preventDefault();
+  if(typeof finishIntro==='function')finishIntro();
   closePreview();
+  closeVersions();
   window.scrollTo({top:0,behavior:'smooth'});
   document.getElementById('navToggle')?.classList.remove('open');
   document.getElementById('nl')?.classList.remove('open');
@@ -1738,15 +2061,26 @@ function animateStat(el){
   requestAnimationFrame(step);
 }
 
+const SECTIONS=['about','channels','live','projects','contact'];
+const NAV_OFFSET=120;
+
+function syncCatalogStat(){
+  const el=document.getElementById('statCatalog');
+  if(!el)return;
+  el.dataset.count=String(PROJECT_CATALOG.length);
+  if(!el.dataset.done)el.textContent='0';
+}
+
 window.addEventListener('scroll',()=>{
   const h=document.documentElement.scrollHeight-window.innerHeight;
   document.getElementById('prog').style.width=(h>0?window.scrollY/h*100:0)+'%';
   document.getElementById('backTop').classList.toggle('show',window.scrollY>400);
   let cur='';
-  sections.forEach(id=>{
+  SECTIONS.forEach(id=>{
     const el=document.getElementById(id);
-    if(el&&window.scrollY>=el.offsetTop-140)cur=id;
+    if(el&&window.scrollY>=el.offsetTop-NAV_OFFSET)cur=id;
   });
+  document.querySelectorAll('#nl a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
   document.querySelectorAll('.dock-btn[data-dock]').forEach(a=>{
     a.classList.toggle('active',a.dataset.dock===cur);
   });
@@ -1778,7 +2112,6 @@ function openPreview(url,title){
   document.getElementById('previewTitle').textContent=title||url;
   const frame=document.getElementById('previewFrame');
   const localFile=location.protocol==='file:';
-  openInNewTab(url);
   if(localFile){
     showPreviewFallback();
     if(frame){frame.removeAttribute('src');frame.style.visibility='hidden';}
@@ -1805,8 +2138,39 @@ function closePreview(){
   document.body.style.overflow='';
   resetPreviewUi();
 }
+function openVersions(id){
+  const p=PROJECT_CATALOG.find(x=>x.id===id);
+  if(!p)return;
+  const t=T[currentLang]||T.he;
+  const lang=currentLang||'he';
+  const name=p.name[lang]||p.name.he;
+  document.getElementById('versProjName').textContent=name;
+  const ghBtn=document.getElementById('versGhLink');
+  const ghLabel=ghBtn?.querySelector('[data-i18n="vers_gh"]');
+  if(ghLabel&&t.vers_gh)ghLabel.textContent=t.vers_gh;
+  if(p.gh){ghBtn.href=p.gh;ghBtn.style.display='flex';}
+  else ghBtn.style.display='none';
+  const tl=document.getElementById('verTimeline');
+  const vers=p.versions||[{v:'v1.0',date:'2025',label:'השקה ראשונה',desc:'גירסה ראשונית של הפרויקט.'}];
+  tl.innerHTML=vers.map((v,i)=>`<div class="ver-item">
+    <span class="ver-date">${v.date||''}</span>
+    <span class="ver-dot" style="${i===0?'background:var(--gold)':''}"></span>
+    <div class="ver-content">
+      <span class="ver-badge">${v.v}</span>
+      ${v.label?`<div class="ver-label">${v.label}</div>`:''}
+      <div class="ver-desc">${v.desc||''}</div>
+    </div>
+  </div>`).join('');
+  refreshIcons();
+  document.getElementById('versionsModal').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeVersions(){
+  document.getElementById('versionsModal').classList.remove('open');
+  document.body.style.overflow='';
+}
 function handleSiteOpen(e){
-  if(e.target.closest('.plink.gh'))return;
+  if(e.target.closest('.proj-links,.plink,.fbtn,.filter-reset,.lang-btn,[data-theme-toggle],.launch-tile'))return;
   const contactCard=e.target.closest('.proj-card[data-contact]');
   if(contactCard){
     e.preventDefault();
@@ -1816,13 +2180,13 @@ function handleSiteOpen(e){
   const card=e.target.closest('.proj-card[data-open-preview]');
   if(card){
     e.preventDefault();
-    openPreview(card.dataset.openPreview,card.dataset.previewTitle);
+    openInNewTab(card.dataset.openPreview);
     return;
   }
   const el=e.target.closest('[data-open-preview]');
   if(!el)return;
   e.preventDefault();
-  openPreview(el.dataset.openPreview,el.dataset.previewTitle);
+  openInNewTab(el.dataset.openPreview);
 }
 document.addEventListener('click',handleSiteOpen,true);
 document.getElementById('previewClose').onclick=closePreview;
@@ -1841,25 +2205,36 @@ document.getElementById('previewReload').onclick=()=>{
   previewFrameTimer=setTimeout(showPreviewFallback,3000);
 };
 document.getElementById('previewFrame').onerror=showPreviewFallback;
+function scrollToSection(id){
+  const target=document.getElementById(id);
+  if(!target)return;
+  if(typeof finishIntro==='function')finishIntro();
+  closePreview();
+  closeVersions();
+  target.scrollIntoView({block:'start',behavior:'auto'});
+  document.getElementById('navToggle')?.classList.remove('open');
+  document.getElementById('nl')?.classList.remove('open');
+}
 function bindHashNav(){
   document.querySelectorAll('a[href^="#"]').forEach(a=>{
     a.addEventListener('click',e=>{
       const href=a.getAttribute('href');
       if(!href||href==='#'||a.hasAttribute('data-open-preview')||a.hasAttribute('data-go-home'))return;
-      const target=document.querySelector(href);
-      if(!target)return;
+      const id=href.slice(1);
+      if(!document.getElementById(id))return;
       e.preventDefault();
-      closePreview();
-      target.scrollIntoView({behavior:'auto',block:'start'});
-      document.getElementById('navToggle')?.classList.remove('open');
-      document.getElementById('nl')?.classList.remove('open');
+      scrollToSection(id);
+      history.replaceState(null,'',href);
     });
   });
 }
 bindHashNav();
 document.getElementById('previewModal').onclick=e=>{if(e.target===e.currentTarget)closePreview();};
 document.addEventListener('keydown',e=>{
-  if(e.key==='Escape')closePreview();
+  if(e.key==='Escape'){
+    if(!introDone&&document.getElementById('wowIntro')&&!document.getElementById('wowIntro').classList.contains('done')){finishIntro();return;}
+    closePreview();closeVersions();
+  }
   if(e.key!=='Enter'&&e.key!==' ')return;
   const contact=e.target.closest('.proj-card[data-contact]');
   if(contact){
@@ -1870,22 +2245,12 @@ document.addEventListener('keydown',e=>{
   const card=e.target.closest('.proj-card[data-open-preview]');
   if(card){
     e.preventDefault();
-    openPreview(card.dataset.openPreview,card.dataset.previewTitle);
+    openInNewTab(card.dataset.openPreview);
   }
 });
 
-const sections=['about','channels','live','projects','contact'];
-const navLinks=document.querySelectorAll('#nl a');
-window.addEventListener('scroll',()=>{
-  let cur='';
-  sections.forEach(id=>{
-    const el=document.getElementById(id);
-    if(el&&window.scrollY>=el.offsetTop-120)cur=id;
-  });
-  navLinks.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
-},{passive:true});
-
 document.querySelectorAll('.stat .n').forEach(el=>{
+  if(el.id!=='statCatalog')return;
   const m=el.textContent.match(/(\d+)(\+?)/);
   if(m){el.dataset.count=m[1];el.dataset.suffix=m[2]||'';el.textContent='0'+(m[2]||'');}
 });
@@ -1905,7 +2270,127 @@ document.querySelectorAll('.stat .n').forEach(el=>{
 
 renderProjects();
 
+let introDone=false;
+function finishIntro(){
+  if(introDone)return;
+  introDone=true;
+  document.getElementById('wowIntro')?.classList.add('done');
+  document.body.classList.remove('intro-active');
+  document.body.classList.add('intro-revealed');
+  document.querySelector('.hero-inner')?.querySelectorAll('.stat .n[data-count]').forEach(animateStat);
+  initHeroParticles();
+  typeHeroTagline();
+  buildHeroSpotlight();
+}
+function animateIntroCount(end){
+  const el=document.getElementById('introCount');
+  if(!el)return;
+  const dur=1600,t0=performance.now();
+  function step(t){
+    const p=Math.min((t-t0)/dur,1);
+    el.textContent=Math.round(end*(1-Math.pow(1-p,4)));
+    if(p<1)requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+function initIntroCanvas(){
+  const c=document.getElementById('introCanvas');
+  if(!c)return;
+  const ctx=c.getContext('2d');
+  let w,h,pts=[],raf;
+  function resize(){
+    w=c.width=c.offsetWidth;h=c.height=c.offsetHeight;
+    pts=Array.from({length:80},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.7,vy:(Math.random()-.5)*.7,r:Math.random()*1.8+.4}));
+  }
+  resize();
+  const mx=w*.5,my=h*.5;
+  function draw(){
+    if(introDone)return;
+    ctx.fillStyle='rgba(5,5,8,.18)';ctx.fillRect(0,0,w,h);
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>w)p.vx*=-1;
+      if(p.y<0||p.y>h)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(245,200,66,.55)';ctx.fill();
+    });
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+      const a=pts[i],b=pts[j],d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<90){ctx.strokeStyle='rgba(124,106,245,'+(1-d/90)*.25+')';ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}
+    }
+    raf=requestAnimationFrame(draw);
+  }
+  draw();
+  window.addEventListener('resize',resize,{passive:true});
+  return()=>{cancelAnimationFrame(raf);};
+}
+function initHeroParticles(){
+  const c=document.getElementById('heroParticles');
+  if(!c||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const ctx=c.getContext('2d');
+  let w,h,pts=[],mx=-999,my=-999,raf;
+  function resize(){
+    w=c.width=window.innerWidth;h=c.height=Math.min(window.innerHeight,900);
+    c.style.height=h+'px';
+    if(!pts.length)pts=Array.from({length:55},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.2+.3}));
+  }
+  resize();
+  window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;},{passive:true});
+  window.addEventListener('resize',resize,{passive:true});
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    pts.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>w)p.vx*=-1;
+      if(p.y<0||p.y>h)p.vy*=-1;
+      if(mx>-100){const dx=p.x-mx,dy=p.y-my,d=Math.hypot(dx,dy);if(d<100){p.x+=dx*.008;p.y+=dy*.008;}}
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(124,106,245,.35)';ctx.fill();
+    });
+    raf=requestAnimationFrame(draw);
+  }
+  draw();
+}
+function typeHeroTagline(){
+  const el=document.querySelector('.hero-hand');
+  if(!el||window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const full=((T[currentLang]||T.he).hero_tagline||el.textContent).replace(/^"|"$/g,'');
+  el.classList.add('typing');el.textContent='';
+  let i=0;
+  (function tick(){if(i<=full.length){el.textContent=full.slice(0,i++);setTimeout(tick,i<full.length?38:0);}else el.classList.remove('typing');})();
+}
+function buildHeroSpotlight(){
+  const el=document.getElementById('heroSpotlight');
+  if(!el)return;
+  const lang=currentLang||'he';
+  el.innerHTML=PROJECT_CATALOG.filter(p=>p.featured&&p.demo).map(p=>{
+    const name=esc((p.name[lang]||p.name.he||'').replace(/<[^>]+>/g,''));
+    return '<a class="spot-card" href="'+esc(p.demo)+'" target="_blank" rel="noopener">'+
+      '<img src="'+esc(p.preview||'')+'" alt="" loading="lazy" onerror="this.style.opacity=\'0.25\'">'+
+      '<span class="spot-glow"></span><span class="spot-info"><em>'+p.icon+'</em>'+name+'</span></a>';
+  }).join('');
+}
+function initWowIntro(){
+  const intro=document.getElementById('wowIntro');
+  const reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!intro||reduced){
+    document.body.classList.add('intro-revealed');
+    intro?.remove();
+    finishIntro();
+    return;
+  }
+  document.body.classList.add('intro-active');
+  const flash=document.getElementById('introFlash');
+  const t=T[currentLang]||T.he;
+  if(flash&&t.intro_flash)flash.textContent=t.intro_flash;
+  initIntroCanvas();
+  animateIntroCount(PROJECT_CATALOG.length);
+  document.getElementById('introSkip')?.addEventListener('click',finishIntro);
+  setTimeout(finishIntro,2600);
+}
+
 (function init(){
+  syncCatalogStat();
   document.querySelectorAll('.reveal').forEach(r=>r.classList.add('visible'));
   document.documentElement.classList.add('js-anim');
   const savedLang=localStorage.getItem('portfolio-lang')||'he';
@@ -1914,11 +2399,26 @@ renderProjects();
   initThemeToggles();
   const savedTheme=localStorage.getItem('portfolio-theme');
   setTheme(savedTheme==='light',true);
-  document.querySelector('.hero-inner')?.querySelectorAll('.stat .n[data-count]').forEach(animateStat);
+  initWowIntro();
   refreshIcons();
   revealVisible();
 })();
 </script>
 <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js" async onload="refreshIcons()"></script>
+
+<div id="versionsModal" role="dialog" aria-modal="true" aria-labelledby="versProjName" onclick="if(event.target===this)closeVersions()">
+  <div class="versions-box">
+    <div class="versions-header">
+      <span class="versions-title"><i data-lucide="clock-3"></i><span id="versProjName"></span></span>
+      <button class="versions-close" onclick="closeVersions()" data-i18n-aria="vers_close" aria-label="סגור"><i data-lucide="x"></i></button>
+    </div>
+    <div class="versions-body">
+      <a id="versGhLink" class="versions-gh-btn" href="#" target="_blank" rel="noopener" style="display:none">
+        <i data-lucide="github"></i><span data-i18n="vers_gh">ראה קוד מלא ב-GitHub</span>
+      </a>
+      <div class="ver-timeline" id="verTimeline"></div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
