@@ -2398,7 +2398,7 @@ function initWowIntro(){
   setLang(savedLang,langBtn);
   initThemeToggles();
   const savedTheme=localStorage.getItem('portfolio-theme');
-  setTheme(savedTheme==='light',true);
+  setTheme(savedTheme==='light'||(savedTheme===null&&window.matchMedia('(prefers-color-scheme: light)').matches),true);
   initWowIntro();
   refreshIcons();
   revealVisible();
