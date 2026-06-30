@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="WhatsApp · 500+ מילות מפתח · מנתח">
-<title>לידים חכמים — גרסה מאוחדת</title>
+<meta name="description" content="מנתח WhatsApp · מילות מפתח · ייצוא — בדף אחד">
+<title>לידים חכמים — Ultimate</title>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Syne:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#f5c842;--accent:#7c6af5;--glass:rgba(255,255,255,.1);--border:rgba(255,255,255,.18)}
@@ -15,31 +15,36 @@ body{font-family:Rubik,sans-serif;min-height:100vh;background:linear-gradient(13
 .nav a,.nav button{color:#fff;text-decoration:none;font-weight:600;font-size:.85rem;padding:8px 14px;border-radius:999px;background:var(--glass);border:1px solid var(--border);cursor:pointer;font-family:inherit}
 .nav a:hover,.nav button:hover,.tab.on{border-color:var(--gold);color:var(--gold)}
 .badge{background:linear-gradient(135deg,var(--gold),#e0a820);color:#111;padding:4px 10px;border-radius:999px;font-size:.7rem;font-weight:800}
-.wrap{max-width:980px;margin:0 auto;padding:24px 18px 60px;position:relative;z-index:1}
+.wrap{max-width:1060px;margin:0 auto;padding:24px 18px 60px;position:relative;z-index:1}
 .hero h1{font-family:Syne,sans-serif;font-size:clamp(1.7rem,4vw,2.5rem);margin:8px 0}
-.hero .sub{opacity:.88;max-width:640px}
+.hero .sub{opacity:.88;max-width:720px}
 .tabs{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 16px}
 .tab{padding:10px 18px;border-radius:12px;border:1px solid var(--border);background:var(--glass);cursor:pointer;font-weight:600;font-size:.88rem}
 .panel{display:none;background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:22px;backdrop-filter:blur(10px);margin-bottom:16px}
 .panel.on{display:block}
 .panel h2{font-size:1.15rem;margin-bottom:12px;color:var(--gold)}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
 .card{background:rgba(0,0,0,.22);border-radius:14px;padding:16px;border:1px solid var(--border);transition:.2s}
-.card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.card:hover{border-color:var(--gold)}
+.card.sel{border-color:var(--gold);box-shadow:0 0 0 2px rgba(245,200,66,.35)}
 input,textarea,select{width:100%;padding:11px 14px;border-radius:12px;border:1px solid var(--border);background:rgba(0,0,0,.35);color:#fff;font-family:inherit;margin:8px 0}
 label{font-size:.85rem;opacity:.9;display:block;margin-top:10px}
 .btn{display:inline-block;margin:10px 6px 0 0;padding:12px 22px;border-radius:999px;background:linear-gradient(135deg,var(--gold),#e0a820);color:#111;font-weight:800;border:none;cursor:pointer;font-size:.92rem}
 .btn.ghost{background:var(--glass);color:#fff;border:1px solid var(--border)}
 .stat-row{display:flex;flex-wrap:wrap;gap:12px;margin:14px 0}
-.stat{flex:1;min-width:100px;text-align:center;padding:14px;background:rgba(0,0,0,.25);border-radius:14px}
-.stat b{display:block;font-size:1.5rem;color:var(--gold)}
+.stat{flex:1;min-width:90px;text-align:center;padding:14px;background:rgba(0,0,0,.25);border-radius:14px}
+.stat b{display:block;font-size:1.4rem;color:var(--gold)}
 .meter{height:10px;background:rgba(0,0,0,.4);border-radius:999px;overflow:hidden;margin-top:8px}
 .meter>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:999px;transition:width .4s}
 .tag{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(245,200,66,.2);font-size:.75rem;margin:4px 0 0 4px}
-canvas{display:block;max-width:100%;margin:12px auto;border-radius:14px;background:#0a0a12}
-pre,code{font-family:Consolas,monospace;font-size:.85rem}
-pre{background:rgba(0,0,0,.4);padding:14px;border-radius:12px;overflow:auto;max-height:280px}
-.vers-list{font-size:.82rem;opacity:.75;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+.trend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;max-height:340px;overflow:auto;padding:4px}
+.trend-chip{padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:rgba(0,0,0,.28);cursor:pointer;font-size:.82rem;text-align:center}
+.trend-chip.on{border-color:var(--gold);background:rgba(245,200,66,.15)}
+.gallery img{width:100%;border-radius:12px;aspect-ratio:4/3;object-fit:cover}
+pre{background:rgba(0,0,0,.4);padding:14px;border-radius:12px;overflow:auto;white-space:pre-wrap;font-size:.88rem}
+.warn{background:rgba(239,68,68,.2);border:1px solid rgba(239,68,68,.5);padding:12px;border-radius:12px;margin:10px 0;display:none}
+.plant-btn{cursor:pointer;text-align:center;padding:18px}
+.plant-btn:hover{border-color:var(--gold);transform:translateY(-2px)}
 
 </style>
 </head>
@@ -47,17 +52,25 @@ pre{background:rgba(0,0,0,.4);padding:14px;border-radius:12px;overflow:auto;max-
 <div class="bg-mesh"></div>
 <nav class="nav">
   <a href="https://storied-alfajores-6f10d2.netlify.app/portfolio.html">← תיק עבודות</a>
-  <span class="badge">גרסה מאוחדת v3</span>
+  <span class="badge">תוכן מאוחד — ללא iframe</span>
 </nav>
 <div class="wrap">
-<div class="hero"><h1>🪖 לידים חכמים Ultimate</h1><p class="sub">מאחד: מנתח WhatsApp · מילות מפתח · ייצוא Excel · תבניות פנייה</p></div>
-<div class="grid">
-<a class="card" href="archive/1whatsapp_lead_analyzer.html" style="text-decoration:none;color:inherit"><strong>📊 מנתח מלא</strong><p>העלאת גיבוי, זיהוי, ייצוא</p></a>
-<a class="card" href="archive/keywords_js.js" download style="text-decoration:none;color:inherit"><strong>📥 500+ מילות מפתח</strong><p>מאגר לידים</p></a>
+<div class="hero"><h1>🪖 לידים חכמים Ultimate</h1>
+<p class="sub">מאוחד מ-analyzer + keywords + תבניות — ניתוח מקומי בדפדפן</p></div>
+<div class="stat-row"><div class="stat"><b id="leadCnt">0</b>לידים</div><div class="stat"><b>20</b>מילות מפתח</div></div>
+<div class="tabs">
+<button class="tab" data-p="p1">📊 ניתוח</button><button class="tab" data-p="p2">📋 תבניות</button><button class="tab" data-p="p3">📥 ייצוא</button>
 </div>
-<div class="panel" style="display:block;margin-top:16px"><h2>תבנית פנייה</h2>
-<textarea readonly rows="3">שלום {שם}, ראיתי שאתה מתעניין ב{נושא}. אשמח לשוחח — דוד, פעמי עתידים</textarea></div>
-<p class="vers-list">מאוחד: v1 חילוץ · v2 500 מילים · Ultimate</p>
+<div class="panel on" id="p1"><h2>הדבק שיחת WhatsApp</h2>
+<textarea id="chat" rows="8" placeholder="הדבק כאן טקסט מגיבוי WhatsApp..."></textarea>
+<button class="btn" id="analyze">🔍 נתח לידים</button>
+<div id="leads" class="grid" style="margin-top:16px"></div></div>
+<div class="panel" id="p2"><h2>תבניות פנייה</h2>
+<textarea readonly rows="4">שלום {שם}, ראיתי שאתה מתעניין ב{נושא}. אשמח לשוחח — דוד, פעמי עתידים</textarea>
+<textarea readonly rows="3" style="margin-top:10px">היי {שם}, יש לי מידע רלוונטי על {נושא} — מתי נוח לשיחה קצרה?</textarea></div>
+<div class="panel" id="p3"><h2>ייצוא</h2>
+<button class="btn" id="csv">📥 הורד CSV</button>
+<pre id="csvPreview" style="margin-top:12px"></pre></div>
 </div>
 <script>
 function tabs(ids) {
@@ -67,9 +80,34 @@ function tabs(ids) {
     t.classList.add('on');
     document.getElementById(t.dataset.p).classList.add('on');
   });
-  document.querySelector('.tab').classList.add('on');
-  document.getElementById(ids[0]).classList.add('on');
+  if(ids.length){document.querySelector('.tab').classList.add('on');document.getElementById(ids[0]).classList.add('on');}
 }
+
+const KEYWORDS = ["צבא", "שירות", "לוחם", "מל״ט", "טכנולוגיה", "הייטק", "קורס", "לימודים", "קריירה", "עתיד", "מתמטיקה", "פיזיקה", "הנדסה", "רפואה", "פסיכומטרי", "מיון", "יחידה", "קצין", "חייל", "שחרור"];
+let lastLeads = [];
+analyze.onclick = () => {
+  const text = chat.value;
+  const lines = text.split(/\n/).filter(l=>l.trim());
+  lastLeads = [];
+  lines.forEach(line => {
+    const hits = KEYWORDS.filter(k => line.includes(k));
+    if(hits.length) {
+      const name = (line.match(/- ([^:]+):/)||line.match(/^([^:]+):/)||['','לא ידוע'])[1].trim();
+      lastLeads.push({name, line: line.slice(0,120), hits});
+    }
+  });
+  leadCnt.textContent = lastLeads.length;
+  leads.innerHTML = lastLeads.length ? lastLeads.map(l =>
+    '<div class="card"><strong>'+l.name+'</strong><p>'+l.line+'</p><p>'+l.hits.map(h=>'<span class="tag">'+h+'</span>').join('')+'</p></div>'
+  ).join('') : '<p>לא נמצאו לידים — נסה טקסט ארוך יותר</p>';
+};
+csv.onclick = () => {
+  const rows = [['שם','שורה','מילות מפתח'], ...lastLeads.map(l=>[l.name,l.line,l.hits.join(';')])];
+  const csv = rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  csvPreview.textContent = csv.slice(0,500)+'...';
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='leads.csv';a.click();
+};
+tabs(['p1']);
 
 </script>
 </body>
