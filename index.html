@@ -80,7 +80,7 @@ body::before{
 [data-theme="light"] .bg-stars{opacity:0;}
 @keyframes stars-drift{to{transform:translateY(-12px);}}
 @keyframes float{0%,100%{transform:translate(0,0)}50%{transform:translate(20px,-30px)}}
-body>*:not(.bg-mesh):not(.bg-glow):not(.bg-stars){position:relative;z-index:1;}
+body>section,body>footer{position:relative;z-index:1;}
 .ico{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;}
 .ico svg,.dock-btn svg,.launch-tile svg,.fbtn svg,.nav-links svg,.skill-tile svg,.cat-ico svg{
   width:1.15em;height:1.15em;stroke-width:2.2px;flex-shrink:0;
@@ -896,11 +896,11 @@ html[dir="ltr"] .app-launcher{margin-inline:0;}
 }
 .skill-tile svg{width:1.35rem;height:1.35rem;color:var(--accent);}
 .app-dock{
-  position:fixed;bottom:0;inset-inline:0;z-index:560;
+  position:fixed;top:auto;bottom:0;inset-inline:0;z-index:560;
   display:flex;justify-content:center;align-items:stretch;gap:.15rem;
   padding:.45rem .8rem calc(.55rem + env(safe-area-inset-bottom,0px));
   background:rgba(8,8,14,.82);backdrop-filter:blur(22px);
-  border-top:1px solid var(--border);box-shadow:0 -8px 40px rgba(0,0,0,.45);
+  border-top:1px solid var(--border);border-bottom:none;box-shadow:0 -8px 40px rgba(0,0,0,.45);
 }
 [data-theme="light"] .app-dock{background:rgba(255,255,255,.9);box-shadow:0 -8px 32px rgba(91,79,207,.12);}
 .dock-btn{
@@ -989,10 +989,10 @@ html.js-anim .reveal:nth-child(3){animation-delay:.1s;}
 @keyframes intro-fade-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @keyframes intro-ring{to{stroke-dashoffset:0}}
 body.intro-active{overflow:hidden;}
-body.intro-active nav,body.intro-active .hero,body.intro-active .app-dock{opacity:0;pointer-events:none;}
+body.intro-active nav,body.intro-active .hero,body.intro-active .app-dock{pointer-events:none;}
 body.intro-active #wowIntro{pointer-events:auto;}
 body.intro-revealed nav,body.intro-revealed .hero,body.intro-revealed .app-dock{
-  opacity:1;transition:opacity .7s ease .15s;
+  opacity:1;transition:opacity .45s ease;
 }
 body.intro-revealed .hero-content>*{animation:hero-stagger .75s cubic-bezier(.22,1,.36,1) both;}
 body.intro-revealed .hero-visual{animation:hero-photo-in 1s cubic-bezier(.22,1,.36,1) .25s both;}
@@ -1004,8 +1004,8 @@ body.intro-revealed .hero-content>*:nth-child(5){animation-delay:.44s;}
 body.intro-revealed .hero-content>*:nth-child(6){animation-delay:.52s;}
 body.intro-revealed .hero-content>*:nth-child(7){animation-delay:.6s;}
 body.intro-revealed .hero-content>*:nth-child(8){animation-delay:.68s;}
-@keyframes hero-stagger{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
-@keyframes hero-photo-in{from{opacity:0;transform:perspective(900px) rotateY(-12deg) scale(.88)}to{opacity:1;transform:none}}
+@keyframes hero-stagger{from{opacity:1;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes hero-photo-in{from{opacity:1;transform:perspective(900px) rotateY(-8deg) scale(.96)}to{opacity:1;transform:none}}
 @keyframes gold-shimmer{0%,100%{background-position:0% center}50%{background-position:100% center}}
 .hero-particles{
   position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55;
@@ -1361,6 +1361,8 @@ html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
 </div>
 
 <script>
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+const INITIAL_HASH=window.location.hash;
 const T={
 he:{s1b:'פעילים בתיק',s1c:'תחומי מומחיות',dir:'rtl',lang:'he',skip:'דלג לתוכן',intro_skip:'דלג ›',intro_projects:'פרויקטים',intro_flash:'AI · חינוך · משחקים · יהדות',search_ph:'חפש פרויקט...',loading:'טוען פרויקטים...',no_results:'לא נמצאו פרויקטים — נסה מסנן או חיפוש אחר',show_all:'הצג הכל',show_all_n:'הצג את כל הפרויקטים',filter_cat:'מסנן: {c}',filter_search:'חיפוש: "{q}"',count:'מציג {n} מתוך {t} פרויקטים',cat_n:'{n} פרויקטים',co_wa:'WhatsApp',pv_open:'פתח',pv_newtab:'פתח בדפדפן',pv_loading:'טוען אתר...',pv_blocked:'לא ניתן להציג כאן — לחץ לפתיחה בדפדפן',pv_reload:'רענן',pv_close:'סגור',pv_contact:'צור קשר',pv_home:'עמוד פרויקט',theme_day:'מצב יום',theme_night:'מצב לילה',theme_lbl_day:'יום',theme_lbl_night:'לילה',dock_home:'בית',dock_apps:'אפליקציות',dock_live:'חי',dock_channels:'ערוצים',nav_home:'בית',nav_about:'אודות',nav_channels:'ערוצים',nav_live:'חי',nav_projects:'פרויקטים',nav_contact:'צור קשר',lv_label:'חי ב-Netlify',lv_title:'אתרים <span>חיים</span>',lv_sub:'פרויקטים חיים — לחיצה פותחת בדפדפן',lv_d1:'פלטפורמת מתמטיקה מלאה — 90+ שיעורים ו-PWA',lv_d2:'קורס מכונאות — 19,000+ רכבים, מוסך חי, בוט ווצאפ',lv_d3:'דף נחיתה עם דמו אינטראקטיבי — שקיפות אלגוריתמית בעברית',available:'זמין',photo_title:'משפחת Patlas',photo_sub:'אבא ל-5 · קוד שמשרת בית וקהילה',photo_family:'אבא ל-5',chip_creator:'יוצר',chip_langs:'3 שפות',hero_lead:'פלטפורמות חינוכיות · AI · משחקים',hero_tagline:'קוד שמשרת קהילה',s1:'פרויקטים',s2:'מוכנים לפרסום',s3:'שפות',s4:'ערוצי תוכן',b1:'הפרויקטים שלי',b2:'ערוצי התוכן',ab_label:'אודות',ab_title:'מי <span>אני</span>',ab_sub:'מפתח שגם יוצר — ויוצר שגם מפתח',ab_p1:'שלום! אני <strong>דוד פטלס</strong> — מפתח Full Stack, יוצר תוכן דיגיטלי ומנהל נוכחות מקוונת.',ab_p2:'בניתי עשרות פרויקטים: <strong>פלטפורמות חינוכיות לקהילה החרדית</strong>, כלי AI, משחקי HTML5, ויג\'טים, כלי CRM ושיווק — ועוד.',ab_p3:'במקביל לפיתוח, אני מנהל את <strong>הנוכחות הדיגיטלית</strong> — YouTube, אתר, TikTok וטוויטר — עם תוכן תורני ויהודי בעברית, רוסית ואנגלית.',archive_title:'ארכיון פרויקטים',arch_title:'ארכיון מלא',arch_sub:'42+ בתיק · 52+ בארכיון — גרסאות, גלריות ומסמכי תכנון',arch_full:'כל הפרויקטים',arch_gallery:'גלריית כלים',arch_about:'תיק מפורט',pv_versions:'גירסאות',pv_versions_title:'היסטוריית גירסאות',vers_gh:'ראה קוד מלא ב-GitHub',vers_close:'סגור',tl_h:'ציר הזמן',tl1t:'2025–2026 — פיתוח נרחב',tl1d:'42+ פרויקטים בתיק — AI, חינוך, כלים ומשחקים',tl2t:'2024–2025 — פלטפורמות',tl2d:'מתמטיקה לחרדים, מסלול רכב, האלגוריתם שחזר בתשובה',tl3t:'2023+ — ניהול דיגיטלי',tl3d:'YouTube, TikTok, אתר וטוויטר — בשלוש שפות',tl4t:'לימודים — פעמי עתידים',tl4d:'Python, רשתות תקשורת ופיתוח ווב',ch_label:'ערוצים',ch_title:'נוכחות <span>דיגיטלית</span>',ch_sub:'כל הערוצים שאני בונה ומנהל',cyt:'שיעורי תורה, פרשת שבוע ומשניות ברוסית ועברית — בניתי ומנהל.',csite_h:'פלטפורמת לימוד יהודית',csite:'שיעורים, מאמרים וספרי פרדס — פיתחתי ואני מנהל.',ctt:'תוכן יהודי קצר לקהל רחב — עורך ומנהל.',cx:'פרויקטים ומחשבות על AI ופיתוח.',cpic_name:'ארכיון פרויקטים',cpic_h:'גרסה קודמת',cpic:'אוסף פרויקטים נוספים — לינק לארכיון',cgh:'כלים, AI, משחקים וחינוך — קוד פתוח.',pr_label:'פרויקטים',pr_title:'מה <span>בניתי</span>',pr_sub:'52+ פרויקטים · AI · חינוך · משחקים · <a href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/" data-preview-title="ארכיון פרויקטים" style="color:var(--accent);font-weight:700;">ארכיון →</a>',fa:'הכל',ff:'דגל',fai:'AI',fg:'משחקים',fj:'יהודי',fe:'חינוך',fb:'עסקים',fd:'כלי מפתחים',fl:'חי',cf:'פרויקט דגל',cai:'כלי AI',cg:'משחק',cj:'כלי יהודי',ce:'חינוך',cb:'עסקים',cd:'כלי מפתח',n1:'מתמטיקה לחרדים',d1:'פלטפורמת מתמטיקה מלאה — 90+ שיעורים, GeoGebra, מבחנים ו-PWA.',n2:'מסלול רכב',d2:'קורס מכונאות — 19,000+ רכבים, מוסך חי, בוט ווצאפ.',n3:'האלגוריתם שחזר בתשובה',d3:'תוסף דפדפן + אגנט AI — מסביר למה ראית כל פוסט, שקיפות אלגוריתמית בעברית.',d4:'ויג\'ט שולחן עבודה: תאריך עברי, פרשה, זמני היום.',n5:'בודק אתרוגים',d5:'זיהוי פסולים וכתמים — Computer Vision.',n6:'מזהה רגשות',d6:'NLP לזיהוי רגשות בטקסט עברי.',n7:'ID מפענח ובודק',d7:'סריקה וניתוח ת.ז. ישראליות — React, OCR.',n8:'מערכת אימון מודל',d8:'ממשק עברי לאימון מודלי ML.',n9:'הכל בכסף',d9:'משחק ניחוש מחירים לכל המשפחה.',n10:'פארק שעשועים RCT',d10:'בונה פארק שעשועים RCT — בדפדפן.',n11:'פטלס משחקים',d11:'אוסף HTML5 — אסטרואידים, ברייקאוט, סנייק ועוד.',n12:'משחקים לילדים',d12:'חבילת משחקים חינוכיים בעברית לגן ולבית ספר.',n13:'שופר',d13:'תקיעות אודיו ומידע הלכתי לחגי תשרי.',n14:'תיקון שם השם ברוסית',d14:'כלי לתיקון כתיב שם ה\' בספרים ברוסית.',n15:'שזם נשימות',d15:'טיימר נשימות מודרך — מיינדפולנס ורגיעה.',n16:'ניהול משק בית חרדי',d16:'תוכנה offline לניהול תקציב למגזר החרדי.',n17:'לידים מגיבוי ווצאפ',d17:'חילוץ לידים מגיבוי WhatsApp — CRM אוטומטי.',n18:'מחולל קבצי CRM',d18:'יצירה אוטומטית של קבצי CRM.',n19:'מחולל מייל + Alias',d19:'כתובות מייל עם + לסינון ספאם.',n20:'מנתח קוד אמיתי',d20:'פירוק וניתוח קוד לעומק.',n21:'מפצל קוד מקלוד',d21:'פיצול קבצי קוד גדולים מ-Claude.',d22:'פלטפורמת ניהול פרויקטים מאוחדת.',n23:'אוסף עיצובי CSS',d23:'77 אפקטי CSS — אנימציות, כרטיסים, גרדיאנטים.',co_t:'בואו נבנה משהו <span style="text-decoration:underline;text-decoration-color:rgba(255,255,255,0.4);">יחד</span>',co_s:'מחפש מפתח שגם יוצר תוכן? יש פרויקט? רוצה לשתף פעולה? אני כאן.',co_email:'שלח מייל',ft:'מפתח · יוצר · מנהל דיגיטלי'},
 en:{s1b:'Active in portfolio',s1c:'Expertise areas',dir:'ltr',lang:'en',skip:'Skip to content',intro_skip:'Skip ›',intro_projects:'projects',intro_flash:'AI · Education · Games · Jewish',search_ph:'Search projects...',loading:'Loading projects...',no_results:'No projects found — try another filter or search',show_all:'Show all',show_all_n:'Show all projects',filter_cat:'Filter: {c}',filter_search:'Search: "{q}"',count:'Showing {n} of {t} projects',cat_n:'{n} projects',co_wa:'WhatsApp',pv_open:'Open',pv_newtab:'Open in browser',pv_loading:'Loading site...',pv_blocked:'Cannot preview here — open in browser',pv_reload:'Reload',pv_close:'Close',pv_contact:'Contact',pv_home:'Project home',theme_day:'Light mode',theme_night:'Dark mode',theme_lbl_day:'Day',theme_lbl_night:'Night',dock_home:'Home',dock_apps:'Apps',dock_live:'Live',dock_channels:'Channels',nav_home:'Home',nav_about:'About',nav_channels:'Channels',nav_live:'Live',nav_projects:'Projects',nav_contact:'Contact',lv_label:'Live on Netlify',lv_title:'Live <span>Sites</span>',lv_sub:'Live projects — click opens in your browser',lv_d1:'Full math platform — 90+ lessons and PWA',lv_d2:'Mechanics course — 19,000+ cars, live garage, WhatsApp bot',lv_d3:'Landing page with interactive demo — algorithm transparency in Hebrew',available:'Available',photo_title:'The Patlas Family',photo_sub:'Father of 5 · Code that serves home & community',photo_family:'Father of 5',chip_creator:'Creator',chip_langs:'3 langs',hero_lead:'Education · AI · Games',hero_tagline:'Code that serves community',s1:'Projects',s2:'Ready to publish',s3:'Languages',s4:'Content channels',b1:'My Projects',b2:'My Channels',ab_label:'About',ab_title:'Who <span>I Am</span>',ab_sub:'Developer who creates — creator who develops',ab_p1:'Hi! I\'m <strong>David Patlas</strong> — Full Stack Developer, digital content creator and online presence manager.',ab_p2:'I\'ve built dozens of projects: <strong>educational platforms for the Haredi community</strong>, AI tools, HTML5 games, widgets, CRM and marketing tools — and more.',ab_p3:'Alongside development, I manage a <strong>digital presence</strong> — YouTube, website, TikTok and Twitter — with Jewish content in Hebrew, Russian and English.',archive_title:'Project Archive',arch_title:'Full archive',arch_sub:'42+ in portfolio · 52+ in archive — versions, galleries & docs',arch_full:'All projects',arch_gallery:'Tools gallery',arch_about:'Detailed portfolio',pv_versions:'Versions',pv_versions_title:'Version history',vers_gh:'View full code on GitHub',vers_close:'Close',tl_h:'Timeline',tl1t:'2025–2026 — Heavy Development',tl1d:'42+ projects in portfolio — AI, education, tools and games',tl2t:'2024–2025 — Platforms',tl2d:'Math for Haredim, Car Course, The Algorithm That Repented',tl3t:'2023+ — Digital Management',tl3d:'YouTube, TikTok, website and Twitter in three languages',tl4t:'Studies — Paamei Atid',tl4d:'Python, networking and web development',ch_label:'Channels',ch_title:'Digital <span>Presence</span>',ch_sub:'All channels I build and manage',cyt:'Torah lessons, weekly Parasha and Mishna in Russian and Hebrew — I built and manage.',csite_h:'Jewish Learning Platform',csite:'Torah study website with lessons, articles and Pardes books.',ctt:'Short Jewish content for a wide audience.',cx:'Projects and thoughts on AI and development.',cpic_name:'Project Archive',cpic_h:'Earlier version',cpic:'Additional projects — archive link',cgh:'Tools, AI, games and education — open source.',pr_label:'Projects',pr_title:'What I <span>Built</span>',pr_sub:'52+ projects · AI · education · games · <a href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/" data-preview-title="Project Archive" style="color:var(--accent);font-weight:700;">archive →</a>',pr_full:'Full portfolio (34+ projects) →',fa:'All',ff:'Flagship',fai:'AI',fg:'Games',fj:'Jewish',fe:'Education',fb:'Business',fd:'Dev Tools',fl:'Live',cf:'Flagship',cai:'AI Tool',cg:'Game',cj:'Jewish Tool',ce:'Education',cb:'Business Tool',cd:'Dev Tool',n1:'Math for Haredim',d1:'Full math platform — 90+ lessons, GeoGebra, quizzes and PWA for the Haredi community.',n2:'Car Mechanics Course',d2:'Interactive course — 19,000+ cars, live garage, WhatsApp bot.',n3:'The Algorithm That Repented',d3:'Browser extension + AI agent — explains why you saw every post, algorithm transparency in Hebrew.',d4:'Desktop widget: Hebrew date, Parasha, daily prayer times.',n5:'Etrog Checker',d5:'AI detection of defects and quality in etrogim.',n6:'Emotion Identifier',d6:'NLP for emotion detection in Hebrew text.',n7:'ID Decoder & Checker',d7:'Scan and analyze Israeli IDs — React, OCR.',n8:'Model Training System',d8:'Hebrew UI for training ML models.',n9:'It\'s All About Money',d9:'Price guessing game for the whole family.',n10:'Theme Park RCT Builder',d10:'Build a theme park RCT-style — in the browser.',n11:'Patlas Games Collection',d11:'HTML5 collection — Asteroids, Breakout, Snake and more.',n12:'Digital Kids Games',d12:'Educational Hebrew games for kindergarten and school.',n13:'Shofar',d13:'Shofar audio and halachic info for High Holidays.',n14:"God's Name Russian Fixer",d14:"Fix spelling of God's name in Russian books.",n15:'Breathing Timer',d15:'Guided breathing timer — mindfulness and relaxation.',n16:'Haredi Household Manager',d16:'Offline budget management for the Haredi community.',n17:'WhatsApp Leads Extractor',d17:'Extract leads from WhatsApp backup — automated CRM.',n18:'CRM File Generator',d18:'Automatically generate CRM files.',n19:'Email + Aliasing Generator',d19:'Email addresses with + for spam filtering.',n20:'Real Code Analyzer',d20:'Deep code breakdown and analysis.',n21:'Claude Code Splitter',d21:'Split large code files from Claude.',d22:'Unified project management platform.',n23:'CSS Designs Collection',d23:'77 CSS effects — animations, cards, gradients.',co_t:'Let\'s Build Something <span style="text-decoration:underline;text-decoration-color:rgba(255,255,255,0.4);">Together</span>',co_s:'Looking for a developer who also creates content? Have a project? I\'m here.',co_email:'Send Email',ft:'Developer · Creator · Digital Manager'},
@@ -1615,14 +1617,14 @@ const PROJECT_CATALOG = [
     name:{he:'CableVitality — רחפן קשור',en:'CableVitality — Tethered Drone',ru:'CableVitality — привязной дрон'},
     desc:{he:'פורטל סימולציות רחפן קשור — פיזיקה, משחקים, מחקר ומאגר משתנים.',en:'Tethered drone simulation hub — physics engine, games, research and variable database.',ru:'Симулятор привязного дрона — физика, игры, исследования.'}, tags:['Physics','Simulation','JS'],
     versions:[{v:'v1.0',date:'בפיתוח',label:'פרוטוטייפ',desc:'מנוע פיזיקה לרחפן קשור, משחקים ומחקר.'}] },
-  { id:'diykids', icon:'🔬', cat:['edu','biz'], status:'wip', contact:1,
+  { id:'diykids', icon:'🔬', cat:['edu','biz'], status:'live', demo:'https://davidpatlas-ai.github.io/diy-kids-lab/', gh:'https://github.com/DavidPatlas-AI/diy-kids-lab',
     name:{he:'מעבדת DIY — ערכות לילדים',en:'DIY Kids Lab',ru:'DIY Лаборатория для детей'},
     desc:{he:'חנות ערכות יצירה וטכנולוגיה לילדים — אלקטרוניקה, לחמה ורובוטיקה.',en:'DIY kits shop for kids — electronics, soldering and robotics products.',ru:'Магазин DIY наборов — электроника, пайка, робототехника.'}, tags:['DIY','Kids','E-commerce'],
     versions:[{v:'v1.0',date:'בפיתוח',label:'פרוטוטייפ',desc:'חנות ערכות DIY לילדים — אלקטרוניקה ורובוטיקה.'}] },
-  { id:'mahat', icon:'📐', cat:['edu'], status:'wip', contact:1,
+  { id:'mahat', icon:'📐', cat:['edu'], status:'live', demo:'https://davidpatlas-ai.github.io/mahat-math-prep/', gh:'https://github.com/DavidPatlas-AI/mahat-math-prep',
     name:{he:'קורס מה"ט — הכנה למתמטיקה',en:'Mahat Math Prep Course',ru:'Курс Махат — математика'},
     desc:{he:'קורס הכנה למבחני מה"ט במתמטיקה — שיעורים, תרגול ומבחנים.',en:'Math prep course for Mahat exams — lessons, practice and tests.',ru:'Подготовка к экзаменам Махат по математике.'}, tags:['Mahat','Math','Edu'],
-    versions:[{v:'v1.0',date:'בפיתוח',label:'בפיתוח',desc:'קורס הכנה למבחני מה"ט — שיעורים, תרגול ומבחנים.'}] }
+    versions:[{v:'v1.0',date:'2026',label:'השקה',desc:'קורס הכנה למבחני מה"ט — שיעורים, תרגול ומבחנים.'}] }
 ];
 
 [
@@ -2225,7 +2227,7 @@ document.getElementById('previewFrame').onerror=showPreviewFallback;
 function scrollToSection(id){
   const target=document.getElementById(id);
   if(!target)return;
-  if(typeof finishIntro==='function')finishIntro();
+  if(typeof finishIntro==='function')finishIntro(true);
   closePreview();
   closeVersions();
   target.scrollIntoView({block:'start',behavior:'auto'});
@@ -2288,12 +2290,24 @@ document.querySelectorAll('.stat .n').forEach(el=>{
 renderProjects();
 
 let introDone=false;
-function finishIntro(){
+let stopIntroCanvas=null;
+function finishIntro(preserveScroll=false){
   if(introDone)return;
   introDone=true;
-  document.getElementById('wowIntro')?.classList.add('done');
+  const intro=document.getElementById('wowIntro');
+  intro?.classList.add('done');
   document.body.classList.remove('intro-active');
   document.body.classList.add('intro-revealed');
+  if(stopIntroCanvas){stopIntroCanvas();stopIntroCanvas=null;}
+  if(!preserveScroll){
+    const hashTarget=INITIAL_HASH&&document.getElementById(INITIAL_HASH.slice(1));
+    requestAnimationFrame(()=>{
+      if(hashTarget)hashTarget.scrollIntoView({block:'start',behavior:'auto'});
+      else window.scrollTo({top:0,left:0,behavior:'auto'});
+    });
+  }
+  intro?.addEventListener('transitionend',()=>intro.remove(),{once:true});
+  setTimeout(()=>intro?.remove(),1300);
   document.querySelector('.hero-inner')?.querySelectorAll('.stat .n[data-count]').forEach(animateStat);
   initHeroParticles();
   typeHeroTagline();
@@ -2396,13 +2410,14 @@ function initWowIntro(){
     finishIntro();
     return;
   }
+  window.scrollTo({top:0,left:0,behavior:'auto'});
   document.body.classList.add('intro-active');
   const flash=document.getElementById('introFlash');
   const t=T[currentLang]||T.he;
   if(flash&&t.intro_flash)flash.textContent=t.intro_flash;
-  initIntroCanvas();
+  stopIntroCanvas=initIntroCanvas();
   animateIntroCount(PROJECT_CATALOG.length);
-  document.getElementById('introSkip')?.addEventListener('click',finishIntro);
+  document.getElementById('introSkip')?.addEventListener('click',()=>finishIntro());
   setTimeout(finishIntro,2600);
 }
 
@@ -2439,4 +2454,3 @@ function initWowIntro(){
 </div>
 </body>
 </html>
-
