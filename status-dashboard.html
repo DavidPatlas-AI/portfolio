@@ -40,6 +40,20 @@ header p{color:var(--muted);font-size:1rem}
 .health-track{height:8px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;border:1px solid var(--border)}
 .health-fill{height:100%;background:linear-gradient(90deg,#22c55e,#4ade80);border-radius:999px;transition:width .4s}
 .health-txt{font-size:.82rem;color:var(--muted);text-align:center}
+.alert-banner{display:none;margin:0 0 20px;border:1px solid rgba(248,113,113,.45);background:rgba(248,113,113,.1);
+  border-radius:16px;padding:14px 16px;animation:alertPulse 2.4s ease-in-out infinite}
+@keyframes alertPulse{0%,100%{box-shadow:0 0 0 0 rgba(248,113,113,0)}50%{box-shadow:0 0 0 6px rgba(248,113,113,.12)}}
+.alert-inner{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.alert-title{font-weight:800;color:#fecaca;flex:1;min-width:180px}
+.alert-items{display:flex;flex-wrap:wrap;gap:8px;flex:2}
+.alert-item{padding:6px 12px;border-radius:999px;border:1px solid rgba(248,113,113,.45);background:rgba(0,0,0,.2);
+  color:#fecaca;font-family:inherit;font-size:.78rem;cursor:pointer;transition:.2s}
+.alert-item:hover{border-color:#f87171;background:rgba(248,113,113,.18)}
+.alert-new{color:#fde047;font-weight:800;margin-inline-start:4px}
+.alert-actions{display:flex;gap:8px}
+.alert-btn{padding:6px 12px;border-radius:999px;border:1px solid rgba(248,113,113,.4);background:transparent;
+  color:#fecaca;font-family:inherit;font-size:.78rem;font-weight:600;cursor:pointer}
+.alert-btn:hover{background:rgba(248,113,113,.15)}
 .stats{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin:22px 0}
 .stat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 22px;min-width:110px;text-align:center}
 .stat b{display:block;font-size:1.6rem;font-weight:800}
@@ -130,19 +144,21 @@ a.portfolio{display:inline-block;margin-top:12px;color:var(--gold);text-decorati
       <button class="icon-btn" id="exportBtn" type="button" title="ייצוא JSON">⬇ JSON</button>
     </div>
     <h1>🗺️ מפת סטטוס פרויקטים</h1>
-    <p>מה באמת עובד · מה דמו · מה בפיתוח — עודכן 30.06.2026 22:16</p>
+    <p>מה באמת עובד · מה דמו · מה בפיתוח — עודכן 30.06.2026 22:19</p>
     <div class="health">
       <div class="health-track"><div class="health-fill" id="healthFill" style="width:100%"></div></div>
       <span class="health-txt" id="healthTxt">100% פרויקטים פעילים (44/44)</span>
     </div>
     <a class="portfolio" href="https://storied-alfajores-6f10d2.netlify.app/portfolio.html" target="_blank">← תיק עבודות Patlas</a>
   </header>
+  <div class="alert-banner" id="alertBanner" role="alert"></div>
   <div class="stats" id="stats"></div>
   <div class="legend">
     <div class="leg"><b>🟢 עובד מלא</b>אתר ייצור אמיתי — Netlify / GitHub Pages / PWA מלא</div>
     <div class="leg"><b>✅ עובד</b>דמו חי עם פונקציונליות אמיתית ב-Netlify</div>
     <div class="leg"><b>🟡 דמו / נראה</b>עמוד שנוצר/שוחזר — נראה טוב, תוכן מצומצם</div>
     <div class="leg"><b>🔵 בפיתוח</b>רק GitHub / צור קשר — אין דמו חי</div>
+    <div class="leg"><b>🔴 שבור</b>URL לא נגיש או HTTP 4xx/5xx — דורש תיקון</div>
   </div>
   <div class="featured" id="featured"></div>
   <div class="toolbar">
@@ -165,7 +181,8 @@ const DATA = [{"id": "codeplayer", "name": "CodePlayer — משמיע קוד", "
 const TIER_LABELS = {"full": "עובד מלא", "works": "עובד", "demo": "דמו / נראה", "wip": "בפיתוח", "broken": "שבור"};
 const CAT_LABELS = {"flag": "דגל", "edu": "חינוך", "ai": "AI", "jewish": "יהדות", "games": "משחקים", "biz": "עסקים", "dev": "פיתוח", "live": "חי"};
 const ALL_CATS = ["ai", "biz", "dev", "edu", "flag", "games", "jewish"];
-const GENERATED = "30.06.2026 22:16";
+const GENERATED = "30.06.2026 22:19";
+const NEWLY_BROKEN = [];
 let filter = 'all';
 let catFilter = 'all';
 let viewMode = localStorage.getItem('patlas-status-view') || 'grid';
@@ -234,9 +251,57 @@ function sorted(list) {
 }
 
 function httpLine(r) {
-  if (r.http) return (r.http >= 400 ? '<div class="http err">HTTP ' + r.http + '</div>' : '<div class="http">HTTP ' + r.http + '</div>');
+  if (r.tier === 'broken') {
+    const detail = r.http ? ('HTTP ' + r.http) : (r.httpErr || 'לא נגיש');
+    return '<div class="http err">🔴 ' + esc(detail) + '</div>';
+  }
+  if (r.http) return '<div class="http">HTTP ' + r.http + '</div>';
   if (r.tier === 'wip') return '<div class="http">אין דמו חי</div>';
   return '';
+}
+
+function renderAlerts() {
+  const el = document.getElementById('alertBanner');
+  const broken = DATA.filter(r => r.tier === 'broken');
+  if (!broken.length || localStorage.getItem('patlas-alert-dismiss') === GENERATED) {
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+  el.style.display = 'block';
+  const items = broken.map(r => {
+    const isNew = NEWLY_BROKEN.includes(r.id);
+    const detail = r.http ? ('HTTP ' + r.http) : (r.httpErr || 'לא נגיש');
+    return `<button type="button" class="alert-item" data-id="${esc(r.id)}">${r.icon} ${esc(r.name)} · ${esc(detail)}${isNew ? ' <span class="alert-new">חדש!</span>' : ''}</button>`;
+  }).join('');
+  el.innerHTML = `<div class="alert-inner">
+    <div class="alert-title">🔴 ${broken.length} פרויקטים שבורים — דורשים תיקון</div>
+    <div class="alert-items">${items}</div>
+    <div class="alert-actions">
+      <button type="button" class="alert-btn" id="alertFilterBtn">הצג רק שבורים</button>
+      <button type="button" class="alert-btn" id="alertDismissBtn">הסתר</button>
+    </div>
+  </div>`;
+  document.getElementById('alertFilterBtn').onclick = () => {
+    filter = 'broken';
+    renderChips();
+    renderCatChips();
+    render();
+    document.getElementById('grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+  document.getElementById('alertDismissBtn').onclick = () => {
+    localStorage.setItem('patlas-alert-dismiss', GENERATED);
+    renderAlerts();
+  };
+  el.querySelectorAll('.alert-item').forEach(btn => {
+    btn.onclick = () => {
+      document.getElementById('q').value = btn.dataset.id;
+      filter = 'all';
+      renderChips();
+      renderCatChips();
+      render();
+    };
+  });
 }
 
 function setView(mode) {
@@ -286,6 +351,7 @@ function exportJson() {
 function render() {
   const list = sorted(filtered());
   renderStats(list);
+  renderAlerts();
   const g = document.getElementById('grid');
   g.classList.toggle('list', viewMode === 'list');
   if (!list.length) { g.innerHTML = '<div class="empty">לא נמצאו פרויקטים</div>'; return; }
