@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="גידול קהילתי · סימולציה · גלריה">
+<meta name="description" content="נחיתה · סימולטור · תצוגה · גלריה">
 <title>חממה דיגיטלית — גרסה מאוחדת</title>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Syne:wght@700&display=swap" rel="stylesheet">
 <style>
 :root{--gold:#f5c842;--accent:#7c6af5;--glass:rgba(255,255,255,.1);--border:rgba(255,255,255,.18)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Rubik,sans-serif;min-height:100vh;background:linear-gradient(135deg,#15803d,#14532d);color:#fff;line-height:1.55}
+body{font-family:Rubik,sans-serif;min-height:100vh;background:linear-gradient(135deg,#15803d,#14532d,#052e16);color:#fff;line-height:1.55}
 .bg-mesh{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 40% at 80% 10%,rgba(255,255,255,.12),transparent),radial-gradient(ellipse 50% 30% at 10% 90%,rgba(0,0,0,.2),transparent)}
 .nav{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 20px;background:rgba(8,8,16,.75);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
 .nav a,.nav button{color:#fff;text-decoration:none;font-weight:600;font-size:.85rem;padding:8px 14px;border-radius:999px;background:var(--glass);border:1px solid var(--border);cursor:pointer;font-family:inherit}
@@ -50,13 +50,17 @@ pre{background:rgba(0,0,0,.4);padding:14px;border-radius:12px;overflow:auto;max-
   <span class="badge">גרסה מאוחדת v3</span>
 </nav>
 <div class="wrap">
-<div class="hero"><h1>🌱 חממה דיגיטלית Ultimate</h1><p class="sub">מאחד: landing · enhanced · showcase · gallery</p>
-<div class="grid">
-<a class="card" href="landing_page.html" style="text-decoration:none;color:inherit"><strong>🏠 דף נחיתה</strong></a>
-<a class="card" href="enhanced_greenhouse.html" style="text-decoration:none;color:inherit"><strong>🔬 סימולטור</strong></a>
-<a class="card" href="showcase.html" style="text-decoration:none;color:inherit"><strong>✨ תצוגה</strong></a>
-<a class="card" href="index_with_gallery.html" style="text-decoration:none;color:inherit"><strong>🖼️ גלריה</strong></a>
-</div></div>
+<div class="hero"><h1>🌱 חממה דיגיטלית Ultimate</h1>
+<p class="sub">מאחד: landing · enhanced · showcase · gallery → מרכז אחד</p></div>
+<div class="tabs">
+  <button class="tab" data-p="p1">🏠 נחיתה</button><button class="tab" data-p="p2">🔬 סימולטור</button>
+  <button class="tab" data-p="p3">✨ תצוגה</button><button class="tab" data-p="p4">🖼️ גלריה</button>
+</div>
+<div class="panel on" id="p1"><iframe src="landing_page.html" style="width:100%;height:560px;border:1px solid var(--border);border-radius:14px"></iframe></div>
+<div class="panel" id="p2"><iframe src="enhanced_greenhouse.html" style="width:100%;height:560px;border:1px solid var(--border);border-radius:14px"></iframe></div>
+<div class="panel" id="p3"><iframe src="showcase.html" style="width:100%;height:560px;border:1px solid var(--border);border-radius:14px"></iframe></div>
+<div class="panel" id="p4"><iframe src="index_with_gallery.html" style="width:100%;height:560px;border:1px solid var(--border);border-radius:14px"></iframe></div>
+<p class="vers-list">מאוחד: 4 גרסאות בטאבים אחד — Ultimate v3</p>
 </div>
 <script>
 function tabs(ids) {
@@ -69,7 +73,7 @@ function tabs(ids) {
   document.querySelector('.tab').classList.add('on');
   document.getElementById(ids[0]).classList.add('on');
 }
-
+tabs(["p1"]);
 </script>
 </body>
 </html>

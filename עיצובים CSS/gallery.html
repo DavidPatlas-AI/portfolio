@@ -1,127 +1,73 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>גלריית עיצובי CSS</title>
-    <style>
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            font-family: Arial, sans-serif;
-            color: white;
-            padding: 20px;
-        }
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        .card {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-        }
-        .card:hover {
-            transform: scale(1.05);
-            transition: 0.3s;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="13 אפקטים ייחודיים — ללא כפילויות">
+<title>אוסף CSS — גרסה מאוחדת</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800&family=Syne:wght@700&display=swap" rel="stylesheet">
+<style>
+:root{--gold:#f5c842;--accent:#7c6af5;--glass:rgba(255,255,255,.1);--border:rgba(255,255,255,.18)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Rubik,sans-serif;min-height:100vh;background:linear-gradient(135deg,#667eea,#764ba2,#5b21b6);color:#fff;line-height:1.55}
+.bg-mesh{position:fixed;inset:0;pointer-events:none;background:radial-gradient(ellipse 60% 40% at 80% 10%,rgba(255,255,255,.12),transparent),radial-gradient(ellipse 50% 30% at 10% 90%,rgba(0,0,0,.2),transparent)}
+.nav{position:sticky;top:0;z-index:50;display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 20px;background:rgba(8,8,16,.75);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.nav a,.nav button{color:#fff;text-decoration:none;font-weight:600;font-size:.85rem;padding:8px 14px;border-radius:999px;background:var(--glass);border:1px solid var(--border);cursor:pointer;font-family:inherit}
+.nav a:hover,.nav button:hover,.tab.on{border-color:var(--gold);color:var(--gold)}
+.badge{background:linear-gradient(135deg,var(--gold),#e0a820);color:#111;padding:4px 10px;border-radius:999px;font-size:.7rem;font-weight:800}
+.wrap{max-width:980px;margin:0 auto;padding:24px 18px 60px;position:relative;z-index:1}
+.hero h1{font-family:Syne,sans-serif;font-size:clamp(1.7rem,4vw,2.5rem);margin:8px 0}
+.hero .sub{opacity:.88;max-width:640px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 16px}
+.tab{padding:10px 18px;border-radius:12px;border:1px solid var(--border);background:var(--glass);cursor:pointer;font-weight:600;font-size:.88rem}
+.panel{display:none;background:var(--glass);border:1px solid var(--border);border-radius:18px;padding:22px;backdrop-filter:blur(10px);margin-bottom:16px}
+.panel.on{display:block}
+.panel h2{font-size:1.15rem;margin-bottom:12px;color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.card{background:rgba(0,0,0,.22);border-radius:14px;padding:16px;border:1px solid var(--border);transition:.2s}
+.card:hover{border-color:var(--gold);transform:translateY(-2px)}
+input,textarea,select{width:100%;padding:11px 14px;border-radius:12px;border:1px solid var(--border);background:rgba(0,0,0,.35);color:#fff;font-family:inherit;margin:8px 0}
+label{font-size:.85rem;opacity:.9;display:block;margin-top:10px}
+.btn{display:inline-block;margin:10px 6px 0 0;padding:12px 22px;border-radius:999px;background:linear-gradient(135deg,var(--gold),#e0a820);color:#111;font-weight:800;border:none;cursor:pointer;font-size:.92rem}
+.btn.ghost{background:var(--glass);color:#fff;border:1px solid var(--border)}
+.stat-row{display:flex;flex-wrap:wrap;gap:12px;margin:14px 0}
+.stat{flex:1;min-width:100px;text-align:center;padding:14px;background:rgba(0,0,0,.25);border-radius:14px}
+.stat b{display:block;font-size:1.5rem;color:var(--gold)}
+.meter{height:10px;background:rgba(0,0,0,.4);border-radius:999px;overflow:hidden;margin-top:8px}
+.meter>i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:999px;transition:width .4s}
+.tag{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(245,200,66,.2);font-size:.75rem;margin:4px 0 0 4px}
+canvas{display:block;max-width:100%;margin:12px auto;border-radius:14px;background:#0a0a12}
+pre,code{font-family:Consolas,monospace;font-size:.85rem}
+pre{background:rgba(0,0,0,.4);padding:14px;border-radius:12px;overflow:auto;max-height:280px}
+.vers-list{font-size:.82rem;opacity:.75;margin-top:16px;padding-top:14px;border-top:1px solid var(--border)}
+
+</style>
 </head>
 <body>
-    <h1 style="text-align: center;">גלריית עיצובי CSS</h1>
-    <div class="gallery">
-        <div class="card" onclick="window.open('projects/animated_404_page.html')">
-            <h3>דף 404 מונפש</h3>
-            <p>דף שגיאה עם אנימציות</p>
-        </div>
-        <div class="card" onclick="window.open('projects/car_speedometer.html')">
-            <h3>מד מהירות רכב</h3>
-            <p>מד מהירות דיגיטלי</p>
-        </div>
-        <div class="card" onclick="window.open('projects/engine_button.html')">
-            <h3>כפתור הנעה</h3>
-            <p>כפתור מנוע אינטראקטיבי</p>
-        </div>
-        <div class="card" onclick="window.open('projects/hazard_lights_button.html')">
-            <h3>כפתור אורות חירום</h3>
-            <p>כפתור חירום מונפש</p>
-        </div>
-        <div class="card" onclick="window.open('projects/hazard_lights_button (1).html')">
-            <h3>כפתור אורות חירום (2)</h3>
-            <p>גרסה משופרת</p>
-        </div>
-        <div class="card" onclick="window.open('projects/hazard_lights_button (2).html')">
-            <h3>כפתור אורות חירום (3)</h3>
-            <p>גרסה מתקדמת</p>
-        </div>
-        <div class="card" onclick="window.open('projects/interactive_credit_card.html')">
-            <h3>כרטיס אשראי אינטראקטיבי</h3>
-            <p>כרטיס תלת-מימדי</p>
-        </div>
-        <div class="card" onclick="window.open('projects/jewish_clock.html')">
-            <h3>שעון יהודי</h3>
-            <p>שעון עברי מתקדם</p>
-        </div>
-        <div class="card" onclick="window.open('projects/matching_game_presentation.html')">
-            <h3>משחק התאמות</h3>
-            <p>משחק אינטראקטיבי</p>
-        </div>
-        <div class="card" onclick="window.open('projects/modern_3d_ignition.html')">
-            <h3>הצתה תלת-מימדית</h3>
-            <p>מערכת הצתה מודרנית</p>
-        </div>
-        <div class="card" onclick="window.open('projects/modern_3d_ignition (1).html')">
-            <h3>הצתה תלת-מימדית (2)</h3>
-            <p>גרסה משופרת</p>
-        </div>
-        <div class="card" onclick="window.open('projects/rock_paper_scissors_game.html')">
-            <h3>אבן נייר מספריים</h3>
-            <p>משחק קלאסי</p>
-        </div>
-        <div class="card" onclick="window.open('projects/steering_wheel_system.html')">
-            <h3>מערכת הגה</h3>
-            <p>סימולטור הגה</p>
-        </div>
-        <div class="card" onclick="window.open('projects/steering_wheel_system (1).html')">
-            <h3>מערכת הגה (2)</h3>
-            <p>גרסה משופרת</p>
-        </div>
-        <div class="card" onclick="window.open('projects/steering_wheel_system (2).html')">
-            <h3>מערכת הגה (3)</h3>
-            <p>גרסה מתקדמת</p>
-        </div>
-        <div class="card" onclick="window.open('projects/theme_toggle.html')">
-            <h3>מחליף נושא</h3>
-            <p>מחליף יום/לילה</p>
-        </div>
-        <div class="card" onclick="window.open('projects/traffic_light (1).html')">
-            <h3>רמזור</h3>
-            <p>רמזור אינטראקטיבי</p>
-        </div>
-        <div class="card" onclick="window.open('projects/turning_page_animation.html')">
-            <h3>הפיכת עמוד</h3>
-            <p>אנימציה תלת-מימדית</p>
-        </div>
-        <div class="card" onclick="window.open('projects/turning_page_animation (1).html')">
-            <h3>הפיכת עמוד (2)</h3>
-            <p>גרסה משופרת</p>
-        </div>
-        <div class="card" onclick="window.open('projects/turning_page_animation (2).html')">
-            <h3>הפיכת עמוד (3)</h3>
-            <p>גרסה מתקדמת</p>
-        </div>
-        <div class="card" onclick="window.open('projects/turning_page_animation (3).html')">
-            <h3>הפיכת עמוד (4)</h3>
-            <p>גרסה מיוחדת</p>
-        </div>
-        <div class="card" onclick="window.open('projects/turning_page_animation (4).html')">
-            <h3>הפיכת עמוד (5)</h3>
-            <p>גרסה אולטימטיבית</p>
-        </div>
-    </div>
-    <div style="text-align: center; margin-top: 30px;">
-        <h2>22 פרויקטים CSS מתקדמים</h2>
-        <p>לחץ על כל כרטיס כדי לצפות בפרויקט</p>
-    </div>
+<div class="bg-mesh"></div>
+<nav class="nav">
+  <a href="https://storied-alfajores-6f10d2.netlify.app/portfolio.html">← תיק עבודות</a>
+  <span class="badge">גרסה מאוחדת v3</span>
+</nav>
+<div class="wrap">
+<div class="hero"><h1>✨ CSS Lab Ultimate</h1>
+<p class="sub">מאחד: 22 קבצים → 13 אפקטים ייחודיים · ללא גרסאות כפולות</p></div>
+<div class="stat-row"><div class="stat"><b>13</b>אפקטים</div><div class="stat"><b>100%</b>HTML/CSS</div><div class="stat"><b>v3</b>מאוחד</div></div>
+<div class="grid"><a class="card" href="projects/animated_404_page.html" style="text-decoration:none;color:inherit"><strong>דף 404 מונפש</strong><p>אנימציות שגיאה</p></a><a class="card" href="projects/car_speedometer.html" style="text-decoration:none;color:inherit"><strong>מד מהירות</strong><p>לוח מחוונים רכב</p></a><a class="card" href="projects/engine_button.html" style="text-decoration:none;color:inherit"><strong>כפתור הנעה</strong><p>מנוע אינטראקטיבי</p></a><a class="card" href="projects/hazard_lights_button.html" style="text-decoration:none;color:inherit"><strong>אורות חירום</strong><p>הזהרה מונפשת</p></a><a class="card" href="projects/interactive_credit_card.html" style="text-decoration:none;color:inherit"><strong>כרטיס אשראי</strong><p>תלת-ממד</p></a><a class="card" href="projects/jewish_clock.html" style="text-decoration:none;color:inherit"><strong>שעון עברי</strong><p>זמנים ותאריך</p></a><a class="card" href="projects/matching_game_presentation.html" style="text-decoration:none;color:inherit"><strong>משחק התאמה</strong><p>זיכרון</p></a><a class="card" href="projects/modern_3d_ignition.html" style="text-decoration:none;color:inherit"><strong>הנעה 3D</strong><p>ממשק רכב</p></a><a class="card" href="projects/rock_paper_scissors_game.html" style="text-decoration:none;color:inherit"><strong>אבן נייר ומספריים</strong><p>משחק קלאסי</p></a><a class="card" href="projects/steering_wheel_system.html" style="text-decoration:none;color:inherit"><strong>הגה</strong><p>סימולטור היגוי</p></a><a class="card" href="projects/theme_toggle.html" style="text-decoration:none;color:inherit"><strong>מצב כהה/בהיר</strong><p>Theme toggle</p></a><a class="card" href="projects/traffic_light.html" style="text-decoration:none;color:inherit"><strong>רמזור</strong><p>אנימציית תנועה</p></a><a class="card" href="projects/turning_page_animation.html" style="text-decoration:none;color:inherit"><strong>דפדוף עמוד</strong><p>אפקט ספר</p></a></div>
+<p class="vers-list">מאוחד: כל הגרסאות הכפולות הוסרו מהגלריה — נשארו האפקטים הטובים ביותר</p>
+</div>
+<script>
+function tabs(ids) {
+  document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('on'));
+    t.classList.add('on');
+    document.getElementById(t.dataset.p).classList.add('on');
+  });
+  document.querySelector('.tab').classList.add('on');
+  document.getElementById(ids[0]).classList.add('on');
+}
+
+</script>
 </body>
-</html> 
+</html>
