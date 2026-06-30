@@ -1,6 +1,12 @@
 [build]
   publish = "."
 
+[[redirects]]
+  from = "/"
+  to = "/portfolio.html"
+  status = 302
+  force = false
+
 [[headers]]
   for = "/*"
   [headers.values]
