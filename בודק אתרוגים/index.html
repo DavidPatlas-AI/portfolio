@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="זיהוי פסולים וכתמים באתרוג — הדגמה">
+<title>בודק אתרוגים</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans Hebrew',Segoe UI,sans-serif;min-height:100vh;background:linear-gradient(135deg,#365314,#14532d,#052e16);color:#fff;padding:20px;line-height:1.6}
+.top-nav a{color:rgba(255,255,255,.92);text-decoration:none;font-weight:600;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);display:inline-block;margin-bottom:18px}
+.wrap{max-width:920px;margin:0 auto}
+h1{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:8px}
+.sub{opacity:.85;margin-bottom:24px}
+.panel{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:24px;backdrop-filter:blur(8px);margin-bottom:16px}
+.btn{display:inline-block;margin-top:12px;margin-left:8px;padding:12px 22px;border-radius:999px;background:#f5c842;color:#1a1a2e;font-weight:700;border:none;cursor:pointer;font-size:1rem;text-decoration:none}
+.btn:hover{filter:brightness(1.08)}
+.btn.sec{background:rgba(255,255,255,.2);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:16px}
+.card{background:rgba(0,0,0,.2);border-radius:12px;padding:18px;border:2px solid transparent;transition:.2s;text-decoration:none;color:inherit;display:block}
+.card:hover{border-color:#f5c842;transform:translateY(-2px)}
+input,textarea,select{width:100%;padding:10px;border-radius:10px;border:none;margin:8px 0;font-family:inherit}
+label{font-size:.9rem;opacity:.9;display:block;margin-top:10px}
+.tag{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(245,200,66,.2);font-size:.8rem;margin:4px 4px 0 0}
+</style>
+</head>
+<body>
+<nav class="top-nav"><a href="https://storied-alfajores-6f10d2.netlify.app/portfolio.html">← תיק עבודות Patlas</a></nav><div class="wrap">
+<h1>🍋 בודק אתרוגים</h1>
+<p class="sub">העלו תמונה — ניתוח אוטומטי של כתמים ופגמים (הדגמה)</p>
+<div class="panel">
+  <input type="file" id="file" accept="image/*">
+  <canvas id="c" style="display:block;max-width:100%;margin:16px auto;border-radius:12px;background:#0a0a12"></canvas>
+  <p id="out" style="font-weight:700;min-height:1.5em"></p>
+  <span class="tag">Computer Vision</span><span class="tag">כשרות</span>
+</div></div>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d'),out=document.getElementById('out');
+document.getElementById('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const img=new Image();
+img.onload=()=>{c.width=Math.min(640,img.width);c.height=c.width*img.height/img.width;x.drawImage(img,0,0,c.width,c.height);
+const d=x.getImageData(0,0,c.width,c.height).data;let dark=0,brown=0;
+for(let i=0;i<d.length;i+=16){const r=d[i],g=d[i+1],b=d[i+2];if(r+g+b<120)dark++;if(r>90&&g<80&&b<60)brown++}
+const spots=Math.round(dark/800), score=Math.max(0,100-spots*8-brown/200);
+out.textContent=spots>8?'⚠️ זוהו '+spots+' אזורים כהים — מומלץ בדיקה נוספת':'✅ נראה תקין (ציון '+score+'/100) — הדגמה בלבד';
+};img.src=URL.createObjectURL(f)};</script></body></html>

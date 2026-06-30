@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="יצירת קבצי אוטומציה — BAT, PowerShell, Python">
+<title>מחולל קבצי CRM</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans Hebrew',Segoe UI,sans-serif;min-height:100vh;background:linear-gradient(135deg,#1f2937,#111827,#030712);color:#fff;padding:20px;line-height:1.6}
+.top-nav a{color:rgba(255,255,255,.92);text-decoration:none;font-weight:600;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);display:inline-block;margin-bottom:18px}
+.wrap{max-width:920px;margin:0 auto}
+h1{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:8px}
+.sub{opacity:.85;margin-bottom:24px}
+.panel{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:24px;backdrop-filter:blur(8px);margin-bottom:16px}
+.btn{display:inline-block;margin-top:12px;margin-left:8px;padding:12px 22px;border-radius:999px;background:#f5c842;color:#1a1a2e;font-weight:700;border:none;cursor:pointer;font-size:1rem;text-decoration:none}
+.btn:hover{filter:brightness(1.08)}
+.btn.sec{background:rgba(255,255,255,.2);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:16px}
+.card{background:rgba(0,0,0,.2);border-radius:12px;padding:18px;border:2px solid transparent;transition:.2s;text-decoration:none;color:inherit;display:block}
+.card:hover{border-color:#f5c842;transform:translateY(-2px)}
+input,textarea,select{width:100%;padding:10px;border-radius:10px;border:none;margin:8px 0;font-family:inherit}
+label{font-size:.9rem;opacity:.9;display:block;margin-top:10px}
+.tag{display:inline-block;padding:4px 10px;border-radius:999px;background:rgba(245,200,66,.2);font-size:.8rem;margin:4px 4px 0 0}
+</style>
+</head>
+<body>
+<nav class="top-nav"><a href="https://storied-alfajores-6f10d2.netlify.app/portfolio.html">← תיק עבודות Patlas</a></nav><div class="wrap">
+<h1>⚙️ מחולל קבצי CRM</h1>
+<p class="sub">בחרו סוג ושם — קבלו קובץ מוכן</p>
+<div class="panel">
+  <label>שם הפרויקט</label><input id="name" value="MyCRM">
+  <label>סוג קובץ</label><select id="type"><option value="bat">BAT</option><option value="ps1">PowerShell</option><option value="py">Python</option></select>
+  <button class="btn" id="gen">צור קובץ</button>
+  <textarea id="code" readonly style="min-height:160px;font-family:monospace;font-size:.85rem;margin-top:12px"></textarea>
+  <a class="btn sec" id="dl" download="crm.txt">הורד</a>
+</div>
+<a class="btn sec" href="gallery.html">גלריה מלאה</a></div>
+<script>
+document.getElementById('gen').onclick=()=>{const n=document.getElementById('name').value||'CRM',t=document.getElementById('type').value;
+let c='';if(t==='bat')c='@echo off\nmkdir '+n+'\ncd '+n+'\necho CRM ready > README.txt';
+else if(t==='ps1')c='# '+n+' CRM\nNew-Item -ItemType Directory -Force -Path '+n;
+else c='# '+n+' CRM\nimport os\nos.makedirs("'+n+'", exist_ok=True)';
+document.getElementById('code').value=c.replace(/\\n/g,'\n');document.getElementById('dl').download=n+'.'+({bat:'bat',ps1:'ps1',py:'py'}[t]);};</script></body></html>

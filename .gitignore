@@ -1,0 +1,7 @@
+# Local Netlify folder
+.netlify
+
+# Invalid deploy filenames (# ? not allowed on Netlify) — literal chars only
+*\#*
+*\?*
+*.pdf

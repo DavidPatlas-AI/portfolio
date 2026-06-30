@@ -1,7 +1,7 @@
-# Netlify rejects # and ? in deployed paths
+# Netlify rejects # and ? in deployed paths — literal chars only
+*\#*
+*\?*
 *.pdf
-*#*
-*?*
 
 # Large / non-site folders
 ARCHIVE/
