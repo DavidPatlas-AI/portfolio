@@ -1,0 +1,20 @@
+# Netlify rejects # and ? in deployed paths
+*.pdf
+*#*
+*?*
+
+# Large / non-site folders
+ARCHIVE/
+archive/
+.git/
+node_modules/
+.netlify/
+portfolio-git-temp/
+
+# Dev / docs only
+DOCS/
+WORK/
+workflows/
+scripts/
+*.txt
+README.md
