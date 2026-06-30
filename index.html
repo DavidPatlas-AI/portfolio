@@ -2173,7 +2173,7 @@ function openVersions(id){
     <span class="ver-date">${v.date||''}</span>
     <span class="ver-dot-col"><span class="ver-dot${i===0?' ver-dot-first':''}"></span>${i<vers.length-1?'<span class="ver-line"></span>':''}</span>
     <div class="ver-content">
-      <span class="ver-badge${i===0?' ver-badge-first':''}">v${v.v||''}</span>
+      <span class="ver-badge${i===0?' ver-badge-first':''}">v${(v.v||'').replace(/^v/i,'')}</span>
       ${v.label?`<div class="ver-label">${v.label}</div>`:''}
       <div class="ver-desc">${v.desc||''}</div>
     </div>
