@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CableVitality | חוקרים לעומק נקודות תורפה בסיב אופטי</title>
+<link rel="stylesheet" href="assets/mobile-shell.css">
+<style>
+:root{color-scheme:dark;--bg:#050908;--ink:#f5fbf8;--soft:#d8ebe4;--muted:#99aaa6;--line:rgba(245,251,248,.14);--panel:rgba(13,22,21,.78);--panel2:rgba(20,31,29,.9);--green:#42d392;--cyan:#6fd6ff;--amber:#ffd166;--red:#ff6b6b;--shadow:0 30px 100px rgba(0,0,0,.38)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 12% 8%,rgba(66,211,146,.18),transparent 28%),radial-gradient(circle at 86% 4%,rgba(111,214,255,.14),transparent 28%),linear-gradient(180deg,#07100f,#050908)}a{color:inherit}.shell{width:min(1220px,calc(100% - 32px));margin:0 auto}
+.top{padding:34px 0 18px;display:flex;justify-content:space-between;align-items:end;gap:18px}.back{min-height:44px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:var(--green);color:#04110e;text-decoration:none;font-weight:900;padding:0 16px}.kicker{margin:0 0 10px;color:var(--green);font-weight:900}h1{font-size:clamp(38px,7vw,88px);line-height:.95;margin:0}.lead{max-width:760px;color:var(--soft);font-size:19px;line-height:1.65;margin:18px 0 0}
+.screen{border:1px solid var(--line);border-radius:8px;background:rgba(4,10,9,.82);box-shadow:var(--shadow);overflow:hidden;margin:18px 0 28px}.screen-head{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--line);padding:14px 18px;background:rgba(255,255,255,.035)}.screen-head strong{color:var(--green);font-size:18px}.screen-head span{color:var(--muted)}
+.lane{height:74px;display:flex;align-items:center;border-bottom:1px solid rgba(245,251,248,.08);overflow:hidden;position:relative}.lane:last-child{border-bottom:0}.rail{display:flex;gap:16px;white-space:nowrap;will-change:transform;animation:move 55s linear infinite}.lane:nth-child(odd) .rail{animation-duration:64s}.lane:nth-child(3n) .rail{animation-duration:48s}.item{display:inline-flex;align-items:center;gap:10px;min-height:42px;border:1px solid var(--line);border-radius:999px;padding:0 16px;background:rgba(13,22,21,.9);text-decoration:none}.item b{color:var(--cyan)}.item span{color:var(--soft)}.item em{font-style:normal;color:var(--green);font-weight:900}
+@keyframes move{from{transform:translateX(-10%)}to{transform:translateX(55%)}}
+.controls{display:grid;grid-template-columns:1fr 170px 140px;gap:10px;margin-bottom:18px}.control,.btn{min-height:46px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:0 13px;font:inherit}.btn{border:0;background:var(--green);color:#04110e;font-weight:900;cursor:pointer}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:56px}.card{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:18px;text-decoration:none;min-height:150px}.card h2{margin:0 0 10px;font-size:21px}.card p{margin:0;color:var(--muted);line-height:1.55}.card .meta{margin-top:14px;color:var(--green);font-weight:900;font-size:13px}.empty{padding:28px;color:var(--muted)}@media(max-width:850px){.top{display:block}.back{margin-top:18px}.controls,.grid{grid-template-columns:1fr}.lane{height:88px}.rail{animation-duration:38s!important}.item{border-radius:8px;max-width:82vw}.item span{overflow:hidden;text-overflow:ellipsis;max-width:64vw}}
+</style>
+<link rel="stylesheet" href="assets/site-polish.css">
+</head>
+<body>
+<header class="shell top">
+  <div>
+    <p class="kicker">Global Running Headlines</p>
+    <h1>חוקרים לעומק נקודות תורפה בסיב אופטי</h1>
+    <p class="lead">מסך חדשות חי עם כותרות רצות מכל העולם: רחפנים קשורים, סיב אופטי, tethered UAV, OFDR, חישה לאורך כבל וזיהוי נקודות חולשה בזמן אמת.</p>
+  </div>
+  <a class="back" href="robot-avot.html">רובוט אבות</a>
+  <a class="back" href="index.html">חזרה לאתר</a>
+</header>
+<main class="shell">
+  <section class="controls">
+    <input class="control" id="q" placeholder="חיפוש חופשי">
+    <select class="control" id="topic">
+      <option value="all">כל העולם</option>
+      <option value="fiber">סיב אופטי</option>
+      <option value="tether">רחפן קשור</option>
+      <option value="sensing">OFDR / חישה</option>
+      <option value="defense">ביטחוני</option>
+    </select>
+    <button class="btn" onclick="loadWorld()">רענן</button>
+  </section>
+  <section class="screen">
+    <div class="screen-head"><strong>LIVE FEED</strong><span id="status">טוען כותרות...</span></div>
+    <div class="lane"><div class="rail" id="lane1"></div></div>
+    <div class="lane"><div class="rail" id="lane2"></div></div>
+    <div class="lane"><div class="rail" id="lane3"></div></div>
+    <div class="lane"><div class="rail" id="lane4"></div></div>
+  </section>
+  <section class="grid" id="cards"></section>
+</main>
+<div class="cv-mobile-orbit" aria-hidden="true"></div>
+<script>
+const fallbackArticles=[
+  {title:'Google News: fiber optic tethered drone',url:'https://news.google.com/search?q=fiber%20optic%20tethered%20drone%20when%3A5y',source:'Google News'},
+  {title:'Google News: tethered UAV fiber optic',url:'https://news.google.com/search?q=tethered%20UAV%20fiber%20optic%20when%3A5y',source:'Google News'},
+  {title:'Google News: optical fiber UAV',url:'https://news.google.com/search?q=optical%20fiber%20UAV%20when%3A5y',source:'Google News'},
+  {title:'Google News: OFDR cable drone',url:'https://news.google.com/search?q=OFDR%20cable%20drone%20when%3A5y',source:'Google News'},
+  {title:'Google Scholar: fiber optic tethered drone',url:'https://scholar.google.com/scholar?q=fiber+optic+tethered+drone',source:'Google Scholar'},
+  {title:'Google Scholar: distributed fiber sensing drone cable',url:'https://scholar.google.com/scholar?q=distributed+fiber+sensing+drone+cable',source:'Google Scholar'},
+  {title:'IEEE Xplore: fiber optic drone tether',url:'https://ieeexplore.ieee.org/search/searchresult.jsp?queryText=fiber%20optic%20drone%20tether',source:'IEEE Xplore'},
+  {title:'arXiv: UAV fiber optic sensing',url:'https://arxiv.org/search/?query=UAV+fiber+optic+sensing&searchtype=all',source:'arXiv'}
+];
+function safe(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function item(a,i){return `<a class="item" href="${a.url}" target="_blank" rel="noopener"><em>${String(i+1).padStart(2,'0')}</em><span>${safe(a.title)}</span><b>${safe(a.source||'source')}</b></a>`}
+function card(a){return `<a class="card" href="${a.url}" target="_blank" rel="noopener"><h2>${safe(a.title)}</h2><p>${safe(a.url)}</p><div class="meta">${safe(a.source||'source')}</div></a>`}
+function renderWorld(list,status){
+  document.getElementById('status').textContent=status;
+  const chunks=[list.slice(0,40),list.slice(40,80),list.slice(80,120),list.slice(120,160)];
+  chunks.forEach((chunk,idx)=>{
+    const html=(chunk.length?chunk:list).map(item).join('');
+    document.getElementById('lane'+(idx+1)).innerHTML=html+html;
+  });
+  document.getElementById('cards').innerHTML=list.slice(0,12).map(card).join('');
+}
+async function loadWorld(){
+  const topic=document.getElementById('topic').value;
+  const q=document.getElementById('q').value.trim();
+  document.getElementById('status').textContent='מחפש...';
+  if(location.protocol==='file:'){
+    renderWorld(fallbackArticles,'מצב מקומי: מוצגים קישורי חדשות ומחקר מוכנים');
+    return;
+  }
+  const url='/.netlify/functions/news-feed?years=5&max=160&topic='+encodeURIComponent(topic)+(q?'&q='+encodeURIComponent(q):'');
+  try{
+    const res=await fetch(url);
+    const data=await res.json();
+    const list=(data.articles&&data.articles.length)?data.articles:fallbackArticles;
+    renderWorld(list,data.fallback?'מצב גיבוי: קישורי חדשות ומחקר מוכנים':`${list.length} כותרות נטענו`);
+  }catch(e){
+    renderWorld(fallbackArticles,'מצב גיבוי: הפיד החי לא נטען כרגע');
+  }
+}
+loadWorld();
+setInterval(loadWorld, 15*60*1000);
+</script>
+<script src="assets/site-polish.js"></script>
+</body>
+</html>

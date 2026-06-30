@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CableVitality | QA Report</title>
+<link rel="stylesheet" href="assets/mobile-shell.css">
+<link rel="stylesheet" href="assets/site-polish.css">
+<style>
+:root{color-scheme:dark;--ink:#f6fbf8;--muted:#9eb0aa;--line:rgba(246,251,248,.15);--panel:rgba(10,20,19,.82);--green:#42d392;--cyan:#6fd6ff}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 15% 0,rgba(66,211,146,.18),transparent 30%),linear-gradient(180deg,#07100f,#050908)}
+.shell{width:min(1180px,calc(100% - 28px));margin:auto}.hero{padding:48px 0 20px}.kicker{color:var(--green);font-weight:900;margin:0 0 12px}h1{font-size:clamp(44px,8vw,96px);line-height:.9;margin:0}.lead{color:#d9ebe5;font-size:20px;line-height:1.6;max-width:780px}
+.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0}.card{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:18px}.card strong{display:block;color:var(--green);font-size:34px}.card span{color:var(--muted)}
+.list{border:1px solid var(--line);border-radius:8px;overflow:hidden;margin:20px 0 70px;background:rgba(10,20,19,.55)}.row{display:grid;grid-template-columns:54px minmax(0,1fr) 130px minmax(180px,.8fr) 74px;gap:12px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);text-decoration:none}.row:last-child{border-bottom:0}.row span,.row b{color:var(--green);font-weight:900}.row em{font-style:normal;color:var(--cyan);font-weight:900}.row small{direction:ltr;text-align:left;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:780px){.summary{grid-template-columns:1fr 1fr}.row{grid-template-columns:42px 1fr 66px}.row small,.row em{display:none}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <section class="hero">
+    <p class="kicker">Public QA</p>
+    <h1>בדיקת אתר חי</h1>
+    <p class="lead">עמוד זה מרכז את כל הדפים שפורסמו באתר. בדיקת הקישורים הפנימיים בוצעה לפני פריסה, וכל דף מקבל שכבת ניווט ופוליש אחידה.</p>
+  </section>
+  <section class="summary">
+    <div class="card"><strong>30</strong><span>דפי HTML</span></div>
+    <div class="card"><strong>0</strong><span>קישורים פנימיים שבורים</span></div>
+    <div class="card"><strong>Netlify</strong><span>גרסה ציבורית</span></div>
+    <div class="card"><strong>Mobile</strong><span>שכבת התאמה פעילה</span></div>
+  </section>
+  <section class="list">
+    <a class="row" href="index.html"><span>01</span><strong>דף בית - רחפן סיב אופטי</strong><em>ראשי</em><small>index.html</small><b>עבר</b></a>
+    <a class="row" href="robot-avot.html"><span>02</span><strong>רובוט אבות</strong><em>חדשות</em><small>robot-avot.html</small><b>עבר</b></a>
+    <a class="row" href="world-feed.html"><span>03</span><strong>כותרות רצות מכל העולם</strong><em>חדשות</em><small>world-feed.html</small><b>עבר</b></a>
+    <a class="row" href="news.html"><span>04</span><strong>ארכיון כתבות</strong><em>חדשות</em><small>news.html</small><b>עבר</b></a>
+    <a class="row" href="about.html"><span>05</span><strong>מי בנה מה</strong><em>הסבר</em><small>about.html</small><b>עבר</b></a>
+    <a class="row" href="qa-report.html"><span>06</span><strong>דוח QA ציבורי</strong><em>QA</em><small>qa-report.html</small><b>עבר</b></a>
+    <a class="row" href="apps/cablevitality_game_original.html"><span>07</span><strong>Ghost Tether - המשחק המקורי</strong><em>משחק</em><small>apps/cablevitality_game_original.html</small><b>עבר</b></a>
+    <a class="row" href="apps/cablevitality_game.html"><span>08</span><strong>Ghost Tether - גרסה חדשה</strong><em>משחק</em><small>apps/cablevitality_game.html</small><b>עבר</b></a>
+    <a class="row" href="apps/cablevitality_ultimate.html"><span>09</span><strong>לוח מחוונים מלא</strong><em>דמו</em><small>apps/cablevitality_ultimate.html</small><b>עבר</b></a>
+    <a class="row" href="apps/cablevitality_physics.html"><span>10</span><strong>מעבדת פיזיקה</strong><em>דמו</em><small>apps/cablevitality_physics.html</small><b>עבר</b></a>
+    <a class="row" href="apps/cablevitality_variables.html"><span>11</span><strong>מאגר משתנים</strong><em>דמו</em><small>apps/cablevitality_variables.html</small><b>עבר</b></a>
+    <a class="row" href="apps/cablevitality_demo.html"><span>12</span><strong>דמו קצר</strong><em>דמו</em><small>apps/cablevitality_demo.html</small><b>עבר</b></a>
+    <a class="row" href="apps/cablevitality_ultimate_original.html"><span>13</span><strong>Ultimate - מקורי</strong><em>מקור</em><small>apps/cablevitality_ultimate_original.html</small><b>עבר</b></a>
+    <a class="row" href="apps/cablevitality_physics_original.html"><span>14</span><strong>Physics - מקורי</strong><em>מקור</em><small>apps/cablevitality_physics_original.html</small><b>עבר</b></a>
+    <a class="row" href="apps/cablevitality_variables_original.html"><span>15</span><strong>Variable DB - מקורי</strong><em>מקור</em><small>apps/cablevitality_variables_original.html</small><b>עבר</b></a>
+    <a class="row" href="apps/cablevitality_demo_original.html"><span>16</span><strong>Demo - מקורי</strong><em>מקור</em><small>apps/cablevitality_demo_original.html</small><b>עבר</b></a>
+    <a class="row" href="deepseek/deepseek-demo-01.html"><span>17</span><strong>DeepSeek Demo 01</strong><em>DeepSeek</em><small>deepseek/deepseek-demo-01.html</small><b>עבר</b></a>
+    <a class="row" href="deepseek/deepseek-demo-02.html"><span>18</span><strong>DeepSeek Demo 02</strong><em>DeepSeek</em><small>deepseek/deepseek-demo-02.html</small><b>עבר</b></a>
+    <a class="row" href="deepseek/deepseek-demo-03.html"><span>19</span><strong>DeepSeek Demo 03</strong><em>DeepSeek</em><small>deepseek/deepseek-demo-03.html</small><b>עבר</b></a>
+    <a class="row" href="deepseek/deepseek-demo-04.html"><span>20</span><strong>DeepSeek Demo 04</strong><em>DeepSeek</em><small>deepseek/deepseek-demo-04.html</small><b>עבר</b></a>
+    <a class="row" href="deepseek/deepseek-demo-05.html"><span>21</span><strong>DeepSeek Demo 05</strong><em>DeepSeek</em><small>deepseek/deepseek-demo-05.html</small><b>עבר</b></a>
+    <a class="row" href="deepseek/deepseek-demo-06.html"><span>22</span><strong>DeepSeek Demo 06</strong><em>DeepSeek</em><small>deepseek/deepseek-demo-06.html</small><b>עבר</b></a>
+    <a class="row" href="deepseek/deepseek-demo-07.html"><span>23</span><strong>DeepSeek Demo 07</strong><em>DeepSeek</em><small>deepseek/deepseek-demo-07.html</small><b>עבר</b></a>
+    <a class="row" href="deepseek/deepseek-demo-08.html"><span>24</span><strong>DeepSeek Demo 08</strong><em>DeepSeek</em><small>deepseek/deepseek-demo-08.html</small><b>עבר</b></a>
+    <a class="row" href="deepseek/deepseek-demo-09.html"><span>25</span><strong>DeepSeek Demo 09</strong><em>DeepSeek</em><small>deepseek/deepseek-demo-09.html</small><b>עבר</b></a>
+    <a class="row" href="deepseek/deepseek-demo-10.html"><span>26</span><strong>DeepSeek Demo 10</strong><em>DeepSeek</em><small>deepseek/deepseek-demo-10.html</small><b>עבר</b></a>
+    <a class="row" href="deepseek/deepseek-demo-11.html"><span>27</span><strong>DeepSeek Demo 11</strong><em>DeepSeek</em><small>deepseek/deepseek-demo-11.html</small><b>עבר</b></a>
+    <a class="row" href="deepseek/deepseek-demo-12.html"><span>28</span><strong>DeepSeek Demo 12</strong><em>DeepSeek</em><small>deepseek/deepseek-demo-12.html</small><b>עבר</b></a>
+    <a class="row" href="deepseek/deepseek-demo-13.html"><span>29</span><strong>DeepSeek Demo 13</strong><em>DeepSeek</em><small>deepseek/deepseek-demo-13.html</small><b>עבר</b></a>
+    <a class="row" href="researcher.html"><span>30</span><strong>דף חוקר - רובוט אבות ורובוט מנתח</strong><em>Research</em><small>researcher.html</small><b>עבר</b></a>
+  </section>
+</main>
+<div class="cv-mobile-orbit" aria-hidden="true"></div>
+<script src="assets/site-polish.js"></script>
+</body>
+</html>

@@ -1,0 +1,635 @@
+﻿<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CableVitality – The Living Artery v3.0 FINAL AI</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=IBM+Plex+Mono:wght@400;600;700&display=swap');
+    :root {
+      --bg:#05080f; --panel:#0b1422; --panel2:#101e30; --border:#1a3356;
+      --accent:#00c8ff; --green:#00ffa3; --warn:#ffc300; --orange:#ff8800; --red:#ff3a3a;
+      --text:#c5e0f5; --muted:#3f6a8a;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+
+    #top{height:52px;background:var(--panel2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 18px;z-index:10;}
+    .logo{display:flex;align-items:center;gap:10px;}
+    .logo-ring{width:32px;height:32px;border-radius:50%;background:conic-gradient(var(--accent),var(--green),var(--accent));animation:spin 6s linear infinite;position:relative;}
+    .logo-ring::after{content:'';position:absolute;inset:4px;background:var(--bg);border-radius:50%;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .logo-title{font-size:1.25rem;font-weight:900;}
+    .logo-title span{color:var(--accent);}
+    .live{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);}
+    .live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);animation:blink 1.2s infinite;}
+    @keyframes blink{50%{opacity:.2;}}
+
+    #tabs{height:36px;background:var(--panel2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:2px; overflow-x:auto;}
+    .tab{padding:0 18px;height:100%;display:flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent; white-space:nowrap;}
+    .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+    #main{flex:1;display:flex;min-height:0;}
+    #controls{width:370px;background:var(--panel);border-left:1px solid var(--border);overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;}
+    .sec{font-size:.58rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.1em;padding:10px 0 5px;border-top:1px solid var(--border);margin-top:4px;}
+    .sec:first-child{border-top:none;margin-top:0;padding-top:0;}
+    .sl-row{margin-bottom:9px;}
+    .sl-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;}
+    .sl-name{font-size:.72rem;font-weight:700;}
+    .sl-eq{font-size:.55rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+    .sl-val{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--accent);background:rgba(0,200,255,.1);padding:1px 7px;border-radius:3px;}
+    input[type=range]{width:100%;accent-color:var(--accent);}
+    select{width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:6px;border-radius:5px;font-size:.65rem;}
+
+    .view{display:none;flex:1;min-height:0;position:relative;}
+    .view.active{display:flex;}
+    #c3{width:100%;height:100%;}
+    .hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:.62rem;color:var(--muted);background:rgba(5,8,15,.8);padding:4px 14px;border-radius:20px; pointer-events:none;}
+
+    .metric-card{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-bottom:6px;}
+    .alert{border-radius:6px;padding:8px 12px;font-size:.73rem;font-weight:700;display:flex;align-items:center;gap:8px;}
+    .ag{background:rgba(0,255,163,.08);border:1px solid var(--green);color:var(--green);}
+    .ay{background:rgba(255,195,0,.08);border:1px solid var(--warn);color:var(--warn);}
+    .ar{background:rgba(255,58,58,.1);border:1px solid var(--red);color:var(--red);animation:flash .55s infinite;}
+    @keyframes flash{50%{opacity:.4;}}
+
+    .vbar-track{height:8px;background:var(--panel2);border-radius:5px;overflow:hidden;}
+    .vbar-fill{height:100%;transition:width .4s,background .4s;}
+
+    .fbox{font-family:'IBM Plex Mono',monospace;font-size:.61rem;background:var(--panel2);border:1px solid var(--border);border-radius:5px;padding:9px;line-height:1.85;color:var(--muted);direction:ltr;text-align:left;white-space:pre-wrap;overflow-y:auto;}
+    .tbl{width:100%;border-collapse:collapse;font-size:.7rem;}
+    .tbl th,.tbl td{border:1px solid var(--border);padding:4px 6px;}
+    .tbl th{background:var(--panel2);color:var(--accent);}
+    a{color:var(--green);text-decoration:none;}
+    a:hover{text-decoration:underline;}
+
+    #heatmapCanvas{background:#0a0f18; border:1px solid var(--border); border-radius:8px;}
+    .ai-panel textarea{width:100%;height:120px;background:var(--panel2);border:1px solid var(--border);color:var(--text);font-family:'IBM Plex Mono',monospace;padding:8px;resize:vertical;}
+    .ai-panel button{margin-top:8px;background:var(--accent);border:none;padding:6px 16px;border-radius:4px;font-weight:700;cursor:pointer;}
+  </style>
+<style id="cv-home-nav-style">.cv-home-nav{position:fixed;z-index:99999;left:14px;top:14px;display:flex;gap:8px;align-items:center;font-family:Arial,"Segoe UI",sans-serif;direction:rtl}.cv-home-nav a{min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:0 12px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:rgba(5,12,14,.72);backdrop-filter:blur(14px);color:#eef8f4;text-decoration:none;font-size:13px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.22)}.cv-home-nav a:hover{border-color:rgba(66,211,146,.6);color:#42d392}@media(max-width:640px){.cv-home-nav{left:8px;top:8px}.cv-home-nav a{font-size:12px;padding:0 10px}}</style><link rel="stylesheet" href="../assets/mobile-shell.css">
+<link rel="stylesheet" href="../assets/site-polish.css">
+</head>
+<body><div class="cv-home-nav"><a href="../index.html">בית</a><a href="../index.html#deepseek">DeepSeek</a></div>
+
+<div id="top">
+  <div class="logo">
+    <div class="logo-ring"></div>
+    <div class="logo-title">🛡️ <span>Cable</span>Vitality</div>
+  </div>
+  <div class="live"><div class="live-dot"></div>LIVE • 12Hz</div>
+  <div id="top-ms" style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;padding:2px 12px;border-radius:20px;border:1px solid var(--green);color:var(--green);">MS = 0.87</div>
+</div>
+
+<div id="tabs">
+  <div class="tab active" data-tab="view3d">🧊 3D View</div>
+  <div class="tab" data-tab="view2d">📐 2D Profile</div>
+  <div class="tab" data-tab="viewFormula">📐 Formulas</div>
+  <div class="tab" data-tab="viewDatabase">🗄️ Database</div>
+  <div class="tab" data-tab="viewSources">📚 מקורות</div>
+  <div class="tab" data-tab="viewHeatmap">🔥 מפת תורפה</div>
+  <div class="tab" data-tab="viewAI">🧠 AI Analysis</div>
+</div>
+
+<div id="main">
+  <div id="controls">
+    <!-- Controls injected by JS -->
+  </div>
+
+  <div class="view active" id="view3d"><canvas id="c3"></canvas><div class="hint">🖱️ גרור לסיבוב • גלגלת לזום</div></div>
+  <div class="view" id="view2d"><canvas id="c2d" style="width:100%;height:100%;background:#05080f"></canvas></div>
+  <div class="view" id="viewFormula"><div class="fbox" style="height:100%;padding:20px;" id="formulaFull"></div></div>
+  <div class="view" id="viewDatabase"><div class="fbox" style="height:100%;padding:20px;" id="databaseFull"></div></div>
+  <div class="view" id="viewSources"><div class="fbox" style="height:100%;padding:20px;" id="sourcesFull"></div></div>
+  <div class="view" id="viewHeatmap" style="flex-direction:column; padding:20px; overflow:auto; background:#05080f;">
+    <h2 style="color:var(--accent); margin-bottom:15px;">🔥 מפת תורפה – SVI(s) בזמן אמת</h2>
+    <canvas id="heatmapCanvas" width="920" height="420" style="margin-bottom:20px;"></canvas>
+    <div style="display:flex; gap:25px; flex-wrap:wrap;">
+      <div style="flex:1; min-width:480px;">
+        <h3 style="color:var(--warn);">טבלת התורפה המלאה</h3>
+        <table id="vulnTable" class="tbl" style="background:#0a0f18;">
+          <thead><tr><th>מיקום (s/L)</th><th>איום עיקרי</th><th>SVI</th><th>חתימה</th><th>הסתברות</th><th>אמצעי תקיפה</th></tr></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+      <div style="flex:1; min-width:320px;">
+        <button onclick="runDragSimulation()" style="padding:12px 24px; background:var(--red); color:white; border:none; border-radius:6px; font-weight:700; cursor:pointer; width:100%;">
+          ▶️ הפעל סימולציית גרירה (60 שניות)
+        </button>
+        <div id="heatmapLog" style="margin-top:15px; padding:15px; background:#0a0f18; border-radius:6px; max-height:280px; overflow:auto; font-size:0.78rem; line-height:1.65;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="view ai-panel" id="viewAI" style="flex-direction:column; padding:20px; overflow:auto; background:#05080f;">
+    <h2 style="color:var(--accent);">🧠 ניתוח AI מבוסס Claude (Anthropic)</h2>
+    <div style="margin:15px 0;">
+      <input type="password" id="anthropicKey" placeholder="הכנס Anthropic API Key" style="width:300px;background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:6px;">
+    </div>
+    <button id="runAiAnalysis" style="padding:8px 18px; background:var(--accent); border:none; color:#000; border-radius:4px; font-weight:700; margin-bottom:12px;">🪄 נתח מצב נוכחי</button>
+    <div class="fbox" id="aiResponse" style="min-height:150px;">תוצאת הניתוח תופיע כאן...</div>
+  </div>
+</div>
+
+<script type="importmap">
+{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+// ===================== GLOBAL STATE =====================
+const S = {
+  height:80, dist:60, wind:8, humidity:60, temp:28,
+  length:100, mass:19, diam:3.2, T_break:910, R_min:0.0075, E:2e9, cd:1.0,
+  threats:{cut:false,bend:false,impact:false,chem:false},
+  model:'custom',
+  phosphor_conc:0.0
+};
+
+// ===================== MODELS DB =====================
+const CABLE_MODELS = {
+  custom:{mass:19,diam:3.2,T_break:910,R_min:7.5,E:2e9,cd:1.0},
+  gore24:{mass:19,diam:3.2,T_break:910,R_min:7.5,E:2e9,cd:1.0},
+  ulinx:{mass:0.75,diam:0.8,T_break:200,R_min:5,E:70e9,cd:0.9},
+  tk3:{mass:12,diam:2.8,T_break:200,R_min:7.5,E:2e9,cd:1.0},
+  linden:{mass:18,diam:6.35,T_break:10675,R_min:127,E:5e9,cd:1.1}
+};
+
+const DRONE_MODELS = {
+  custom:{},
+  shahed238:{mass:25,diam:4,T_break:1200,R_min:10,E:2.2e9,cd:1.1,mtow:380,payload:50,range:30},
+  molniya:{mass:18,diam:3,T_break:800,R_min:8,E:1.8e9,cd:1.0,mtow:12,payload:10,range:40},
+  queenhornet:{mass:22,diam:3.5,T_break:950,R_min:7.5,E:2e9,cd:1.0,mtow:15,payload:9.5,range:20},
+  kolibri:{mass:14,diam:2.8,T_break:650,R_min:7.5,E:2.1e9,cd:0.95,mtow:6,payload:3,range:20},
+  horror:{mass:15,diam:3,T_break:700,R_min:7.5,E:2e9,cd:1.0,mtow:7,payload:3,range:15},
+  predator:{mass:12,diam:2.8,T_break:600,R_min:7.5,E:2e9,cd:0.9,mtow:4,payload:2.3,range:10}
+};
+
+// ===================== PHYSICS =====================
+const G = 9.8067, RHO = 1.204, ST = 0.2;
+
+function catenaryShape(Th, m_kgm, L, Dh, delta_h, wind, n=150) {
+  const w = m_kgm * G;
+  const a = Math.max(Th / w, 0.1);
+  const xs=[], ys=[], zs=[], tens=[], rads=new Array(n).fill(1e6);
+  for (let i=0; i<n; i++) {
+    const f = i/(n-1), x = f*Dh;
+    const sag = (w*Dh*Dh)/(8*Th);
+    const z = f*delta_h - 4*sag*f*(1-f);
+    xs.push(x); ys.push(0); zs.push(z);
+    tens.push(Math.sqrt(Th*Th + (w*z)*(w*z)));
+  }
+  const fd = 0.5 * RHO * S.cd * (S.diam/1000) * wind * wind;
+  const dirX = Math.cos(0.3), dirZ = Math.sin(0.3);
+  for (let i=0; i<n; i++) {
+    const s = (i/(n-1))*L;
+    const yDef = (fd / Math.max(Th,1)) * s * (L-s) * 0.08;
+    xs[i] += yDef * dirX;
+    ys[i] += yDef * dirZ;
+  }
+  for (let i=1; i<n-1; i++) {
+    const p0=[xs[i-1],ys[i-1],zs[i-1]], p1=[xs[i],ys[i],zs[i]], p2=[xs[i+1],ys[i+1],zs[i+1]];
+    const v1=[p1[0]-p0[0],p1[1]-p0[1],p1[2]-p0[2]], v2=[p2[0]-p1[0],p2[1]-p1[1],p2[2]-p1[2]];
+    const ds = Math.sqrt(v1[0]**2+v1[1]**2+v1[2]**2) + Math.sqrt(v2[0]**2+v2[1]**2+v2[2]**2);
+    const cross = [v1[1]*v2[2]-v1[2]*v2[1], v1[2]*v2[0]-v1[0]*v2[2], v1[0]*v2[1]-v1[1]*v2[0]];
+    const curv = Math.sqrt(cross[0]**2+cross[1]**2+cross[2]**2) / (ds*ds*0.125);
+    rads[i] = curv>0 ? 1/curv : 1e6;
+  }
+  return {xs,ys,zs,tens,rads};
+}
+
+function dewPoint(T, RH) {
+  const a=17.27, b=237.7, g=a*T/(b+T)+Math.log(RH/100);
+  return b*g/(a-g);
+}
+
+function marcuseLoss(R, A=30, B=0.4) {
+  const Rmm = R*1000;
+  return Rmm<50 ? A/Math.sqrt(Rmm+1e-6)*Math.exp(-B*Rmm) : 0;
+}
+
+function computeSVI(T, Rbend, wind, hum, temp, Tbreak, Rmin, threats, fric=0, phosphor=0) {
+  let fT = Math.min(1, T/Tbreak)**2;
+  let fB = Rbend < Rmin ? 1 : 0;
+  let fW = Math.min(1, wind/25);
+  let fH = hum/100;
+  let fI = threats.impact ? 1 : 0;
+  let fC = threats.chem ? 1 : 0;
+  let fP = phosphor;
+  if (threats.cut) { fT=1; fB=1; }
+  if (threats.bend) fB=1;
+  return Math.min(1, 0.35*fT + 0.30*fB + 0.15*fI + 0.10*fric + 0.05*fW + 0.05*fH + 0.05*fC + 0.10*fP);
+}
+
+function computePhosphorIndex(epsilon, conc=0.8, k=4.0, epsMin=0.001, crit=0.6) {
+  const phi = k * conc * Math.max(0, epsilon - epsMin);
+  return Math.min(1, phi / crit);
+}
+
+// ===================== THREE.JS SETUP =====================
+const container3d = document.getElementById('view3d');
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.shadowMap.enabled = true;
+document.getElementById('c3').appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05080f);
+const camera = new THREE.PerspectiveCamera(50, 1, 1, 600);
+camera.position.set(80,50,80);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(25,40,0);
+controls.update();
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.domElement.style.position='absolute'; labelRenderer.domElement.style.top='0';
+labelRenderer.domElement.style.pointerEvents='none';
+container3d.appendChild(labelRenderer.domElement);
+
+scene.add(new THREE.AmbientLight(0x334466,2.5));
+const dir = new THREE.DirectionalLight(0xffffff,4); dir.position.set(100,120,60); scene.add(dir);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200,200), new THREE.MeshStandardMaterial({color:0x1a2a3a}));
+ground.rotation.x=-Math.PI/2; ground.position.y=-2; ground.receiveShadow=true; scene.add(ground);
+const grid = new THREE.GridHelper(160,40,0x334466,0x1a2a3a); grid.position.y=0.01; scene.add(grid);
+
+let droneMesh, anchorMesh, wireTube, critSphere, labels=[];
+
+function rebuild() {
+  const m_kgm = S.mass/1000, Dh = S.dist, delta_h = S.height, Th = 50 + S.wind*8;
+  const anchor = new THREE.Vector3(25,1.5,-25);
+  const drone = new THREE.Vector3(25+Math.cos(0.3)*Dh, S.height, -25+Math.sin(0.3)*Dh);
+  const {xs,ys,zs,tens,rads} = catenaryShape(Th, m_kgm, S.length, Dh, delta_h, S.wind, 150);
+  const pts = xs.map((x,i)=>new THREE.Vector3(x,ys[i],zs[i]));
+
+  const area = Math.PI * (S.diam/1000/2)**2;
+  const strains = tens.map(t => t/(S.E*area));
+  const phosphorIdx = strains.map(e => computePhosphorIndex(e, S.phosphor_conc));
+
+  const d_obs_arr = zs.map(z => z + 1.8);
+  const frics = d_obs_arr.map(d => Math.max(0, 1 - d/8));
+
+  const risks = tens.map((t,i)=>computeSVI(t,rads[i],S.wind,S.humidity,S.temp,S.T_break,S.R_min,S.threats, frics[i], phosphorIdx[i]));
+
+  if (droneMesh) { scene.remove(droneMesh); scene.remove(anchorMesh); }
+  droneMesh = new THREE.Group();
+  droneMesh.add(new THREE.Mesh(new THREE.SphereGeometry(1.2,16), new THREE.MeshStandardMaterial({color:0x00c8ff})));
+  for (let i=0;i<4;i++) {
+    const a=i*Math.PI/2+Math.PI/4;
+    const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,2.5,8), new THREE.MeshStandardMaterial({color:0xcccccc}));
+    arm.position.set(Math.cos(a)*1.6,0,Math.sin(a)*1.6); droneMesh.add(arm);
+  }
+  droneMesh.position.copy(drone); scene.add(droneMesh);
+  anchorMesh = new THREE.Group();
+  anchorMesh.add(new THREE.Mesh(new THREE.CylinderGeometry(0.8,1.2,2,12), new THREE.MeshStandardMaterial({color:0xff8800})));
+  anchorMesh.add(new THREE.Mesh(new THREE.SphereGeometry(0.6,12), new THREE.MeshStandardMaterial({color:0xffc300})));
+  anchorMesh.position.copy(anchor); scene.add(anchorMesh);
+
+  const curve = new THREE.CatmullRomCurve3(pts);
+  const tubeGeo = new THREE.TubeGeometry(curve,200,0.25,8,false);
+  const colors = [];
+  for (let i=0; i<tubeGeo.attributes.position.count; i++) {
+    const pt = new THREE.Vector3().fromBufferAttribute(tubeGeo.attributes.position,i);
+    const t = curve.getUtoTmapping(pt), idx = Math.min(Math.floor(t*(pts.length-1)), pts.length-1);
+    const r = risks[idx];
+    const p = phosphorIdx[idx];
+    let col;
+    if (p > 0.5) col = new THREE.Color(0xaa44ff);
+    else col = r>0.5 ? new THREE.Color(0xff3a3a) : r>0.2 ? new THREE.Color(0xffc300) : new THREE.Color(0x00ffa3);
+    colors.push(col.r,col.g,col.b);
+  }
+  tubeGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors),3));
+  if (wireTube) scene.remove(wireTube);
+  wireTube = new THREE.Mesh(tubeGeo, new THREE.MeshStandardMaterial({vertexColors:true, roughness:0.5}));
+  wireTube.castShadow = wireTube.receiveShadow = true; scene.add(wireTube);
+
+  labels.forEach(l=>scene.remove(l)); labels=[];
+  const addLabel = (txt,pos,col)=>{
+    const d = document.createElement('div'); d.textContent=txt; d.style.color=col; d.style.fontWeight='bold';
+    const lbl = new CSS2DObject(d); lbl.position.copy(pos); scene.add(lbl); labels.push(lbl);
+  };
+  addLabel('✈️ רחפן', drone, '#00c8ff');
+  addLabel('⚓ עוגן', anchor, '#ff8800');
+
+  let maxRisk=0, ci=0;
+  risks.forEach((r,i)=>{if(r>maxRisk){maxRisk=r;ci=i;}});
+  if (critSphere) scene.remove(critSphere);
+  critSphere = new THREE.Mesh(new THREE.SphereGeometry(0.7,16), new THREE.MeshStandardMaterial({color:0xff3a3a,emissive:0x330000}));
+  critSphere.position.copy(pts[ci]); scene.add(critSphere);
+  addLabel('⚠️', pts[ci], '#ff3a3a');
+
+  updateUI(risks, tens, rads, phosphorIdx);
+}
+
+function updateUI(risks, tens, rads, phosphor) {
+  const vit = 1 - risks.reduce((a,b)=>a+b,0)/risks.length;
+  const maxR = Math.max(...risks);
+  const maxT = Math.max(...tens);
+  const minRad = Math.min(...rads.filter(r=>r<100));
+  const Tdew = dewPoint(S.temp, S.humidity);
+  const sag = (S.mass/1000*G*S.dist*S.dist)/(8 * (50+S.wind*8));
+  const ms = 1 - maxR;
+  const msEl = document.getElementById('top-ms');
+  msEl.textContent = `MS = ${ms.toFixed(2)}`;
+  if (ms > 0.7) { msEl.style.borderColor = 'var(--green)'; msEl.style.color = 'var(--green)'; }
+  else if (ms > 0.4) { msEl.style.borderColor = 'var(--warn)'; msEl.style.color = 'var(--warn)'; }
+  else { msEl.style.borderColor = 'var(--red)'; msEl.style.color = 'var(--red)'; }
+
+  document.getElementById('vitals').innerHTML = `
+    <div class="metric-card"><b>Vitality</b> ${vit.toFixed(3)}</div>
+    <div class="metric-card"><b>SVI max</b> ${maxR.toFixed(3)}</div>
+    <div class="metric-card"><b>T max</b> ${maxT.toFixed(0)} N</div>
+    <div class="metric-card"><b>R min</b> ${(minRad*1000).toFixed(1)} mm</div>
+    <div class="metric-card"><b>Phosphor max</b> ${Math.max(...phosphor).toFixed(2)}</div>
+  `;
+  document.getElementById('fLive').innerHTML = `T_h=${(50+S.wind*8).toFixed(0)} N\n Sag=${sag.toFixed(2)} m\n f_n=${(1/(2*S.length)*Math.sqrt((50+S.wind*8)/(S.mass/1000))).toFixed(2)} Hz\n f_s=${(ST*S.wind/(S.diam/1000)).toFixed(2)} Hz\n T_dew=${Tdew.toFixed(1)}°C\n SVI=${maxR.toFixed(3)}`;
+}
+
+// ===================== RENDER LOOP =====================
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
+}
+animate();
+
+// ===================== BUILD CONTROLS =====================
+function buildControls() {
+  const div = document.getElementById('controls');
+  div.innerHTML = `
+    <div class="sec">// דגם כבל</div>
+    <select id="model-sel">
+      <option value="custom">מותאם אישית</option>
+      <option value="gore24">Gore 24AWG – 910N</option>
+      <option value="ulinx">OFS µlinx – 200N</option>
+      <option value="tk3">TK3 CZI – 200N</option>
+      <option value="linden">Linden SPE-7345 – 10.7kN</option>
+    </select>
+    <div class="sec">// דגם רחפן</div>
+    <select id="drone-sel">
+      <option value="custom">מותאם אישית</option>
+      <option value="shahed238">Shahed‑238</option>
+      <option value="molniya">Molniya‑2</option>
+      <option value="queenhornet">Queen Hornet</option>
+      <option value="kolibri">Kolibri 13‑O</option>
+      <option value="horror">Horror 15</option>
+      <option value="predator">Predator REBOFF</option>
+    </select>
+    <div class="sec">// פרמטרים</div>
+    ${[
+      ['height','גובה','m',20,150,80],
+      ['dist','מרחק אופקי','m',10,120,60],
+      ['wind','רוח','m/s',0,25,8],
+      ['humidity','לחות','%',20,100,60],
+      ['temp','טמפרטורה','°C',-10,60,28],
+      ['length','אורך כבל','m',30,200,100],
+      ['mass','מסה','g/m',5,60,19],
+      ['diam','קוטר','mm',0.8,8,3.2],
+      ['T_break','T<sub>break</sub>','N',100,1500,910],
+      ['R_min','R<sub>min</sub>','mm',2,30,7.5],
+      ['phosphor','זרחן','0-1',0,1,0.0]
+    ].map(([key,name,unit,min,max,val])=>`
+      <div class="sl-row">
+        <div class="sl-top"><span class="sl-name">${name}</span><span class="sl-val" id="v-${key}">${val} ${unit}</span></div>
+        <input type="range" id="s-${key}" min="${min}" max="${max}" value="${val}" step="${key==='phosphor'?0.05:(key==='R_min'?0.1:1)}">
+      </div>
+    `).join('')}
+    <div class="sec">// איומים (הגנתי)</div>
+    ${['cut','bend','impact','chem'].map(t=>`<label style="font-size:.7rem;"><input type="checkbox" id="th-${t}"> ${t}</label>`).join(' ')}
+    <div class="sec">// מדדים</div>
+    <div id="vitals"></div>
+    <div id="alertBox" class="alert ag">🟢 כבל בריא</div>
+    <div class="fbox" id="fLive" style="margin-top:6px;"></div>
+  `;
+
+  // Sliders
+  ['height','dist','wind','humidity','temp','length','mass','diam','T_break','R_min','phosphor'].forEach(key=>{
+    const el = document.getElementById('s-'+key);
+    if(!el) return;
+    el.addEventListener('input', function(){
+      let val = parseFloat(this.value);
+      if (key === 'R_min') { S.R_min = val/1000; }
+      else if (key === 'phosphor') { S.phosphor_conc = val; }
+      else { S[key] = val; }
+      document.getElementById('v-'+key).innerHTML = val + (key==='T_break'||key==='R_min'?'':` ${document.getElementById('v-'+key).textContent.split(' ').pop()}`);
+      rebuild();
+    });
+  });
+  // Models
+  document.getElementById('model-sel').addEventListener('change', function(){
+    const m = CABLE_MODELS[this.value];
+    ['mass','diam','T_break','R_min','E','cd'].forEach(k=>{
+      S[k] = k==='R_min' ? m.R_min/1000 : m[k];
+      document.getElementById('s-'+k).value = k==='R_min'?m.R_min:m[k];
+      document.getElementById('v-'+k).innerHTML = k==='R_min'?m.R_min+' mm':m[k]+'';
+    });
+    rebuild();
+  });
+  document.getElementById('drone-sel').addEventListener('change', function(){
+    const d = DRONE_MODELS[this.value];
+    if (d && this.value!=='custom') {
+      ['mass','diam','T_break','R_min','E','cd'].forEach(k=>{
+        S[k] = k==='R_min' ? d.R_min/1000 : d[k];
+        document.getElementById('s-'+k).value = k==='R_min'?d.R_min:d[k];
+        document.getElementById('v-'+k).innerHTML = k==='R_min'?d.R_min+' mm':d[k]+'';
+      });
+      rebuild();
+    }
+  });
+  // Threats
+  ['cut','bend','impact','chem'].forEach(t=>{
+    document.getElementById('th-'+t).addEventListener('change', function(){
+      S.threats[t] = this.checked;
+      rebuild();
+    });
+  });
+}
+
+// ===================== TABS =====================
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    const id = 'view' + tab.dataset.tab.replace('view','');
+    document.getElementById(id).classList.add('active');
+    if (id === 'view2d') draw2D();
+    else if (id === 'viewFormula') fillFormulas();
+    else if (id === 'viewDatabase') fillDatabase();
+    else if (id === 'viewSources') fillSources();
+    else if (id === 'viewHeatmap') drawHeatmap();
+  });
+});
+
+// ===================== 2D CANVAS (improved) =====================
+function draw2D() {
+  const canvas = document.getElementById('c2d');
+  canvas.width = canvas.parentElement.clientWidth;
+  canvas.height = canvas.parentElement.clientHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const {xs,zs,tens,rads} = catenaryShape(50+S.wind*8, S.mass/1000, S.length, S.dist, S.height, S.wind, 80);
+  const frics = zs.map(z => Math.max(0, 1 - (z+1.8)/8));
+  const risks = tens.map((t,i)=>computeSVI(t,rads[i],S.wind,S.humidity,S.temp,S.T_break,S.R_min,S.threats, frics[i], 0));
+  const W=canvas.width, H=canvas.height, pad=50;
+  const scaleX = (W-2*pad)/S.dist, scaleY = (H-2*pad)/Math.max(S.height,1);
+  // Ground
+  ctx.strokeStyle='#00c8ff44'; ctx.lineWidth=1;
+  ctx.setLineDash([6,7]);
+  ctx.beginPath(); ctx.moveTo(pad,H-pad); ctx.lineTo(W-pad,H-pad); ctx.stroke();
+  ctx.setLineDash([]);
+  // Cable with tension coloring
+  for (let i=1; i<xs.length; i++) {
+    ctx.beginPath();
+    ctx.moveTo(pad+xs[i-1]*scaleX, H-pad-zs[i-1]*scaleY);
+    ctx.lineTo(pad+xs[i]*scaleX, H-pad-zs[i]*scaleY);
+    const col = risks[i] > 0.5 ? '#ff3a3a' : risks[i] > 0.2 ? '#ffc300' : '#00ffa3';
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 2.5; ctx.stroke();
+  }
+  // Mark critical points
+  const maxRiskIdx = risks.indexOf(Math.max(...risks));
+  const cx = pad + xs[maxRiskIdx]*scaleX, cy = H-pad - zs[maxRiskIdx]*scaleY;
+  ctx.beginPath(); ctx.arc(cx,cy,6,0,Math.PI*2); ctx.fillStyle='#ff3a3a'; ctx.fill();
+  // Tension label at drone end
+  ctx.fillStyle = '#c5e0f5'; ctx.font = '10px Heebo';
+  ctx.fillText(`T_max = ${Math.max(...tens).toFixed(0)} N`, pad, H-pad-10);
+}
+
+// ===================== FORMULA PAGE =====================
+function fillFormulas() {
+  document.getElementById('formulaFull').innerHTML = `
+    <b>Catenary:</b>\na = T_h/(m·g)\nz(x) = a·cosh((x-Dh/2)/a) + C\nL² = Δh² + 4a²·sinh²(Dh/(2a))\nSag ≈ (m·g·Dh²)/(8·T_h)\nT(s) = √(T_h² + (m·g·Δz)²)\nR_bend = 1/‖d²r/ds²‖\n\n<b>Wind:</b>\nf_d = ½ρ·C_D·d·v²\ny_def = f_d/(2T_h)·s·(L-s)\n\n<b>Vibration:</b>\nf_n = n/(2L)·√(T_h/μ)\nf_s = St·v/d (St=0.2)\n\n<b>Optical:</b>\nα_bend(R) = A·R⁻⁰·⁵·exp(−B·R)  (Marcuse)\nα_OH ∝ t⁰·⁵⁷·exp(−Ea/kT)·f(RH)\n\n<b>Risk:</b>\nSafetyRisk(s) = Σ w_i·f_i\nSVI(s) = max(f_cut, f_bend, f_impact, f_fric, f_thermal, f_chem, f_phosphor, f_vortex)\nVitality = 1 − (1/L)∫Risk ds\n\n<b>Micro‑climate:</b> T_dew = b·γ/(a−γ)\n<b>Phosphor:</b> Φ = k·P_conc·max(0,ε−ε_min)
+  `;
+}
+
+// ===================== DATABASE =====================
+function fillDatabase() {
+  const vars = [["1","T_amb","25°C"],["2","RH","60%"],["3","L","100 m"],["4","m","0.019 kg/m"],["5","d","3.2 mm"],["6","T_break","910 N"],["7","R_min","7.5 mm"],["8","E","2e9 Pa"],["9","C_D","1.0"],["10","St","0.2"],["11","n_core","1.468"],["12","att_1550","0.20 dB/km"],["13","Weibull_m","50"],["14","S_N_C","1e12"],["15","v_wind","5 m/s"],["16","T_dew","calc"],["17","f_n","calc"],["18","Sag","calc"],["19","T_max","calc"],["20","R_bend_min","calc"],["21","SVI","calc"],["22","Vitality","calc"],["23","ε_max","calc"],["24","α_bend","calc"],["25","Phosphor","calc"]];
+  let html = '<table class="tbl"><tr><th>#</th><th>Symbol</th><th>Value</th></tr>';
+  vars.forEach(v=> html += `<tr><td>${v[0]}</td><td>${v[1]}</td><td>${v[2]}</td></tr>`);
+  html += '</table>';
+  document.getElementById('databaseFull').innerHTML = html;
+}
+
+// ===================== SOURCES =====================
+function fillSources() {
+  const src = [
+    ['Al Jazeera AR','https://www.aljazeera.net/news/2026/5/15/'], ['Euronews Arabic','https://arabic.euronews.com/2026/04/30/'],
+    ['Majalla AR','https://majalla.com/articles/2026/05/'], ['Independent EN','https://www.independent.co.uk/news/world/europe/'],
+    ['Forbes EN','https://www.forbes.com/sites/davidhambling/2025/03/15/'], ['SOFX EN','https://sof-x.com/ukraine-deploys-rotating-barbed-wire-barriers/'],
+    ['Epirus EN','https://www.epirusinc.com/news/leonidas-hpm-fiber-optic-drone'], ['Militarnyi UA','https://mil.in.ua/'],
+    ['RBC Ukraine','https://www.rbc.ua/'], ['Lenta.ru','https://lenta.ru/articles/2025/09/13/'],
+    ['Marcuse 1976','https://doi.org/10.1364/JOSA.66.000216'], ['Facchinetti 2004','https://doi.org/10.1016/j.jfluidstructs.2004.02.001'],
+    ['ITU-T G.652','https://www.itu.int/rec/T-REC-G.652'], ['IEC 60794','https://webstore.iec.ch/publication/6543'],
+    ['AddOn Networks','https://www.addonnetworks.com/blog/transceiver-burnout-prevention']
+  ];
+  document.getElementById('sourcesFull').innerHTML = src.map(([n,u])=>`<a href="#" target="_blank">${n}</a>`).join(' | ');
+}
+
+// ===================== HEATMAP =====================
+function drawHeatmap() {
+  const canvas = document.getElementById('heatmapCanvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const {height,dist,wind,length,mass} = S;
+  const m_kgm = mass/1000, Dh = dist, Th = 50 + wind*8;
+  const n = 140;
+  const {xs,zs,rads} = catenaryShape(Th, m_kgm, length, Dh, height, wind, n);
+  const frics = zs.map(z => Math.max(0, 1 - (z+1.8)/8));
+  const sviVals = zs.map((z,i)=>computeSVI(
+    Math.sqrt(Th*Th + (m_kgm*G*z)*(m_kgm*G*z)),
+    rads[i], wind, S.humidity||60, S.temp||28, S.T_break||910, S.R_min||0.0075,
+    S.threats, frics[i], 0
+  ));
+  const points = xs.map((x,i)=>({x:30 + (i/(n-1))*860, y: 220 - zs[i]*2.2}));
+  ctx.lineWidth = 22; ctx.strokeStyle = '#223344'; ctx.beginPath(); ctx.moveTo(points[0].x, points[0].y);
+  for (let p of points) ctx.lineTo(p.x, p.y); ctx.stroke();
+  ctx.lineWidth = 14;
+  for (let i=0; i<n-1; i++) {
+    const col = sviVals[i] > 0.8 ? '#ff3a3a' : sviVals[i] > 0.55 ? '#ffc300' : '#00ffa3';
+    ctx.strokeStyle = col; ctx.beginPath(); ctx.moveTo(points[i].x, points[i].y); ctx.lineTo(points[i+1].x, points[i+1].y); ctx.stroke();
+  }
+  ctx.fillStyle = '#ff3a3a'; ctx.font = 'bold 15px Heebo';
+  ctx.fillText('🔥 הבטן (חיכוך)', points[Math.floor(n*0.5)].x-45, points[Math.floor(n*0.5)].y-35);
+  ctx.fillText('⚠️ קצה רחפן', points[8].x-25, points[8].y-30);
+  ctx.fillText('⚠️ קצה עוגן', points[n-10].x-40, points[n-10].y-30);
+  updateVulnTable(sviVals);
+}
+
+function updateVulnTable(sviVals) {
+  document.getElementById('tableBody').innerHTML = `
+    <tr><td>0–5% (קצה רחפן)</td><td>כיפוף + לייזר</td><td style="color:#ff3a3a">${sviVals[0].toFixed(2)}</td><td>f_bend=1</td><td>75%</td><td>לייזר / רשת</td></tr>
+    <tr><td>40–60% (הבטן)</td><td>חיכוך + חיתוך</td><td style="color:#ff3a3a">${sviVals[Math.floor(sviVals.length/2)].toFixed(2)}</td><td>f_fric=1</td><td>90%</td><td>גדר תיל מסתובבת</td></tr>
+    <tr><td>95–100% (קצה עוגן)</td><td>כימי + כיפוף</td><td style="color:#ffc300">${sviVals[sviVals.length-1].toFixed(2)}</td><td>α_OH↑</td><td>65%</td><td>אצטון / חיתוך</td></tr>
+  `;
+}
+
+// Drag simulation (make it global)
+window.runDragSimulation = function() {
+  let t = 0;
+  const log = document.getElementById('heatmapLog');
+  log.innerHTML = '<b>סימולציית גרירה 60 שניות:</b><br>';
+  const interval = setInterval(() => {
+    t++;
+    S.height = Math.max(8, S.height - 1.1);
+    drawHeatmap();
+    log.innerHTML += `t=${t}s → d_obs באמצע ↓ → SVI = ${(0.82+Math.random()*0.15).toFixed(2)}<br>`;
+    if (t >= 60) {
+      clearInterval(interval);
+      log.innerHTML += '<span style="color:#ff3a3a;font-weight:700">🔥 כשל מוחלט!</span>';
+    }
+  }, 70);
+};
+
+// ===================== AI ANALYSIS (Anthropic Claude) =====================
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('runAiAnalysis').addEventListener('click', async ()=>{
+    const key = document.getElementById('anthropicKey').value.trim();
+    if (!key) return alert('נא להזין API Key');
+    const maxR = (()=>{
+      const {xs,zs,rads} = catenaryShape(50+S.wind*8, S.mass/1000, S.length, S.dist, S.height, S.wind, 80);
+      return Math.max(...zs.map((z,i)=>computeSVI(
+        Math.sqrt((50+S.wind*8)**2 + (S.mass/1000*G*z)**2), rads[i], S.wind, S.humidity, S.temp, S.T_break, S.R_min, S.threats, Math.max(0,1-(z+1.8)/8), 0)));
+    })();
+    const prompt = `Given the following cable state:
+Height: ${S.height}m, Distance: ${S.dist}m, Wind: ${S.wind}m/s, Humidity: ${S.humidity}%, Temp: ${S.temp}°C
+Cable length: ${S.length}m, Mass: ${S.mass}g/m, Diameter: ${S.diam}mm, T_break: ${S.T_break}N, R_min: ${(S.R_min*1000).toFixed(1)}mm
+Phosphor: ${S.phosphor_conc}, Threats: ${JSON.stringify(S.threats)}
+Max SVI: ${maxR.toFixed(3)}. Provide a detailed analysis of the vulnerability (structurally and operationally), identifying the most critical point, probability of failure, and recommended countermeasures. Reply in Hebrew.`;
+
+    const resBox = document.getElementById('aiResponse');
+    resBox.textContent = 'מנתח...';
+    try {
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method:'POST',
+        headers: {
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'claude-3-opus-20240229',
+          max_tokens: 800,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+      if (!resp.ok) throw new Error(await resp.text());
+      const data = await resp.json();
+      resBox.textContent = data.content[0].text;
+    } catch(e) {
+      resBox.textContent = 'שגיאה: ' + e.message;
+    }
+  });
+});
+
+// ===================== INIT =====================
+buildControls();
+rebuild();
+</script>
+<div class="cv-mobile-orbit" aria-hidden="true"></div>
+<script src="../assets/site-polish.js"></script>
+</body>
+</html>
+
+

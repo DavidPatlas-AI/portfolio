@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>רובוט אבות | מרכז מודיעין רחפן סיב אופטי</title>
+<link rel="stylesheet" href="assets/mobile-shell.css">
+<link rel="stylesheet" href="assets/site-polish.css">
+<style>
+:root{color-scheme:dark;--bg:#070b10;--surface:#101922;--surface2:#172331;--ink:#f5fbf8;--soft:#d9e8e4;--muted:#8fa2aa;--line:rgba(230,245,240,.14);--green:#42d392;--cyan:#6fd6ff;--red:#ff6b6b;--yellow:#ffd166;--shadow:0 28px 90px rgba(0,0,0,.42)}
+body.light-mode{color-scheme:light;--bg:#eef4f7;--surface:#ffffff;--surface2:#e7edf1;--ink:#142126;--soft:#26383f;--muted:#5e727b;--line:rgba(20,33,38,.16);--green:#07885f;--cyan:#096b95;--shadow:0 22px 80px rgba(24,46,54,.16)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-height:100vh;font-family:Arial,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 12% 0,rgba(66,211,146,.18),transparent 31%),radial-gradient(circle at 88% 5%,rgba(111,214,255,.15),transparent 32%),linear-gradient(180deg,var(--bg),#05080d)}
+a{color:inherit}.shell{width:min(1380px,calc(100% - 28px));margin:auto}.hero{padding:34px 0 18px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr);gap:16px;align-items:stretch}.panel,.hero-card,.map-card,.feed,.chart-card,.log-card{border:1px solid var(--line);border-radius:8px;background:rgba(16,25,34,.84);box-shadow:var(--shadow)}body.light-mode .panel,body.light-mode .hero-card,body.light-mode .map-card,body.light-mode .feed,body.light-mode .chart-card,body.light-mode .log-card{background:rgba(255,255,255,.88)}
+.hero-card{padding:28px;overflow:hidden;position:relative}.kicker{margin:0 0 12px;color:var(--green);font-weight:900}.hero-card h1{margin:0;font-size:clamp(42px,7vw,94px);line-height:.92;letter-spacing:0}.lead{max-width:860px;color:var(--soft);font-size:20px;line-height:1.62;margin:18px 0 0}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.btn{min-height:46px;border-radius:8px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);font-weight:900;padding:0 14px;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;cursor:pointer}.btn.primary{background:var(--green);color:#04110e;border-color:transparent}.btn:hover{transform:translateY(-1px);border-color:rgba(66,211,146,.65)}
+.robot-panel{padding:22px;display:grid;grid-template-rows:auto 1fr auto;gap:14px;min-height:360px}.robot-headline{display:flex;align-items:center;justify-content:space-between;gap:12px}.robot-headline h2{font-size:24px;margin:0}.live{border:1px solid rgba(255,107,107,.38);background:rgba(255,107,107,.08);color:var(--red);border-radius:999px;padding:8px 12px;font-weight:900}.robot-stage{position:relative;min-height:210px;overflow:hidden}.radar{position:absolute;left:26px;top:22px;width:118px;height:118px;border-radius:50%;background:conic-gradient(from 0deg,transparent,rgba(66,211,146,.3),transparent 74deg);animation:spin 2.8s linear infinite}.radar:before,.radar:after{content:"";position:absolute;inset:0;border:1px solid rgba(66,211,146,.3);border-radius:50%;animation:ping 1.9s ease-out infinite}.radar:after{animation-delay:.6s}.bot{position:absolute;right:40px;bottom:12px;width:160px;height:180px;animation:bob 2.8s ease-in-out infinite}.bot.found{animation:shake .45s ease-in-out}.bot:before{content:"";position:absolute;right:70px;top:0;width:4px;height:30px;background:#637685;border-radius:2px}.bot:after{content:"";position:absolute;right:64px;top:-10px;width:16px;height:16px;border-radius:50%;background:var(--green);box-shadow:0 0 22px var(--green)}.head{position:absolute;right:42px;top:28px;width:86px;height:66px;border-radius:14px 14px 7px 7px;background:linear-gradient(#657684,#304251);border:2px solid #546777}.eye{position:absolute;top:22px;width:18px;height:20px;border-radius:50%;background:#02070b}.eye:after{content:"";position:absolute;inset:5px 4px;border-radius:50%;background:var(--cyan);box-shadow:0 0 14px var(--cyan)}.eye.a{right:20px}.eye.b{left:20px}.mouth{position:absolute;right:31px;bottom:12px;width:24px;height:4px;border-radius:4px;background:var(--green)}.body{position:absolute;right:34px;top:98px;width:102px;height:76px;border-radius:8px 8px 12px 12px;background:linear-gradient(#526476,#344554);border:2px solid #546777}.wheels{position:absolute;right:25px;bottom:0;display:flex;gap:12px}.wheel{width:24px;height:24px;border-radius:50%;background:#111922;border:3px solid #546777;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}@keyframes ping{to{transform:scale(1.48);opacity:0}}@keyframes bob{50%{transform:translateY(-8px)}}@keyframes shake{25%{transform:translateX(-5px) translateY(-5px)}50%{transform:translateX(6px) translateY(-9px)}75%{transform:translateX(-3px) translateY(-3px)}}
+.speech{border:1px solid var(--line);border-radius:8px;background:var(--surface2);padding:13px;color:var(--soft);line-height:1.45}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:0 0 16px}.stat{border:1px solid var(--line);border-radius:8px;background:rgba(16,25,34,.72);padding:14px}.stat strong{display:block;color:var(--green);font-size:30px;font-family:"Courier New",monospace}.stat span{color:var(--muted);font-size:13px}
+.concept-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 16px}.concept{border:1px solid var(--line);border-radius:8px;background:rgba(16,25,34,.76);padding:15px}.concept strong{display:block;color:var(--green);font-size:18px;margin-bottom:6px}.concept span{display:block;color:var(--soft);line-height:1.5;font-size:14px}.dashboard{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:16px;padding-bottom:46px}.map-card{padding:18px;min-height:360px}.section-title{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:14px}.section-title h2,.section-title h3{margin:0;font-size:24px}.section-title span{color:var(--muted);font-weight:900}.world{height:320px;border:1px solid var(--line);border-radius:8px;background:radial-gradient(circle at 50% 50%,rgba(111,214,255,.1),transparent 50%),linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));position:relative;overflow:hidden}.world svg{position:absolute;inset:0;width:100%;height:100%}.marker{position:absolute;width:14px;height:14px;border-radius:50%;background:var(--green);box-shadow:0 0 18px var(--green);transform:translate(-50%,-50%);cursor:pointer}.marker:after{content:"";position:absolute;inset:-8px;border:1px solid rgba(66,211,146,.34);border-radius:50%;animation:ping 1.7s infinite}.marker small{position:absolute;right:16px;top:-8px;white-space:nowrap;color:var(--soft);background:rgba(5,9,8,.72);border:1px solid var(--line);border-radius:6px;padding:3px 6px;font-size:11px}.controls{display:grid;grid-template-columns:1fr 130px 120px 120px;gap:8px;margin:14px 0}.control{min-height:42px;border-radius:8px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);padding:0 11px;font:inherit}.charts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.chart-card{padding:14px}.chart-card h3{margin:0 0 10px;font-size:17px;color:var(--soft)}canvas{width:100%;height:170px;display:block}.feed{padding:16px;max-height:82vh;overflow:auto}.article{width:100%;text-align:inherit;color:inherit;display:grid;grid-template-columns:86px minmax(0,1fr);gap:12px;border:1px solid transparent;border-radius:8px;background:var(--surface2);padding:12px;margin-bottom:10px;text-decoration:none;animation:in .35s ease-out;cursor:pointer}.article.new{border-color:rgba(66,211,146,.7);box-shadow:0 0 24px rgba(66,211,146,.22)}.article:hover{border-color:rgba(111,214,255,.58);transform:translateY(-2px)}.thumb{height:62px;border:1px solid var(--line);border-radius:6px;background:linear-gradient(135deg,rgba(66,211,146,.16),rgba(111,214,255,.16));display:grid;place-items:center;color:var(--cyan);font-weight:900}.article h3{margin:3px 0 6px;font-size:16px;line-height:1.32}.article p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.meta{display:flex;gap:7px;flex-wrap:wrap;color:var(--cyan);font-weight:900;font-size:12px}.listen{margin-top:8px;min-height:28px;border-radius:7px;border:1px solid var(--line);background:transparent;color:var(--soft);font-weight:900;cursor:pointer}.listen:hover{background:var(--green);color:#04110e}.reader{position:fixed;inset:0;z-index:2147483200;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,6,7,.72);backdrop-filter:blur(14px)}.reader.open{display:flex}.reader-card{width:min(860px,100%);border:1px solid rgba(111,214,255,.26);border-radius:8px;background:linear-gradient(180deg,rgba(18,32,31,.98),rgba(8,15,16,.98));box-shadow:0 40px 120px rgba(0,0,0,.58);overflow:hidden}.reader-hero{padding:22px;border-bottom:1px solid var(--line);background:radial-gradient(circle at 15% 0,rgba(66,211,146,.18),transparent 45%)}.reader-kicker{color:var(--green);font-weight:900;margin:0 0 10px}.reader-title{margin:0;font-size:clamp(28px,5vw,54px);line-height:1.05}.reader-body{padding:20px;display:grid;grid-template-columns:1fr 230px;gap:18px}.reader-body p{margin:0;color:var(--soft);font-size:18px;line-height:1.65}.reader-side{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.04);padding:14px}.reader-side div{color:var(--muted);line-height:1.7}.reader-actions{display:flex;gap:10px;flex-wrap:wrap;padding:0 20px 20px}.reader-actions a,.reader-actions button{min-height:42px;border-radius:8px;border:1px solid var(--line);background:var(--surface2);color:var(--ink);padding:0 14px;text-decoration:none;font-weight:900;cursor:pointer}.reader-actions .primary{background:var(--green);color:#04110e;border-color:transparent}.log-card{padding:15px;margin-top:16px;max-height:220px;overflow:auto;font-family:"Courier New",monospace;color:var(--green);line-height:1.65;font-size:13px}.flags{font-size:22px;line-height:1.6;color:var(--soft)}
+@keyframes in{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}@media(max-width:1050px){.hero,.dashboard{grid-template-columns:1fr}.stats,.charts,.concept-grid{grid-template-columns:1fr 1fr}.feed{max-height:none}.controls{grid-template-columns:1fr 1fr}.reader-body{grid-template-columns:1fr}}@media(max-width:640px){.stats,.charts,.controls,.concept-grid{grid-template-columns:1fr}.hero-card{padding:22px}.world{height:260px}.article{grid-template-columns:1fr}.thumb{height:52px}.reader{padding:8px}.reader-card{max-height:92vh;overflow:auto}}
+</style>
+</head>
+<body>
+<main class="shell">
+  <section class="hero">
+    <div class="hero-card">
+      <p class="kicker">Global Intelligence Console</p>
+      <h1>רובוט אבות</h1>
+      <p class="lead">מרכז מודיעין חי לרחפני סיב אופטי: פיד כתבות, מקורות מכל העולם, מפת מדינות, גרפים, סינון, הקראה, ייצוא CSV ו-QA לפריסה ב-Netlify.</p>
+      <div class="actions">
+        <a class="btn primary" href="world-feed.html">כותרות רצות</a>
+        <a class="btn" href="news.html">ארכיון כתבות</a>
+        <button class="btn" id="themeBtn" type="button">מצב בהיר</button>
+        <button class="btn" id="exportBtn" type="button">ייצוא CSV</button>
+        <button class="btn" id="printBtn" type="button">הדפס</button>
+      </div>
+    </div>
+    <aside class="panel robot-panel">
+      <div class="robot-headline"><h2>סורק גלובלי</h2><div class="live">פעיל 24/7</div></div>
+      <div class="robot-stage"><div class="radar"></div><div class="bot" id="bot"><div class="head"><div class="eye a"></div><div class="eye b"></div><div class="mouth"></div></div><div class="body"></div><div class="wheels"><div class="wheel"></div><div class="wheel"></div><div class="wheel"></div></div></div></div>
+      <div class="speech" id="speech">מאזין לפיד החדשות ומרכז מקורות סביב רחפן סיב אופטי.</div>
+    </aside>
+  </section>
+  <section class="stats">
+    <div class="stat"><strong id="totalVal">0</strong><span>כותרות</span></div>
+    <div class="stat"><strong id="countriesVal">0</strong><span>מדינות</span></div>
+    <div class="stat"><strong id="sourcesVal">0</strong><span>מקורות</span></div>
+    <div class="stat"><strong id="speedVal">0</strong><span>לשעה</span></div>
+  </section>
+  <section class="concept-grid" aria-label="מה רובוט אבות עושה">
+    <div class="concept"><strong>מה הקשר לטקסטים?</strong><span>רובוט אבות הוא שכבת איסוף וארגון: הוא הופך כותרות, קישורים וטקסטים קצרים למסך עבודה שאפשר לקרוא, לסנן ולהמשיך לפתח ממנו.</span></div>
+    <div class="concept"><strong>מה הוא לא?</strong><span>הוא לא מעתיק כתבות מלאות ולא מחליף מקור חדשות. הוא מציג תקציר וקישור מקור, כדי לשמור על זכויות יוצרים ולתת ניווט מהיר.</span></div>
+    <div class="concept"><strong>למה זה חשוב?</strong><span>הפיד נותן למודלים ולמפתחים חומר חי: אילו מדינות, מקורות ונושאים חוזרים סביב רחפני סיב אופטי ונקודות תורפה בכבל.</span></div>
+  </section>
+  <section class="dashboard">
+    <div>
+      <section class="map-card">
+        <div class="section-title"><h2>מפת מקורות עולמית</h2><span id="mapStatus">טוען...</span></div>
+        <div class="world" id="world">
+          <svg viewBox="0 0 1000 500" aria-hidden="true">
+            <path d="M154 150l80-34 90 28 28 64-46 48-120 0-58-46zM422 132l80-54 118 24 38 72-72 66-122-10-70-70zM686 145l136-40 112 52-18 96-150 32-96-86zM250 302l86-32 82 48 4 88-76 36-86-48zM568 290l98-42 134 44 32 92-96 48-128-34z" fill="rgba(111,214,255,.12)" stroke="rgba(111,214,255,.35)" stroke-width="2"/>
+            <path d="M105 392c160-28 280-28 440-6 140 19 230 20 350-6" fill="none" stroke="rgba(66,211,146,.28)" stroke-width="3" stroke-dasharray="8 10"/>
+          </svg>
+        </div>
+        <div class="controls">
+          <input class="control" id="filterInput" placeholder="סנן לפי מדינה / מקור / כותרת">
+          <select class="control" id="topicSelect"><option value="all">כל הנושאים</option><option value="fiber">סיב אופטי</option><option value="tether">רחפן קשור</option><option value="sensing">OFDR</option><option value="defense">ביטחוני</option></select>
+          <button class="btn" id="searchBtn" type="button">חפש</button>
+          <button class="btn" id="clearBtn" type="button">נקה</button>
+        </div>
+        <div class="flags" id="flagsRow"></div>
+        <div class="charts">
+          <div class="chart-card"><h3>זרימת כותרות</h3><canvas id="trendCanvas" width="520" height="180"></canvas></div>
+          <div class="chart-card"><h3>מקורות מובילים</h3><canvas id="sourceCanvas" width="520" height="180"></canvas></div>
+        </div>
+      </section>
+      <section class="log-card" id="logBox"></section>
+    </div>
+    <aside class="feed">
+      <div class="section-title"><h2>פיד כתבות</h2><span id="feedCount">0 כתבות</span></div>
+      <div id="articles"></div>
+    </aside>
+  </section>
+</main>
+<div class="reader" id="reader" aria-hidden="true">
+  <article class="reader-card" role="dialog" aria-modal="true" aria-labelledby="readerTitle">
+    <div class="reader-hero">
+      <p class="reader-kicker" id="readerSource">מקור</p>
+      <h2 class="reader-title" id="readerTitle">כותרת</h2>
+    </div>
+    <div class="reader-body">
+      <p id="readerSnippet">תקציר</p>
+      <aside class="reader-side">
+        <div><strong>מדינה:</strong> <span id="readerCountry"></span></div>
+        <div><strong>שפה:</strong> <span id="readerLang"></span></div>
+        <div><strong>סוג:</strong> תקציר + קישור מקור</div>
+        <div><strong>תפקיד:</strong> חומר גלם להמשך בנייה</div>
+      </aside>
+    </div>
+    <div class="reader-actions">
+      <a class="primary" id="readerOpen" href="#" target="_blank" rel="noopener">פתח מקור</a>
+      <button type="button" id="readerSpeak">האזן</button>
+      <button type="button" id="readerClose">סגור</button>
+    </div>
+  </article>
+</div>
+<div class="cv-mobile-orbit" aria-hidden="true"></div>
+<script>
+const demoArticles=[
+  {title:'רחפן סיב אופטי חמקן נחשף בארצות הברית',source:'Defense Lab',country:'ארצות הברית',lang:'אנגלית',flag:'US',snippet:'מערכת דמו המדמה מקור חדשות על רחפן עם סליל סיב אופטי עמיד בפני שיבושים.',url:'https://news.google.com/search?q=fiber%20optic%20drone%20USA%20when%3A5y'},
+  {title:'בריטניה בוחנת רחפן קשור לניטור גבולות',source:'Global Drone Monitor',country:'בריטניה',lang:'אנגלית',flag:'UK',snippet:'בדיקת רחפנים קשורים עם קישור אופטי לאזורים מרוחקים.',url:'https://news.google.com/search?q=tethered%20UAV%20fiber%20optic%20UK%20when%3A5y'},
+  {title:'יפן: חישה אופטית לכבל רחפן בזמן אסון',source:'Photonics Brief',country:'יפן',lang:'יפנית',flag:'JP',snippet:'שילוב חישה לאורך כבל עם מערכות מיפוי מהירות.',url:'https://scholar.google.com/scholar?q=drone+fiber+optic+sensing'},
+  {title:'ישראל: דמו חישה לאורך סיב לרחפן קשור',source:'CableVitality',country:'ישראל',lang:'עברית',flag:'IL',snippet:'מפת סיכון חיה לזיהוי עומס חריג ונקודות תורפה בכבל.',url:'news.html'},
+  {title:'גרמניה: רחפן סיב אופטי לתעשייה 4.0',source:'Industry Watch',country:'גרמניה',lang:'גרמנית',flag:'DE',snippet:'שילוב רחפן עם כבל סיב אופטי לתחזוקה ובקרה במפעלים.',url:'https://news.google.com/search?q=fiber%20optic%20drone%20industry%204.0%20Germany'},
+  {title:'ברזיל: רחפן קשור לניטור יערות ללא קליטה',source:'Green Aviation',country:'ברזיל',lang:'פורטוגזית',flag:'BR',snippet:'שימוש בקישור קווי באזורים שבהם רדיו וסלולר אינם יציבים.',url:'https://news.google.com/search?q=tethered%20drone%20fiber%20optic%20Brazil'},
+  {title:'הודו בודקת רחפני סיב אופטי לגבול הררי',source:'Asia Defense',country:'הודו',lang:'אנגלית',flag:'IN',snippet:'מערכות קשורות לטווח ארוך בסביבה עם שיבוש תקשורת.',url:'https://news.google.com/search?q=fiber%20optic%20tethered%20drone%20India'},
+  {title:'צרפת: OFDR לזיהוי כיפוף וקריעה בכבל רחפן',source:'Optics Watch',country:'צרפת',lang:'צרפתית',flag:'FR',snippet:'מדידות אופטיות לזיהוי נקודות חולשה בזמן אמת.',url:'https://scholar.google.com/scholar?q=OFDR+drone+cable'}
+];
+const flagMap={US:'ארצות הברית',UK:'בריטניה',JP:'יפן',IL:'ישראל',DE:'גרמניה',BR:'ברזיל',IN:'הודו',FR:'צרפת'};
+const points={US:[23,39],UK:[47,31],JP:[86,43],IL:[56,49],DE:[50,36],BR:[35,70],IN:[70,55],FR:[48,40]};
+let allArticles=[],visible=[],shown=[],start=Date.now(),trend=[];
+const el=id=>document.getElementById(id);
+function safe(s){return String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function log(msg){const d=document.createElement('div');d.textContent='['+new Date().toLocaleTimeString('he-IL')+'] '+msg;el('logBox').prepend(d);while(el('logBox').children.length>40)el('logBox').lastChild.remove()}
+function say(text){el('speech').textContent=text;el('bot').classList.add('found');setTimeout(()=>el('bot').classList.remove('found'),600)}
+function speak(text){if(!('speechSynthesis' in window))return;speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang='he-IL';u.rate=.92;speechSynthesis.speak(u);say('מקריא כותרת: '+text)}
+function normalize(a,i){const title=a.title||a.th||'כותרת ללא שם';const source=a.source||a.src||'source';const country=a.country||a.co||guessCountry(source,i);const flag=Object.keys(flagMap).find(k=>flagMap[k]===country)||['US','UK','JP','IL','DE','BR','IN','FR'][i%8];return{title,source,country,flag,lang:a.language||a.lang||a.la||'לא ידוע',snippet:a.snippet||a.sh||a.url||'כתבה שנמצאה בפיד החי.',url:a.url||'#'}}
+function guessCountry(source,i){const list=Object.values(flagMap);return list[i%list.length]}
+function card(a,isNew,i){return '<div class="article '+(isNew?'new':'')+'" role="button" tabindex="0" data-index="'+i+'"><div class="thumb">'+safe(a.flag)+'</div><div><div class="meta"><span>'+safe(a.source)+'</span><span>'+safe(a.country)+'</span><span>'+safe(a.lang)+'</span></div><h3>'+safe(a.title)+'</h3><p>'+safe(a.snippet).slice(0,150)+'</p><button class="listen" type="button" data-title="'+safe(a.title)+'">האזן לכותרת</button></div></div>'}
+function render(list){visible=list;const box=el('articles');box.innerHTML=list.map((a,i)=>card(a,i<2,i)).join('')||'<div class="panel">לא נמצאו תוצאות.</div>';box.querySelectorAll('.article').forEach(btn=>{btn.addEventListener('click',()=>openReader(visible[Number(btn.dataset.index)]));btn.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openReader(visible[Number(btn.dataset.index)])}})});box.querySelectorAll('.listen').forEach(btn=>btn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();speak(btn.dataset.title)}));shown=list.slice();updateStats();drawMap();drawCharts()}
+function updateStats(){const countries=new Set(visible.map(a=>a.country));const sources=new Set(visible.map(a=>a.source));el('totalVal').textContent=visible.length;el('countriesVal').textContent=countries.size;el('sourcesVal').textContent=sources.size;el('feedCount').textContent=visible.length+' כתבות';const h=Math.max((Date.now()-start)/3600000,.05);el('speedVal').textContent=Math.round(visible.length/h);el('flagsRow').textContent=[...new Set(visible.map(a=>a.flag))].join('  ');trend.push({t:new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'}),v:visible.length});if(trend.length>10)trend.shift()}
+function drawMap(){const world=el('world');world.querySelectorAll('.marker').forEach(m=>m.remove());const active=[...new Set(visible.map(a=>a.flag))];active.forEach(flag=>{const p=points[flag];if(!p)return;const m=document.createElement('button');m.className='marker';m.style.left=p[0]+'%';m.style.top=p[1]+'%';m.title=flagMap[flag]||flag;m.innerHTML='<small>'+safe(flagMap[flag]||flag)+'</small>';m.addEventListener('click',()=>{el('filterInput').value=flagMap[flag]||flag;applyFilter();say('מציג מקורות מ'+(flagMap[flag]||flag))});world.appendChild(m)});el('mapStatus').textContent=active.length+' מדינות פעילות'}
+function drawLine(ctx,w,h,data,color){ctx.clearRect(0,0,w,h);ctx.strokeStyle='rgba(255,255,255,.14)';ctx.beginPath();ctx.moveTo(18,h-22);ctx.lineTo(w-12,h-22);ctx.stroke();const max=Math.max(1,...data.map(d=>d.v));ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();data.forEach((d,i)=>{const x=22+i*((w-42)/Math.max(1,data.length-1));const y=h-26-(d.v/max)*(h-48);if(i)ctx.lineTo(x,y);else ctx.moveTo(x,y)});ctx.stroke()}
+function drawBars(ctx,w,h,counts,color){ctx.clearRect(0,0,w,h);const entries=Object.entries(counts).slice(0,6);const max=Math.max(1,...entries.map(e=>e[1]));entries.forEach((e,i)=>{const y=20+i*25;const bw=(e[1]/max)*(w-130);ctx.fillStyle=color;ctx.fillRect(100,y,bw,14);ctx.fillStyle=getComputedStyle(document.body).getPropertyValue('--soft');ctx.font='12px Arial';ctx.fillText(e[0].slice(0,12),10,y+12);ctx.fillText(e[1],105+bw,y+12)})}
+function drawCharts(){drawLine(el('trendCanvas').getContext('2d'),520,180,trend,getComputedStyle(document.body).getPropertyValue('--green'));const counts={};visible.forEach(a=>counts[a.source]=(counts[a.source]||0)+1);drawBars(el('sourceCanvas').getContext('2d'),520,180,counts,getComputedStyle(document.body).getPropertyValue('--cyan'))}
+let currentArticle=null;
+function openReader(a){if(!a)return;currentArticle=a;el('readerSource').textContent=(a.source||'מקור')+' · '+(a.country||'מדינה');el('readerTitle').textContent=a.title;el('readerSnippet').textContent=a.snippet||a.url||'תקציר לא זמין כרגע.';el('readerCountry').textContent=a.country||'';el('readerLang').textContent=a.lang||'';el('readerOpen').href=a.url||'#';el('reader').classList.add('open');el('reader').setAttribute('aria-hidden','false');say('פתחתי תצוגת כתבה פנימית. אפשר לקרוא, להאזין או לפתוח את המקור.')}
+function closeReader(){el('reader').classList.remove('open');el('reader').setAttribute('aria-hidden','true')}
+function applyFilter(){const q=el('filterInput').value.trim().toLowerCase();const list=!q?allArticles:allArticles.filter(a=>(a.title+a.source+a.country+a.lang+a.snippet).toLowerCase().includes(q));render(list);log(q?'סינון הופעל: '+q:'סינון נוקה')}
+async function loadFeed(){log('מתחבר לפיד Netlify...');try{const topic=el('topicSelect').value;const res=await fetch('/.netlify/functions/news-feed?topic='+encodeURIComponent(topic)+'&years=5&max=80');const data=await res.json();const raw=(data.articles&&data.articles.length)?data.articles:demoArticles;allArticles=raw.map(normalize);render(allArticles);log(data.fallback?'פיד חי במצב גיבוי יציב':'פיד חי נטען בהצלחה');say('הפיד נטען. אפשר לסנן, להאזין ולייצא.')}catch(e){allArticles=demoArticles.map(normalize);render(allArticles);log('מצב מקומי או תקלה בפיד: נטען מאגר דמו');say('מצב גיבוי פעיל. האתר עדיין עובד.')}}
+function exportCsv(){const rows=[['כותרת','מקור','מדינה','שפה','קישור'],...visible.map(a=>[a.title,a.source,a.country,a.lang,a.url])];const csv=rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='robot-avot-feed.csv';a.click();URL.revokeObjectURL(url);log('CSV יוצא')}
+el('searchBtn').addEventListener('click',applyFilter);el('clearBtn').addEventListener('click',()=>{el('filterInput').value='';applyFilter()});el('filterInput').addEventListener('keydown',e=>{if(e.key==='Enter')applyFilter()});el('topicSelect').addEventListener('change',loadFeed);el('exportBtn').addEventListener('click',exportCsv);el('printBtn').addEventListener('click',()=>window.print());el('themeBtn').addEventListener('click',()=>{document.body.classList.toggle('light-mode');el('themeBtn').textContent=document.body.classList.contains('light-mode')?'מצב כהה':'מצב בהיר';drawCharts()});
+el('readerClose').addEventListener('click',closeReader);el('reader').addEventListener('click',e=>{if(e.target===el('reader'))closeReader()});el('readerSpeak').addEventListener('click',()=>{if(currentArticle)speak(currentArticle.title)});document.addEventListener('keydown',e=>{if(e.key==='Escape')closeReader()});
+loadFeed();setInterval(()=>{if(allArticles.length){const next=allArticles[Math.floor(Math.random()*allArticles.length)];allArticles=[next,...allArticles.filter(a=>a!==next)];render(allArticles);log('כותרת חדשה קודמה לפיד');say('נמצאה כותרת חדשה בפיד.')}},12000);
+</script>
+<script src="assets/site-polish.js"></script>
+</body>
+</html>

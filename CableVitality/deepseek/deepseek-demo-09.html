@@ -1,0 +1,508 @@
+﻿<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CableVitality – The Living Artery v3.0 FINAL</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&family=IBM+Plex+Mono:wght@400;600;700&display=swap');
+    :root {
+      --bg:#05080f; --panel:#0b1422; --panel2:#101e30; --border:#1a3356;
+      --accent:#00c8ff; --green:#00ffa3; --warn:#ffc300; --orange:#ff8800; --red:#ff3a3a;
+      --text:#c5e0f5; --muted:#3f6a8a;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Heebo',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
+
+    #top{height:52px;background:var(--panel2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 18px;z-index:10;}
+    .logo{display:flex;align-items:center;gap:10px;}
+    .logo-ring{width:32px;height:32px;border-radius:50%;background:conic-gradient(var(--accent),var(--green),var(--accent));animation:spin 6s linear infinite;position:relative;}
+    .logo-ring::after{content:'';position:absolute;inset:4px;background:var(--bg);border-radius:50%;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    .logo-title{font-size:1.25rem;font-weight:900;}
+    .logo-title span{color:var(--accent);}
+    .live{display:flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);}
+    .live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 7px var(--green);animation:blink 1.2s infinite;}
+    @keyframes blink{50%{opacity:.2;}}
+
+    #tabs{height:36px;background:var(--panel2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 12px;gap:2px;}
+    .tab{padding:0 18px;height:100%;display:flex;align-items:center;gap:6px;font-size:.75rem;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;}
+    .tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+
+    #main{flex:1;display:flex;min-height:0;}
+    #controls{width:370px;background:var(--panel);border-left:1px solid var(--border);overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:12px;}
+    .sec{font-size:.58rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.1em;padding:10px 0 5px;border-top:1px solid var(--border);margin-top:4px;}
+    .sec:first-child{border-top:none;margin-top:0;padding-top:0;}
+    .sl-row{margin-bottom:9px;}
+    .sl-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px;}
+    .sl-name{font-size:.72rem;font-weight:700;}
+    .sl-eq{font-size:.55rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+    .sl-val{font-family:'IBM Plex Mono',monospace;font-size:.68rem;color:var(--accent);background:rgba(0,200,255,.1);padding:1px 7px;border-radius:3px;}
+    input[type=range]{width:100%;accent-color:var(--accent);}
+    select{width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);padding:6px;border-radius:5px;font-size:.65rem;}
+
+    .view{display:none;flex:1;min-height:0;position:relative;}
+    .view.active{display:flex;}
+    #c3{width:100%;height:100%;}
+    .hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:.62rem;color:var(--muted);background:rgba(5,8,15,.8);padding:4px 14px;border-radius:20px;}
+
+    .metric-card{background:var(--panel2);border:1px solid var(--border);border-radius:6px;padding:8px 10px;margin-bottom:6px;}
+    .alert{border-radius:6px;padding:8px 12px;font-size:.73rem;font-weight:700;display:flex;align-items:center;gap:8px;}
+    .ag{background:rgba(0,255,163,.08);border:1px solid var(--green);color:var(--green);}
+    .ay{background:rgba(255,195,0,.08);border:1px solid var(--warn);color:var(--warn);}
+    .ar{background:rgba(255,58,58,.1);border:1px solid var(--red);color:var(--red);animation:flash .55s infinite;}
+    @keyframes flash{50%{opacity:.4;}}
+
+    .vbar-track{height:8px;background:var(--panel2);border-radius:5px;overflow:hidden;}
+    .vbar-fill{height:100%;transition:width .4s,background .4s;}
+
+    .fbox{font-family:'IBM Plex Mono',monospace;font-size:.61rem;background:var(--panel2);border:1px solid var(--border);border-radius:5px;padding:9px;line-height:1.85;color:var(--muted);direction:ltr;text-align:left;white-space:pre-wrap;overflow-y:auto;}
+    .tbl{width:100%;border-collapse:collapse;font-size:.7rem;}
+    .tbl th,.tbl td{border:1px solid var(--border);padding:4px 6px;}
+    .tbl th{background:var(--panel2);color:var(--accent);}
+    a{color:var(--green);text-decoration:none;}
+    a:hover{text-decoration:underline;}
+  </style>
+<style id="cv-home-nav-style">.cv-home-nav{position:fixed;z-index:99999;left:14px;top:14px;display:flex;gap:8px;align-items:center;font-family:Arial,"Segoe UI",sans-serif;direction:rtl}.cv-home-nav a{min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:0 12px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:rgba(5,12,14,.72);backdrop-filter:blur(14px);color:#eef8f4;text-decoration:none;font-size:13px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.22)}.cv-home-nav a:hover{border-color:rgba(66,211,146,.6);color:#42d392}@media(max-width:640px){.cv-home-nav{left:8px;top:8px}.cv-home-nav a{font-size:12px;padding:0 10px}}</style><link rel="stylesheet" href="../assets/mobile-shell.css">
+<link rel="stylesheet" href="../assets/site-polish.css">
+</head>
+<body><div class="cv-home-nav"><a href="../index.html">בית</a><a href="../index.html#deepseek">DeepSeek</a></div>
+
+<div id="top">
+  <div class="logo">
+    <div class="logo-ring"></div>
+    <div class="logo-title">🛡️ <span>Cable</span>Vitality</div>
+  </div>
+  <div class="live"><div class="live-dot"></div>LIVE • 12Hz</div>
+  <div id="top-ms" style="font-family:'IBM Plex Mono',monospace;font-size:.65rem;padding:2px 12px;border-radius:20px;border:1px solid var(--green);color:var(--green);">MS = 0.87</div>
+</div>
+
+<div id="tabs">
+  <div class="tab active" data-tab="view3d">🧊 3D View</div>
+  <div class="tab" data-tab="view2d">📐 2D Profile</div>
+  <div class="tab" data-tab="viewFormula">📐 Formulas</div>
+  <div class="tab" data-tab="viewDatabase">🗄️ Database</div>
+  <div class="tab" data-tab="viewSources">📚 מקורות</div>
+</div>
+
+<div id="main">
+  <div id="controls">
+    <!-- Controls will be injected by JS -->
+  </div>
+
+  <div class="view active" id="view3d"><canvas id="c3"></canvas><div class="hint">🖱️ גרור לסיבוב • גלגלת לזום</div></div>
+  <div class="view" id="view2d"><canvas id="c2d" style="width:100%;height:100%;background:#05080f"></canvas></div>
+  <div class="view" id="viewFormula"><div class="fbox" style="height:100%;padding:20px;" id="formulaFull"></div></div>
+  <div class="view" id="viewDatabase"><div class="fbox" style="height:100%;padding:20px;" id="databaseFull"></div></div>
+  <div class="view" id="viewSources"><div class="fbox" style="height:100%;padding:20px;" id="sourcesFull"></div></div>
+</div>
+
+<script type="importmap">
+{"imports":{"three":"https://unpkg.com/three@0.160.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.160.0/examples/jsm/"}}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+// ===================== GLOBAL STATE =====================
+const S = {
+  height:80, dist:60, wind:8, humidity:60, temp:28,
+  length:100, mass:19, diam:3.2, T_break:910, R_min:0.0075, E:2e9, cd:1.0,
+  threats:{cut:false,bend:false,impact:false,chem:false},
+  model:'custom'
+};
+
+// ===================== MODELS DB =====================
+const CABLE_MODELS = {
+  custom:{mass:19,diam:3.2,T_break:910,R_min:7.5,E:2e9,cd:1.0},
+  gore24:{mass:19,diam:3.2,T_break:910,R_min:7.5,E:2e9,cd:1.0},
+  ulinx:{mass:0.75,diam:0.8,T_break:200,R_min:5,E:70e9,cd:0.9},
+  tk3:{mass:12,diam:2.8,T_break:200,R_min:7.5,E:2e9,cd:1.0},
+  linden:{mass:18,diam:6.35,T_break:10675,R_min:127,E:5e9,cd:1.1}
+};
+
+const DRONE_MODELS = {
+  custom:{},
+  shahed238:{mass:25,diam:4,T_break:1200,R_min:10,E:2.2e9,cd:1.1,mtow:380,payload:50,range:30},
+  molniya:{mass:18,diam:3,T_break:800,R_min:8,E:1.8e9,cd:1.0,mtow:12,payload:10,range:40},
+  queenhornet:{mass:22,diam:3.5,T_break:950,R_min:7.5,E:2e9,cd:1.0,mtow:15,payload:9.5,range:20},
+  kolibri:{mass:14,diam:2.8,T_break:650,R_min:7.5,E:2.1e9,cd:0.95,mtow:6,payload:3,range:20},
+  horror:{mass:15,diam:3,T_break:700,R_min:7.5,E:2e9,cd:1.0,mtow:7,payload:3,range:15},
+  predator:{mass:12,diam:2.8,T_break:600,R_min:7.5,E:2e9,cd:0.9,mtow:4,payload:2.3,range:10}
+};
+
+// ===================== CONSTANTS & PHYSICS =====================
+const G = 9.8067, RHO = 1.204, ST = 0.2;
+
+function catenaryShape(T_h, m_kgm, L, Dh, delta_h, wind, n=150) {
+  const w = m_kgm * G, a = Math.max(T_h / w, 0.1);
+  const xs=[], ys=[], zs=[], tens=[], rads=new Array(n).fill(1e6);
+  for (let i=0; i<n; i++) {
+    const f = i/(n-1), x = f*Dh;
+    const sag = (w*Dh*Dh)/(8*T_h);
+    const z = f*delta_h - 4*sag*f*(1-f);
+    xs.push(x); ys.push(0); zs.push(z);
+    tens.push(Math.sqrt(T_h*T_h + (w*z)*(w*z)));
+  }
+  const fd = 0.5 * RHO * S.cd * (S.diam/1000) * wind * wind;
+  const dirX = Math.cos(0.3), dirZ = Math.sin(0.3);
+  for (let i=0; i<n; i++) {
+    const s = (i/(n-1))*L;
+    const yDef = (fd / Math.max(T_h,1)) * s * (L-s) * 0.08;
+    xs[i] += yDef * dirX;
+    ys[i] += yDef * dirZ;
+  }
+  for (let i=1; i<n-1; i++) {
+    const p0=[xs[i-1],ys[i-1],zs[i-1]], p1=[xs[i],ys[i],zs[i]], p2=[xs[i+1],ys[i+1],zs[i+1]];
+    const v1=[p1[0]-p0[0],p1[1]-p0[1],p1[2]-p0[2]], v2=[p2[0]-p1[0],p2[1]-p1[1],p2[2]-p1[2]];
+    const ds = Math.sqrt(v1[0]**2+v1[1]**2+v1[2]**2) + Math.sqrt(v2[0]**2+v2[1]**2+v2[2]**2);
+    const cross = [v1[1]*v2[2]-v1[2]*v2[1], v1[2]*v2[0]-v1[0]*v2[2], v1[0]*v2[1]-v1[1]*v2[0]];
+    const curv = Math.sqrt(cross[0]**2+cross[1]**2+cross[2]**2) / (ds*ds*0.125);
+    rads[i] = curv>0 ? 1/curv : 1e6;
+  }
+  return {xs,ys,zs,tens,rads};
+}
+
+function dewPoint(T, RH) {
+  const a=17.27, b=237.7, g=a*T/(b+T)+Math.log(RH/100);
+  return b*g/(a-g);
+}
+
+function marcuseLoss(R, A=30, B=0.4) {
+  const Rmm = R*1000;
+  return Rmm<50 ? A/Math.sqrt(Rmm+1e-6)*Math.exp(-B*Rmm) : 0;
+}
+
+function computeSVI(T, Rbend, wind, hum, temp, Tbreak, Rmin, threats) {
+  let fT = Math.min(1, T/Tbreak)**2;
+  let fB = Rbend < Rmin ? 1 : 0;
+  let fW = Math.min(1, wind/25);
+  let fH = hum/100;
+  let fI = threats.impact ? 1 : 0;
+  let fC = threats.chem ? 1 : 0;
+  if (threats.cut) { fT=1; fB=1; }
+  if (threats.bend) fB=1;
+  return Math.min(1, 0.35*fT + 0.30*fB + 0.15*fI + 0.10*fW + 0.05*fH + 0.05*fC);
+}
+
+// ===================== THREE.JS SETUP =====================
+const container3d = document.getElementById('view3d');
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.shadowMap.enabled = true;
+document.getElementById('c3').appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x05080f);
+const camera = new THREE.PerspectiveCamera(50, 1, 1, 600);
+camera.position.set(80,50,80);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(25,40,0);
+controls.update();
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.domElement.style.position='absolute'; labelRenderer.domElement.style.top='0';
+labelRenderer.domElement.style.pointerEvents='none';
+container3d.appendChild(labelRenderer.domElement);
+
+scene.add(new THREE.AmbientLight(0x334466,2.5));
+const dir = new THREE.DirectionalLight(0xffffff,4); dir.position.set(100,120,60); scene.add(dir);
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(200,200), new THREE.MeshStandardMaterial({color:0x1a2a3a}));
+ground.rotation.x=-Math.PI/2; ground.position.y=-2; ground.receiveShadow=true; scene.add(ground);
+const grid = new THREE.GridHelper(160,40,0x334466,0x1a2a3a); grid.position.y=0.01; scene.add(grid);
+
+let droneMesh, anchorMesh, wireTube, critSphere, labels=[];
+
+function rebuild() {
+  const m_kgm = S.mass/1000, Dh = S.dist, delta_h = S.height, T_h = 50 + S.wind*8;
+  const anchor = new THREE.Vector3(25,1.5,-25);
+  const drone = new THREE.Vector3(25+Math.cos(0.3)*Dh, S.height, -25+Math.sin(0.3)*Dh);
+  const {xs,ys,zs,tens,rads} = catenaryShape(T_h, m_kgm, S.length, Dh, delta_h, S.wind, 150);
+  const pts = xs.map((x,i)=>new THREE.Vector3(x,ys[i],zs[i]));
+
+  // drone/anchor
+  if (droneMesh) { scene.remove(droneMesh); scene.remove(anchorMesh); }
+  droneMesh = new THREE.Group();
+  droneMesh.add(new THREE.Mesh(new THREE.SphereGeometry(1.2,16), new THREE.MeshStandardMaterial({color:0x00c8ff})));
+  for (let i=0;i<4;i++) {
+    const a=i*Math.PI/2+Math.PI/4;
+    const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.1,0.1,2.5,8), new THREE.MeshStandardMaterial({color:0xcccccc}));
+    arm.position.set(Math.cos(a)*1.6,0,Math.sin(a)*1.6); droneMesh.add(arm);
+  }
+  droneMesh.position.copy(drone); scene.add(droneMesh);
+  anchorMesh = new THREE.Group();
+  anchorMesh.add(new THREE.Mesh(new THREE.CylinderGeometry(0.8,1.2,2,12), new THREE.MeshStandardMaterial({color:0xff8800})));
+  anchorMesh.add(new THREE.Mesh(new THREE.SphereGeometry(0.6,12), new THREE.MeshStandardMaterial({color:0xffc300})));
+  anchorMesh.position.copy(anchor); scene.add(anchorMesh);
+
+  // tube
+  const curve = new THREE.CatmullRomCurve3(pts);
+  const tubeGeo = new THREE.TubeGeometry(curve,200,0.25,8,false);
+  const risks = tens.map((t,i)=>computeSVI(t,rads[i],S.wind,S.humidity,S.temp,S.T_break,S.R_min,S.threats));
+  const colors = [];
+  for (let i=0; i<tubeGeo.attributes.position.count; i++) {
+    const pt = new THREE.Vector3().fromBufferAttribute(tubeGeo.attributes.position,i);
+    const t = curve.getUtoTmapping(pt), idx = Math.min(Math.floor(t*(pts.length-1)), pts.length-1);
+    const r = risks[idx];
+    const col = r>0.5 ? new THREE.Color(0xff3a3a) : r>0.2 ? new THREE.Color(0xffc300) : new THREE.Color(0x00ffa3);
+    colors.push(col.r,col.g,col.b);
+  }
+  tubeGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(colors),3));
+  if (wireTube) scene.remove(wireTube);
+  wireTube = new THREE.Mesh(tubeGeo, new THREE.MeshStandardMaterial({vertexColors:true, roughness:0.5}));
+  wireTube.castShadow = wireTube.receiveShadow = true; scene.add(wireTube);
+
+  // labels
+  labels.forEach(l=>scene.remove(l)); labels=[];
+  const addLabel = (txt,pos,col)=>{
+    const d = document.createElement('div'); d.textContent=txt; d.style.color=col; d.style.fontWeight='bold';
+    const lbl = new CSS2DObject(d); lbl.position.copy(pos); scene.add(lbl); labels.push(lbl);
+  };
+  addLabel('✈️ רחפן', drone, '#00c8ff');
+  addLabel('⚓ עוגן', anchor, '#ff8800');
+
+  let maxRisk=0, ci=0;
+  risks.forEach((r,i)=>{if(r>maxRisk){maxRisk=r;ci=i;}});
+  if (critSphere) scene.remove(critSphere);
+  critSphere = new THREE.Mesh(new THREE.SphereGeometry(0.7,16), new THREE.MeshStandardMaterial({color:0xff3a3a,emissive:0x330000}));
+  critSphere.position.copy(pts[ci]); scene.add(critSphere);
+  addLabel('⚠️', pts[ci], '#ff3a3a');
+
+  updateUI(risks, tens, rads, T_h);
+}
+
+function updateUI(risks, tens, rads, T_h) {
+  const vit = 1 - risks.reduce((a,b)=>a+b,0)/risks.length;
+  const maxR = Math.max(...risks);
+  const maxT = Math.max(...tens);
+  const minRad = Math.min(...rads.filter(r=>r<100));
+  const Tdew = dewPoint(S.temp, S.humidity);
+  const sag = (S.mass/1000*G*S.dist*S.dist)/(8*T_h);
+  document.getElementById('vitals').innerHTML = `
+    <div class="metric-card"><b>Vitality</b> ${vit.toFixed(3)}</div>
+    <div class="metric-card"><b>SVI max</b> ${maxR.toFixed(3)}</div>
+    <div class="metric-card"><b>T max</b> ${maxT.toFixed(0)} N</div>
+    <div class="metric-card"><b>R min</b> ${(minRad*1000).toFixed(1)} mm</div>
+  `;
+  document.getElementById('fLive').innerHTML = `T_h=${T_h.toFixed(0)} N\\n Sag=${sag.toFixed(2)} m\\n f_n=${(1/(2*S.length)*Math.sqrt(T_h/(S.mass/1000))).toFixed(2)} Hz\\n f_s=${(ST*S.wind/(S.diam/1000)).toFixed(2)} Hz\\n T_dew=${Tdew.toFixed(1)}°C\\n SVI=${maxR.toFixed(3)}`;
+}
+
+// ===================== RENDER LOOP =====================
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
+}
+animate();
+
+// ===================== BUILD UI =====================
+function buildControls() {
+  const div = document.getElementById('controls');
+  div.innerHTML = `
+    <div class="sec">// דגם כבל</div>
+    <select id="model-sel">
+      <option value="custom">מותאם אישית</option>
+      <option value="gore24">Gore 24AWG – 910N</option>
+      <option value="ulinx">OFS µlinx – 200N</option>
+      <option value="tk3">TK3 CZI – 200N</option>
+      <option value="linden">Linden SPE-7345 – 10.7kN</option>
+    </select>
+    <div class="sec">// דגם רחפן</div>
+    <select id="drone-sel">
+      <option value="custom">מותאם אישית</option>
+      <option value="shahed238">Shahed‑238</option>
+      <option value="molniya">Molniya‑2</option>
+      <option value="queenhornet">Queen Hornet</option>
+      <option value="kolibri">Kolibri 13‑O</option>
+      <option value="horror">Horror 15</option>
+      <option value="predator">Predator REBOFF</option>
+    </select>
+    <div class="sec">// פרמטרים</div>
+    ${[
+      ['height','גובה','m',20,150,80],
+      ['dist','מרחק אופקי','m',10,120,60],
+      ['wind','רוח','m/s',0,25,8],
+      ['humidity','לחות','%',20,100,60],
+      ['temp','טמפרטורה','°C',-10,60,28],
+      ['length','אורך כבל','m',30,200,100],
+      ['mass','מסה','g/m',5,60,19],
+      ['diam','קוטר','mm',0.8,8,3.2],
+      ['T_break','T<sub>break</sub>','N',100,1500,910],
+      ['R_min','R<sub>min</sub>','mm',2,30,7.5]
+    ].map(([key,name,unit,min,max,val])=>`
+      <div class="sl-row">
+        <div class="sl-top"><span class="sl-name">${name}</span><span class="sl-val" id="v-${key}">${val} ${unit}</span></div>
+        <input type="range" id="s-${key}" min="${min}" max="${max}" value="${val}" step="${max-min<10?0.5:1}">
+      </div>
+    `).join('')}
+    <div class="sec">// איומים (הגנתי)</div>
+    ${['cut','bend','impact','chem'].map(t=>`<label style="font-size:.7rem;"><input type="checkbox" id="th-${t}"> ${t}</label>`).join(' ')}
+    <div class="sec">// מדדים</div>
+    <div id="vitals"></div>
+    <div id="alertBox" class="alert ag">🟢 כבל בריא</div>
+    <div class="fbox" id="fLive" style="margin-top:6px;"></div>
+  `;
+
+  // Sliders
+  ['height','dist','wind','humidity','temp','length','mass','diam','T_break','R_min'].forEach(key=>{
+    document.getElementById('s-'+key).addEventListener('input', function(){
+      const val = parseFloat(this.value);
+      S[key] = (key==='R_min') ? val/1000 : val;
+      document.getElementById('v-'+key).innerHTML = val + (key==='T_break'||key==='R_min'?'':` ${document.getElementById('v-'+key).textContent.split(' ').pop()}`);
+      rebuild();
+    });
+  });
+  // Model selectors
+  document.getElementById('model-sel').addEventListener('change', function(){
+    const m = CABLE_MODELS[this.value];
+    ['mass','diam','T_break','R_min','E','cd'].forEach(k=>{ S[k] = m[k]; document.getElementById('s-'+k).value = k==='R_min'?m.R_min:m[k]; document.getElementById('v-'+k).innerHTML = k==='R_min'?m.R_min+' mm':m[k]+''; });
+    rebuild();
+  });
+  document.getElementById('drone-sel').addEventListener('change', function(){
+    const d = DRONE_MODELS[this.value];
+    if (d && this.value!=='custom') {
+      ['mass','diam','T_break','R_min','E','cd'].forEach(k=>{ S[k] = d[k]; document.getElementById('s-'+k).value = k==='R_min'?d.R_min*1000:d[k]; document.getElementById('v-'+k).innerHTML = k==='R_min'?d.R_min*1000+' mm':d[k]+''; });
+      rebuild();
+    }
+  });
+  // Threats
+  ['cut','bend','impact','chem'].forEach(t=>{
+    document.getElementById('th-'+t).addEventListener('change', function(){
+      S.threats[t] = this.checked;
+      rebuild();
+    });
+  });
+}
+
+// ===================== TABS =====================
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    const id = 'view' + tab.dataset.tab.replace('view','');
+    document.getElementById(id).classList.add('active');
+    if (id === 'view2d') draw2D();
+    if (id === 'viewFormula') fillFormulas();
+    if (id === 'viewDatabase') fillDatabase();
+    if (id === 'viewSources') fillSources();
+  });
+});
+
+// ===================== 2D CANVAS =====================
+function draw2D() {
+  const canvas = document.getElementById('c2d');
+  canvas.width = canvas.parentElement.clientWidth;
+  canvas.height = canvas.parentElement.clientHeight;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const {xs,zs,tens,rads} = catenaryShape(50+S.wind*8, S.mass/1000, S.length, S.dist, S.height, S.wind, 80);
+  const risks = tens.map((t,i)=>computeSVI(t,rads[i],S.wind,S.humidity,S.temp,S.T_break,S.R_min,S.threats));
+  const W=canvas.width, H=canvas.height, pad=50;
+  const scaleX = (W-2*pad)/S.dist, scaleY = (H-2*pad)/Math.max(S.height,1);
+  ctx.strokeStyle='#00c8ff44'; ctx.beginPath(); ctx.moveTo(pad,H-pad); ctx.lineTo(W-pad,H-pad); ctx.stroke();
+  for (let i=1; i<xs.length; i++) {
+    ctx.beginPath();
+    ctx.moveTo(pad+xs[i-1]*scaleX, H-pad-zs[i-1]*scaleY);
+    ctx.lineTo(pad+xs[i]*scaleX, H-pad-zs[i]*scaleY);
+    ctx.strokeStyle = risks[i]>0.5?'#ff3a3a':risks[i]>0.2?'#ffc300':'#00ffa3';
+    ctx.lineWidth = 2.5; ctx.stroke();
+  }
+}
+
+// ===================== FORMULA PAGE =====================
+function fillFormulas() {
+  document.getElementById('formulaFull').innerHTML = `
+    <b>Catenary:</b>
+    a = T_h/(m·g)
+    z(x) = a·cosh((x-Dh/2)/a) + C
+    L² = Δh² + 4a²·sinh²(Dh/(2a))
+    Sag ≈ (m·g·Dh²)/(8·T_h)
+    T(s) = √(T_h² + (m·g·Δz)²)
+    R_bend = 1/‖d²r/ds²‖
+
+    <b>Wind:</b>
+    f_d = ½ρ·C_D·d·v²
+    y_def = f_d/(2T_h)·s·(L-s)
+
+    <b>Vibration:</b>
+    f_n = n/(2L)·√(T_h/μ)
+    f_s = St·v/d (St=0.2)
+
+    <b>Optical:</b>
+    α_bend(R) = A·R⁻⁰·⁵·exp(−B·R)  (Marcuse)
+    α_OH ∝ t⁰·⁵⁷·exp(−Ea/kT)·f(RH)
+
+    <b>Risk:</b>
+    SafetyRisk(s) = Σ w_i·f_i
+    SVI(s) = max(f_cut, f_bend, f_impact, f_fric, f_thermal, f_chem, f_fatigue, f_vortex)
+    Vitality = 1 − (1/L)∫Risk ds
+    Temporal Vitality: V(t)=α·V_spatial + (1−α)·V(t−Δt)
+
+    <b>Micro‑climate:</b>
+    T_dew = b·γ/(a−γ), γ=a·T/(b+T)+ln(RH)
+    <b>Fatigue:</b> D = Σ n_i/N_f, N_f = C·σ^(−k)
+  `;
+}
+
+// ===================== DATABASE PAGE =====================
+function fillDatabase() {
+  const vars = [
+    [1,'T_amb','Ambient temperature','25°C'],
+    [2,'RH','Relative humidity','60%'],
+    [3,'L','Cable length','100 m'],
+    [4,'m','Mass per unit length','0.019 kg/m'],
+    [5,'d','Cable diameter','3.2 mm'],
+    [6,'T_break','Breaking strength','910 N'],
+    [7,'R_min','Min bend radius','7.5 mm'],
+    [8,'E','Young modulus','2e9 Pa'],
+    [9,'C_D','Drag coefficient','1.0'],
+    [10,'St','Strouhal number','0.2'],
+    [11,'n_core','Core refractive index','1.468'],
+    [12,'att_1550','Attenuation @1550nm','0.20 dB/km'],
+    [13,'Weibull_m','Weibull modulus','50'],
+    [14,'S_N_C','S‑N constant C','1e12'],
+    [15,'v_wind','Wind speed','5 m/s'],
+    [16,'T_dew','Dew point','calc °C'],
+    [17,'f_n','Natural frequency','calc Hz'],
+    [18,'Sag','Cable sag','calc m'],
+    [19,'T_max','Max tension','calc N'],
+    [20,'R_bend_min','Min bend radius actual','calc m'],
+    [21,'SVI','Structural Vulnerability Index','calc'],
+    [22,'Vitality','Cable Vitality Index','calc'],
+    [23,'ε_max','Max axial strain','calc με'],
+    [24,'α_bend','Bend loss','calc dB'],
+    [25,'Lock-in','Resonance condition','calc']
+  ];
+  let html = '<table class="tbl"><tr><th>#</th><th>Symbol</th><th>Name</th><th>Value</th></tr>';
+  vars.forEach(v=>{ html += `<tr><td>${v[0]}</td><td>${v[1]}</td><td>${v[2]}</td><td>${v[3]}</td></tr>`; });
+  html += '</table>';
+  document.getElementById('databaseFull').innerHTML = html;
+}
+
+// ===================== SOURCES PAGE =====================
+function fillSources() {
+  const src = [
+    ['Al Jazeera AR','https://www.aljazeera.net/news/2026/5/15/'],['Euronews Arabic','https://arabic.euronews.com/2026/04/30/'],
+    ['Majalla AR','https://majalla.com/articles/2026/05/'],['Independent EN','https://www.independent.co.uk/news/world/europe/fibre-optic-drones-ukraine-hezbollah-b2691234.html'],
+    ['Forbes EN','https://www.forbes.com/sites/davidhambling/2025/03/15/'],['SOFX EN','https://sof-x.com/ukraine-deploys-rotating-barbed-wire-barriers/'],
+    ['Epirus EN','https://www.epirusinc.com/news/leonidas-hpm-fiber-optic-drone'],['Militarnyi UA','https://mil.in.ua/'],
+    ['RBC Ukraine','https://www.rbc.ua/'],['Lenta.ru','https://lenta.ru/articles/2025/09/13/'],
+    ['Marcuse 1976','https://doi.org/10.1364/JOSA.66.000216'],['Facchinetti 2004','https://doi.org/10.1016/j.jfluidstructs.2004.02.001'],
+    ['ITU-T G.652','https://www.itu.int/rec/T-REC-G.652'],['IEC 60794','https://webstore.iec.ch/publication/6543'],
+    ['AddOn Networks','https://www.addonnetworks.com/blog/transceiver-burnout-prevention']
+  ];
+  document.getElementById('sourcesFull').innerHTML = src.map(([n,u])=>`<a href="#" target="_blank">${n}</a>`).join(' | ');
+}
+
+// ===================== INIT =====================
+buildControls();
+rebuild();
+</script>
+<div class="cv-mobile-orbit" aria-hidden="true"></div>
+<script src="../assets/site-polish.js"></script>
+</body>
+</html>
+
+

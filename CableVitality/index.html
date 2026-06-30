@@ -1,0 +1,230 @@
+﻿<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CableVitality | AI Drone Lab</title>
+<meta name="description" content="CableVitality is an AI playground for tethered drone cable simulations, demos, models, source material and experimental game prototypes.">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#050908;--ink:#f5fbf8;--soft:#d8ebe4;--muted:#99aaa6;
+  --line:rgba(245,251,248,.14);--panel:rgba(13,22,21,.78);--panel2:rgba(20,31,29,.9);
+  --green:#42d392;--cyan:#6fd6ff;--amber:#ffd166;--red:#ff6b6b;--violet:#b7a2ff;
+  --shadow:0 30px 100px rgba(0,0,0,.38);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:Arial,"Segoe UI",sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 12% 8%,rgba(66,211,146,.18),transparent 28%),
+    radial-gradient(circle at 86% 4%,rgba(111,214,255,.14),transparent 28%),
+    linear-gradient(180deg,#07100f 0%,#07100e 42%,#050908 100%);
+}
+a{color:inherit}
+.shell{width:min(1220px,calc(100% - 32px));margin:0 auto}
+.nav{
+  position:sticky;top:0;z-index:50;
+  border-bottom:1px solid var(--line);
+  background:rgba(5,9,8,.76);
+  backdrop-filter:blur(18px);
+}
+.news-strip{min-height:38px;border-bottom:1px solid var(--line);background:rgba(66,211,146,.08);overflow:hidden;display:flex;align-items:center}
+.news-strip a{white-space:nowrap;text-decoration:none;color:var(--soft);font-weight:900;animation:ticker 34s linear infinite}
+.news-strip span{color:var(--green);margin:0 22px}
+@keyframes ticker{from{transform:translateX(-20%)}to{transform:translateX(110%)}}
+.nav-inner{height:70px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:900;font-size:22px}
+.logo{width:46px;height:46px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(145deg,var(--green),var(--cyan));color:#04110e;font-weight:900}
+.nav-links{display:flex;gap:18px;color:var(--muted);font-weight:800;font-size:15px}
+.nav-links a{text-decoration:none}.nav-links a:hover{color:var(--green)}
+.hero{min-height:calc(100vh - 70px);display:grid;grid-template-columns:1.05fr .95fr;gap:42px;align-items:center;padding:48px 0 34px}
+.kicker{margin:0 0 14px;color:var(--green);font-weight:900}
+h1{margin:0;font-size:clamp(46px,8vw,110px);line-height:.9;letter-spacing:0}
+.lead{max-width:760px;color:var(--soft);font-size:clamp(19px,2vw,25px);line-height:1.62;margin:24px 0 0}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.btn{min-height:50px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;padding:0 18px;text-decoration:none;font-weight:900;border:1px solid var(--line);background:var(--panel2)}
+.btn.primary{background:var(--green);color:#04110e;border-color:transparent}
+.mission{
+  min-height:520px;border:1px solid var(--line);border-radius:8px;background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+  box-shadow:var(--shadow);position:relative;overflow:hidden;text-decoration:none;color:inherit;display:block;
+}
+.mission:before{content:"";position:absolute;inset:22px;border:1px dashed rgba(245,251,248,.14);border-radius:8px}
+.drone,.station,.cable,.hot,.ground,.hud{position:absolute}
+.ground{inset:auto 0 0;height:22%;background:linear-gradient(180deg,transparent,rgba(66,211,146,.18));border-top:1px solid rgba(66,211,146,.24)}
+.station{right:12%;bottom:21%;width:90px;height:52px;border-radius:8px;border:1px solid rgba(245,251,248,.32);background:rgba(5,9,8,.84)}
+.drone{left:12%;top:22%;width:150px;height:52px;border-radius:8px;border:1px solid rgba(111,214,255,.6);background:rgba(111,214,255,.12)}
+.drone:before,.drone:after{content:"";position:absolute;top:20px;width:66px;border-top:2px solid rgba(245,251,248,.72)}
+.drone:before{right:-55px}.drone:after{left:-55px}
+.cable{right:18%;left:19%;top:32%;height:165px;border-bottom:4px solid var(--green);border-radius:0 0 58% 58%;transform:rotate(-5deg)}
+.hot{right:47%;top:55%;width:14px;height:14px;border-radius:50%;background:var(--amber);box-shadow:0 0 32px var(--amber)}
+.hud{left:22px;right:22px;bottom:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.hud div{border:1px solid var(--line);border-radius:8px;background:rgba(5,9,8,.62);padding:14px}
+.hud strong{display:block;color:var(--cyan);font-size:23px}.hud span{color:var(--muted);font-size:13px}
+.play-badge{position:absolute;right:24px;top:24px;z-index:3;border-radius:999px;background:var(--green);color:#04110e;font-weight:900;padding:11px 16px}
+.mission-title{position:absolute;right:24px;left:24px;top:78px;z-index:3}
+.mission-title strong{display:block;font-size:clamp(28px,4vw,48px);line-height:1.05}.mission-title span{display:block;color:var(--soft);margin-top:8px;font-size:17px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:-12px;position:relative;z-index:4}
+.stat{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:18px;box-shadow:var(--shadow)}
+.stat strong{display:block;color:var(--green);font-size:32px}.stat span{display:block;color:var(--muted);margin-top:5px}
+section{padding:54px 0}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:18px}
+h2{margin:0;font-size:clamp(30px,4vw,50px);line-height:1.05}
+.section-head p{margin:0;color:var(--muted);line-height:1.65;max-width:680px;font-size:17px}
+.band{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,255,255,.025)}
+.model-grid{display:grid;grid-template-columns:1fr;gap:0;border-top:1px solid var(--line)}
+.app-grid,.source-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.card,.source{
+  border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:20px;text-decoration:none;
+  min-height:230px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .18s,border-color .18s,background .18s;
+}
+.card:hover,.source:hover{transform:translateY(-3px);border-color:rgba(66,211,146,.62);background:var(--panel2)}
+.model{display:grid;grid-template-columns:86px minmax(0,1fr) 220px;gap:18px;padding:24px 0;border-bottom:1px solid var(--line)}
+.model-num{color:var(--green);font-size:18px;font-weight:900}
+.model h3,.card h3,.source h3{margin:0 0 10px;font-size:24px;line-height:1.2}
+.model p,.card p,.source p{margin:0;color:var(--muted);line-height:1.62}
+.meta{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.meta span{border:1px solid rgba(111,214,255,.32);color:var(--cyan);border-radius:999px;padding:5px 9px;font-size:12px;font-weight:900}
+.model .origin{color:var(--soft);font-weight:900;text-align:left;line-height:1.5}
+.card .open,.source .open{color:var(--green);font-weight:900;margin-top:22px}
+.lane{margin-top:28px}
+.lane-title{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:12px}
+.lane-title h3{font-size:28px;margin:0}.lane-title p{margin:0;color:var(--muted)}
+.deepseek-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.deepseek-card{
+  min-height:150px;border:1px solid var(--line);border-radius:8px;background:rgba(13,22,21,.72);padding:16px;text-decoration:none;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.deepseek-card:hover{border-color:rgba(66,211,146,.62)}
+.deepseek-card strong{font-size:18px}.deepseek-card span{color:var(--muted);line-height:1.45;font-size:14px}.deepseek-card em{font-style:normal;color:var(--green);font-weight:900}
+.note{margin-top:20px;border:1px solid rgba(255,209,102,.28);border-radius:8px;background:rgba(255,209,102,.06);padding:18px;color:#f7df9f;line-height:1.6}
+footer{border-top:1px solid var(--line);padding:28px 0 44px;color:var(--muted)}
+@media(max-width:1000px){.hero{grid-template-columns:1fr}.stats,.app-grid,.source-grid{grid-template-columns:1fr 1fr}.model{grid-template-columns:56px minmax(0,1fr)}.model .origin{text-align:right;grid-column:2}.deepseek-grid{grid-template-columns:1fr 1fr}.mission{min-height:420px}.nav-links{display:none}}
+@media(max-width:640px){.shell{width:calc(100% - 20px)}.stats,.app-grid,.source-grid,.deepseek-grid{grid-template-columns:1fr}.model{grid-template-columns:1fr}.model .origin{grid-column:auto}.section-head{display:block}.hud{grid-template-columns:1fr}.hero{padding-top:30px}}
+</style>
+<link rel="stylesheet" href="assets/mobile-shell.css">
+<link rel="stylesheet" href="assets/site-polish.css">
+</head>
+<body>
+<div class="news-strip"><a id="newsTicker" href="news.html"><span>Live Intelligence Feed</span> טוען כותרת אחרונה על רחפנים, סיב אופטי ו־tethered UAV...</a></div>
+<nav class="nav">
+  <div class="shell nav-inner">
+    <div class="brand"><div class="logo">CV</div><span>CableVitality</span></div>
+    <div class="nav-links">
+      <a href="#apps">דפים</a>
+      <a href="#deepseek">DeepSeek</a>
+      <a href="researcher.html">דף חוקר</a>
+      <a href="robot-avot.html">רובוט אבות</a>
+      <a href="world-feed.html">כותרות רצות</a>
+      <a href="news.html">חדשות</a>
+      <a href="#sources">מקורות</a>
+      <a href="apps/cablevitality_game_original.html">משחק ראשי</a>
+    </div>
+  </div>
+</nav>
+
+<header class="shell hero">
+  <div>
+    <p class="kicker">CableVitality AI Drone Lab</p>
+    <h1>רחפן סיב אופטי</h1>
+    <p class="lead">כבל חי לרחפן קשור: דמואים, סימולציות ומשחקים סביב סיב אופטי, סיכון, עומס וחישה.</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="apps/cablevitality_game_original.html">שחק עכשיו</a>
+      <a class="btn" href="#deepseek">DeepSeek</a>
+      <a class="btn" href="researcher.html">דף חוקר</a>
+      <a class="btn" href="#apps">כל הדפים</a>
+      <a class="btn" href="robot-avot.html">רובוט אבות</a>
+      <a class="btn" href="world-feed.html">כותרות רצות</a>
+    </div>
+  </div>
+  <a class="mission" href="apps/cablevitality_game_original.html" aria-label="Open original Ghost Tether game">
+    <div class="play-badge">שחק עכשיו</div>
+    <div class="mission-title"><strong>Ghost Tether</strong><span>הדמו המקורי שהופך לכניסה הראשית.</span></div>
+    <div class="cable"></div><div class="station"></div><div class="drone"></div><div class="hot"></div><div class="ground"></div>
+    <div class="hud"><div><strong>Game</strong><span>ראשי</span></div><div><strong>25</strong><span>דפי דמו</span></div><div><strong>AI</strong><span>ממשיך לבנות</span></div></div>
+  </a>
+</header>
+
+<div class="shell stats">
+  <div class="stat"><strong>13</strong><span>דמואים מקוריים של DeepSeek</span></div>
+  <div class="stat"><strong>5</strong><span>גרסאות מקור CableVitality</span></div>
+  <div class="stat"><strong>2D/3D</strong><span>קנבס, Three.js וסימולציה</span></div>
+  <div class="stat"><strong>Netlify</strong><span>אתר חי לפריסה ושיתוף</span></div>
+</div>
+
+<main class="shell">
+  <section id="apps">
+    <div class="section-head">
+      <h2>דפי CableVitality</h2>
+      <p>הדפים החדשים יושבים לצד הגרסאות המקוריות, כדי שאפשר להשוות, ללמוד, ולהמשיך לבנות מכל כיוון.</p>
+    </div>
+    <div class="app-grid">
+      <a class="card" href="researcher.html"><div><div class="meta"><span>DeepSeek</span><span>Research</span></div><h3>דף חוקר</h3><p>עמוד DeepSeek חדש עם רובוט אבות, רובוט מנתח, מפה, גרפים ותצוגת מחקר סביב רחפן סיב אופטי.</p></div><div class="open">פתח חוקר</div></a>
+      <a class="card" href="apps/cablevitality_ultimate.html"><div><div class="meta"><span>חדש</span><span>Dashboard</span></div><h3>לוח מחוונים מלא</h3><p>מדדי מצב, תצוגת כבל, בקרות ונתוני מערכת.</p></div><div class="open">פתח</div></a>
+      <a class="card" href="apps/cablevitality_physics.html"><div><div class="meta"><span>חדש</span><span>Physics</span></div><h3>מעבדת פיזיקה</h3><p>שקיעה, מתיחות, גרר רוח ותדרי תהודה.</p></div><div class="open">פתח</div></a>
+      <a class="card" href="apps/cablevitality_variables.html"><div><div class="meta"><span>חדש</span><span>Data</span></div><h3>מאגר משתנים</h3><p>חיפוש, סינון, QA וייצוא CSV למשתני הפרויקט.</p></div><div class="open">פתח</div></a>
+      <a class="card" href="apps/cablevitality_demo.html"><div><div class="meta"><span>חדש</span><span>Demo</span></div><h3>דמו קצר</h3><p>הצגה מהירה של הרחפן, הכבל ונקודת הסיכון.</p></div><div class="open">פתח</div></a>
+      <a class="card" href="apps/cablevitality_game.html"><div><div class="meta"><span>חדש</span><span>Game</span></div><h3>Ghost Tether</h3><p>מעבדה משחקית לחישה לאורך הכבל.</p></div><div class="open">פתח</div></a>
+      <a class="card" href="apps/cablevitality_game_original.html"><div><div class="meta"><span>מקורי</span><span>Game</span></div><h3>Ghost Tether - המקורי</h3><p>המשחק המקורי מתוך תיקיית הרחפנים.</p></div><div class="open">פתח</div></a>
+      <a class="card" href="apps/cablevitality_demo_original.html"><div><div class="meta"><span>מקורי</span><span>Demo</span></div><h3>Demo - המקורי</h3><p>דף הדמו המקורי מתוך הפרויקט.</p></div><div class="open">פתח</div></a>
+      <a class="card" href="apps/cablevitality_physics_original.html"><div><div class="meta"><span>מקורי</span><span>Physics</span></div><h3>Physics - המקורי</h3><p>סימולציית הפיזיקה המקורית.</p></div><div class="open">פתח</div></a>
+      <a class="card" href="apps/cablevitality_ultimate_original.html"><div><div class="meta"><span>מקורי</span><span>Ultimate</span></div><h3>Ultimate - המקורי</h3><p>לוח המחוונים המקורי והמלא.</p></div><div class="open">פתח</div></a>
+      <a class="card" href="apps/cablevitality_variables_original.html"><div><div class="meta"><span>מקורי</span><span>Variables</span></div><h3>Variable DB - המקורי</h3><p>מאגר המשתנים המקורי לצד המאגר החדש.</p></div><div class="open">פתח</div></a>
+    </div>
+  </section>
+
+  <section id="deepseek">
+    <div class="section-head">
+      <h2>דמואים של DeepSeek</h2>
+      <p>אבות הטיפוס המקוריים, מסודרים כמסלול ניסויים. חלקם גדולים ועשירים יותר, חלקם וריאציות שמראות כיווני UI וסימולציה שונים.</p>
+    </div>
+    <div class="deepseek-grid">
+      <a class="deepseek-card" href="deepseek/deepseek-demo-01.html"><strong>Living Artery Full System</strong><span>הדמו הגדול והעשיר ביותר מהארכיון</span><em>Demo 01</em></a>
+      <a class="deepseek-card" href="deepseek/deepseek-demo-02.html"><strong>Advanced Interactive Prototype</strong><span>גרסה מתקדמת עם תצוגה אינטראקטיבית</span><em>Demo 02</em></a>
+      <a class="deepseek-card" href="deepseek/deepseek-demo-03.html"><strong>Visual Risk Simulator</strong><span>אב טיפוס ויזואלי מלא</span><em>Demo 03</em></a>
+      <a class="deepseek-card" href="deepseek/deepseek-demo-04.html"><strong>Visual Risk Simulator Alt</strong><span>וריאציה נוספת לאותו דמו</span><em>Demo 04</em></a>
+      <a class="deepseek-card" href="deepseek/deepseek-demo-05.html"><strong>Control Room Prototype</strong><span>תצוגת שליטה וניטור</span><em>Demo 05</em></a>
+      <a class="deepseek-card" href="deepseek/deepseek-demo-06.html"><strong>Control Room Prototype Alt</strong><span>תצוגת שליטה וניטור נוספת</span><em>Demo 06</em></a>
+      <a class="deepseek-card" href="deepseek/deepseek-demo-07.html"><strong>Living Artery v3</strong><span>גרסת Living Artery מלאה</span><em>Demo 07</em></a>
+      <a class="deepseek-card" href="deepseek/deepseek-demo-08.html"><strong>Living Artery v3 Alt</strong><span>גרסה חלופית של Living Artery</span><em>Demo 08</em></a>
+      <a class="deepseek-card" href="deepseek/deepseek-demo-09.html"><strong>Early CableVitality Prototype</strong><span>אב טיפוס מוקדם של CableVitality</span><em>Demo 09</em></a>
+      <a class="deepseek-card" href="deepseek/deepseek-demo-10.html"><strong>Tactical Dashboard</strong><span>דשבורד ניסויי טקטי</span><em>Demo 10</em></a>
+      <a class="deepseek-card" href="deepseek/deepseek-demo-11.html"><strong>Live Load Map 3D</strong><span>מפת עומס חיה בתלת ממד</span><em>Demo 11</em></a>
+      <a class="deepseek-card" href="deepseek/deepseek-demo-12.html"><strong>Dynamic Risk Map 3D</strong><span>מפת סיכון דינמית בתלת ממד</span><em>Demo 12</em></a>
+      <a class="deepseek-card" href="deepseek/deepseek-demo-13.html"><strong>Research HTML Prototype</strong><span>דף מחקר ניסיוני מתוך DeepSeek</span><em>Demo 13</em></a>
+    </div>
+  </section>
+
+  <section id="sources" class="band"><div class="section-head"><h2>חומרי מקור וארכיון</h2><p>חומרי המקור קיימים בגרסה המקומית, אבל לא מפורסמים באתר החי כדי לא לחשוף PDF/TXT/Python החוצה. האתר הציבורי כולל את כל הדמואים והמשחקים הפעילים.</p></div><div class="source-grid"><a class="source" href="robot-avot.html"><div><h3>רובוט אבות</h3><p>שכבת מודיעין לטקסטים: אוסף כותרות וקישורים, הופך אותם לתצוגת כתבה פנימית, מפת מקורות, גרפים, סינון וייצוא CSV.</p></div><div class="open">פתח קונסול</div></a><a class="source" href="world-feed.html"><div><h3>כותרות רצות מכל העולם</h3><p>מסך חדשות חי עם כותרות רצות סביב רחפנים, סיב אופטי ו־OFDR.</p></div><div class="open">פתח מסך</div></a><a class="source" href="news.html"><div><h3>ארכיון כתבות</h3><p>חיפוש כתבות וקישורים לפי נושא וטווח זמן עד חמש שנים.</p></div><div class="open">פתח חדשות</div></a><a class="source" href="about.html"><div><h3>מי בנה מה</h3><p>הסבר מלא על DeepSeek, Grok, Claude, Codex והמטרה של גן המשחקים.</p></div><div class="open">פתח הסבר</div></a><div class="source"><div><h3>ארכיון מקומי</h3><p>README, PDFים, טקסטים וקוד Python נשמרים במחשב ולא עולים לאתר הציבורי.</p></div><div class="open">בטוח לפרסום</div></div><a class="source" href="apps/cablevitality_game_original.html"><div><h3>Ghost Tether</h3><p>המשחק המקורי הוא הכניסה הראשית.</p></div><div class="open">שחק עכשיו</div></a></div></section>
+</main>
+
+<footer>
+  <div class="shell">CableVitality AI Drone Lab - אתר ניסויים חי למודלים, דמואים וסימולציות רחפן קשור.</div>
+</footer>
+<script>
+async function loadTicker(){
+  try{
+    const res = await fetch('/.netlify/functions/news-feed?topic=all&max=12&years=5');
+    const data = await res.json();
+    const first = data.articles && data.articles[0];
+    const ticker = document.getElementById('newsTicker');
+    if(first){
+      ticker.href = first.url || 'news.html';
+      ticker.innerHTML = '<span>כותרת אחרונה</span>' + first.title + ' · ' + (first.source || 'source') + ' · <span>לכל הארכיון</span>';
+    }
+  }catch(e){}
+}
+loadTicker();
+</script>
+<div class="cv-mobile-orbit" aria-hidden="true"></div>
+<script src="assets/site-polish.js"></script>
+</body>
+</html>
+
+
+
+
+

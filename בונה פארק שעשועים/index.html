@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="בונה פארק שעשועים בדפדפן — סגנון RCT">
+<title>פארק שעשועים RCT</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans Hebrew',Segoe UI,sans-serif;min-height:100vh;background:linear-gradient(135deg,#0369a1 0%,#0c4a6e 50%,#082f49 100%);color:#fff;padding:20px;line-height:1.6}
+.top-nav a{color:rgba(255,255,255,.92);text-decoration:none;font-weight:600;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);display:inline-block;margin-bottom:18px}
+.wrap{max-width:900px;margin:0 auto}
+h1{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:8px}
+.sub{opacity:.85;margin-bottom:24px}
+.panel{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:24px;backdrop-filter:blur(8px)}
+.btn{display:inline-block;margin-top:16px;padding:12px 22px;border-radius:999px;background:#f5c842;color:#1a1a2e;font-weight:700;border:none;cursor:pointer;font-size:1rem}
+.btn:hover{filter:brightness(1.08)}
+.score{font-size:2rem;font-weight:900;color:#f5c842;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px}
+.card{background:rgba(0,0,0,.2);border-radius:12px;padding:16px;text-align:center;cursor:pointer;border:2px solid transparent;transition:.2s}
+.card:hover,.card.active{border-color:#f5c842;transform:translateY(-2px)}
+canvas{display:block;margin:16px auto;border-radius:12px;background:#0a0a14;max-width:100%}
+input[type=range]{width:100%;margin:8px 0}
+label{font-size:.9rem;opacity:.9}
+</style>
+</head>
+<body>
+<nav class="top-nav"><a href="https://storied-alfajores-6f10d2.netlify.app/">← תיק עבודות Patlas</a></nav>
+<div class="wrap">
+
+<h1>🎢 פארק שעשועים RCT</h1>
+<p class="sub">בנו את הפארק — לחצו על הקרקע להוספת מתקן</p>
+<div class="panel">
+  <div class="grid" id="tools"></div>
+  <canvas id="c" width="640" height="400"></canvas>
+  <p>כסף: ₪<span id="money">5000</span> · מבקרים: <span id="vis">0</span> · דירוג: ⭐<span id="rate">3.0</span></p>
+</div>
+</div>
+<script>
+const TYPES=[{id:'coaster',name:'רכבת הרים',cost:800,emoji:'🎢',w:3,h:2},{id:'ferris',name:'גלגל ענק',cost:500,emoji:'🎡',w:2,h:2},{id:'carousel',name:'קרוסלה',cost:300,emoji:'🎠',w:2,h:1},{id:'food',name:'דוכן אוכל',cost:150,emoji:'🍿',w:1,h:1}];
+let sel=TYPES[0],grid=[],money=5000,vis=0,rate=3;
+const c=document.getElementById('c'),x=c.getContext('2d'),cols=16,rows=10,cw=640/cols,ch=400/rows;
+const tg=document.getElementById('tools');
+TYPES.forEach(t=>{const d=document.createElement('div');d.className='card'+(t===sel?' active':'');d.innerHTML='<span style="font-size:1.8rem">'+t.emoji+'</span><br>'+t.name+'<br><small>₪'+t.cost+'</small>';
+d.onclick=()=>{sel=t;document.querySelectorAll('#tools .card').forEach((c,i)=>c.classList.toggle('active',TYPES[i]===t))};tg.appendChild(d)});
+c.onclick=e=>{const r=c.getBoundingClientRect(),gx=Math.floor((e.clientX-r.left)/cw),gy=Math.floor((e.clientY-r.top)/ch);
+if(money<sel.cost||grid.some(g=>gx<g.x+g.w&&gx+sel.w>g.x&&gy<g.y+g.h&&gy+sel.h>g.y))return;
+money-=sel.cost;grid.push({...sel,x:gx,y:gy});vis+=Math.floor(sel.cost/50);rate=Math.min(5,rate+.1);draw()};
+function draw(){x.fillStyle='#14532d';x.fillRect(0,0,640,400);
+for(let i=0;i<=cols;i++){x.strokeStyle='#166534';x.beginPath();x.moveTo(i*cw,0);x.lineTo(i*cw,400);x.stroke()}
+for(let j=0;j<=rows;j++){x.beginPath();x.moveTo(0,j*ch);x.lineTo(640,j*ch);x.stroke()}
+grid.forEach(g=>{x.fillStyle='#fef3c7';x.fillRect(g.x*cw+2,g.y*ch+2,g.w*cw-4,g.h*ch-4);x.font='24px serif';x.fillText(g.emoji,g.x*cw+g.w*cw/2-12,g.y*ch+g.h*ch/2+8)});
+document.getElementById('money').textContent=money;document.getElementById('vis').textContent=vis;document.getElementById('rate').textContent=rate.toFixed(1)}
+draw();setInterval(()=>{if(grid.length){money+=grid.length*2;vis+=grid.length;draw()}},3000);
+</script></body></html>

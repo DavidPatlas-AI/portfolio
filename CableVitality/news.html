@@ -1,0 +1,98 @@
+﻿<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CableVitality | ארכיון כתבות</title>
+<style>
+:root{color-scheme:dark;--bg:#050908;--ink:#f5fbf8;--soft:#d8ebe4;--muted:#99aaa6;--line:rgba(245,251,248,.14);--panel:rgba(13,22,21,.78);--panel2:rgba(20,31,29,.9);--green:#42d392;--cyan:#6fd6ff;--amber:#ffd166;--shadow:0 30px 100px rgba(0,0,0,.38)}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at 12% 8%,rgba(66,211,146,.18),transparent 28%),radial-gradient(circle at 86% 4%,rgba(111,214,255,.14),transparent 28%),linear-gradient(180deg,#07100f,#050908)}a{color:inherit}.shell{width:min(1220px,calc(100% - 32px));margin:0 auto}
+.top{padding:44px 0 24px}.back{display:inline-flex;min-height:44px;align-items:center;padding:0 15px;border-radius:8px;background:var(--green);color:#04110e;text-decoration:none;font-weight:900}.kicker{color:var(--green);font-weight:900;margin:22px 0 12px}h1{font-size:clamp(42px,7vw,92px);line-height:.94;margin:0}.lead{max-width:820px;color:var(--soft);font-size:20px;line-height:1.65}.ticker{border:1px solid var(--line);border-radius:8px;background:rgba(66,211,146,.08);padding:15px 18px;margin:22px 0;overflow:hidden}.ticker a{text-decoration:none;color:var(--soft);font-weight:900}.ticker span{color:var(--green);margin-left:12px}
+.controls{display:grid;grid-template-columns:1fr 180px 150px 130px;gap:10px;margin:18px 0 24px}.control,.btn{min-height:46px;border-radius:8px;border:1px solid var(--line);background:var(--panel2);color:var(--ink);padding:0 13px;font:inherit}.btn{background:var(--green);color:#04110e;font-weight:900;cursor:pointer;border:0}.grid{display:grid;grid-template-columns:1fr 320px;gap:16px}.articles{display:grid;gap:10px}.article{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:16px;text-decoration:none}.article:hover{border-color:rgba(66,211,146,.62)}.article h2{font-size:22px;margin:0 0 8px}.article p{margin:0;color:var(--muted);line-height:1.5}.article .meta{display:flex;gap:10px;flex-wrap:wrap;color:var(--green);font-weight:900;font-size:13px;margin-top:14px}.side{display:grid;gap:12px;align-self:start;position:sticky;top:14px}.panel{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:16px}.panel h3{margin:0 0 10px;font-size:22px}.panel p,.panel li{color:var(--muted);line-height:1.6}.panel ul{margin:0;padding:0 18px 0 0}.query-link{display:block;text-decoration:none;border-top:1px solid var(--line);padding:10px 0;color:var(--soft)}.empty{border:1px solid var(--line);border-radius:8px;background:var(--panel);padding:24px;color:var(--muted)}@media(max-width:900px){.grid,.controls{grid-template-columns:1fr}.side{position:static}}
+</style>
+<link rel="stylesheet" href="assets/mobile-shell.css">
+<link rel="stylesheet" href="assets/site-polish.css">
+</head>
+<body>
+<header class="shell top">
+  <a class="back" href="index.html">חזרה לאתר</a>
+  <p class="kicker">Live Intelligence Feed</p>
+  <h1>ארכיון כתבות</h1>
+  <p class="lead">דף שמרכז כתבות וקישורים מהשנים האחרונות סביב סיב אופטי, רחפנים קשורים, tethered UAV, OFDR וחישה לאורך כבל. הנתונים מגיעים ממנוע חדשות ציבורי ומתעדכנים לפי חיפוש.</p>
+  <div class="ticker"><a id="ticker" href="#"><span>כותרת אחרונה</span>טוען...</a></div>
+</header>
+<main class="shell">
+  <section class="controls">
+    <input class="control" id="q" placeholder="חיפוש חופשי, למשל: fiber optic tethered drone">
+    <select class="control" id="topic">
+      <option value="all">כל הנושאים</option>
+      <option value="tether">רחפן קשור</option>
+      <option value="fiber">סיב אופטי</option>
+      <option value="sensing">OFDR / חישה</option>
+      <option value="defense">ביטחוני</option>
+    </select>
+    <select class="control" id="years">
+      <option value="5">5 שנים</option>
+      <option value="3">3 שנים</option>
+      <option value="1">שנה</option>
+    </select>
+    <button class="btn" onclick="loadNews()">חפש</button>
+  </section>
+  <section class="grid">
+    <div class="articles" id="articles"><div class="empty">טוען כתבות...</div></div>
+    <aside class="side">
+      <div class="panel"><h3>מה הדף עושה</h3><p>הוא אוסף כותרות, מקורות וקישורים. הוא לא מעתיק כתבות מלאות, כדי לשמור על זכויות יוצרים.</p></div>
+      <div class="panel"><h3>חיפושים מוכנים</h3>
+        <a class="query-link" target="_blank" href="https://news.google.com/search?q=fiber%20optic%20tethered%20drone%20when%3A5y">Google News: fiber optic tethered drone</a>
+        <a class="query-link" target="_blank" href="https://news.google.com/search?q=tethered%20UAV%20fiber%20optic%20when%3A5y">Google News: tethered UAV fiber optic</a>
+        <a class="query-link" target="_blank" href="https://news.google.com/search?q=OFDR%20cable%20drone%20when%3A5y">Google News: OFDR cable drone</a>
+        <a class="query-link" target="_blank" href="https://scholar.google.com/scholar?q=fiber+optic+tethered+drone">Google Scholar: מחקרים</a>
+      </div>
+      <div class="panel"><h3>סוגי מקורות</h3><ul><li>חדשות טכנולוגיה</li><li>אתרי רחפנים</li><li>אתרי ביטחון</li><li>מחקר אקדמי</li><li>אופטיקה וסיבים</li></ul></div>
+    </aside>
+  </section>
+</main>
+<script>
+const fallbackArticles=[
+  {title:'Google News: fiber optic tethered drone',url:'https://news.google.com/search?q=fiber%20optic%20tethered%20drone%20when%3A5y',source:'Google News',date:''},
+  {title:'Google News: tethered UAV fiber optic',url:'https://news.google.com/search?q=tethered%20UAV%20fiber%20optic%20when%3A5y',source:'Google News',date:''},
+  {title:'Google News: optical fiber UAV',url:'https://news.google.com/search?q=optical%20fiber%20UAV%20when%3A5y',source:'Google News',date:''},
+  {title:'Google News: OFDR cable drone',url:'https://news.google.com/search?q=OFDR%20cable%20drone%20when%3A5y',source:'Google News',date:''},
+  {title:'Google Scholar: fiber optic tethered drone',url:'https://scholar.google.com/scholar?q=fiber+optic+tethered+drone',source:'Google Scholar',date:''},
+  {title:'Google Scholar: distributed fiber sensing drone cable',url:'https://scholar.google.com/scholar?q=distributed+fiber+sensing+drone+cable',source:'Google Scholar',date:''},
+  {title:'IEEE Xplore: fiber optic drone tether',url:'https://ieeexplore.ieee.org/search/searchresult.jsp?queryText=fiber%20optic%20drone%20tether',source:'IEEE Xplore',date:''},
+  {title:'arXiv: UAV fiber optic sensing',url:'https://arxiv.org/search/?query=UAV+fiber+optic+sensing&searchtype=all',source:'arXiv',date:''}
+];
+function fmtDate(s){ if(!s) return ''; const d=new Date(s.replace(' ', 'T')); return isNaN(d) ? s : d.toLocaleDateString('he-IL'); }
+function articleHtml(a){ return `<a class="article" href="${a.url}" target="_blank" rel="noopener"><h2>${a.title}</h2><p>${a.url}</p><div class="meta"><span>${a.source || 'source'}</span><span>${fmtDate(a.date)}</span></div></a>`; }
+function renderNews(list, note){
+  const ticker=document.getElementById('ticker');
+  if(list[0]){ ticker.href=list[0].url; ticker.innerHTML='<span>כותרת אחרונה</span>'+list[0].title+' · '+(list[0].source||'source'); }
+  document.getElementById('articles').innerHTML=(note?'<div class="empty">'+note+'</div>':'')+list.map(articleHtml).join('');
+}
+async function loadNews(){
+  const topic=document.getElementById('topic').value;
+  const years=document.getElementById('years').value;
+  const q=document.getElementById('q').value.trim();
+  const box=document.getElementById('articles');
+  box.innerHTML='<div class="empty">מחפש כתבות...</div>';
+  if(location.protocol==='file:'){
+    renderNews(fallbackArticles,'פתחת את הדף כקובץ מקומי. הפיד החי של Netlify עובד באתר, וכאן מוצגים קישורי חדשות ומחקר מוכנים.');
+    return;
+  }
+  const url='/.netlify/functions/news-feed?topic='+encodeURIComponent(topic)+'&years='+years+'&max=120'+(q?'&q='+encodeURIComponent(q):'');
+  try{
+    const res=await fetch(url);
+    const data=await res.json();
+    const list=(data.articles&&data.articles.length)?data.articles:fallbackArticles;
+    renderNews(list,data.fallback?'מנוע החדשות החי לא החזיר תוצאות עכשיו, לכן מוצגים קישורי חיפוש ומחקר מוכנים.':'');
+  }catch(e){ renderNews(fallbackArticles,'הפיד החי לא נטען כרגע, לכן מוצגים קישורי חדשות ומחקר מוכנים.'); }
+}
+loadNews();
+</script>
+<div class="cv-mobile-orbit" aria-hidden="true"></div>
+<script src="assets/site-polish.js"></script>
+</body>
+</html>
+
+

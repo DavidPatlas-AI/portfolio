@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0;url=index.html">
+    <link rel="canonical" href="index.html">
+    <title>פוליגרף דיגיטלי - מעביר לאפליקציה...</title>
+    <script>location.replace('index.html');</script>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rubik', sans-serif;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Language Switch */
+        .language-switch {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 15px;
+            border-radius: 25px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .language-switch a {
+            color: white;
+            text-decoration: none;
+            margin: 0 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .language-switch a:hover {
+            color: #ff6b6b;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+        }
+
+        .language-switch a.active {
+            color: #ff6b6b;
+            text-shadow: 0 0 10px rgba(255, 107, 107, 0.8);
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        /* Back Button */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 152, 0, 0.9);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-decoration: none;
+            font-weight: bold;
+            font-family: 'Rubik', sans-serif;
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.3);
+        }
+        
+        .back-btn:hover {
+            background: rgba(255, 167, 38, 1);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 152, 0, 0.4);
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 40px 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Project Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* Sections */
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #ff6b6b;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #ff6b6b;
+            padding-bottom: 10px;
+        }
+
+        /* Version Grid */
+        .versions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .version-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #ff6b6b;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .version-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.2);
+        }
+
+        .version-card.skeleton {
+            opacity: 0.6;
+            border-left-color: #ccc;
+        }
+
+        .version-card.skeleton:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .version-card h3 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .version-card.skeleton h3 {
+            color: #999;
+        }
+
+        .version-card p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .version-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .version-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .version-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .version-btn.skeleton {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .version-btn.skeleton:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* WhatsApp Button */
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .whatsapp-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+        }
+
+        /* Features List */
+        .features-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .feature-item {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        /* Research Files */
+        .research-files {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .research-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .research-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .research-card h4 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        /* Research Section */
+        .research-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .research-section h2 {
+            color: white;
+            border-bottom-color: white;
+        }
+
+        .research-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            margin: 10px;
+        }
+
+        .research-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-buttons {
+                position: static;
+                flex-direction: row;
+                justify-content: center;
+                margin-bottom: 20px;
+            }
+
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .versions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Back Button -->
+    <a class='back-btn' href='/'>← חזרה לעמוד הראשי</a>
+    
+    <!-- Language Switch -->
+    <div class="language-switch">
+        <a href="homepage.html" class="active">עברית</a> |
+        <a href="homepage_en.html">EN</a> |
+        <a href="homepage_ru.html">RU</a>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+        <a class='nav-btn' href='/'>
+            <i class="fas fa-home"></i>
+            <span>דף הבית הראשי</span>
+        </a>
+        <a class='nav-btn' href='/project_gallery'>
+            <i class="fas fa-images"></i>
+            <span>גלריית פרויקטים</span>
+        </a>
+        <a href="https://wa.me/972547923366?text=שלום דוד! אני מעוניין בפוליגרף דיגיטלי - מערכת מתקדמת לניתוח אמת ושקר עם מחקרים מדעיים. אשמח לשמוע פרטים נוספים על הפרויקט!" class="nav-btn whatsapp-btn" target="_blank">
+            <i class="fab fa-whatsapp"></i>
+            <span>צור קשר</span>
+        </a>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🔍 פוליגרף דיגיטלי</h1>
+            <p>מערכת פוליגרף מתקדמת לניתוח אמת ושקר. כוללת מחקרים מדעיים, קבצי PDF מקצועיים, כלים לניתוח מתקדם וממשק משתמש מתקדם. מושלם למחקר, אבטחה וניתוח התנהגותי.</p>
+        </div>
+
+        <!-- Project Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">גרסאות פעילות</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">2</div>
+                <div class="stat-label">מחקרים מדעיים</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">דיוק מחקרי</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">זמינות</div>
+            </div>
+        </div>
+
+        <!-- Main Features -->
+        <div class="section">
+            <h2>🌟 תכונות עיקריות</h2>
+            <div class="features-list">
+                <div class="feature-item">🔍 ניתוח אמת ושקר</div>
+                <div class="feature-item">📊 מחקרים מדעיים</div>
+                <div class="feature-item">📄 קבצי PDF מקצועיים</div>
+                <div class="feature-item">⚡ ניתוח בזמן אמת</div>
+                <div class="feature-item">🎯 דיוק גבוה</div>
+                <div class="feature-item">🔒 אבטחה מתקדמת</div>
+            </div>
+        </div>
+
+        <!-- Research Section -->
+        <div class="research-section">
+            <h2>📚 מחקרים מדעיים</h2>
+            <p style="margin-bottom: 20px; font-size: 1.1em;">
+                מחקרים מדעיים מקיפים על טכנולוגיות פוליגרף - קבצי PDF מקצועיים להורדה
+            </p>
+            <a href="פוליגרף מחקר.pdf" class="research-btn" target="_blank">
+                <i class="fas fa-file-pdf"></i>
+                מחקר פוליגרף ראשי
+            </a>
+            <a href="פוליגרף מחקר 2.pdf" class="research-btn" target="_blank">
+                <i class="fas fa-file-pdf"></i>
+                מחקר פוליגרף שני
+            </a>
+        </div>
+
+        <!-- Active Versions -->
+        <div class="section">
+            <h2>✅ גרסאות פעילות</h2>
+            <div class="versions-grid">
+                <div class="version-card" onclick="window.open('polygraph-homepage.html', '_blank')">
+                    <h3>דף הבית של הפוליגרף</h3>
+                    <p>דף הבית הראשי של מערכת הפוליגרף הדיגיטלי</p>
+                    <div class="version-links">
+                        <a href="polygraph-homepage.html" class="version-btn" target="_blank">פתח</a>
+                    </div>
+                </div>
+
+                <div class="version-card" onclick="window.open('enhanced_polygraph_app.html', '_blank')">
+                    <h3>אפליקציית פוליגרף משופרת</h3>
+                    <p>אפליקציה מתקדמת עם יכולות ניתוח משופרות</p>
+                    <div class="version-links">
+                        <a href="enhanced_polygraph_app.html" class="version-btn" target="_blank">פתח</a>
+                    </div>
+                </div>
+
+                <div class="version-card" onclick="window.open('polygraph_detector.html', '_blank')">
+                    <h3>מגלה פוליגרף</h3>
+                    <p>כלי מתקדם לגילוי וניתוח פוליגרף</p>
+                    <div class="version-links">
+                        <a href="polygraph_detector.html" class="version-btn" target="_blank">פתח</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentation -->
+        <div class="section">
+            <h2>📖 תיעוד ומחקר</h2>
+            <div class="versions-grid">
+                <div class="version-card" onclick="window.open('compass_artifact_wf-5c411e12-a52c-43cf-810b-cbe62c88e024_text_markdown.md', '_blank')">
+                    <h3>תיעוד מחקר 1</h3>
+                    <p>תיעוד מפורט של מחקר פוליגרף ראשון</p>
+                    <div class="version-links">
+                        <a href="compass_artifact_wf-5c411e12-a52c-43cf-810b-cbe62c88e024_text_markdown.md" class="version-btn" target="_blank">פתח</a>
+                    </div>
+                </div>
+
+                <div class="version-card" onclick="window.open('compass_artifact_wf-8e11243d-3719-4306-a834-2399ba3311cf_text_markdown.md', '_blank')">
+                    <h3>תיעוד מחקר 2</h3>
+                    <p>תיעוד מפורט של מחקר פוליגרף שני</p>
+                    <div class="version-links">
+                        <a href="compass_artifact_wf-8e11243d-3719-4306-a834-2399ba3311cf_text_markdown.md" class="version-btn" target="_blank">פתח</a>
+                    </div>
+                </div>
+
+                <div class="version-card" onclick="window.open('פוליגרף/compass_artifact_wf-ed8b9de9-380f-413b-a2ce-40927b2009f5_text_markdown.md', '_blank')">
+                    <h3>תיעוד מחקר 3</h3>
+                    <p>תיעוד מחקר נוסף על פוליגרף</p>
+                    <div class="version-links">
+                        <a href="פוליגרף/compass_artifact_wf-ed8b9de9-380f-413b-a2ce-40927b2009f5_text_markdown.md" class="version-btn" target="_blank">פתח</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Old Versions / Skeletons -->
+        <div class="section">
+            <h2>📦 גרסאות ישנות / שלדים</h2>
+            <div class="versions-grid">
+                <div class="version-card skeleton">
+                    <h3>polygraph_detector (1).html</h3>
+                    <p>שלד בלבד - לא פעיל</p>
+                    <div class="version-links">
+                        <span class="version-btn skeleton">שלד בלבד</span>
+                    </div>
+                </div>
+
+                <div class="version-card skeleton">
+                    <h3>polygraph_detector (2).html</h3>
+                    <p>שלד בלבד - לא פעיל</p>
+                    <div class="version-links">
+                        <span class="version-btn skeleton">שלד בלבד</span>
+                    </div>
+                </div>
+
+                <div class="version-card skeleton">
+                    <h3>polygraph_detector (3).html</h3>
+                    <p>שלד בלבד - לא פעיל</p>
+                    <div class="version-links">
+                        <span class="version-btn skeleton">שלד בלבד</span>
+                    </div>
+                </div>
+
+                <div class="version-card skeleton">
+                    <h3>polygraph_detector (4).html</h3>
+                    <p>שלד בלבד - לא פעיל</p>
+                    <div class="version-links">
+                        <span class="version-btn skeleton">שלד בלבד</span>
+                    </div>
+                </div>
+
+                <div class="version-card skeleton">
+                    <h3>polygraph_detector (5).html</h3>
+                    <p>שלד בלבד - לא פעיל</p>
+                    <div class="version-links">
+                        <span class="version-btn skeleton">שלד בלבד</span>
+                    </div>
+                </div>
+
+                <div class="version-card skeleton">
+                    <h3>polygraph_detector (6).html</h3>
+                    <p>שלד בלבד - לא פעיל</p>
+                    <div class="version-links">
+                        <span class="version-btn skeleton">שלד בלבד</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="section">
+            <h2>📞 צור קשר</h2>
+            <p style="text-align: center; margin-bottom: 20px; font-size: 1.1em;">
+                יש לך שאלות על הפרויקט? רוצה לשמוע על תכונות נוספות?
+            </p>
+            <div style="text-align: center;">
+                <a href="https://wa.me/972547923366?text=שלום דוד! אני מעוניין בפוליגרף דיגיטלי - מערכת מתקדמת לניתוח אמת ושקר עם מחקרים מדעיים. אשמח לשמוע פרטים נוספים על הפרויקט!" class="whatsapp-btn" target="_blank">
+                    <i class="fab fa-whatsapp"></i>
+                    צור קשר בווטסאפ
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add hover effects to version cards
+        document.querySelectorAll('.version-card:not(.skeleton)').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html> 

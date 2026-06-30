@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="משחק ניחוש מחירים לכל המשפחה — חינוכי ומהנה">
+<title>הכל בכסף — משחק ניחוש מחירים</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans Hebrew',Segoe UI,sans-serif;min-height:100vh;background:linear-gradient(135deg,#1a5f2a 0%,#0d3d1a 50%,#062810 100%);color:#fff;padding:20px;line-height:1.6}
+.top-nav a{color:rgba(255,255,255,.92);text-decoration:none;font-weight:600;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);display:inline-block;margin-bottom:18px}
+.wrap{max-width:900px;margin:0 auto}
+h1{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:8px}
+.sub{opacity:.85;margin-bottom:24px}
+.panel{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:24px;backdrop-filter:blur(8px)}
+.btn{display:inline-block;margin-top:16px;padding:12px 22px;border-radius:999px;background:#f5c842;color:#1a1a2e;font-weight:700;border:none;cursor:pointer;font-size:1rem}
+.btn:hover{filter:brightness(1.08)}
+.score{font-size:2rem;font-weight:900;color:#f5c842;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px}
+.card{background:rgba(0,0,0,.2);border-radius:12px;padding:16px;text-align:center;cursor:pointer;border:2px solid transparent;transition:.2s}
+.card:hover,.card.active{border-color:#f5c842;transform:translateY(-2px)}
+canvas{display:block;margin:16px auto;border-radius:12px;background:#0a0a14;max-width:100%}
+input[type=range]{width:100%;margin:8px 0}
+label{font-size:.9rem;opacity:.9}
+</style>
+</head>
+<body>
+<nav class="top-nav"><a href="https://storied-alfajores-6f10d2.netlify.app/">← תיק עבודות Patlas</a></nav>
+<div class="wrap">
+
+<h1>💰 הכל בכסף</h1>
+<p class="sub">נחשו כמה עולה המוצר — משחק משפחתי עם מחירים ישראליים 2026</p>
+<div class="panel">
+  <p id="item" style="font-size:1.4rem;font-weight:700"></p>
+  <p id="hint" style="opacity:.75;font-size:.95rem;margin-top:6px"></p>
+  <label>הניחוש שלך (₪): <input type="number" id="guess" min="1" style="width:120px;padding:8px;border-radius:8px;border:none;margin-right:8px"></label>
+  <button class="btn" id="check">בדוק!</button>
+  <button class="btn" id="skip" style="background:rgba(255,255,255,.2);color:#fff;margin-right:8px">דלג</button>
+  <p class="score">ניקוד: <span id="score">0</span> · רצף: <span id="streak">0</span></p>
+  <p id="result" style="min-height:1.5em;font-weight:600"></p>
+</div>
+</div>
+<script>
+const ITEMS=[
+  {n:'חלב תנובה 3%',h:'ליטר',p:6.9},{n:'לחם אחיד',h:'800 גרם',p:5.5},{n:'ביצים L',h:'תריסר',p:14.9},
+  {n:'קוטג' 5%',h:'250 גרם',p:5.9},{n:'עגבניות',h:'ק"ג',p:7.5},{n:'בננה',h:'ק"ג',p:9.9},
+  {n:'קוקה קולה',h:'1.5 ליטר',p:8.9},{n:'טוסטים',h:'חבילה',p:12.5},{n:'חומוס',h:'400 גרם',p:6.5},
+  {n:'שמן זית',h:'750 מ"ל',p:28},{n:'טונה',h:'4 יחידות',p:22},{n:'נייר טואלט',h:'32 גלילים',p:35},
+  {n:'סמארטפון בסיסי',h:'מסך 6.5"',p:599},{n:'אוזניות Bluetooth',h:'איכות בינונית',p:89},
+  {n:'כיסא גיימינג',h:'ergonomic',p:450},{n:'מקרר בינוני',h:'350 ליטר',p:2890}
+];
+let idx=-1,score=0,streak=0,used=[];
+function next(){
+  if(used.length>=ITEMS.length)used=[];
+  let i;do{i=Math.floor(Math.random()*ITEMS.length)}while(used.includes(i));
+  used.push(i);idx=i;
+  const it=ITEMS[i];
+  document.getElementById('item').textContent=it.n+' — '+it.h;
+  document.getElementById('hint').textContent='טיפ: חשבו על מחיר סופר ישראלי ממוצע';
+  document.getElementById('guess').value='';
+  document.getElementById('result').textContent='';
+}
+function check(){
+  const g=+document.getElementById('guess').value;
+  if(!g||idx<0)return;
+  const it=ITEMS[idx],diff=Math.abs(g-it.p),pct=diff/it.p;
+  let pts=0,msg='';
+  if(pct<=.1){pts=100;streak++;msg='🎯 מדויק! המחיר: ₪'+it.p;}
+  else if(pct<=.25){pts=60;streak++;msg='👍 קרוב! המחיר: ₪'+it.p+' (הניחוש: ₪'+g+')';}
+  else if(pct<=.5){pts=30;streak=0;msg='📊 לא רע. המחיר: ₪'+it.p;}
+  else{streak=0;msg='😅 רחוק. המחיר האמיתי: ₪'+it.p;}
+  score+=pts;
+  document.getElementById('score').textContent=score;
+  document.getElementById('streak').textContent=streak;
+  document.getElementById('result').textContent=msg+' (+'+pts+' נק')';
+  setTimeout(next,2200);
+}
+document.getElementById('check').onclick=check;
+document.getElementById('skip').onclick=next;
+document.getElementById('guess').onkeydown=e=>{if(e.key==='Enter')check()};
+next();
+</script></body></html>

@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>?? ???? | ????? ???? ?????? ????</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js">
+    </script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
+    <style>
+        :root {
+            --bg: #080e1a;
+            --surface: #101826;
+            --surface2: #18202e;
+            --surface3: #1e2737;
+            --text: #eef2f6;
+            --text2: #8b9bb5;
+            --accent: #00f2a7;
+            --accent2: #009fdf;
+            --accent3: #f5a623;
+            --accent4: #ff6b6b;
+            --gold: #f5c542;
+            --border: #1f2a3a;
+            --radius: 14px;
+            --radius-sm: 8px;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --transition: 0.25s ease;
+        }
+        .light-mode {
+            --bg: #f4f7fb;
+            --surface: #ffffff;
+            --surface2: #edf1f7;
+            --surface3: #e1e7f0;
+            --text: #1a2435;
+            --text2: #4a5568;
+            --accent: #007a4d;
+            --accent2: #005a8c;
+            --accent3: #c47f00;
+            --accent4: #d63031;
+            --border: #d0d9e4;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            padding: 18px;
+            min-height: 100vh;
+            transition: background var(--transition), color var(--transition);
+            line-height: 1.5;
+            background-image: radial-gradient(circle at 20% 20%, rgba(0, 242, 167, 0.04) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 159, 223, 0.04) 0%, transparent 50%);
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+        .header {
+            background: rgba(16, 24, 38, 0.8);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 22px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: var(--shadow);
+        }
+        .header h1 {
+            font-size: 1.7rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.3px;
+        }
+        .subtitle {
+            font-size: 0.75rem;
+            color: var(--text2);
+        }
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 10px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+        .btn:hover {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(0, 242, 167, 0.3);
+            transform: translateY(-1px);
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #000;
+            border: none;
+        }
+        .live-badge {
+            background: rgba(255, 60, 60, 0.1);
+            border: 1px solid rgba(255, 60, 60, 0.4);
+            color: #ff4d4d;
+            padding: 8px 16px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            animation: livePulse 2s infinite;
+        }
+        .live-dot {
+            width: 9px;
+            height: 9px;
+            background: #ff4d4d;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #ff4d4d;
+        }
+        @keyframes livePulse {
+            0%,
+            100% {
+                box-shadow: 0 0 12px rgba(255, 60, 60, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 28px rgba(255, 60, 60, 0.6);
+            }
+        }
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+        @media (max-width: 960px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+        .card-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            transition: background var(--transition);
+        }
+        .card-panel h3 {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text);
+        }
+        #map {
+            height: 280px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+        .robot-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 16px 0;
+            background: var(--surface2);
+            border-radius: var(--radius);
+            padding: 16px;
+        }
+        .robot-face {
+            font-size: 3.2rem;
+            transition: 0.2s;
+            filter: drop-shadow(0 8px 12px rgba(0, 0, 0, 0.4));
+        }
+        .speech-bubble {
+            background: var(--surface3);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 12px 18px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            right: -10px;
+            top: 50%;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-left-color: var(--border);
+            border-right: 0;
+            margin-top: -10px;
+        }
+        .stats-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 12px 0;
+        }
+        .stat-item {
+            background: var(--surface2);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            text-align: center;
+            flex: 1;
+            min-width: 60px;
+        }
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .stat-label {
+            font-size: 0.6rem;
+            color: var(--text2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .feed-scroll {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .article-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            gap: 12px;
+            transition: all 0.2s;
+            animation: slideUp 0.4s ease;
+        }
+        .article-card.new-highlight {
+            border-color: var(--accent);
+            box-shadow: 0 0 18px rgba(0, 242, 167, 0.3);
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .article-card:hover {
+            border-color: var(--accent2);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        }
+        .article-img {
+            width: 70px;
+            height: 50px;
+            border-radius: 6px;
+            object-fit: cover;
+            background: #1e2a3a;
+        }
+        .article-content {
+            flex: 1;
+        }
+        .article-meta {
+            font-size: 0.65rem;
+            color: var(--accent2);
+        }
+        .article-title {
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin: 4px 0;
+            cursor: pointer;
+        }
+        .article-snippet {
+            font-size: 0.7rem;
+            color: var(--text2);
+            line-height: 1.4;
+        }
+        .fav-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+            max-width: 1500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        @media (max-width: 800px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .chart-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            box-shadow: var(--shadow);
+            height: 220px;
+        }
+
+        /* ANALYZER SECTION */
+        .analyzer-section {
+            max-width: 1500px;
+            margin: 20px auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 800px) {
+            .analyzer-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        .analyzer-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+        .analyzer-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .analyzer-robot {
+            font-size: 2.5rem;
+            animation: thinker 2s ease-in-out infinite;
+        }
+        @keyframes thinker {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+        .weakness-item {
+            background: var(--surface2);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .weakness-icon {
+            font-size: 1.5rem;
+            color: var(--accent4);
+        }
+        .weakness-text h4 {
+            font-size: 0.85rem;
+            color: var(--accent4);
+            margin-bottom: 2px;
+        }
+        .weakness-text p {
+            font-size: 0.7rem;
+            color: var(--text2);
+        }
+        .link-item {
+            background: var(--surface2);
+            border: 1px solid rgba(245, 166, 35, 0.3);
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            margin-bottom: 6px;
+            font-size: 0.7rem;
+        }
+        .link-item .arrow {
+            color: var(--accent3);
+            margin: 0 6px;
+        }
+        .keyword-tag {
+            display: inline-block;
+            background: rgba(0, 242, 167, 0.15);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.65rem;
+            margin: 3px;
+            font-weight: 600;
+        }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            width: 90%;
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: #000;
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-weight: 700;
+            z-index: 2000;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            animation: fadeSlide 3s ease forwards;
+        }
+        @keyframes fadeSlide {
+            0% {
+                opacity: 0;
+                top: 10px;
+            }
+            10% {
+                opacity: 1;
+                top: 20px;
+            }
+            85% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 12px 0;
+        }
+        input[type="color"] {
+            width: 44px;
+            height: 34px;
+            border-radius: 6px;
+        }
+    </style>
+<link rel="stylesheet" href="assets/mobile-shell.css">
+<link rel="stylesheet" href="assets/site-polish.css">
+</head>
+<body>
+
+    <header class="header">
+        <div>
+            <h1>🌍 רובוט אבות + 🧠 רובוט מנתח</h1>
+            <div class="subtitle">רחפן סיב אופטי · 74 מדינות · תרגום אוטומטי · ניתוח חולשות</div>
+        </div>
+        <div class="header-actions">
+            <button class="btn" id="voiceBtn">🎤 פקודה קולית</button>
+            <button class="btn" id="darkModeToggle">🌓 מצב תאורה</button>
+            <button class="btn" id="settingsBtn">⚙️ הגדרות</button>
+            <span class="live-badge"><span class="live-dot"></span> LIVE</span>
+        </div>
+    </header>
+
+    <div class="dashboard">
+        <div class="card-panel">
+            <h3>🗺️ מפת עולם · מקורות כתבות</h3>
+            <div id="map"></div>
+            <div class="robot-area">
+                <div class="robot-face" id="robotFace">🤖</div>
+                <div class="speech-bubble" id="speechBubble">סורק גלובלי פעיל...</div>
+            </div>
+            <div class="stats-row">
+                <div class="stat-item"><div class="stat-value" id="totalVal">0</div><div class="stat-label">כתבות</div></div>
+                <div class="stat-item"><div class="stat-value" id="countriesVal">0</div><div class="stat-label">מדינות</div></div>
+                <div class="stat-item"><div class="stat-value" id="langsVal">0</div><div class="stat-label">שפות</div></div>
+                <div class="stat-item"><div class="stat-value" id="speedVal">0</div><div class="stat-label">לשעה</div></div>
+            </div>
+            <div id="flagsRow" style="font-size:1.3rem; margin-bottom:12px;"></div>
+            <div style="display:flex; gap:8px;">
+                <button class="btn" id="exportCSV">📥 ייצא CSV</button>
+                <button class="btn" id="printBtn">🖨️ הדפס</button>
+            </div>
+        </div>
+
+        <div class="card-panel">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <h3>📰 כתבות רחפן סיב אופטי</h3>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn" id="favTabBtn">⭐ מועדפים (<span id="favCount">0</span>)</button>
+                    <button class="btn" id="refreshFeedBtn">🔄 רענן</button>
+                </div>
+            </div>
+            <div class="feed-scroll" id="feedContainer"></div>
+            <div class="feed-scroll" id="favContainer" style="display:none;"></div>
+        </div>
+    </div>
+
+    <!-- ANALYZER SECTION -->
+    <div class="analyzer-section">
+        <div class="analyzer-panel">
+            <div class="analyzer-header">
+                <div class="analyzer-robot" id="analyzerRobot">🧠</div>
+                <div>
+                    <h3>🔍 רובוט מנתח · חולשות ונקודות תורפה</h3>
+                    <div class="subtitle" id="analyzerStatus">מנתח 0 כתבות...</div>
+                </div>
+            </div>
+            <div id="weaknessesContainer">
+                <p style="color:var(--text2);">ממתין לכתבות לניתוח...</p>
+            </div>
+            <div style="margin-top:12px;">
+                <h4 style="font-size:0.75rem; margin-bottom:6px;">🏷️ מילות מפתח שזוהו:</h4>
+                <div id="keywordsCloud"></div>
+            </div>
+        </div>
+
+        <div class="analyzer-panel">
+            <div class="analyzer-header">
+                <div style="font-size:2rem;">🔗</div>
+                <div>
+                    <h3>קישורים בין כתבות</h3>
+                    <div class="subtitle" id="linksCount">0 קישורים נמצאו</div>
+                </div>
+            </div>
+            <div id="linksContainer" style="max-height:350px; overflow-y:auto;">
+                <p style="color:var(--text2);">ממתין לניתוח קשרים...</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        <div class="chart-container"><canvas id="trendChart"></canvas></div>
+        <div class="chart-container"><canvas id="countryChart"></canvas></div>
+        <div class="chart-container"><canvas id="langChart"></canvas></div>
+        <div class="chart-container"><canvas id="hourlyChart"></canvas></div>
+    </div>
+
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-box">
+            <h2>⚙️ הגדרות</h2>
+            <div class="setting-row"><span>צבע אקצנט</span><input type="color" id="accentColor" value="#00f2a7"></div>
+            <div class="setting-row"><span>קצב סריקה (שניות)</span><input type="range" id="scanSpeedSlider" min="2" max="15" value="5"><span id="speedValue">5</span></div>
+            <button class="btn btn-accent" id="closeSettings" style="margin-top:12px;">שמור & סגור</button>
+        </div>
+    </div>
+    <div id="toast" class="toast" style="display:none;"></div>
+
+    <script>
+        (function() {
+            const DB = [
+                { id:1, th:'רחפן סיב אופטי חמקן נחשף בארה"ב', to:'Stealth Fiber-Optic Drone Revealed in USA', sh:'חיל האוויר האמריקאי בוחן רחפן עם סליל סיב אופטי עמיד בפני שיבושים.', src:'CNN', co:'ארה"ב', la:'אנגלית', fl:'🇺🇸', lat:37.1, lng:-95.7, sd:'us1', tags:['חמקן','שיבושים','ארה"ב','צבא'] },
+                { id:2, th:'בריטניה: רחפן סיב אופטי לניטור גבולות', to:'UK Fiber Optic Drone for Border Surveillance', sh:'משמר הגבול הבריטי מצטייד ברחפנים עם תקשורת סיב אופטי לפעולה באזורים מרוחקים.', src:'BBC', co:'בריטניה', la:'אנגלית', fl:'🇬🇧', lat:55.0, lng:-3.4, sd:'uk1', tags:['גבולות','ניטור','אזורים מרוחקים'] },
+                { id:3, th:'סין חושפת נחיל רחפני סיב אופטי', to:'中国展示光纤无人机蜂群', sh:'צבא סין מציג נחיל מתואם של 50 רחפנים עם סיב אופטי למשימות תקיפה.', src:'Xinhua', co:'סין', la:'סינית', fl:'🇨🇳', lat:35.0, lng:104.0, sd:'cn1', tags:['נחיל','תקיפה','סין','צבא'] },
+                { id:4, th:'רוסיה: רחפן סיב אופטי "קוב-10" מבצעי', to:'Россия: Боевой оптоволоконный дрон КУБ-10', sh:'משרד ההגנה הרוסי מאשר שימוש מבצעי ברחפן מתאבד עם סיב אופטי.', src:'RT', co:'רוסיה', la:'רוסית', fl:'🇷🇺', lat:61.0, lng:105.0, sd:'ru1', tags:['מתאבד','רוסיה','צבא','מבצעי'] },
+                { id:5, th:'צרפת מפתחת רחפן סיב אופטי ימי', to:'La France développe un drone naval à fibre optique', sh:'חיל הים הצרפתי בוחן רחפן סיב אופטי הממריא ממים ומסוגל לצלול.', src:'Le Monde', co:'צרפת', la:'צרפתית', fl:'🇫🇷', lat:46.0, lng:2.0, sd:'fr1', tags:['ימי','צלילה','צרפת','ים'] },
+                { id:6, th:'הודו: רחפני סיב אופטי לגבול ההימלאיה', to:'भारत: हिमालयी सीमा के लिए फाइबर ऑप्टिक ड्रोन', sh:'צבא הודו פורס רחפני סיב אופטי עמידי קור בגבול סין.', src:'Times of India', co:'הודו', la:'הינדי', fl:'🇮🇳', lat:20.0, lng:78.0, sd:'in1', tags:['הימלאיה','קור','גבול','הודו'] },
+                { id:7, th:'גרמניה: רחפן סיב אופטי לתעשייה 4.0', to:'Deutschland: Glasfaserdrohne für Industrie 4.0', sh:'סימנס משלבת רחפן סיב אופטי עם זרוע רובוטית בקווי ייצור.', src:'Der Spiegel', co:'גרמניה', la:'גרמנית', fl:'🇩🇪', lat:51.0, lng:10.0, sd:'de1', tags:['תעשייה','רובוטיקה','גרמניה'] },
+                { id:8, th:'יפן: רחפן סיב אופטי לחקר אסונות', to:'日本：災害調査用光ファイバードローン', sh:'JAXA בוחנת רחפן סיב אופטי למיפוי מהיר לאחר רעידות אדמה.', src:'NHK', co:'יפן', la:'יפנית', fl:'🇯🇵', lat:36.0, lng:138.0, sd:'jp1', tags:['אסונות','מיפוי','יפן','רעידות אדמה'] },
+                { id:9, th:'ברזיל: רחפן סיב אופטי לאמזונס', to:'Brasil: Drone de fibra óptica para Amazônia', sh:'ממשלת ברזיל משתמשת ברחפן סיב אופטי לניטור כריתת יערות באזורים ללא קליטה.', src:'Globo', co:'ברזיל', la:'פורטוגזית', fl:'🇧🇷', lat:-14.0, lng:-52.0, sd:'br1', tags:['אמזונס','כריתת יערות','ברזיל','ללא קליטה'] },
+                { id:10, th:'ישראל: רחפן סיב אופטי "עוקץ" מבצעי', to:'Israel: "Okets" Fiber-Optic Drone', sh:'צה"ל מפעיל רחפן סיב אופטי טקטי לאיסוף מודיעין ברצועה.', src:'Ynet', co:'ישראל', la:'עברית', fl:'🇮🇱', lat:31.0, lng:35.0, sd:'il1', tags:['ישראל','מודיעין','צה"ל','טקטי'] }
+            ];
+
+            let total = 0,
+                hourCount = 0,
+                hourStart = Date.now();
+            const usedIds = [];
+            const countriesSet = new Set();
+            const langsSet = new Set();
+            const flagsSet = new Set();
+            let favorites = JSON.parse(localStorage.getItem('robotFavs') || '[]');
+            let scanInterval = 5000;
+            let accentColor = '#00f2a7';
+            let darkMode = true;
+
+            const feedContainer = document.getElementById('feedContainer');
+            const favContainer = document.getElementById('favContainer');
+            const robotFace = document.getElementById('robotFace');
+            const speechBubble = document.getElementById('speechBubble');
+            const toast = document.getElementById('toast');
+            const analyzerRobot = document.getElementById('analyzerRobot');
+            const analyzerStatus = document.getElementById('analyzerStatus');
+
+            function updateStats() {
+                document.getElementById('totalVal').textContent = total;
+                document.getElementById('countriesVal').textContent = countriesSet.size;
+                document.getElementById('langsVal').textContent = langsSet.size;
+                const h = (Date.now() - hourStart) / 3600000;
+                document.getElementById('speedVal').textContent = Math.round(hourCount / Math.max(h, 0.05));
+                document.getElementById('flagsRow').textContent = Array.from(flagsSet).slice(0, 12).join(' ');
+                document.getElementById('favCount').textContent = favorites.length;
+                updateCharts();
+                runAnalyzer();
+            }
+
+            function showToast(msg) {
+                toast.textContent = msg;
+                toast.style.display = 'block';
+                toast.style.animation = 'none';
+                toast.offsetHeight;
+                toast.style.animation = 'fadeSlide 3s ease forwards';
+                setTimeout(() => toast.style.display = 'none', 3000);
+                if ('Notification' in window && Notification.permission === 'granted') {
+                    new Notification('רובוט אבות', { body: msg, icon: '🤖' });
+                }
+            }
+
+            function robotSay(text, expression = '🤖') {
+                speechBubble.textContent = text;
+                robotFace.textContent = expression;
+                if ('speechSynthesis' in window) {
+                    speechSynthesis.cancel();
+                    const u = new SpeechSynthesisUtterance(text);
+                    u.lang = 'he-IL';
+                    u.rate = 0.9;
+                    speechSynthesis.speak(u);
+                }
+                setTimeout(() => { robotFace.textContent = '🤖';
+                    speechBubble.textContent = 'מאזין...'; }, 4000);
+            }
+
+            function pickArticle() {
+                let avail = DB.filter(a => !usedIds.includes(a.id));
+                if (!avail.length) { usedIds.length = 0;
+                    avail = DB; }
+                const art = avail[Math.floor(Math.random() * avail.length)];
+                usedIds.push(art.id);
+                if (usedIds.length > 40) usedIds.splice(0, 10);
+                return art;
+            }
+
+            function createCard(art, isNew = false) {
+                const card = document.createElement('div');
+                card.className = 'article-card' + (isNew ? ' new-highlight' : '');
+                card.innerHTML = `
+                    <img src="https://picsum.photos/seed/${art.sd}/160/110" alt="" class="article-img">
+                    <div class="article-content">
+                        <div class="article-meta">${art.fl} ${art.src} · ${art.co}</div>
+                        <div class="article-title">${art.th}</div>
+                        <div class="article-snippet">${art.sh}</div>
+                        <button class="fav-btn" data-id="${art.id}">${favorites.includes(art.id) ? '⭐' : '☆'}</button>
+                    </div>`;
+                card.querySelector('.fav-btn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleFavorite(art.id);
+                });
+                return card;
+            }
+
+            function addArticle(isNew = true) {
+                const art = pickArticle();
+                if (!art) return;
+                feedContainer.insertBefore(createCard(art, isNew), feedContainer.firstChild);
+                total++;
+                hourCount++;
+                countriesSet.add(art.co);
+                langsSet.add(art.la);
+                flagsSet.add(art.fl);
+                updateStats();
+                if (isNew) {
+                    showToast(`📰 כתבה חדשה מ${art.co}!`);
+                    setTimeout(() => {
+                        const first = feedContainer.firstChild;
+                        if (first) first.classList.remove('new-highlight');
+                    }, 3000);
+                }
+                if (feedContainer.children.length > 40) feedContainer.lastChild.remove();
+                updateMapMarkers();
+            }
+
+            function toggleFavorite(id) {
+                if (favorites.includes(id)) favorites = favorites.filter(f => f !== id);
+                else favorites.push(id);
+                localStorage.setItem('robotFavs', JSON.stringify(favorites));
+                refreshFeed();
+            }
+
+            function refreshFeed() {
+                feedContainer.innerHTML = '';
+                const recentIds = [...usedIds].reverse().slice(0, 20);
+                recentIds.forEach(id => {
+                    const art = DB.find(a => a.id === id);
+                    if (art) feedContainer.appendChild(createCard(art));
+                });
+                updateStats();
+            }
+
+            function showFavorites() {
+                favContainer.style.display = 'block';
+                feedContainer.style.display = 'none';
+                favContainer.innerHTML = '<h4>⭐ מועדפים</h4>';
+                favorites.forEach(id => {
+                    const art = DB.find(a => a.id === id);
+                    if (art) favContainer.appendChild(createCard(art));
+                });
+            }
+
+            // ==================== MAP ====================
+            let map, markersGroup;
+            function initMap() {
+                map = L.map('map').setView([20, 0], 2);
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
+                markersGroup = L.layerGroup().addTo(map);
+                updateMapMarkers();
+            }
+
+            function updateMapMarkers() {
+                markersGroup.clearLayers();
+                const drawn = new Set();
+                DB.forEach(art => {
+                    if (countriesSet.has(art.co) && !drawn.has(art.co)) {
+                        drawn.add(art.co);
+                        const m = L.circleMarker([art.lat, art.lng], { radius: 9, color: accentColor,
+                            fillColor: accentColor, fillOpacity: 0.6 }).addTo(markersGroup);
+                        m.bindPopup(`<b>${art.fl} ${art.co}</b><br>${art.th}`);
+                        m.on('click', () => filterByCountry(art.co));
+                    }
+                });
+            }
+
+            function filterByCountry(country) {
+                feedContainer.innerHTML = '';
+                DB.filter(a => a.co === country).forEach(a => feedContainer.appendChild(createCard(a)));
+                robotSay(`מציג כתבות מ${country}`, '🎯');
+            }
+
+            // ==================== CHARTS ====================
+            let trendChart, countryChart, langChart, hourlyChart;
+            const trendData = [];
+            function initCharts() {
+                trendChart = new Chart(document.getElementById('trendChart'), { type: 'line', data: { labels: [],
+                        datasets: [{ label: 'כתבות', data: [], borderColor: accentColor }] } });
+                countryChart = new Chart(document.getElementById('countryChart'), { type: 'bar', data: { labels: [],
+                        datasets: [{ data: [] }] } });
+                langChart = new Chart(document.getElementById('langChart'), { type: 'doughnut', data: { labels: [],
+                        datasets: [{ data: [] }] } });
+                hourlyChart = new Chart(document.getElementById('hourlyChart'), { type: 'bar', data: { labels: [],
+                        datasets: [{ data: [] }] } });
+            }
+
+            function updateCharts() {
+                const now = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+                trendData.push({ time: now, count: total });
+                if (trendData.length > 10) trendData.shift();
+                trendChart.data.labels = trendData.map(d => d.time);
+                trendChart.data.datasets[0].data = trendData.map(d => d.count);
+                trendChart.update();
+                const cc = {};
+                DB.forEach(a => { if (countriesSet.has(a.co)) cc[a.co] = (cc[a.co] || 0) + 1; });
+                countryChart.data.labels = Object.keys(cc);
+                countryChart.data.datasets[0].data = Object.values(cc);
+                countryChart.update();
+                const lc = {};
+                DB.forEach(a => { if (langsSet.has(a.la)) lc[a.la] = (lc[a.la] || 0) + 1; });
+                langChart.data.labels = Object.keys(lc);
+                langChart.data.datasets[0].data = Object.values(lc);
+                langChart.update();
+                const hours = ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'];
+                hourlyChart.data.labels = hours;
+                hourlyChart.data.datasets[0].data = hours.map(() => Math.floor(Math.random() * 20));
+                hourlyChart.update();
+            }
+
+            // ==================== ANALYZER ENGINE ====================
+            const weaknessesDB = [
+                { keyword: 'שיבושים', weakness: 'חסינות לשיבושים עלולה ליצור תלות בסיב – פגיע פיזית', severity: 'בינונית',
+                    icon: '⚠️' },
+                { keyword: 'מתאבד', weakness: 'רחפנים מתאבדים – עלות גבוהה לכל תקיפה, מלאי מוגבל', severity: 'גבוהה',
+                    icon: '💥' },
+                { keyword: 'נחיל', weakness: 'נחיל רחפנים – תלות בתקשורת מרכזית, נקודת כשל אחת', severity: 'גבוהה',
+                    icon: '🐝' },
+                { keyword: 'קור', weakness: 'תנאי קור קיצוניים – הסיב עלול להפוך שביר', severity: 'בינונית', icon: '❄️' },
+                { keyword: 'ים', weakness: 'סביבה ימית – סכנת קורוזיה ונזקי מים לסיב', severity: 'בינונית', icon: '🌊' },
+                { keyword: 'ללא קליטה', weakness: 'אזורים ללא קליטה – הסיב הוא יתרון אך גם מגביל טווח פיזי',
+                    severity: 'נמוכה', icon: '📡' },
+                { keyword: 'תעשייה', weakness: 'שימוש תעשייתי – רגישות לאבק ורעידות בסביבת ייצור', severity: 'נמוכה',
+                    icon: '🏭' },
+                { keyword: 'אסונות', weakness: 'תנאי אסון – הסיב עלול להיקרע בטפטים או רעידות משנה', severity: 'גבוהה',
+                    icon: '🌋' },
+            ];
+
+            function runAnalyzer() {
+                const scannedArticles = DB.filter(a => usedIds.includes(a.id));
+                if (scannedArticles.length === 0) return;
+
+                analyzerStatus.textContent = `מנתח ${scannedArticles.length} כתבות...`;
+                analyzerRobot.textContent = '🧐';
+
+                // Find weaknesses
+                const foundWeaknesses = [];
+                const allTags = [];
+                scannedArticles.forEach(art => {
+                    allTags.push(...(art.tags || []));
+                    weaknessesDB.forEach(w => {
+                        if ((art.th + art.sh).includes(w.keyword) && !foundWeaknesses.some(fw => fw
+                                .keyword === w.keyword)) {
+                            foundWeaknesses.push(w);
+                        }
+                    });
+                });
+
+                const weaknessesContainer = document.getElementById('weaknessesContainer');
+                if (foundWeaknesses.length > 0) {
+                    weaknessesContainer.innerHTML = foundWeaknesses.map(w => `
+                        <div class="weakness-item">
+                            <span class="weakness-icon">${w.icon}</span>
+                            <div class="weakness-text">
+                                <h4>${w.weakness} <span style="font-size:0.65rem;color:var(--text2);">(${w.severity})</span></h4>
+                                <p>זוהה דרך מילת מפתח: "${w.keyword}"</p>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    weaknessesContainer.innerHTML = '<p style="color:var(--text2);">🔍 אין חולשות חדשות כרגע.</p>';
+                }
+
+                // Keywords cloud
+                const tagCounts = {};
+                allTags.forEach(t => tagCounts[t] = (tagCounts[t] || 0) + 1);
+                const keywordsCloud = document.getElementById('keywordsCloud');
+                keywordsCloud.innerHTML = Object.entries(tagCounts).map(([tag, count]) =>
+                    `<span class="keyword-tag">${tag} (${count})</span>`
+                ).join('');
+
+                // Links between articles
+                const links = [];
+                for (let i = 0; i < scannedArticles.length; i++) {
+                    for (let j = i + 1; j < scannedArticles.length; j++) {
+                        const a = scannedArticles[i];
+                        const b = scannedArticles[j];
+                        const commonTags = (a.tags || []).filter(t => (b.tags || []).includes(t));
+                        if (commonTags.length >= 1) {
+                            links.push({ from: a, to: b, common: commonTags });
+                        }
+                    }
+                }
+                const linksContainer = document.getElementById('linksContainer');
+                document.getElementById('linksCount').textContent = `${links.length} קישורים נמצאו`;
+                if (links.length > 0) {
+                    linksContainer.innerHTML = links.slice(0, 8).map(l => `
+                        <div class="link-item">
+                            <strong>${l.from.fl} ${l.from.co}</strong> <span class="arrow">🔗</span> <strong>${l.to.fl} ${l.to.co}</strong>
+                            <br><span style="color:var(--accent3);">תגיות משותפות: ${l.common.join(', ')}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    linksContainer.innerHTML = '<p style="color:var(--text2);">אין קישורים בין כתבות כרגע.</p>';
+                }
+
+                setTimeout(() => { analyzerRobot.textContent = '🧠'; }, 2000);
+            }
+
+            // ==================== SETTINGS ====================
+            function applySettings() {
+                document.documentElement.style.setProperty('--accent', accentColor);
+                document.documentElement.style.setProperty('--accent2', accentColor);
+                clearInterval(window.scanTimer);
+                window.scanTimer = setInterval(() => addArticle(true), scanInterval);
+                localStorage.setItem('robotSettings', JSON.stringify({ accentColor, scanInterval, darkMode }));
+            }
+
+            // ==================== INIT ====================
+            function init() {
+                const saved = JSON.parse(localStorage.getItem('robotSettings') || '{}');
+                if (saved.accentColor) accentColor = saved.accentColor;
+                if (saved.scanInterval) scanInterval = saved.scanInterval;
+                if (saved.darkMode !== undefined) darkMode = saved.darkMode;
+                if (!darkMode) document.body.classList.add('light-mode');
+                document.getElementById('accentColor').value = accentColor;
+                document.getElementById('scanSpeedSlider').value = scanInterval / 1000;
+                document.getElementById('speedValue').textContent = scanInterval / 1000;
+                applySettings();
+
+                initMap();
+                initCharts();
+                if ('Notification' in window) Notification.requestPermission();
+                for (let i = 0; i < 8; i++) addArticle(false);
+                updateStats();
+                runAnalyzer();
+                robotSay('מערכת מוכנה!', '😊');
+
+                document.getElementById('voiceBtn').addEventListener('click', () => {
+                    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                    if (!SpeechRecognition) return alert('לא נתמך');
+                    const r = new SpeechRecognition();
+                    r.lang = 'he-IL';
+                    r.start();
+                    robotSay('מקשיב...', '🎤');
+                    r.onresult = e => {
+                        const cmd = e.results[0][0].transcript;
+                        robotSay(`פקודה: "${cmd}"`, '🤔');
+                        if (cmd.includes('חפש') || cmd.includes('חיפוש')) {
+                            const term = cmd.replace(/חפש|חיפוש/g, '').trim();
+                            feedContainer.innerHTML = '';
+                            DB.filter(a => a.th.includes(term) || a.sh.includes(term)).forEach(a => feedContainer
+                                .appendChild(createCard(a)));
+                        } else if (cmd.includes('ניתוח') || cmd.includes('חולשות')) {
+                            document.querySelector('.analyzer-section').scrollIntoView();
+                            runAnalyzer();
+                        }
+                    };
+                });
+
+                document.getElementById('darkModeToggle').addEventListener('click', () => {
+                    darkMode = !darkMode;
+                    document.body.classList.toggle('light-mode', !darkMode);
+                    localStorage.setItem('robotSettings', JSON.stringify({ accentColor, scanInterval,
+                        darkMode }));
+                });
+                document.getElementById('settingsBtn').addEventListener('click', () => document.getElementById(
+                    'settingsModal').style.display = 'flex');
+                document.getElementById('closeSettings').addEventListener('click', () => {
+                    document.getElementById('settingsModal').style.display = 'none';
+                    accentColor = document.getElementById('accentColor').value;
+                    scanInterval = document.getElementById('scanSpeedSlider').value * 1000;
+                    applySettings();
+                });
+                document.getElementById('scanSpeedSlider').addEventListener('input', function() {
+                    document.getElementById('speedValue').textContent = this.value;
+                });
+                document.getElementById('favTabBtn').addEventListener('click', () => {
+                    if (favContainer.style.display === 'none') showFavorites();
+                    else { favContainer.style.display = 'none';
+                        feedContainer.style.display = 'block'; }
+                });
+                document.getElementById('refreshFeedBtn').addEventListener('click', refreshFeed);
+                document.getElementById('exportCSV').addEventListener('click', () => {
+                    let csv = 'כותרת,מקור,מדינה,שפה\n';
+                    [...usedIds].reverse().slice(0, 20).forEach(id => {
+                        const a = DB.find(x => x.id === id);
+                        if (a) csv += `"${a.th}","${a.src}","${a.co}","${a.la}"\n`;
+                    });
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'robot_articles.csv';
+                    link.click();
+                });
+                document.getElementById('printBtn').addEventListener('click', () => window.print());
+
+                window.scanTimer = setInterval(() => addArticle(true), scanInterval);
+            }
+            init();
+        })();
+    </script>
+<script src="assets/site-polish.js"></script>
+<div class="cv-mobile-orbit" aria-hidden="true"></div>
+</body>
+</html>

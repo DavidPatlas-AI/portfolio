@@ -1,0 +1,627 @@
+﻿<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CableVitality – Variable Database</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04080e;--panel:#0a1320;--panel2:#0e1c30;--border:#172f50;
+  --accent:#00c8ff;--green:#00ffa3;--warn:#ffc300;--red:#ff3d3d;--orange:#ff8c00;
+  --text:#bdd8f0;--muted:#3a6080;--muted2:#5580a0;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);}
+body{font-family:'Heebo',sans-serif;color:var(--text);display:flex;flex-direction:column;}
+
+/* TOP */
+#top{
+  height:50px;flex-shrink:0;background:var(--panel2);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+}
+.logo{display:flex;align-items:center;gap:10px;}
+.ring{width:28px;height:28px;border-radius:50%;background:conic-gradient(var(--accent),var(--green),var(--accent));animation:spin 6s linear infinite;position:relative;}
+.ring::after{content:'';position:absolute;inset:4px;background:var(--bg);border-radius:50%;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.logo h1{font-size:1.1rem;font-weight:900;}
+.logo h1 span{color:var(--accent);}
+.logo-sub{font-size:.58rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+.badge{background:rgba(0,200,255,.1);border:1px solid rgba(0,200,255,.25);color:var(--accent);font-size:.62rem;font-family:'IBM Plex Mono',monospace;padding:2px 10px;border-radius:20px;}
+
+/* TOOLBAR */
+#toolbar{
+  height:46px;flex-shrink:0;background:var(--panel);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:10px;padding:0 14px;
+}
+#search{
+  flex:1;max-width:280px;height:30px;
+  background:var(--panel2);border:1px solid var(--border);
+  color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:.72rem;
+  padding:0 10px;border-radius:5px;outline:none;
+  transition:.2s;
+}
+#search:focus{border-color:var(--accent);}
+#search::placeholder{color:var(--muted);}
+.tb-btn{
+  height:28px;padding:0 12px;border-radius:5px;border:none;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;font-size:.65rem;font-weight:600;
+  transition:.15s;
+}
+.tb-btn.primary{background:rgba(0,200,255,.12);color:var(--accent);border:1px solid rgba(0,200,255,.25);}
+.tb-btn.primary:hover{background:rgba(0,200,255,.22);}
+.tb-btn.warn{background:rgba(255,195,0,.1);color:var(--warn);border:1px solid rgba(255,195,0,.2);}
+.tb-btn.warn:hover{background:rgba(255,195,0,.2);}
+.tb-btn.green{background:rgba(0,255,163,.08);color:var(--green);border:1px solid rgba(0,255,163,.2);}
+.tb-btn.green:hover{background:rgba(0,255,163,.16);}
+.cat-select{
+  height:28px;background:var(--panel2);border:1px solid var(--border);
+  color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:.65rem;
+  padding:0 8px;border-radius:5px;outline:none;cursor:pointer;
+}
+.sep{width:1px;height:24px;background:var(--border);margin:0 4px;}
+.qa-summary{display:flex;gap:8px;margin-right:auto;}
+.qa-pill{font-size:.62rem;font-family:'IBM Plex Mono',monospace;padding:2px 10px;border-radius:20px;border:1px solid;}
+.qa-pill.ok{color:var(--green);border-color:rgba(0,255,163,.3);background:rgba(0,255,163,.06);}
+.qa-pill.fail{color:var(--red);border-color:rgba(255,61,61,.3);background:rgba(255,61,61,.08);animation:flash .8s infinite;}
+@keyframes flash{50%{opacity:.5;}}
+
+/* MAIN */
+#main{flex:1;display:flex;min-height:0;}
+
+/* LEFT SIDEBAR */
+#sidebar{
+  width:160px;flex-shrink:0;background:var(--panel);
+  border-left:1px solid var(--border);overflow-y:auto;padding:10px 8px;
+}
+#sidebar::-webkit-scrollbar{width:3px;}
+#sidebar::-webkit-scrollbar-thumb{background:var(--border);}
+.cat-item{
+  padding:7px 10px;border-radius:6px;cursor:pointer;font-size:.68rem;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:.15s;margin-bottom:2px;
+}
+.cat-item:hover{background:var(--panel2);}
+.cat-item.active{background:rgba(0,200,255,.1);color:var(--accent);}
+.cat-item .cnt{
+  font-family:'IBM Plex Mono',monospace;font-size:.6rem;
+  background:var(--border);padding:1px 5px;border-radius:10px;color:var(--muted2);
+}
+.cat-item.active .cnt{background:rgba(0,200,255,.15);color:var(--accent);}
+.cat-label{
+  font-size:.58rem;font-family:'IBM Plex Mono',monospace;
+  color:var(--muted);text-transform:uppercase;letter-spacing:.06em;
+  padding:10px 10px 4px;
+}
+
+/* TABLE */
+#table-wrap{flex:1;overflow:auto;min-width:0;}
+#table-wrap::-webkit-scrollbar{width:6px;height:6px;}
+#table-wrap::-webkit-scrollbar-track{background:var(--panel);}
+#table-wrap::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+table{width:100%;border-collapse:collapse;font-size:.68rem;}
+thead{position:sticky;top:0;z-index:5;}
+th{
+  background:var(--panel2);border-bottom:2px solid var(--border);
+  padding:9px 10px;text-align:right;font-size:.6rem;
+  font-family:'IBM Plex Mono',monospace;color:var(--muted2);
+  text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;
+  cursor:pointer;user-select:none;
+}
+th:hover{color:var(--accent);}
+th.sort-asc::after{content:' ↑';}
+th.sort-desc::after{content:' ↓';}
+td{
+  padding:7px 10px;border-bottom:1px solid rgba(23,47,80,.5);
+  vertical-align:middle;white-space:nowrap;
+}
+tr:hover td{background:rgba(0,200,255,.03);}
+tr.qa-error td{background:rgba(255,61,61,.04);}
+tr.qa-error td:first-child{border-right:2px solid var(--red);}
+tr.selected td{background:rgba(0,200,255,.07);}
+
+.idx{font-family:'IBM Plex Mono',monospace;color:var(--muted);font-size:.6rem;}
+.sym{font-family:'IBM Plex Mono',monospace;color:var(--accent);font-weight:600;}
+.name-cell{max-width:220px;overflow:hidden;text-overflow:ellipsis;}
+.unit-cell{font-family:'IBM Plex Mono',monospace;color:var(--muted2);font-size:.62rem;}
+.val-cell{font-family:'IBM Plex Mono',monospace;color:var(--green);font-weight:600;}
+.range-cell{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--muted2);}
+.cat-badge{
+  display:inline-block;padding:2px 7px;border-radius:3px;
+  font-size:.58rem;font-family:'IBM Plex Mono',monospace;font-weight:600;
+}
+.src-cell{max-width:200px;overflow:hidden;text-overflow:ellipsis;color:var(--muted);font-size:.6rem;}
+.qa-cell{text-align:center;}
+.qa-ok{color:var(--green);}
+.qa-fail{color:var(--red);}
+.edit-btn{
+  background:none;border:1px solid var(--border);color:var(--muted2);
+  font-size:.58rem;padding:2px 6px;border-radius:3px;cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;transition:.15s;
+}
+.edit-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* DETAIL PANEL */
+#detail{
+  width:260px;flex-shrink:0;background:var(--panel);
+  border-right:1px solid var(--border);padding:14px;
+  overflow-y:auto;display:flex;flex-direction:column;gap:10px;
+}
+#detail::-webkit-scrollbar{width:3px;}
+#detail::-webkit-scrollbar-thumb{background:var(--border);}
+.d-title{font-size:.95rem;font-weight:900;color:var(--text);line-height:1.3;}
+.d-sym{font-family:'IBM Plex Mono',monospace;font-size:1.1rem;color:var(--accent);font-weight:600;}
+.d-row{display:flex;flex-direction:column;gap:2px;}
+.d-label{font-size:.58rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.06em;}
+.d-val{font-size:.78rem;font-family:'IBM Plex Mono',monospace;color:var(--text);}
+.d-divider{height:1px;background:var(--border);}
+.d-range-bar{margin-top:4px;}
+.d-range-track{height:6px;background:var(--panel2);border-radius:3px;overflow:hidden;position:relative;border:1px solid var(--border);}
+.d-range-fill{position:absolute;height:100%;background:var(--accent);border-radius:3px;}
+.d-range-labels{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:.55rem;color:var(--muted);margin-top:2px;}
+.edit-input{
+  width:100%;background:var(--panel2);border:1px solid var(--border);
+  color:var(--accent);font-family:'IBM Plex Mono',monospace;font-size:.78rem;
+  padding:5px 8px;border-radius:4px;outline:none;
+}
+.edit-input:focus{border-color:var(--accent);}
+.save-btn{
+  width:100%;padding:7px;background:rgba(0,200,255,.12);
+  border:1px solid rgba(0,200,255,.3);color:var(--accent);
+  font-family:'IBM Plex Mono',monospace;font-size:.68rem;font-weight:600;
+  border-radius:5px;cursor:pointer;transition:.15s;
+}
+.save-btn:hover{background:rgba(0,200,255,.22);}
+.d-hint{font-size:.62rem;color:var(--muted);line-height:1.6;}
+.qa-status{padding:8px 10px;border-radius:6px;font-size:.7rem;font-weight:700;}
+.qa-status.ok{background:rgba(0,255,163,.08);border:1px solid rgba(0,255,163,.2);color:var(--green);}
+.qa-status.fail{background:rgba(255,61,61,.1);border:1px solid rgba(255,61,61,.25);color:var(--red);}
+
+/* cat colors */
+.cat-env{background:rgba(0,200,100,.12);color:#00c864;}
+.cat-drone{background:rgba(0,150,255,.12);color:#0096ff;}
+.cat-cable{background:rgba(255,150,0,.12);color:#ff9600;}
+.cat-fiber{background:rgba(200,100,255,.12);color:#c864ff;}
+.cat-mat{background:rgba(255,200,0,.12);color:#ffc800;}
+.cat-aero{background:rgba(0,220,255,.12);color:#00dcff;}
+.cat-ofdr{background:rgba(255,80,150,.12);color:#ff5096;}
+.cat-risk{background:rgba(255,60,60,.12);color:#ff3c3c;}
+.cat-ops{background:rgba(100,255,100,.12);color:#64ff64;}
+.cat-qa{background:rgba(150,150,255,.12);color:#9696ff;}
+.cat-struct{background:rgba(255,180,100,.12);color:#ffb464;}
+.cat-tms{background:rgba(100,200,200,.12);color:#64c8c8;}
+</style>
+<style id="cv-home-nav-style">.cv-home-nav{position:fixed;z-index:99999;left:14px;top:14px;display:flex;gap:8px;align-items:center;font-family:Arial,"Segoe UI",sans-serif;direction:rtl}.cv-home-nav a{min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:0 12px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:rgba(5,12,14,.72);backdrop-filter:blur(14px);color:#eef8f4;text-decoration:none;font-size:13px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.22)}.cv-home-nav a:hover{border-color:rgba(66,211,146,.6);color:#42d392}@media(max-width:640px){.cv-home-nav{left:8px;top:8px}.cv-home-nav a{font-size:12px;padding:0 10px}}</style><link rel="stylesheet" href="../assets/mobile-shell.css">
+<link rel="stylesheet" href="../assets/site-polish.css">
+</head>
+<body><div class="cv-home-nav"><a href="../index.html">בית</a><a href="../index.html#apps">כל הדפים</a></div>
+
+<div id="top">
+  <div class="logo">
+    <div class="ring"></div>
+    <div>
+      <h1>Cable<span>Vitality</span> <span style="font-size:.65rem;color:var(--muted)">Variable DB</span></h1>
+      <div class="logo-sub">GORE 24AWG · ITU-T G.652.D · IEC 60794 · Facchinetti 2004</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:10px;align-items:center;">
+    <span class="badge" id="total-badge">127 משתנים</span>
+    <span class="badge" style="color:var(--green);border-color:rgba(0,255,163,.25);background:rgba(0,255,163,.06);">v3.0</span>
+  </div>
+</div>
+
+<div id="toolbar">
+  <input type="text" id="search" placeholder="🔍  חיפוש לפי שם, סמל, יחידות...">
+  <select class="cat-select" id="cat-filter">
+    <option value="all">כל הקטגוריות</option>
+  </select>
+  <div class="sep"></div>
+  <button class="tb-btn warn" onclick="runQA()">⚡ הרץ QA</button>
+  <button class="tb-btn green" onclick="exportCSV()">📥 ייצא CSV</button>
+  <button class="tb-btn primary" onclick="resetEdits()">↩ אפס עריכות</button>
+  <div class="sep"></div>
+  <div class="qa-summary" id="qa-summary"></div>
+</div>
+
+<div id="main">
+  <div id="detail">
+    <div style="font-size:.62rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;text-align:center;margin-top:40px;">
+      בחר משתנה מהטבלה<br>לפרטים ועריכה
+    </div>
+  </div>
+
+  <div id="table-wrap">
+    <table id="var-table">
+      <thead>
+        <tr>
+          <th onclick="sortBy('index')">#</th>
+          <th onclick="sortBy('symbol')">סמל</th>
+          <th onclick="sortBy('name')">שם</th>
+          <th onclick="sortBy('typical')">ערך טיפוסי</th>
+          <th onclick="sortBy('unit')">יחידות</th>
+          <th>טווח</th>
+          <th onclick="sortBy('category')">קטגוריה</th>
+          <th>QA</th>
+          <th>מקור</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+  </div>
+
+  <div id="sidebar">
+    <div class="cat-label">קטגוריות</div>
+    <div id="cat-list"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// 127 VARIABLE DATABASE
+// ============================================================
+const CATS = {
+  env:   {label:'סביבה',        color:'cat-env'},
+  drone: {label:'רחפן',         color:'cat-drone'},
+  cable: {label:'כבל',          color:'cat-cable'},
+  fiber: {label:'סיב אופטי',    color:'cat-fiber'},
+  mat:   {label:'חומר/מבנה',   color:'cat-mat'},
+  aero:  {label:'אווירודינמיקה',color:'cat-aero'},
+  ofdr:  {label:'OFDR/חישה',   color:'cat-ofdr'},
+  risk:  {label:'סיכון/מרווח', color:'cat-risk'},
+  ops:   {label:'תפעול',        color:'cat-ops'},
+  struct:{label:'קטנריה/גאום.', color:'cat-struct'},
+  tms:   {label:'מערכת ספול',  color:'cat-tms'},
+  qa:    {label:'QA/טסט',       color:'cat-qa'},
+};
+
+const RAW = [
+// ENVIRONMENT (1-12)
+[1,'T_amb','טמפרטורת סביבה','°C',25,-40,55,'env','Gore GORE-24AWG, MIL-STD-810','טמפרטורת האוויר הסביבתית. משפיעה על מאפייני הסיב, לחות יחסית, ועמידות הכבל.'],
+[2,'RH','לחות יחסית','%',60,0,100,'env','Magnus formula, IEC 60794','לחות גבוהה מעל נקודת הטל גורמת לעיבוי על הסיב ואובדן אופטי.'],
+[3,'P_atm','לחץ אטמוספרי','hPa',1013,900,1100,'env','Standard atmosphere','משפיע על צפיפות האוויר וכוחות הגרר.'],
+[4,'H_agl','גובה הרחפן מעל הקרקע','m',80,0,300,'env','Norsat SKYLARK STD300','גובה ה-AGL קובע את אורך הכבל הנדרש ואת כוחות הכבידה.'],
+[5,'H_ground','גובה עיגון מעל פני הים','m',0,-400,5000,'env','User defined','גובה MSL של נקודת העיגון.'],
+[6,'Rain_rate','עוצמת גשם','mm/h',0,0,200,'env','WMO No. 8','גשם מוסיף משקל דינמי לכבל ומגדיל את אובדן האופטי.'],
+[7,'Solar_flux','קרינת שמש ישירה','W/m²',800,0,1200,'env','ISO 9845','חימום סולארי משנה את פרופיל הטמפרטורה לאורך הכבל.'],
+[8,'UV_index','אינדקס UV','–',5,0,15,'env','WHO standard','קרינת UV מאיצה הזדקנות מעטפת הכבל.'],
+[9,'Salt_spray','ריכוז מלח באוויר','g/m³',0,0,50,'env','IEC 60068-2-11','מצב ימי – מגביר קורוזיה וחדירת לחות.'],
+[10,'Dust_conc','ריכוז אבק/חול','µg/m³',50,0,5000,'env','MIL-STD-810','חול שוחק את מעטפת הכבל.'],
+[11,'T_dew','נקודת הטל','°C',15,-30,40,'env','Magnus formula','כשהכבל קר מ-T_dew מתרחש עיבוי לחות.'],
+[12,'Wind_gust_factor','מקדם מנשר הרוח','–',1.4,1.0,2.5,'env','ASCE 7','יחס בין מהירות גסט למהירות ממוצעת.'],
+
+// DRONE (13-28)
+[13,'M_drone','מסה כוללת של הרחפן','kg',22,1,78,'drone','Norsat SKYLARK (22 kg), Moneypro M60 (78 kg)','משקל ה-MTOW כולל מטען וכבל.'],
+[14,'M_payload','מסת מטען','kg',3,0,25,'drone','Elistair Khronos, Moneypro','משקל המצלמה/רדיו/מסנן.'],
+[15,'N_rotors','מספר ריצות','–',6,4,8,'drone','Hexa-copter typical','4=Quad, 6=Hex, 8=Oct.'],
+[16,'D_rotor','קוטר ריצה','inch',26,10,40,'drone','Norsat SKYLARK','קוטר גדול יותר = יעילות גבוהה יותר.'],
+[17,'Wheelbase','מרחק מנוע-מנוע','mm',1380,350,2200,'drone','Norsat SKYLARK / Mistral Kite','קובע את שטח ה"כנף" האפקטיבי.'],
+[18,'RPM_max','RPM מרבי של מנוע','rpm',8000,3000,15000,'drone','Generic multirotor','משפיע על כוח המנשא ורעשים.'],
+[19,'V_ascend','מהירות עלייה מרבית','m/s',4,1,10,'drone','Norsat SKYLARK','מגביל את שיעור תוספת מתח בכבל.'],
+[20,'V_descend','מהירות ירידה מרבית','m/s',2,0.5,8,'drone','Norsat SKYLARK','ירידה מהירה יוצרת שחרור פתאומי של מתח.'],
+[21,'V_cruise','מהירות שיוט אופקית','m/s',8,0,20,'drone','Height Technologies EZ Lite','קובע את זווית הנסיגה של הכבל.'],
+[22,'V_tow','מהירות גרר בקרקע','km/h',20,0,55,'drone','Beluga (20), EZ Mobile (55)','כשהעגלה נעה – מהירות גרר.'],
+[23,'Wind_resist','עמידות לרוח מרבית','m/s',13.8,5,25,'drone','Height Technologies (13 m/s)','מגבלת בטיחות תפעולית.'],
+[24,'Drone_len','אורך הרחפן (מורחב)','mm',2040,300,4000,'drone','Norsat SKYLARK','ממד גיאומטרי לסיכוי התנגשות.'],
+[25,'Drone_width','רוחב הרחפן (מורחב)','mm',1330,300,3000,'drone','Norsat SKYLARK','ממד גיאומטרי.'],
+[26,'Drone_height','גובה הרחפן','mm',480,100,1500,'drone','Norsat SKYLARK','ממד אנכי.'],
+[27,'IP_rating','דרגת הגנה IP','–',54,0,67,'drone','Beluga IP67, EZ Lite IP54','קובע חדירת אבק/מים.'],
+[28,'Bat_voltage','מתח סוללה/אספקה','V',48,12,120,'drone','Typical drone/TMS','מתח הפעלה למקינת הרחפן.'],
+
+// CABLE (29-46)
+[29,'L_cable','אורך כבל כולל','m',100,10,20000,'cable','Kaizen Labs (20 km), typical 100 m','אורך הכבל המסופק על הספול.'],
+[30,'d_cable','קוטר חיצוני של כבל','mm',3.2,0.8,16,'cable','Gore 24AWG (3.2 mm), µlinx (0.8 mm)','משפיע על גרר הרוח ועל הגאומטריה.'],
+[31,'m_cable_per_m','מסה ליחידת אורך','kg/m',0.019,0.0007,0.189,'cable','µlinx (0.00075), Gore (0.019), Alibaba (0.189)','קובע את כוח הכובד המופעל על הכבל.'],
+[32,'T_break_cable','כוח שבירה','N',910,29,10675,'cable','Gore 24AWG (910 N), Linden (10675 N)','גבול שבירת הכבל – קו אדום.'],
+[33,'E_cable','מודול אלסטי אפקטיבי','Pa',2e9,5e8,7e10,'cable','Gore 24AWG (2e9), Glass fiber (70e9)','קביעת קשיחות הכבל.'],
+[34,'R_bend_min_cable','רדיוס כיפוף מינימלי בטוח','mm',7.5,2.5,127,'cable','G.657.A2 (7.5 mm), Linden SPE-7345 (127 mm)','כיפוף חד ממנו פוגע בסיב.'],
+[35,'V_op_cable','מתח דירוג','V',600,250,750,'cable','Gore (600 Vrms), Alibaba (750 VDC)','מתח עבודה מרבי.'],
+[36,'N_power_cond','מספר מוליכי חשמל','–',2,0,6,'cable','Gore GORE-24AWG hybrid','זוגות מוליכים להספק.'],
+[37,'N_signal_pairs','זוגות אותות','–',1,0,4,'cable','Gore typical','זוגות נתונים.'],
+[38,'N_fibers','מספר סיבים אופטיים','–',1,0,6,'cable','Paide 6×18AWG+4SMF','מספר ערוצים אופטיים.'],
+[39,'Jacket_mat','חומר מעטפת','–',0,0,0,'cable','Gore Fluoropolymer','פלואורופולימר, PVC, PTFE.'],
+[40,'V_rated_conductor','דירוג מוליך אינדיבידואלי','A',6,1,30,'cable','AWG24 current capacity','זרם מרבי למוליך.'],
+[41,'R_conductor','התנגדות מוליך','Ω/km',84,5,500,'cable','AWG24 (84 Ω/km)','התנגדות חשמלית למוליך.'],
+[42,'Cap_cable','קיבול מקטע','pF/m',100,30,300,'cable','Typical coax/hybrid','קיבול לכל מ׳ כבל.'],
+[43,'Temp_range_min','טמפרטורת עבודה מינימלית','°C',-60,-70,-10,'cable','Gore GORE-24AWG (-60°C)','גבול קר.'],
+[44,'Temp_range_max','טמפרטורת עבודה מרבית','°C',85,50,125,'cable','Gore GORE-24AWG (85°C)','גבול חם.'],
+[45,'MBR_install','רדיוס כיפוף בהתקנה','mm',15,5,200,'cable','10× קוטר כבל typical','חד יותר בהתקנה סטטית.'],
+[46,'TMS_weight','משקל מערכת ספול','kg',18.5,2,30,'tms','Height Tech EZ Lite (18.5 kg)','משקל מנגנון הספול הכולל.'],
+
+// OPTICAL FIBER (47-67)
+[47,'d_core','קוטר ליבת הסיב','µm',8.2,8,62.5,'fiber','ITU-T G.652.D (8-10 µm)','ליבת SM קטנה מ-10µm.'],
+[48,'d_clad','קוטר מעטפת הסיב','µm',125,125,125,'fiber','ITU-T G.652.D','תקן קשיח.'],
+[49,'d_coat','קוטר ציפוי','µm',245,245,250,'fiber','Corning / Prysmian','ציפוי ראשוני.'],
+[50,'R_bend_min_fiber','רדיוס כיפוף מינימלי לסיב','mm',7.5,2.5,30,'fiber','G.657.A2 (7.5 mm), G.652.D (30 mm)','סיב BIF (Bend-Insensitive) עמיד יותר.'],
+[51,'n_core','מדד שבירה של הליבה','–',1.468,1.44,1.51,'fiber','Fused silica standard','מגדיר מהירות האור בליבה.'],
+[52,'n_clad','מדד שבירה של מעטפת','–',1.463,1.44,1.50,'fiber','Fused silica','NA = √(n_core²-n_clad²).'],
+[53,'att_1310','הנחה ב-1310 nm','dB/km',0.35,0.20,0.70,'fiber','Gore (0.35), µlinx (0.7)','חלון O-band.'],
+[54,'att_1550','הנחה ב-1550 nm','dB/km',0.20,0.20,0.50,'fiber','Gore (0.20), GL Fiber (0.3)','חלון C-band – הנמוך ביותר.'],
+[55,'att_1380_OH','ספיגת OH (פסגת מים)','dB/km',0.30,0.20,3.00,'fiber','IEC 60793','סיב Low-Water-Peak מונע בעיה זו.'],
+[56,'lambda_op','אורך גל עבודה','nm',1550,1260,1625,'fiber','ITU-T G.652.D','O/C/L band.'],
+[57,'MFD','קוטר שדה מודה @1550nm','µm',10,9,11,'fiber','ITU-T G.652.D','משפיע על הצימוד ועל כיפוף.'],
+[58,'NA','פתח נומרי','–',0.14,0.10,0.24,'fiber','ITU-T G.652.D','NA = sin(θ_max).'],
+[59,'cutoff_wl','אורך גל cut-off','nm',1260,1100,1350,'fiber','ITU-T G.652.D','מתחת לו הסיב מולטי-מודה.'],
+[60,'PMD','פיזור מצב פולריזציה','ps/√km',0.10,0.01,0.50,'fiber','ITU-T G.652.D (≤0.2)','מגביל קצב שידור גבוה.'],
+[61,'fiber_proof_N','עומס proof-test לסיב','N',89,50,200,'fiber','Patent (89 N bare fiber)','בדיקת QA ייצור.'],
+[62,'fiber_strain_fail','עיוות לכשל','%',0.3,0.2,1.0,'fiber','Patent (0.3%)','גבול קריטי לסיב חשוף.'],
+[63,'OTDR_spat_res','רזולוציה מרחבית OTDR/OFDR','mm',0.5,0.001,5000,'fiber','OFDR (0.5 mm), OTDR (1 m)','רזולוציה גבוהה = OFDR.'],
+[64,'Rayleigh_ref','עצמת Rayleigh backscatter','dB',-70,-90,-40,'fiber','Standard backscatter','ייחוס ל-OFDR.'],
+[65,'group_index','מדד קבוצה n_g','–',1.467,1.44,1.51,'fiber','Fused silica','לחישוב עיכוב אות.'],
+[66,'disp_D','פיזור כרומטי D','ps/(nm·km)',17,-5,20,'fiber','ITU-T G.652.D (D≤18)','מגביל רוחב הסרט.'],
+[67,'disp_slope','שיפוע פיזור S','ps/(nm²·km)',0.09,0.05,0.12,'fiber','ITU-T G.652.D','S = dD/dλ.'],
+
+// MATERIAL / STRUCTURAL (68-82)
+[68,'rho_cable','צפיפות אפקטיבית של כבל','kg/m³',2500,1500,8000,'mat','Gore / typical','לחישוב מסה ומומנט אינרציה.'],
+[69,'alpha_therm','מקדם התפשטות תרמית','1/K',0.55e-6,0.1e-6,20e-6,'mat','Silica (0.55e-6)','הסיב מאוד יציב תרמית.'],
+[70,'cp_cable','קיבול חום סגולי','J/(kg·K)',800,400,1200,'mat','Typical polymer','לחישוב חימום/קירור.'],
+[71,'k_thermal','מוליכות חום','W/(m·K)',0.2,0.1,0.5,'mat','Typical cable','לפרופיל טמפרטורה.'],
+[72,'nu_poisson','יחס פואסון','–',0.30,0.25,0.40,'mat','Standard','εy = -ν·εx.'],
+[73,'m_weibull','מודול ווייבול','–',8,5,100,'mat','Corning (50), glass (5-10)','חוזק סטטיסטי. מ גבוה = עקביות.'],
+[74,'sigma_0_weibull','כוח ווייבול מאפייני','MPa',340,200,700,'mat','Corning 100 kpsi (690 MPa)','ערך בו 63.2% כשלים.'],
+[75,'C_sn','קבוע S-N לעייפות','–',1e12,1e8,1e20,'mat','IEC 60794 (glass ≈ 1e12)','Miners rule: D=Σ n_i/N_f.'],
+[76,'k_sn','מעריך S-N','–',20,4,30,'mat','IEC 60794 (glass ≈ 20)','N_f = C·σ^(-k).'],
+[77,'Ea_OH','אנרגיית הפעלה לדיפוזיית OH','eV',0.8,0.6,1.2,'mat','Hydroxyl absorption lit.','הגורם לדעיכה ארוכת טווח.'],
+[78,'zeta_damp','יחס ריסון מבני','%',0.5,0.1,2.0,'mat','Facchinetti 2004','ζ=0.5% לכבלים עדינים.'],
+[79,'mu_fric','מקדם חיכוך כבל-משטח','–',0.4,0.1,1.0,'mat','Generic','כאשר הכבל נוגע בקצה.'],
+[80,'abrasion_cyc','מחזורי שחיקה (500g)','cycles',36000,5000,100000,'mat','Gore SAE AS4373','עמידות מכנית מעשית.'],
+[81,'EI_bending','קשיחות כפיפה EI','N·m²',1e-3,1e-6,1,'mat','Euler-Bernoulli','EI גבוה = כבל נוקשה.'],
+[82,'fatigue_limit','גבול עייפות (Endurance Limit)','MPa',200,100,500,'mat','Steel-like tether','מתח שמתחתיו אין כשל עייפות.'],
+
+// AERODYNAMICS (83-95)
+[83,'v_wind','מהירות רוח בגובה 10m','m/s',5,0,30,'aero','Meteorological standard','V(z) = V_ref·(z/10)^α.'],
+[84,'psi_wind','כיוון הרוח','rad',0.785,0,6.283,'aero','User input','מאפיין את הסטייה הצידית.'],
+[85,'z0_rough','אורך גסות פני השטח','m',0.03,0.001,2,'aero','AS/NZS 7000 (open terrain)','z0=0.03 שטח פתוח, 2.0 עיר.'],
+[86,'Cd_cable','מקדם גרר','–',1.0,0.6,1.5,'aero','Neara / Eng-Tips','גליל = ~1.0.'],
+[87,'Cl_cable','מקדם עלייה','–',0,–0.3,0.5,'aero','Asymmetric stranding','בכבל שזור לא-סימטרי.'],
+[88,'St','מספר סטרוהל','–',0.2,0.15,0.25,'aero','Facchinetti 2004','f_shed = St·v/d.'],
+[89,'Re_cable','מספר ריינולדס','–',20000,1000,200000,'aero','Calculated: v·d/ν','ν=15e-6 m²/s for air @25°C.'],
+[90,'f_shed','תדר הפלת מערבולות','Hz',10,0.1,100,'aero','St·v/D','Lock-in כש|f_shed-f_n|<10%.'],
+[91,'m_added','מסה אפקטיבית נוספת','kg/m',0.002,0,0.05,'aero','Potential flow theory','m_added = ρ·π(d/2)².'],
+[92,'eps_wake','פרמטר Wake Oscillator ε','–',0.3,0.05,1.0,'aero','Facchinetti 2004','ε קטן = תנדות גדולות יותר.'],
+[93,'A_wake','אמפליטודת כוח Wake A','–',12,5,30,'aero','Facchinetti 2004','A מגדיר עוצמת הכפייה.'],
+[94,'alpha_wind','מעריך פרופיל רוח','–',0.14,0.07,0.40,'aero','Power-law wind profile','α=0.14 שטח פתוח.'],
+[95,'drag_per_m','גרר רוח ליחידת אורך','N/m',0.005,0,2,'aero','½ρCd·d·v²','מחושב מהמשתנים לעיל.'],
+
+// OFDR/SENSING (96-110)
+[96,'OFDR_strain_res','רזולוציית עיוות OFDR','µε',1,0.1,10,'ofdr','LUNA OBR 4600','1 µε = 1e-6 m/m.'],
+[97,'OFDR_temp_res','רזולוציית טמפרטורה OFDR','°C',0.1,0.01,1,'ofdr','LUNA OBR 4600','לזיהוי נקודות חמות.'],
+[98,'OFDR_spat_res','רזולוציה מרחבית OFDR','mm',0.5,0.5,100,'ofdr','OFDR 0.5 mm (PubMed 2019)','0.5mm לאיתור פגמים מדויק.'],
+[99,'OFDR_range','טווח מדידת OFDR','m',50,10,2000,'ofdr','LUNA OBR (50 m)','טווח מוגבל ע"י SNR.'],
+[100,'OFDR_update','קצב עדכון OFDR','Hz',1,0.1,100,'ofdr','Commercial OFDR systems','מוגבל ע"י זמן סריקה.'],
+[101,'Rayleigh_backscatter','עוצמת Rayleigh','dB',-70,-90,-40,'ofdr','Standard backscatter','ייחוס לאנומליה.'],
+[102,'anom_threshold','סף אנומליה מבנית','–',0.02,0.001,0.5,'ofdr','Empirical from baseline','מעל הסף = אנומליה.'],
+[103,'vib_sample_rate','קצב דגימת רטט','Hz',100,10,10000,'ofdr','Welch PSD analysis','fs>2·f_max (Nyquist).'],
+[104,'arrhythmia_thr','סף התראת הפרעת קצב','–',2.5,1.0,10,'ofdr','Model calibration','A_idx > thr → אזהרה.'],
+[105,'resonance_thr','סף התראת תהודה','–',3.0,1.5,8,'ofdr','Model calibration','R_idx > thr → LOCK-IN.'],
+[106,'phase_noise_sigma','רעש פאזה של OFDR','rad',0.01,0.001,0.1,'ofdr','Luna instrumentation','מגביל רגישות.'],
+[107,'OFDR_wavelength','אורך גל OFDR','nm',1550,1310,1625,'ofdr','Typical OFDR systems','C-band מועדף.'],
+[108,'baseline_interval','תדירות כיול baseline','min',60,5,1440,'ofdr','Operational best practice','כיול קודם לכל טיסה.'],
+[109,'SNR_min','SNR מינימלי לזיהוי','dB',20,10,40,'ofdr','Instrumentation','מתחת לכך הזיהוי לא אמין.'],
+[110,'dyn_range_ofdr','טווח דינמי OFDR','dB',40,20,60,'ofdr','Luna OBR 4600','קובע טווח מדידה אפקטיבי.'],
+
+// RISK/MARGIN (111-120)
+[111,'MS_mech_w','משקל רכיב מכני ב-MS','–',0.35,0.1,0.6,'risk','CableVitality model','MS = Σ w_i · MS_i.'],
+[112,'MS_bend_w','משקל רכיב כיפוף ב-MS','–',0.25,0.1,0.5,'risk','CableVitality model','כיפוף = גורם סיכון מרכזי.'],
+[113,'MS_vib_w','משקל רכיב רטט ב-MS','–',0.15,0.05,0.3,'risk','CableVitality model','תנדות → עייפות.'],
+[114,'MS_ofdr_w','משקל רכיב OFDR ב-MS','–',0.15,0.05,0.3,'risk','CableVitality model','אנומליה אופטית.'],
+[115,'MS_fat_w','משקל רכיב עייפות ב-MS','–',0.10,0.05,0.25,'risk','CableVitality model','נזק מצטבר Miner.'],
+[116,'MS_green_thr','סף ירוק MS','–',0.4,0.2,0.7,'risk','CableVitality model','MS>0.4 = מצוין.'],
+[117,'MS_yellow_thr','סף צהוב MS','–',0.15,0.05,0.3,'risk','CableVitality model','0.15<MS<0.4 = אזהרה.'],
+[118,'MS_orange_thr','סף כתום MS','–',-0.1,-0.3,0.1,'risk','CableVitality model','-0.1<MS<0.15 = חירום.'],
+[119,'Vitality_warn_thr','סף Vitality לאזהרה','–',0.60,0.30,0.80,'risk','CableVitality model','V < 0.6 → ניטור מוגבר.'],
+[120,'Vitality_crit_thr','סף Vitality קריטי','–',0.30,0.10,0.50,'risk','CableVitality model','V < 0.3 → חירום.'],
+
+// TMS / SPOOL (121-124)
+[121,'spool_dia','קוטר פנימי של ספול','mm',101,50,500,'tms','Lumenier (101 mm)','גדול מ-MBR_install.'],
+[122,'spool_capacity','קיבולת הספול','m',200,50,20000,'tms','Kaizen Labs options','אורך כבל על הספול.'],
+[123,'spool_tension_ctrl','בקרת מתח ספול','N',15,5,100,'tms','Manufacturer spec','מתח קבוע בהפרפה.'],
+[124,'spool_speed_max','מהירות גלגול מרבית','m/s',2,0.5,10,'tms','TMS typical','מוגבלת ע"י מהירות הרחפן.'],
+
+// QA/OPS (125-127)
+[125,'mission_duration','משך משימה','h',4,0.5,72,'ops','Operational standard','עומד כנגד Miner D.'],
+[126,'MHT_n_hyp','מספר היפותזות MHT','–',2,1,10,'qa','CableVitality MHT module','יותר → דיוק גבוה, מחיר חישוב.'],
+[127,'demo_duration','משך לולאת הדגמה','s',60,10,3600,'qa','cablevitality.demo','משך סימולציה בדמו.'],
+];
+
+// Build objects
+let VARS = RAW.map(r => ({
+  index:r[0], symbol:r[1], name:r[2], unit:r[3], typical:r[4],
+  min_val:r[5], max_val:r[6], category:r[7], source:r[8], description:r[9],
+  edited_typical:null, qa_error:null
+}));
+
+let sortKey='index', sortDir=1, filterCat='all', filterText='', selectedIdx=null;
+
+// ====== RENDER TABLE ======
+function filteredVars(){
+  return VARS.filter(v=>{
+    if(filterCat!=='all' && v.category!==filterCat) return false;
+    if(filterText){
+      const q=filterText.toLowerCase();
+      return v.symbol.toLowerCase().includes(q)||v.name.toLowerCase().includes(q)||v.unit.toLowerCase().includes(q)||v.source.toLowerCase().includes(q);
+    }
+    return true;
+  }).sort((a,b)=>{
+    const av=a[sortKey],bv=b[sortKey];
+    if(typeof av==='number') return sortDir*(av-bv);
+    return sortDir*(String(av).localeCompare(String(bv)));
+  });
+}
+
+function renderTable(){
+  const fv=filteredVars();
+  const tbody=document.getElementById('tbody');
+  tbody.innerHTML=fv.map(v=>{
+    const val=v.edited_typical??v.typical;
+    const inRange=typeof val==='number'?val>=v.min_val&&val<=v.max_val:true;
+    const cat=CATS[v.category]||{label:v.category,color:'cat-qa'};
+    const isSelected=selectedIdx===v.index;
+    return `<tr class="${v.qa_error?'qa-error':''} ${isSelected?'selected':''}" onclick="selectVar(${v.index})">
+      <td class="idx">${v.index}</td>
+      <td class="sym">${v.symbol}</td>
+      <td class="name-cell" title="${v.description}">${v.name}</td>
+      <td class="val-cell" style="color:${inRange?'var(--green)':'var(--red)'}">${fmtNum(val)}</td>
+      <td class="unit-cell">${v.unit}</td>
+      <td class="range-cell">[${fmtNum(v.min_val)}, ${fmtNum(v.max_val)}]</td>
+      <td><span class="cat-badge ${cat.color}">${cat.label}</span></td>
+      <td class="qa-cell">${inRange?'<span class="qa-ok">✓</span>':'<span class="qa-fail">✗</span>'}</td>
+      <td class="src-cell" title="${v.source}">${v.source}</td>
+      <td><button class="edit-btn" onclick="event.stopPropagation();selectVar(${v.index})">✏</button></td>
+    </tr>`;
+  }).join('');
+  document.getElementById('total-badge').textContent=`${fv.length} / ${VARS.length} משתנים`;
+}
+
+function fmtNum(n){
+  if(typeof n!=='number') return String(n);
+  if(Math.abs(n)>=1e9||Math.abs(n)<1e-4&&n!==0) return n.toExponential(2);
+  if(Math.abs(n)>=1000) return n.toLocaleString('he-IL',{maximumFractionDigits:0});
+  return parseFloat(n.toPrecision(4)).toString();
+}
+
+// ====== CATEGORY SIDEBAR ======
+function renderSidebar(){
+  const counts={};
+  VARS.forEach(v=>counts[v.category]=(counts[v.category]||0)+1);
+  const el=document.getElementById('cat-list');
+  const sel=document.getElementById('cat-filter');
+  const allItem=`<div class="cat-item ${filterCat==='all'?'active':''}" onclick="setCat('all')">כל הקטגוריות <span class="cnt">${VARS.length}</span></div>`;
+  const items=Object.entries(CATS).map(([k,c])=>`<div class="cat-item ${filterCat===k?'active':''}" onclick="setCat('${k}')"><span>${c.label}</span><span class="cnt">${counts[k]||0}</span></div>`).join('');
+  el.innerHTML=allItem+items;
+  // update select
+  if(!sel.options.length||sel.options.length<2){
+    sel.innerHTML='<option value="all">כל הקטגוריות</option>'+Object.entries(CATS).map(([k,c])=>`<option value="${k}">${c.label}</option>`).join('');
+  }
+}
+
+function setCat(c){filterCat=c;renderSidebar();renderTable();}
+
+// ====== SORT ======
+function sortBy(k){
+  if(sortKey===k) sortDir*=-1; else {sortKey=k;sortDir=1;}
+  document.querySelectorAll('th').forEach(t=>t.classList.remove('sort-asc','sort-desc'));
+  renderTable();
+}
+
+// ====== SELECT + DETAIL ======
+function selectVar(idx){
+  selectedIdx=idx;
+  const v=VARS.find(x=>x.index===idx);
+  if(!v) return;
+  const val=v.edited_typical??v.typical;
+  const inRange=typeof val==='number'?val>=v.min_val&&val<=v.max_val:true;
+  const pct=typeof val==='number'?Math.max(0,Math.min(100,((val-v.min_val)/(v.max_val-v.min_val)||0)*100)):50;
+  const cat=CATS[v.category]||{label:v.category,color:'cat-qa'};
+  document.getElementById('detail').innerHTML=`
+    <div>
+      <div class="d-sym">${v.symbol}</div>
+      <div class="d-title" style="margin-top:4px;">${v.name}</div>
+    </div>
+    <div class="d-divider"></div>
+    <div class="d-row"><div class="d-label">תיאור</div><div class="d-hint">${v.description}</div></div>
+    <div class="d-divider"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="d-row"><div class="d-label">ערך טיפוסי</div><div class="d-val" style="color:var(--green)">${fmtNum(val)} ${v.unit}</div></div>
+      <div class="d-row"><div class="d-label">יחידות</div><div class="d-val">${v.unit}</div></div>
+      <div class="d-row"><div class="d-label">מינימום</div><div class="d-val">${fmtNum(v.min_val)}</div></div>
+      <div class="d-row"><div class="d-label">מקסימום</div><div class="d-val">${fmtNum(v.max_val)}</div></div>
+      <div class="d-row"><div class="d-label">קטגוריה</div><div class="d-val"><span class="cat-badge ${cat.color}">${cat.label}</span></div></div>
+      <div class="d-row"><div class="d-label">אינדקס</div><div class="d-val">#${v.index}</div></div>
+    </div>
+    <div class="d-range-bar">
+      <div class="d-label" style="margin-bottom:4px;">מיקום בטווח</div>
+      <div class="d-range-track">
+        <div class="d-range-fill" style="width:${pct.toFixed(1)}%;background:${inRange?'var(--accent)':'var(--red)'}"></div>
+      </div>
+      <div class="d-range-labels"><span>${fmtNum(v.min_val)}</span><span style="color:var(--accent)">${fmtNum(val)}</span><span>${fmtNum(v.max_val)}</span></div>
+    </div>
+    <div class="d-divider"></div>
+    <div class="${inRange?'qa-status ok':'qa-status fail'}">${inRange?'✓ QA תקין – בגבולות':'✗ QA כשל – מחוץ לטווח'}</div>
+    <div class="d-divider"></div>
+    <div class="d-label" style="margin-bottom:5px;">ערוך ערך טיפוסי</div>
+    <input class="edit-input" id="edit-val" type="number" value="${val}" step="any">
+    <button class="save-btn" style="margin-top:6px;" onclick="saveEdit(${idx})">💾 שמור שינוי</button>
+    <div class="d-divider"></div>
+    <div class="d-row"><div class="d-label">מקור / תקן</div><div class="d-hint" style="color:var(--muted2)">${v.source}</div></div>
+  `;
+  renderTable();
+}
+
+function saveEdit(idx){
+  const v=VARS.find(x=>x.index===idx);
+  const val=parseFloat(document.getElementById('edit-val').value);
+  if(isNaN(val)) return;
+  v.edited_typical=val;
+  v.qa_error=val<v.min_val||val>v.max_val;
+  selectVar(idx);
+  updateQASummary();
+}
+
+// ====== QA ======
+function runQA(){
+  VARS.forEach(v=>{
+    const val=v.edited_typical??v.typical;
+    v.qa_error=typeof val==='number'&&(val<v.min_val||val>v.max_val);
+  });
+  updateQASummary();
+  renderTable();
+}
+
+function updateQASummary(){
+  const errors=VARS.filter(v=>v.qa_error).length;
+  const ok=VARS.length-errors;
+  document.getElementById('qa-summary').innerHTML=`
+    <span class="qa-pill ok">✓ ${ok} תקינים</span>
+    ${errors?`<span class="qa-pill fail">✗ ${errors} שגיאות</span>`:''}
+  `;
+}
+
+function resetEdits(){
+  VARS.forEach(v=>{v.edited_typical=null;v.qa_error=null;});
+  updateQASummary();
+  if(selectedIdx) selectVar(selectedIdx);
+  else renderTable();
+}
+
+// ====== EXPORT CSV ======
+function exportCSV(){
+  const headers=['#','Symbol','Name','Unit','Typical','Min','Max','Category','Source'];
+  const rows=filteredVars().map(v=>[
+    v.index,`"${v.symbol}"`,`"${v.name}"`,`"${v.unit}"`,
+    v.edited_typical??v.typical,v.min_val,v.max_val,
+    `"${v.category}"`,`"${v.source}"`
+  ].join(','));
+  const csv=[headers.join(','),...rows].join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
+  a.download='cablevitality_variables.csv';
+  a.click();
+}
+
+// ====== SEARCH ======
+document.getElementById('search').addEventListener('input',e=>{
+  filterText=e.target.value;
+  renderTable();
+});
+document.getElementById('cat-filter').addEventListener('change',e=>{
+  filterCat=e.target.value;
+  renderSidebar();
+  renderTable();
+});
+
+// ====== INIT ======
+runQA();
+renderSidebar();
+renderTable();
+</script>
+<div class="cv-mobile-orbit" aria-hidden="true"></div>
+<script src="../assets/site-polish.js"></script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="פוליגרף דיגיטלי מאוחד — זיהוי אמת ושקר בזמן אמת עם מצלמה, מיקרופון וניתוח ביומטרי">
+    <title>פוליגרף דיגיטלי — זיהוי אמת ושקר</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --truth-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --lie-gradient: linear-gradient(135deg, #ff416c 0%, #ff4757 100%);
+            --neutral-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --warning-gradient: linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%);
+            --danger-gradient: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            --glass-bg: rgba(255, 255, 255, 0.12);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.85);
+            --shadow-glow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            --border-radius: 16px;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .top-nav a {
+            color: rgba(255, 255, 255, 0.92);
+            text-decoration: none;
+            font-size: 0.9em;
+            font-weight: 600;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .top-nav a:hover {
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .research-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        body {
+            font-family: 'Noto Sans Hebrew', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--neutral-gradient);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        .app-container {
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 3em;
+            font-weight: 900;
+            background: linear-gradient(45deg, #FF6B35, #F7931E, #FFD23F, #06FFA5);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+            animation: logoFlow 4s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+        }
+
+        @keyframes logoFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .tagline {
+            font-size: 1.1em;
+            font-weight: 600;
+            opacity: 0.95;
+            margin-bottom: 10px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--danger-gradient);
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 0.85em;
+            font-weight: 700;
+            animation: statusPulse 3s ease-in-out infinite;
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Glass Cards */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-glow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5);
+        }
+
+        /* Camera Section */
+        .camera-container {
+            position: relative;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+            margin-bottom: 18px;
+            height: 300px;
+        }
+
+        #video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .camera-overlay {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 10;
+        }
+
+        .detection-info {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .live-indicator {
+            background: var(--lie-gradient);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75em;
+            font-weight: 700;
+            animation: livePulse 1.5s ease-in-out infinite;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Real-time Analysis Display */
+        .realtime-analysis {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.9);
+            border-radius: 12px;
+            padding: 15px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 10;
+        }
+
+        .analysis-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .analysis-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .analysis-label {
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        .analysis-value {
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.85em;
+        }
+
+        .analysis-value.normal { background: var(--truth-gradient); }
+        .analysis-value.elevated { background: var(--warning-gradient); }
+        .analysis-value.high { background: var(--lie-gradient); }
+
+        /* Voice Visualizer */
+        .voice-visualizer {
+            height: 80px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            margin: 15px 0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .voice-wave {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            height: 100%;
+        }
+
+        .voice-bar {
+            width: 4px;
+            background: var(--warning-gradient);
+            border-radius: 2px;
+            animation: voicePulse 0.8s ease-in-out infinite alternate;
+            transform-origin: bottom;
+            height: 20%;
+        }
+
+        .voice-bar:nth-child(2n) { animation-delay: 0.1s; }
+        .voice-bar:nth-child(3n) { animation-delay: 0.2s; }
+        .voice-bar:nth-child(4n) { animation-delay: 0.3s; }
+        .voice-bar:nth-child(5n) { animation-delay: 0.4s; }
+
+        @keyframes voicePulse {
+            from { height: 20%; }
+            to { height: 80%; }
+        }
+
+        .voice-overlay {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            opacity: 0.8;
+        }
+
+        /* Polygraph Chart */
+        .polygraph-chart {
+            height: 150px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .chart-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: #00ff88;
+            box-shadow: 0 0 8px #00ff88;
+            opacity: 0.8;
+        }
+
+        .heart-line { top: 20%; background: #ff6b6b; box-shadow: 0 0 8px #ff6b6b; }
+        .breath-line { top: 40%; background: #4ecdc4; box-shadow: 0 0 8px #4ecdc4; }
+        .skin-line { top: 60%; background: #45b7d1; box-shadow: 0 0 8px #45b7d1; }
+        .voice-line { top: 80%; background: #f9ca24; box-shadow: 0 0 8px #f9ca24; }
+
+        .chart-labels {
+            position: absolute;
+            left: 10px;
+            top: 10px;
+            font-size: 0.7em;
+            opacity: 0.7;
+        }
+
+        .chart-label {
+            margin-bottom: 15px;
+        }
+
+        /* Controls */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 18px 24px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.05em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-primary {
+            background: var(--warning-gradient);
+            color: white;
+            grid-column: 1 / -1;
+            font-size: 1.15em;
+            padding: 20px 24px;
+        }
+
+        .btn-start {
+            background: var(--truth-gradient);
+            color: white;
+        }
+
+        .btn-voice {
+            background: var(--danger-gradient);
+            color: white;
+        }
+
+        /* Question Card */
+        .question-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .question-text {
+            font-size: 1.3em;
+            font-weight: 600;
+            line-height: 1.5;
+            color: #ffffff;
+        }
+
+        /* Metrics */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .metric-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px currentColor;
+        }
+
+        .metric-label {
+            font-size: 0.8em;
+            opacity: 0.85;
+            font-weight: 500;
+        }
+
+        .metric-card.truth .metric-value { color: #38ef7d; }
+        .metric-card.lie .metric-value { color: #ff4757; }
+        .metric-card.neutral .metric-value { color: #fdbb2d; }
+        .metric-card.stress .metric-value { color: #ff6b6b; }
+
+        /* Status Panel */
+        .status-panel {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .status-text {
+            font-weight: 600;
+            font-size: 1.15em;
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .status.loading { color: #fdbb2d; }
+        .status.ready { color: #38ef7d; }
+        .status.error { color: #ff6b6b; }
+        .status.analyzing { 
+            color: #00f2fe; 
+            animation: analyzeGlow 2s ease-in-out infinite alternate;
+        }
+        .status.live { 
+            color: #ff4757; 
+            animation: liveGlow 1.5s ease-in-out infinite alternate;
+        }
+
+        @keyframes analyzeGlow {
+            from { text-shadow: 0 0 10px rgba(0, 242, 254, 0.5); }
+            to { text-shadow: 0 0 20px rgba(0, 242, 254, 0.8); }
+        }
+
+        @keyframes liveGlow {
+            from { text-shadow: 0 0 10px rgba(255, 71, 87, 0.5); }
+            to { text-shadow: 0 0 20px rgba(255, 71, 87, 0.8); }
+        }
+
+        /* Category Selector */
+        .category-selector {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .category-btn {
+            padding: 12px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .category-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .category-btn.active {
+            background: var(--warning-gradient);
+            border-color: transparent;
+        }
+
+        /* Results */
+        .results-area {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            min-height: 150px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            font-size: 1em;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            direction: rtl;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* Animations */
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .scan-animation {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: scanMove 2s ease-in-out;
+        }
+
+        @keyframes scanMove {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        #polyBoot {
+            position: fixed; inset: 0; z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            background: radial-gradient(ellipse at center, #1a1545 0%, #050508 70%);
+            transition: opacity .7s ease, visibility .7s, transform .9s cubic-bezier(.4,0,.2,1);
+        }
+        #polyBoot.done { opacity: 0; visibility: hidden; pointer-events: none; transform: scale(1.05); }
+        .boot-core { text-align: center; padding: 2rem; position: relative; z-index: 2; }
+        .boot-logo {
+            font-size: 4rem; margin-bottom: 1rem;
+            animation: boot-pulse 1.2s ease-in-out infinite;
+            filter: drop-shadow(0 0 24px rgba(255, 65, 108, .5));
+        }
+        .boot-status {
+            font-size: 1rem; font-weight: 700; color: rgba(255,255,255,.9);
+            margin-bottom: 1rem; min-height: 1.5em;
+        }
+        .boot-bar {
+            width: 220px; height: 6px; margin: 0 auto; border-radius: 99px;
+            background: rgba(255,255,255,.12); overflow: hidden;
+        }
+        .boot-bar span {
+            display: block; height: 100%; width: 0;
+            background: linear-gradient(90deg, #11998e, #38ef7d, #ff416c);
+            border-radius: 99px;
+            animation: boot-fill 1.6s cubic-bezier(.4,0,.2,1) forwards;
+        }
+        .boot-scan {
+            position: absolute; inset: 0; pointer-events: none;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(56,239,125,.03) 2px, rgba(56,239,125,.03) 4px);
+            animation: boot-scan 3s linear infinite;
+        }
+        @keyframes boot-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+        @keyframes boot-fill { to { width: 100%; } }
+        @keyframes boot-scan { to { background-position: 0 120px; } }
+        body.boot-active { overflow: hidden; }
+        body.boot-active .app-container { opacity: 0; }
+        body.boot-done .app-container { opacity: 1; transition: opacity .6s ease .1s; }
+
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+            .app-container {
+                padding: 0 10px;
+            }
+            
+            .logo {
+                font-size: 2.5em;
+            }
+            
+            .camera-container {
+                height: 250px;
+            }
+            
+            .question-text {
+                font-size: 1.1em;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .category-selector {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body class="boot-active">
+    <div id="polyBoot" aria-hidden="true">
+        <div class="boot-scan"></div>
+        <div class="boot-core">
+            <div class="boot-logo">🔍</div>
+            <div class="boot-status" id="bootStatus">מאתחל מערכת ביומטרית...</div>
+            <div class="boot-bar"><span></span></div>
+        </div>
+    </div>
+    <div class="app-container">
+        <nav class="top-nav" aria-label="ניווט">
+            <a href="/">← חזרה לתיק עבודות</a>
+            <a href="פוליגרף מחקר.pdf" target="_blank" rel="noopener">📄 מחקר 1</a>
+            <a href="פוליגרף מחקר 2.pdf" target="_blank" rel="noopener">📄 מחקר 2</a>
+        </nav>
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🔍 פוליגרף דיגיטלי</div>
+            <div class="tagline">גרסה מאוחדת — זיהוי אמת ושקר בזמן אמת</div>
+            <div class="status-badge">
+                <span>🔴</span>
+                <span>שידור חי</span>
+            </div>
+        </div>
+
+        <!-- Status Panel -->
+        <div class="glass-card">
+            <div class="status-panel">
+                <div id="status" class="status ready">
+                    <div class="status-text">מערכת מוכנה לשידור חי! 🚀</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Camera Section -->
+        <div class="glass-card">
+            <div class="camera-container">
+                <video id="video" autoplay muted playsinline></video>
+                <canvas id="canvas"></canvas>
+                <div class="camera-overlay">
+                    <div class="detection-info">
+                        <div>📹 מצלמה: <span id="cameraStatus">לא פעילה</span></div>
+                        <div>🎤 מיקרופון: <span id="micStatus">לא פעיל</span></div>
+                    </div>
+                    <div class="live-indicator" id="liveIndicator" style="display: none;">
+                        🔴 LIVE
+                    </div>
+                </div>
+                <div class="realtime-analysis" id="realtimeAnalysis" style="display: none;">
+                    <div class="analysis-row">
+                        <span class="analysis-label">💓 דופק:</span>
+                        <span class="analysis-value normal" id="heartRate">72 BPM</span>
+                    </div>
+                    <div class="analysis-row">
+                        <span class="analysis-label">😤 נשימה:</span>
+                        <span class="analysis-value normal" id="breathRate">16/min</span>
+                    </div>
+                    <div class="analysis-row">
+                        <span class="analysis-label">😰 זיעה:</span>
+                        <span class="analysis-value normal" id="skinResponse">רגיל</span>
+                    </div>
+                    <div class="analysis-row">
+                        <span class="analysis-label">🎵 קול:</span>
+                        <span class="analysis-value normal" id="voiceStress">יציב</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="glass-card">
+            <div class="controls-grid">
+                <button id="startBtn" class="btn btn-start">
+                    🎥 הפעל מצלמה
+                </button>
+                <button id="voiceBtn" class="btn btn-voice">
+                    🎤 הפעל מיקרופון
+                </button>
+                <button id="startAnalysisBtn" class="btn btn-primary" disabled>
+                    🔍 התחל ניתוח חי
+                </button>
+            </div>
+        </div>
+
+        <!-- Voice Visualizer -->
+        <div class="glass-card" id="voiceSection" style="display: none;">
+            <h3 style="color: #fdbb2d; margin-bottom: 15px; text-align: center;">🎤 ניתוח קולי חי</h3>
+            <div class="voice-visualizer">
+                <div class="voice-overlay">
+                    <span>רמת קול: <span id="volumeLevel">0</span>%</span>
+                    <span>זיהוי לחץ: <span id="stressLevel">רגיל</span></span>
+                </div>
+                <div class="voice-wave" id="voiceWave">
+                    <div class="voice-bar"></div>
+                    <div class="voice-bar"></div>
+                    <div class="voice-bar"></div>
+                    <div class="voice-bar"></div>
+                    <div class="voice-bar"></div>
+                    <div class="voice-bar"></div>
+                    <div class="voice-bar"></div>
+                    <div class="voice-bar"></div>
+                    <div class="voice-bar"></div>
+                    <div class="voice-bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Polygraph Chart -->
+        <div class="glass-card" id="chartSection" style="display: none;">
+            <h3 style="color: #00ff88; margin-bottom: 15px; text-align: center;">📈 גרף פוליגרף חי</h3>
+            <div class="polygraph-chart">
+                <div class="chart-labels">
+                    <div class="chart-label">💓 דופק</div>
+                    <div class="chart-label">😤 נשימה</div>
+                    <div class="chart-label">😰 זיעה</div>
+                    <div class="chart-label">🎵 קול</div>
+                </div>
+                <div class="chart-line heart-line"></div>
+                <div class="chart-line breath-line"></div>
+                <div class="chart-line skin-line"></div>
+                <div class="chart-line voice-line"></div>
+            </div>
+        </div>
+
+        <!-- Category Selection -->
+        <div class="glass-card" id="categorySection" style="display: none;">
+            <h3 style="text-align: center; margin-bottom: 15px;">📝 בחר קטגוריית שאלות:</h3>
+            <div class="category-selector">
+                <div class="category-btn active" data-category="personal">🤫 אישי</div>
+                <div class="category-btn" data-category="relationships">💕 זוגיות</div>
+                <div class="category-btn" data-category="work">💼 עבודה</div>
+                <div class="category-btn" data-category="secrets">🔐 סודות</div>
+            </div>
+        </div>
+
+        <!-- Question Card -->
+        <div class="glass-card" id="questionSection" style="display: none;">
+            <div class="question-card">
+                <div class="question-text" id="questionText">
+                    השאלה תופיע כאן...
+                </div>
+            </div>
+            <div class="controls-grid">
+                <button id="truthBtn" class="btn" style="background: var(--truth-gradient);" disabled>
+                    ✅ אמת
+                </button>
+                <button id="lieBtn" class="btn" style="background: var(--lie-gradient);" disabled>
+                    ❌ שקר
+                </button>
+                <button id="newQuestionBtn" class="btn btn-primary" disabled>
+                    🎲 שאלה חדשה
+                </button>
+            </div>
+        </div>
+
+        <!-- Real-time Metrics -->
+        <div class="glass-card" id="metricsSection" style="display: none;">
+            <div class="metrics-grid">
+                <div class="metric-card truth">
+                    <div class="metric-value" id="truthCount">0</div>
+                    <div class="metric-label">אמת</div>
+                </div>
+                <div class="metric-card lie">
+                    <div class="metric-value" id="lieCount">0</div>
+                    <div class="metric-label">שקר</div>
+                </div>
+                <div class="metric-card stress">
+                    <div class="metric-value" id="currentStress">0%</div>
+                    <div class="metric-label">לחץ כללי</div>
+                </div>
+                <div class="metric-card neutral">
+                    <div class="metric-value" id="accuracyRate">--%</div>
+                    <div class="metric-label">דיוק זיהוי</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Results -->
+        <div class="glass-card" id="resultsSection" style="display: none;">
+            <h3 style="text-align: center; margin-bottom: 15px;">📊 תוצאות חיות:</h3>
+            <div class="results-area" id="resultsArea">ההתחלה של הניתוח החי...</div>
+        </div>
+    </div>
+
+    <script>
+        (function initPolyBoot(){
+            const boot=document.getElementById('polyBoot');
+            const status=document.getElementById('bootStatus');
+            if(!boot||window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+                document.body.classList.remove('boot-active');
+                document.body.classList.add('boot-done');
+                boot?.remove();
+                return;
+            }
+            const msgs=['סורק חיישנים...','מכייל מצלמה ומיקרופון...','טוען מאגר שאלות...','מערכת מוכנה!'];
+            let i=0;
+            const tick=setInterval(()=>{
+                if(status&&msgs[i])status.textContent=msgs[i++];
+                if(i>=msgs.length)clearInterval(tick);
+            },450);
+            function finish(){
+                boot.classList.add('done');
+                document.body.classList.remove('boot-active');
+                document.body.classList.add('boot-done');
+                setTimeout(()=>boot.remove(),900);
+            }
+            setTimeout(finish,1900);
+        })();
+
+        class LivePolygraph {
+            constructor() {
+                this.initializeElements();
+                this.initializeState();
+                this.initializeQuestions();
+                this.setupEventListeners();
+                this.updateStatus('מערכת מוכנה לשידור חי! 🚀', 'ready');
+            }
+
+            initializeElements() {
+                this.video = document.getElementById('video');
+                this.canvas = document.getElementById('canvas');
+                this.startBtn = document.getElementById('startBtn');
+                this.voiceBtn = document.getElementById('voiceBtn');
+                this.startAnalysisBtn = document.getElementById('startAnalysisBtn');
+                this.statusElement = document.getElementById('status');
+                this.cameraStatus = document.getElementById('cameraStatus');
+                this.micStatus = document.getElementById('micStatus');
+                this.liveIndicator = document.getElementById('liveIndicator');
+                this.realtimeAnalysis = document.getElementById('realtimeAnalysis');
+                
+                // Sections
+                this.voiceSection = document.getElementById('voiceSection');
+                this.chartSection = document.getElementById('chartSection');
+                this.categorySection = document.getElementById('categorySection');
+                this.questionSection = document.getElementById('questionSection');
+                this.metricsSection = document.getElementById('metricsSection');
+                this.resultsSection = document.getElementById('resultsSection');
+                
+                // Question elements
+                this.questionText = document.getElementById('questionText');
+                this.truthBtn = document.getElementById('truthBtn');
+                this.lieBtn = document.getElementById('lieBtn');
+                this.newQuestionBtn = document.getElementById('newQuestionBtn');
+                this.resultsArea = document.getElementById('resultsArea');
+                
+                // Metrics
+                this.truthCount = document.getElementById('truthCount');
+                this.lieCount = document.getElementById('lieCount');
+                this.currentStress = document.getElementById('currentStress');
+                this.accuracyRate = document.getElementById('accuracyRate');
+                
+                // Real-time displays
+                this.heartRate = document.getElementById('heartRate');
+                this.breathRate = document.getElementById('breathRate');
+                this.skinResponse = document.getElementById('skinResponse');
+                this.voiceStress = document.getElementById('voiceStress');
+                this.volumeLevel = document.getElementById('volumeLevel');
+                this.stressLevel = document.getElementById('stressLevel');
+                this.voiceWave = document.getElementById('voiceWave');
+                
+                // Category buttons
+                this.categoryBtns = document.querySelectorAll('.category-btn');
+            }
+
+            initializeState() {
+                this.isCameraActive = false;
+                this.isMicActive = false;
+                this.isAnalyzing = false;
+                this.audioContext = null;
+                this.audioAnalyser = null;
+                this.currentCategory = 'personal';
+                this.currentQuestion = null;
+                this.totalQuestions = 0;
+                this.truthResponses = 0;
+                this.lieResponses = 0;
+                this.analysisHistory = [];
+                this.maxQuestions = 10;
+                
+                // Real-time monitoring
+                this.baseHeartRate = 72;
+                this.baseBreathRate = 16;
+                this.currentStressValue = 0;
+                this.isLiveAnalyzing = false;
+                
+                // Animation intervals
+                this.heartInterval = null;
+                this.breathInterval = null;
+                this.voiceInterval = null;
+                this.analysisInterval = null;
+            }
+
+            initializeQuestions() {
+                this.questions = {
+                    personal: [
+                        "האם אתה מרוצה מהמראה החיצוני שלך?",
+                        "האם יש לך הרגל רע שאתה מסתיר מאחרים?",
+                        "האם כיזבת בשאלה הקודמת?",
+                        "האם אתה חושב שאתה אדם טוב?",
+                        "האם יש לך סוד שאף אחד לא יודע עליו?",
+                        "האם אתה פוחד ממשהו מסוים?",
+                        "האם אתה אוהב את עצמך?",
+                        "האם אתה מקנא באנשים אחרים?",
+                        "האם אתה נוהג לשקר לעצמך?",
+                        "האם יש משהו שאתה מתחרט עליו?",
+                        "האם אתה חושב שאתה מצחיק?",
+                        "האם אתה מפחד ממוות?",
+                        "האם יש לך דעות קדומות כלפי קבוצות מסוימות?",
+                        "האם אתה חושב שההורים שלך גאים בך?",
+                        "האם תרצה לשנות משהו משמעותי בעברך?",
+                        "האם אתה מרגיש בודד לפעמים?",
+                        "האם אתה חושב שאתה יותר חכם מרוב האנשים?",
+                        "האם אתה מתבייש במשפחה שלך?",
+                        "האם אתה מעמיד פנים שאתה מאושר יותר ממה שאתה באמת?",
+                        "האם אתה חושב שאנשים מדברים עליך מאחורי הגב?",
+                        "האם אתה מרגיש שאתה לא מספיק טוב?",
+                        "האם יש לך פנטזיות מיניות מוזרות?",
+                        "האם אתה משקר על הגיל שלך?",
+                        "האם אתה אוהב את השם שלך?",
+                        "האם אתה מתחרט על דברים שלא עשית?",
+                        "האם אתה חושב שהחיים שלך משעממים?",
+                        "האם אתה מרגיש שאתה זקן מהגיל שלך?",
+                        "האם אתה מסתכל על עצמך בבגדים תחתונים במראה?",
+                        "האם אתה חושב על מוות לפני השינה?",
+                        "האם אתה מתבייש בעבר שלך?"
+                    ],
+                    relationships: [
+                        "האם אתה מאוהב במישהו כרגע?",
+                        "האם בגדת פעם בבן/בת זוג?",
+                        "האם יש לך רגשות כלפי החבר/ה הכי טוב/ה שלך?",
+                        "האם כיזבת לבן/בת הזוג שלך השבוע?",
+                        "האם הסתכלת על מישהו אחר בעיניים של תשוקה?",
+                        "האם אתה מרוצה מחיי הזוגיות שלך?",
+                        "האם יש לך מחשבות רומנטיות על מישהו אחר?",
+                        "האם אתה מקנא בזוגיות של חברים שלך?",
+                        "האם תהיה מוכן להתחתן מחר?",
+                        "האם שיקרת על מספר האנשים שהיית איתם?",
+                        "האם יש לך איש קשר סודי בטלפון?",
+                        "האם התפתית פעם לבגוד?",
+                        "האם אתה חושב שמצאת את האהבה האמיתית?",
+                        "האם יש לך דייט סודי השבוע?",
+                        "האם אתה מסתיר משהו מבן/בת הזוג שלך?",
+                        "האם אתה מתקשר לאקסים שלך?",
+                        "האם אתה עדיין חושב על מישהו מהעבר?",
+                        "האם אתה מקנא כשבן/בת הזוג שלך מדבר עם אחרים?",
+                        "האם אתה בודק את הטלפון של בן/בת הזוג שלך?",
+                        "האם אתה אוהב יותר מבן/בת הזוג שלך אוהב אותך?",
+                        "האם יש לך קונטקט עם אקס בפייסבוק/אינסטגרם?",
+                        "האם אתה מפלרטט עם אנשים אחרים?",
+                        "האם אתה מעמיד פנים באורגזמה?",
+                        "האם אתה חושב על מישהו אחר במהלך יחסי מין?",
+                        "האם אתה מסתכל על פורנוגרפיה?",
+                        "האם יש לך חבר/ה מהעבר שהיית רוצה לפגוש?",
+                        "האם אתה רואה עצמך עם בן/בת הזוג שלך בעוד 10 שנים?",
+                        "האם אתה אוהב את המשפחה של בן/בת הזוג שלך?",
+                        "האם אתה שוקל להיפרד?",
+                        "האם אתה מרגיש כלוא במערכת היחסים שלך?"
+                    ],
+                    work: [
+                        "האם אתה אוהב את העבודה שלך?",
+                        "האם שיקרת לבוס שלך השבוע?",
+                        "האם אתה משתמש בזמן העבודה לעניינים אישיים?",
+                        "האם אתה מקבל את השכר שמגיע לך?",
+                        "האם יש לך עמיתים שאתה לא סובל?",
+                        "האם חשבת לעזוב את העבודה החודש?",
+                        "האם אתה דיברת רע על עמיתים מאחורי הגב?",
+                        "האם אתה מחפש עבודה אחרת בסתר?",
+                        "האם לקחת פעם משהו מהעבודה הביתה?",
+                        "האם ההצלחה שלך בעבודה מגיעה לך?",
+                        "האם אתה רואה עצמך במקום הזה בעוד 5 שנים?",
+                        "האם אתה מתחרה בעמיתים שלך?",
+                        "האם אתה מרגיש שאתה עובד מעל יכולותיך?",
+                        "האם יש לך יחסים מיוחדים עם מישהו בעבודה?",
+                        "האם אתה מקבל קרדיט על עבודה של אחרים?",
+                        "האם אתה מגיע מאוחר לעבודה?",
+                        "האם אתה ישן במהלך שעות העבודה?",
+                        "האם אתה מבזבז זמן ברשתות חברתיות בעבודה?",
+                        "האם אתה מרמה בדיווח שעות?",
+                        "האם אתה שונא את הבוס שלך?",
+                        "האם אתה מרגיש שמנצלים אותך בעבודה?",
+                        "האם אתה עושה את המינימום הנדרש?",
+                        "האם אתה מעמיד פנים שאתה עסוק?",
+                        "האם יש לך רומן בעבודה?",
+                        "האם אתה משתמש במחשב העבודה לדברים אישיים?",
+                        "האם אתה מרמה בהוצאות?",
+                        "האם אתה מתלונן על העבודה לחברים?",
+                        "האם אתה מקווה שיפטרו מישהו מסוים?",
+                        "האם אתה חושב שמגיע לך קידום?",
+                        "האם אתה מרגיש לא מוערך בעבודה?"
+                    ],
+                    secrets: [
+                        "האם יש לך סוד שיכול להרוס קשרים?",
+                        "האם עשית משהו לא חוקי השנה?",
+                        "האם יש משהו מביש בהיסטוריית הגלישה שלך?",
+                        "האם יש לך כסף נסתר שאף אחד לא יודע עליו?",
+                        "האם אתה מסתיר התמכרות כלשהי?",
+                        "האם יש לך חשבון סודי ברשתות חברתיות?",
+                        "האם אמרת למישהו שאתה אוהב אותו כשלא התכוונת לזה?",
+                        "האם יש לך מחשבות שאתה מתבייש בהן?",
+                        "האם קראת יומן או הודעות של מישהו אחר בסתר?",
+                        "האם יש לך חוב שאתה מסתיר?",
+                        "האם עשית משהו שהיית מתבייש אם כולם יידעו?",
+                        "האם אתה מעמיד פנים בנושא מסוים?",
+                        "האם יש לך מידע על מישהו שיכול להזיק לו?",
+                        "האם שיקרת על משהו חשוב השבוע?",
+                        "האם תחשוף את כל הסודות שלך תמורת מיליון שקל?",
+                        "האם אתה מסתכל על פרופילים של אנשים שאתה מכיר בפורנו?",
+                        "האם גנבת פעם משהו?",
+                        "האם עשית משהו מיני מוזר?",
+                        "האם יש לך פטיש מיני סודי?",
+                        "האם אתה מסתיר את האמונות הדתיות שלך?",
+                        "האם אתה מעמיד פנים פוליטיים?",
+                        "האם אתה מעמיד פנים שאתה הטרוסקסואל?",
+                        "האם יש לך פנטזיות אלימות?",
+                        "האם אתה מסתיר בעיה רפואית?",
+                        "האם אתה משקר על ההכנסה שלך?",
+                        "האם אתה מחביא כסף מהרשויות?",
+                        "האם יש לך תמונות פרטיות של אנשים אחרים?",
+                        "האם אתה מריח בגדים של אנשים אחרים?",
+                        "האם אתה אוכל דברים שנפלו על הרצפה?",
+                        "האם אתה מתאונן במקומות ציבוריים?",
+                        "האם אתה מקליט שיחות בלי רשות?",
+                        "האם אתה צופה באנשים דרך החלון?",
+                        "האם אתה מסתכל על אנשים במקלחת/שירותים?",
+                        "האם אתה משקר לרופא?",
+                        "האם אתה מעמיד פנים שאתה חולה כדי לא לעבוד?"
+                    ]
+                };
+            }
+
+            setupEventListeners() {
+                this.startBtn.addEventListener('click', () => this.startCamera());
+                this.voiceBtn.addEventListener('click', () => this.toggleVoice());
+                this.startAnalysisBtn.addEventListener('click', () => this.startLiveAnalysis());
+                this.truthBtn.addEventListener('click', () => this.respondToQuestion(true));
+                this.lieBtn.addEventListener('click', () => this.respondToQuestion(false));
+                this.newQuestionBtn.addEventListener('click', () => this.askNewQuestion());
+                
+                this.categoryBtns.forEach(btn => {
+                    btn.addEventListener('click', (e) => this.changeCategory(e.target.dataset.category));
+                });
+            }
+
+            async startCamera() {
+                try {
+                    this.updateStatus('מפעיל מצלמה...', 'loading');
+                    
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: {
+                            width: { ideal: 640 },
+                            height: { ideal: 480 },
+                            facingMode: 'user'
+                        }
+                    });
+
+                    this.video.srcObject = stream;
+                    
+                    this.video.onloadedmetadata = () => {
+                        this.canvas.width = this.video.videoWidth;
+                        this.canvas.height = this.video.videoHeight;
+                        this.isCameraActive = true;
+                        this.cameraStatus.textContent = 'פעילה';
+                        this.startBtn.textContent = '✅ מצלמה פעילה';
+                        this.startBtn.disabled = true;
+                        this.checkIfReadyForAnalysis();
+                    };
+
+                    this.updateStatus('מצלמה פעילה! 📹', 'ready');
+                    
+                } catch (error) {
+                    console.error('Camera error:', error);
+                    this.updateStatus('שגיאה בגישה למצלמה', 'error');
+                    this.cameraStatus.textContent = 'שגיאה';
+                }
+            }
+
+            async toggleVoice() {
+                if (!this.isMicActive) {
+                    try {
+                        this.updateStatus('מפעיל מיקרופון...', 'loading');
+                        
+                        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                        this.audioContext = new AudioContext();
+                        const source = this.audioContext.createMediaStreamSource(stream);
+                        this.audioAnalyser = this.audioContext.createAnalyser();
+                        this.audioAnalyser.fftSize = 256;
+                        source.connect(this.audioAnalyser);
+                        
+                        this.isMicActive = true;
+                        this.micStatus.textContent = 'פעיל';
+                        this.voiceBtn.textContent = '✅ מיקרופון פעיל';
+                        this.voiceBtn.disabled = true;
+                        this.voiceSection.style.display = 'block';
+                        this.startVoiceVisualization();
+                        this.checkIfReadyForAnalysis();
+                        this.updateStatus('מיקרופון פעיל! 🎤', 'ready');
+                        
+                    } catch (error) {
+                        console.error('Microphone error:', error);
+                        this.updateStatus('שגיאה בגישה למיקרופון', 'error');
+                        this.micStatus.textContent = 'שגיאה';
+                    }
+                } else {
+                    this.isMicActive = false;
+                    if (this.audioContext) {
+                        this.audioContext.close();
+                    }
+                    this.voiceBtn.textContent = '🎤 הפעל מיקרופון';
+                    this.voiceBtn.disabled = false;
+                    this.voiceSection.style.display = 'none';
+                    this.micStatus.textContent = 'לא פעיל';
+                }
+            }
+
+            checkIfReadyForAnalysis() {
+                if (this.isCameraActive && this.isMicActive) {
+                    this.startAnalysisBtn.disabled = false;
+                    this.updateStatus('מוכן לניתוח חי! לחץ להתחיל 🚀', 'ready');
+                }
+            }
+
+            startLiveAnalysis() {
+                this.isLiveAnalyzing = true;
+                this.startAnalysisBtn.disabled = true;
+                this.startAnalysisBtn.textContent = '🔴 ניתוח חי פעיל';
+                
+                // Show all analysis sections
+                this.chartSection.style.display = 'block';
+                this.categorySection.style.display = 'block';
+                this.questionSection.style.display = 'block';
+                this.metricsSection.style.display = 'block';
+                this.resultsSection.style.display = 'block';
+                
+                // Show live indicators
+                this.liveIndicator.style.display = 'block';
+                this.realtimeAnalysis.style.display = 'block';
+                
+                this.updateStatus('ניתוח חי פעיל! 🔴', 'live');
+                this.startRealTimeMonitoring();
+                this.enableQuestionMode();
+                
+                this.resultsArea.textContent = "🔴 ניתוח חי החל!\n\nהמערכת מנטרת:\n• דופק ונשימה\n• רמת זיעה\n• ניתוח קולי\n• תנועות עיניים\n\nבחר קטגוריה והתחל לענות על שאלות...\n\n";
+            }
+
+            startRealTimeMonitoring() {
+                // Simulate heart rate monitoring
+                this.heartInterval = setInterval(() => {
+                    const variation = (Math.random() - 0.5) * 10;
+                    const stressMultiplier = 1 + (this.currentStressValue / 100);
+                    const currentHeart = Math.round(this.baseHeartRate * stressMultiplier + variation);
+                    this.heartRate.textContent = `${currentHeart} BPM`;
+                    this.heartRate.parentElement.className = `analysis-value ${this.getStressLevel(currentHeart, 60, 100)}`;
+                }, 1500);
+
+                // Simulate breathing monitoring
+                this.breathInterval = setInterval(() => {
+                    const variation = (Math.random() - 0.5) * 4;
+                    const stressMultiplier = 1 + (this.currentStressValue / 200);
+                    const currentBreath = Math.round(this.baseBreathRate * stressMultiplier + variation);
+                    this.breathRate.textContent = `${currentBreath}/min`;
+                    this.breathRate.parentElement.className = `analysis-value ${this.getStressLevel(currentBreath, 12, 24)}`;
+                }, 2000);
+
+                // Simulate skin response
+                setInterval(() => {
+                    const responses = ['רגיל', 'קל', 'בינוני', 'גבוה'];
+                    const classes = ['normal', 'normal', 'elevated', 'high'];
+                    const level = Math.floor(Math.random() * 4);
+                    this.skinResponse.textContent = responses[level];
+                    this.skinResponse.className = `analysis-value ${classes[level]}`;
+                }, 3000);
+
+                // Overall stress calculation
+                this.analysisInterval = setInterval(() => {
+                    this.updateOverallStress();
+                }, 1000);
+            }
+
+            startVoiceVisualization() {
+                if (!this.audioAnalyser) return;
+                
+                const dataArray = new Uint8Array(this.audioAnalyser.frequencyBinCount);
+                
+                const visualize = () => {
+                    if (!this.isMicActive) return;
+                    
+                    this.audioAnalyser.getByteFrequencyData(dataArray);
+                    const bars = this.voiceWave.children;
+                    
+                    let totalVolume = 0;
+                    for (let i = 0; i < bars.length; i++) {
+                        const barHeight = (dataArray[i * 8] / 255) * 100;
+                        bars[i].style.height = Math.max(barHeight, 20) + '%';
+                        totalVolume += dataArray[i * 8];
+                    }
+                    
+                    const avgVolume = Math.round((totalVolume / (bars.length * 255)) * 100);
+                    this.volumeLevel.textContent = avgVolume;
+                    
+                    // Voice stress analysis
+                    const stressLevels = ['רגיל', 'קל', 'בינוני', 'גבוה'];
+                    const stressIndex = Math.min(3, Math.floor(avgVolume / 25));
+                    this.stressLevel.textContent = stressLevels[stressIndex];
+                    
+                    const voiceStressLevels = ['יציב', 'קל רעד', 'לא יציב', 'מתוח'];
+                    const voiceClasses = ['normal', 'normal', 'elevated', 'high'];
+                    this.voiceStress.textContent = voiceStressLevels[stressIndex];
+                    this.voiceStress.className = `analysis-value ${voiceClasses[stressIndex]}`;
+                    
+                    requestAnimationFrame(visualize);
+                };
+                visualize();
+            }
+
+            getStressLevel(value, normalMin, normalMax) {
+                if (value >= normalMin && value <= normalMax) return 'normal';
+                if (value > normalMax && value <= normalMax * 1.2) return 'elevated';
+                return 'high';
+            }
+
+            updateOverallStress() {
+                const baseStress = Math.random() * 20; // 0-20% base
+                const questionStress = this.currentQuestion ? 20 : 0; // +20% if question active
+                const timeStress = Math.sin(Date.now() / 10000) * 10; // wave pattern
+                
+                this.currentStressValue = Math.max(0, Math.min(100, baseStress + questionStress + timeStress));
+                this.currentStress.textContent = `${Math.round(this.currentStressValue)}%`;
+            }
+
+            enableQuestionMode() {
+                this.newQuestionBtn.disabled = false;
+                this.questionText.textContent = "לחץ על 'שאלה חדשה' כדי להתחיל את הבדיקה החיה";
+            }
+
+            changeCategory(category) {
+                this.currentCategory = category;
+                this.categoryBtns.forEach(btn => btn.classList.remove('active'));
+                document.querySelector(`[data-category="${category}"]`).classList.add('active');
+                
+                this.questionText.textContent = "לחץ על 'שאלה חדשה' לשאלה מהקטגוריה החדשה";
+                this.truthBtn.disabled = true;
+                this.lieBtn.disabled = true;
+            }
+
+            askNewQuestion() {
+                if (this.totalQuestions >= this.maxQuestions) {
+                    this.showFinalResults();
+                    return;
+                }
+
+                const questions = this.questions[this.currentCategory];
+                const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+                
+                this.currentQuestion = randomQuestion;
+                this.questionText.textContent = randomQuestion;
+                
+                this.truthBtn.disabled = false;
+                this.lieBtn.disabled = false;
+                this.newQuestionBtn.disabled = true;
+                
+                // Add stress from new question
+                this.currentStressValue = Math.min(100, this.currentStressValue + 15);
+                
+                this.resultsArea.textContent += `\n🎯 שאלה חדשה: ${randomQuestion}\n⏳ מחכה לתשובה...\n`;
+                this.resultsArea.scrollTop = this.resultsArea.scrollHeight;
+            }
+
+            respondToQuestion(userClaimsTruth) {
+                if (!this.isLiveAnalyzing) return;
+                
+                this.truthBtn.disabled = true;
+                this.lieBtn.disabled = true;
+                
+                // Simulate real-time analysis
+                this.resultsArea.textContent += `📊 מנתח תשובה בזמן אמת...\n`;
+                this.resultsArea.scrollTop = this.resultsArea.scrollHeight;
+                
+                setTimeout(() => {
+                    const result = this.analyzeResponse(userClaimsTruth);
+                    this.displayLiveResult(result);
+                    this.updateStatistics(result);
+                    this.saveAnalysis(result);
+                    
+                    this.newQuestionBtn.disabled = false;
+                    this.currentQuestion = null;
+                }, 2000);
+            }
+
+            analyzeResponse(userClaimsTruth) {
+                // Advanced "live" detection with multiple factors
+                const heartFactor = (this.currentStressValue > 50) ? 0.3 : 0.1;
+                const voiceFactor = Math.random() * 0.3;
+                const timingFactor = Math.random() * 0.2;
+                const baseFactor = Math.random() * 0.5;
+                
+                const totalSuspicion = heartFactor + voiceFactor + timingFactor + baseFactor;
+                const isDetectorCorrect = totalSuspicion < 0.6; // 60% accuracy
+                
+                let detectedTruth;
+                if (isDetectorCorrect) {
+                    detectedTruth = userClaimsTruth;
+                } else {
+                    detectedTruth = !userClaimsTruth;
+                }
+                
+                const confidence = 70 + Math.random() * 25; // 70-95% confidence
+                
+                return {
+                    userClaim: userClaimsTruth,
+                    detected: detectedTruth,
+                    confidence: Math.round(confidence),
+                    correct: isDetectorCorrect,
+                    question: this.currentQuestion,
+                    stressLevel: this.currentStressValue,
+                    timestamp: new Date()
+                };
+            }
+
+            displayLiveResult(result) {
+                const emoji = result.detected ? "✅" : "❌";
+                const text = result.detected ? "אמת" : "שקר";
+                const stressText = result.stressLevel > 70 ? "לחץ גבוה" : result.stressLevel > 40 ? "לחץ בינוני" : "לחץ נמוך";
+                
+                const resultText = `${emoji} זיהוי חי: ${text}\n` +
+                                 `🎯 ביטחון: ${result.confidence}%\n` +
+                                 `😰 רמת לחץ: ${Math.round(result.stressLevel)}% (${stressText})\n` +
+                                 `⏰ ${new Date().toLocaleTimeString('he-IL')}\n\n`;
+                
+                this.resultsArea.textContent += resultText;
+                this.resultsArea.scrollTop = this.resultsArea.scrollHeight;
+            }
+
+            updateStatistics(result) {
+                this.totalQuestions++;
+                
+                if (result.userClaim) {
+                    this.truthResponses++;
+                } else {
+                    this.lieResponses++;
+                }
+                
+                this.truthCount.textContent = this.truthResponses;
+                this.lieCount.textContent = this.lieResponses;
+                
+                // Calculate detection accuracy
+                const correctDetections = this.analysisHistory.filter(a => a.correct).length;
+                const accuracy = this.totalQuestions > 0 ? Math.round((correctDetections / this.totalQuestions) * 100) : 0;
+                this.accuracyRate.textContent = `${accuracy}%`;
+            }
+
+            saveAnalysis(result) {
+                this.analysisHistory.push(result);
+            }
+
+            showFinalResults() {
+                const truthPercentage = Math.round((this.truthResponses / this.totalQuestions) * 100);
+                const liePercentage = Math.round((this.lieResponses / this.totalQuestions) * 100);
+                const correctDetections = this.analysisHistory.filter(a => a.correct).length;
+                const finalAccuracy = Math.round((correctDetections / this.totalQuestions) * 100);
+                const avgStress = Math.round(this.analysisHistory.reduce((sum, a) => sum + a.stressLevel, 0) / this.totalQuestions);
+                
+                let personality = "";
+                if (truthPercentage > 70 && avgStress < 40) {
+                    personality = "אמתן רגוע - אתה ישר ושקט! 😇";
+                } else if (truthPercentage > 70 && avgStress >= 40) {
+                    personality = "אמתן עצבני - אתה ישר אבל מתוח! 😅";
+                } else if (truthPercentage > 50 && avgStress < 60) {
+                    personality = "מאוזן וקריר - אתה יודע לשמור על קור רוח 😎";
+                } else if (truthPercentage < 40 && avgStress < 50) {
+                    personality = "שקרן מקצועי - פנים של פוקר מושלמות! 🎭";
+                } else {
+                    personality = "מורכב ומעניין - לא קל לקרוא אותך! 🤔";
+                }
+                
+                const finalReport = `
+🎯 דוח פוליגרף חי סופי:
+
+📊 סטטיסטיקות בזמן אמת:
+✅ אמת: ${this.truthResponses} (${truthPercentage}%)
+❌ שקר: ${this.lieResponses} (${liePercentage}%)
+🎯 דיוק זיהוי: ${finalAccuracy}%
+😰 רמת לחץ ממוצעת: ${avgStress}%
+
+🧠 ניתוח אישיות:
+${personality}
+
+📈 ניתוח פיזיולוגי:
+${this.generatePhysiologyAnalysis(avgStress, finalAccuracy)}
+
+🔴 המסקנה מהשידור החי:
+${this.generateLiveConclusion(truthPercentage, avgStress, finalAccuracy)}
+
+⏰ הבדיקה החיה הושלמה ב-${new Date().toLocaleString('he-IL')}
+                `;
+                
+                this.resultsArea.textContent = finalReport;
+                this.questionText.textContent = "🎉 הניתוח החי הושלם! תוכל להתחיל מחדש";
+                this.resetForNewSession();
+            }
+
+            generatePhysiologyAnalysis(avgStress, accuracy) {
+                if (avgStress < 30 && accuracy > 80) {
+                    return "מערכת עצבים יציבה - המכשיר קרא אותך בקלות בגלל הרגיעה שלך.";
+                } else if (avgStress > 70 && accuracy < 60) {
+                    return "מערכת עצבים פעילה - הלחץ הגבוה הקשה על הזיהוי.";
+                } else if (avgStress > 60 && accuracy > 75) {
+                    return "למרות הלחץ, הסימנים שלך ברורים - אתה שקוף רגשית.";
+                } else {
+                    return "פרופיל פיזיולוגי מאוזן - יש לך שליטה טובה על התגובות שלך.";
+                }
+            }
+
+            generateLiveConclusion(truthPercentage, avgStress, accuracy) {
+                if (truthPercentage >= 80 && avgStress < 40) {
+                    return "אתה אדם פתוח ורגוע. הניתוח החי הראה עקביות מושלמת בין מה שאמרת למה שהגוף שלך הראה.";
+                } else if (truthPercentage < 40 && avgStress < 50) {
+                    return "יש לך כישרון טבעי להסתרת האמת! השידור החי הראה שאתה שולט על התגובות הפיזיולוגיות שלך.";
+                } else if (avgStress > 70) {
+                    return "הבדיקה החיה הראתה שאתה מגיב חזק לחקירה. זה נורמלי - הרבה אנשים מתרגשים מפוליגרף.";
+                } else {
+                    return "פרופיל מעניין! השידור החי הראה שאתה אדם מורכב עם תגובות לא צפויות.";
+                }
+            }
+
+            resetForNewSession() {
+                this.startAnalysisBtn.textContent = "🔄 התחל ניתוח חדש";
+                this.startAnalysisBtn.onclick = () => {
+                    // Reset all data
+                    this.totalQuestions = 0;
+                    this.truthResponses = 0;
+                    this.lieResponses = 0;
+                    this.analysisHistory = [];
+                    this.currentStressValue = 0;
+                    
+                    // Reset UI
+                    this.truthCount.textContent = "0";
+                    this.lieCount.textContent = "0";
+                    this.accuracyRate.textContent = "--%";
+                    this.currentStress.textContent = "0%";
+                    
+                    this.resultsArea.textContent = "🔄 מערכת אופסה - מוכן לניתוח חדש!\n\n";
+                    this.questionText.textContent = "לחץ על 'שאלה חדשה' כדי להתחיל מחדש";
+                    
+                    this.startAnalysisBtn.textContent = "🔴 ניתוח חי פעיל";
+                    this.startAnalysisBtn.onclick = null;
+                    this.truthBtn.disabled = true;
+                    this.lieBtn.disabled = true;
+                    this.newQuestionBtn.disabled = false;
+                    
+                    this.updateStatus('ניתוח חי פעיל! 🔴', 'live');
+                };
+            }
+
+            updateStatus(message, type) {
+                const statusText = this.statusElement.querySelector('.status-text');
+                statusText.textContent = message;
+                this.statusElement.className = `status ${type}`;
+            }
+        }
+
+        // Initialize the live polygraph when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const livePolygraph = new LivePolygraph();
+                console.log('✅ Live Polygraph initialized successfully');
+            } catch (error) {
+                console.error('Initialization error:', error);
+                document.getElementById('status').querySelector('.status-text').textContent = 'שגיאה באתחול - רענן את הדף';
+            }
+        });
+
+        // Keyboard shortcuts for quick responses
+        document.addEventListener('keydown', (e) => {
+            const truthBtn = document.getElementById('truthBtn');
+            const lieBtn = document.getElementById('lieBtn');
+            
+            if (e.key === 'Enter' && !truthBtn.disabled) {
+                truthBtn.click();
+            } else if (e.key === ' ' && !lieBtn.disabled) {
+                e.preventDefault();
+                lieBtn.click();
+            } else if (e.key === 'n' || e.key === 'N') {
+                const newQuestionBtn = document.getElementById('newQuestionBtn');
+                if (!newQuestionBtn.disabled) {
+                    newQuestionBtn.click();
+                }
+            }
+        });
+
+        // Touch effects for mobile
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('touchstart', (e) => {
+                e.target.style.transform = 'scale(0.95)';
+            });
+            
+            btn.addEventListener('touchend', (e) => {
+                setTimeout(() => {
+                    e.target.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // Prevent context menu on long press (mobile)
+        document.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+
+        // Add dynamic chart line animations
+        setInterval(() => {
+            const chartLines = document.querySelectorAll('.chart-line');
+            chartLines.forEach((line, index) => {
+                const delay = index * 300;
+                setTimeout(() => {
+                    const randomMove = Math.random() * 20 - 10;
+                    line.style.transform = `translateY(${randomMove}px)`;
+                    setTimeout(() => {
+                        line.style.transform = 'translateY(0px)';
+                    }, 1000);
+                }, delay);
+            });
+        }, 4000);
+
+        // Add realistic heart rate variation animation
+        setInterval(() => {
+            const heartLine = document.querySelector('.heart-line');
+            if (heartLine) {
+                heartLine.style.animation = 'none';
+                setTimeout(() => {
+                    heartLine.style.animation = `waveMove ${2 + Math.random()}s linear infinite`;
+                }, 100);
+            }
+        }, 3000);
+
+        // Handle page visibility for performance
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Pause intensive animations when page is hidden
+                const voiceWave = document.getElementById('voiceWave');
+                if (voiceWave) {
+                    voiceWave.style.animationPlayState = 'paused';
+                }
+            } else {
+                // Resume animations when page is visible
+                const voiceWave = document.getElementById('voiceWave');
+                if (voiceWave) {
+                    voiceWave.style.animationPlayState = 'running';
+                }
+            }
+        });
+
+        // Add wave movement animation for chart lines
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes waveMove {
+                0% { transform: translateX(-100%) translateY(var(--wave-y, 0px)); }
+                100% { transform: translateX(100%) translateY(var(--wave-y, 0px)); }
+            }
+            
+            .chart-line {
+                animation: waveMove 3s linear infinite;
+                transition: transform 0.5s ease;
+            }
+            
+            .voice-bar.active {
+                background: linear-gradient(45deg, #fdbb2d, #22c1c3, #ff6b6b);
+                animation: voicePulse 0.3s ease-in-out infinite alternate;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Add some fun easter eggs
+        let clickCount = 0;
+        document.querySelector('.logo').addEventListener('click', () => {
+            clickCount++;
+            if (clickCount === 5) {
+                alert('🎉 מצאת את הסוד! הפוליגרף הזה הוא בדיחה - אבל כיף לשחק איתו! 😄');
+                clickCount = 0;
+            }
+        });
+
+        // Show tooltips on metrics
+        document.querySelectorAll('.metric-card').forEach(card => {
+            card.addEventListener('mouseenter', (e) => {
+                const label = e.target.querySelector('.metric-label').textContent;
+                let tooltip = '';
+                
+                switch(label) {
+                    case 'אמת':
+                        tooltip = 'מספר התשובות שענית עליהן "אמת"';
+                        break;
+                    case 'שקר':
+                        tooltip = 'מספר התשובות שענית עליהן "שקר"';
+                        break;
+                    case 'לחץ כללי':
+                        tooltip = 'רמת הלחץ הפיזיולוגי שזוהתה במצלמה ובמיקרופון';
+                        break;
+                    case 'דיוק זיהוי':
+                        tooltip = 'כמה מדויק המכשיר בזיהוי האמת והשקר שלך';
+                        break;
+                }
+                
+                e.target.title = tooltip;
+            });
+        });
+    </script>
+</body>
+</html>

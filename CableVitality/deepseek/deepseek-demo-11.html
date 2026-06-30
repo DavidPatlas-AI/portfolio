@@ -1,0 +1,604 @@
+﻿<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CableVitality – מפת עומס חיה</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;600;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Assistant', sans-serif;
+            background: #0a0f1a;
+            color: #e0e8f0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+        }
+        
+        #canvas-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        #panel {
+            width: 420px;
+            background: linear-gradient(180deg, #0d1525 0%, #111a2e 100%);
+            border-left: 1px solid #2a3a5c;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            box-shadow: -4px 0 30px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+        
+        .title {
+            font-size: 1.6em;
+            font-weight: 700;
+            background: linear-gradient(135deg, #4fc3f7, #7c4dff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+        
+        .subtitle {
+            font-size: 0.85em;
+            color: #8899bb;
+            font-weight: 300;
+        }
+        
+        .section {
+            background: #131d30;
+            border-radius: 12px;
+            padding: 16px;
+            border: 1px solid #253250;
+        }
+        
+        .section h3 {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: #b0c8ff;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section h3 .icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+        }
+        
+        label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.82em;
+            color: #aabbcc;
+            margin-bottom: 4px;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            accent-color: #4fc3f7;
+            margin-bottom: 8px;
+        }
+        
+        .value-tag {
+            font-weight: 700;
+            color: #4fc3f7;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        
+        .stat-card {
+            background: #0d1525;
+            border-radius: 10px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #253250;
+        }
+        
+        .stat-card .val {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .stat-card .lbl {
+            font-size: 0.7em;
+            color: #7f8fa0;
+        }
+        
+        .danger { color: #ff5252; }
+        .warning { color: #ffa726; }
+        .ok { color: #66bb6a; }
+        
+        .formula-box {
+            background: #0a0f18;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.75em;
+            color: #aab;
+            border: 1px solid #1e2d45;
+            direction: ltr;
+            text-align: left;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .legend-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-left: 6px;
+        }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0d1525; }
+        ::-webkit-scrollbar-thumb { background: #253250; border-radius: 3px; }
+    </style>
+<style id="cv-home-nav-style">.cv-home-nav{position:fixed;z-index:99999;left:14px;top:14px;display:flex;gap:8px;align-items:center;font-family:Arial,"Segoe UI",sans-serif;direction:rtl}.cv-home-nav a{min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:0 12px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:rgba(5,12,14,.72);backdrop-filter:blur(14px);color:#eef8f4;text-decoration:none;font-size:13px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.22)}.cv-home-nav a:hover{border-color:rgba(66,211,146,.6);color:#42d392}@media(max-width:640px){.cv-home-nav{left:8px;top:8px}.cv-home-nav a{font-size:12px;padding:0 10px}}</style><link rel="stylesheet" href="../assets/mobile-shell.css">
+<link rel="stylesheet" href="../assets/site-polish.css">
+</head>
+<body><div class="cv-home-nav"><a href="../index.html">בית</a><a href="../index.html#deepseek">DeepSeek</a></div>
+
+<div id="canvas-container"></div>
+
+<div id="panel">
+    <div>
+        <div class="title">🎯 CableVitality</div>
+        <div class="subtitle">The Living Artery – Bio‑mimetic Tether Monitoring</div>
+    </div>
+
+    <div class="section">
+        <h3><span class="icon" style="background:#1e3a5f;">🎮</span> פרמטרי סביבה</h3>
+        <label>גובה רחפן <span class="value-tag" id="val-height">80</span> מ'</label>
+        <input type="range" id="slider-height" min="20" max="150" value="80" step="1">
+        
+        <label>מהירות רוח <span class="value-tag" id="val-wind">5</span> מ/ש'</label>
+        <input type="range" id="slider-wind" min="0" max="25" value="5" step="0.5">
+        
+        <label>לחות <span class="value-tag" id="val-humidity">60</span>%</label>
+        <input type="range" id="slider-humidity" min="20" max="100" value="60" step="1">
+        
+        <label>משקל כבל <span class="value-tag" id="val-mass">19</span> ג'/מ'</label>
+        <input type="range" id="slider-mass" min="5" max="50" value="19" step="1">
+        
+        <label>אורך כבל <span class="value-tag" id="val-length">100</span> מ'</label>
+        <input type="range" id="slider-length" min="30" max="200" value="100" step="1">
+    </div>
+
+    <div class="section">
+        <h3><span class="icon" style="background:#2e3a1f;">📊</span> מדדי מצב</h3>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="val ok" id="stat-vitality">0.92</div>
+                <div class="lbl">Vitality Index</div>
+            </div>
+            <div class="stat-card">
+                <div class="val warning" id="stat-maxrisk">0.23</div>
+                <div class="lbl">עומס מרבי</div>
+            </div>
+            <div class="stat-card">
+                <div class="val ok" id="stat-tension">412</div>
+                <div class="lbl">מתיחות (N)</div>
+            </div>
+            <div class="stat-card">
+                <div class="val ok" id="stat-bend">∞</div>
+                <div class="lbl">רדיוס כיפוף (מ"מ)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h3><span class="icon" style="background:#3a1f2e;">🔴🟡🟢</span> מקרא</h3>
+        <div style="font-size:0.8em;">
+            <span class="legend-dot" style="background:#66bb6a;"></span> אזור בטוח (מרווח > 0.3)
+            <span class="legend-dot" style="background:#ffa726;"></span> עומס בינוני (0–0.3)
+            <span class="legend-dot" style="background:#ff5252;"></span> סיכון גבוה (מרווח < 0)
+            <br>
+            <span style="color:#4fc3f7;">⬤</span> נקודת חיבור רחפן &nbsp;
+            <span style="color:#ff9800;">⬤</span> נקודת עיגון &nbsp;
+            <span style="color:#ff5252; font-size:1.2em;">✖</span> נקודת עומס מרבי
+        </div>
+    </div>
+
+    <div class="section">
+        <h3><span class="icon" style="background:#1f2e3a;">📐</span> נוסחה פעילה</h3>
+        <div class="formula-box" id="formula-display">
+T_h = {{T_h}} N<br>
+a = T_h/(m·g) = {{a}} m<br>
+Sag ≈ (m·g·D_h²)/(8·T_h) = {{sag}} m<br>
+T(s) = √(T_h² + (m·g·Δz)²)<br>
+SafetyRisk(s) = Σ w_i · f_i(...)
+        </div>
+    </div>
+</div>
+
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+// ========== DOM ELEMENTS ==========
+const slHeight = document.getElementById('slider-height');
+const slWind = document.getElementById('slider-wind');
+const slHumidity = document.getElementById('slider-humidity');
+const slMass = document.getElementById('slider-mass');
+const slLength = document.getElementById('slider-length');
+
+const valHeight = document.getElementById('val-height');
+const valWind = document.getElementById('val-wind');
+const valHumidity = document.getElementById('val-humidity');
+const valMass = document.getElementById('val-mass');
+const valLength = document.getElementById('val-length');
+
+const statVitality = document.getElementById('stat-vitality');
+const statMaxrisk = document.getElementById('stat-maxrisk');
+const statTension = document.getElementById('stat-tension');
+const statBend = document.getElementById('stat-bend');
+const formulaDisplay = document.getElementById('formula-display');
+
+// ========== THREE.JS SETUP ==========
+const container = document.getElementById('canvas-container');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0f1a);
+scene.fog = new THREE.Fog(0x0a0f1a, 50, 400);
+
+const camera = new THREE.PerspectiveCamera(55, container.clientWidth / container.clientHeight, 1, 600);
+camera.position.set(60, 50, 80);
+camera.lookAt(25, 40, 0);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(container.clientWidth, container.clientHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+container.appendChild(renderer.domElement);
+
+// CSS2 renderer for labels
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(container.clientWidth, container.clientHeight);
+labelRenderer.domElement.style.position = 'absolute';
+labelRenderer.domElement.style.top = '0';
+labelRenderer.domElement.style.pointerEvents = 'none';
+container.appendChild(labelRenderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(25, 40, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.maxPolarAngle = Math.PI * 0.75;
+controls.update();
+
+// ========== LIGHTING ==========
+const ambientLight = new THREE.AmbientLight(0x334466, 2.5);
+scene.add(ambientLight);
+const dirLight = new THREE.DirectionalLight(0xffffff, 4);
+dirLight.position.set(80, 100, 50);
+dirLight.castShadow = true;
+dirLight.shadow.mapSize.width = 1024;
+dirLight.shadow.mapSize.height = 1024;
+dirLight.shadow.camera.near = 1;
+dirLight.shadow.camera.far = 400;
+dirLight.shadow.camera.left = -100;
+dirLight.shadow.camera.right = 100;
+dirLight.shadow.camera.top = 100;
+dirLight.shadow.camera.bottom = -20;
+scene.add(dirLight);
+
+// ========== GROUND ==========
+const groundGeo = new THREE.PlaneGeometry(200, 200);
+const groundMat = new THREE.MeshStandardMaterial({ color: 0x1a2a3a, roughness: 0.9, metalness: 0.1 });
+const ground = new THREE.Mesh(groundGeo, groundMat);
+ground.rotation.x = -Math.PI / 2;
+ground.position.set(25, -2, 0);
+ground.receiveShadow = true;
+scene.add(ground);
+
+// Grid helper
+const grid = new THREE.GridHelper(160, 40, 0x334466, 0x1a2a3a);
+grid.position.set(25, 0.01, 0);
+scene.add(grid);
+
+// ========== SCENE OBJECTS ==========
+let wireLine = null;
+let droneMarker = null;
+let anchorMarker = null;
+let riskMarkers = [];
+let labelObjects = [];
+
+function createDroneModel() {
+    const group = new THREE.Group();
+    const body = new THREE.Mesh(
+        new THREE.SphereGeometry(1.2, 16, 16),
+        new THREE.MeshStandardMaterial({ color: 0x4fc3f7, emissive: 0x1a5a7a, roughness: 0.3 })
+    );
+    body.castShadow = true;
+    group.add(body);
+    // arms
+    for (let i = 0; i < 4; i++) {
+        const angle = (i * Math.PI) / 2 + Math.PI / 4;
+        const arm = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.15, 0.15, 3, 8),
+            new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.4 })
+        );
+        arm.position.set(Math.cos(angle) * 1.8, 0, Math.sin(angle) * 1.8);
+        arm.castShadow = true;
+        group.add(arm);
+        const prop = new THREE.Mesh(
+            new THREE.BoxGeometry(1.2, 0.05, 0.3),
+            new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0x111111 })
+        );
+        prop.position.copy(arm.position);
+        prop.position.y += 0.4;
+        group.add(prop);
+    }
+    return group;
+}
+
+function createAnchorModel() {
+    const group = new THREE.Group();
+    const base = new THREE.Mesh(
+        new THREE.CylinderGeometry(1, 1.5, 2, 16),
+        new THREE.MeshStandardMaterial({ color: 0xff9800, emissive: 0x3a2000, roughness: 0.5 })
+    );
+    base.position.y = -1;
+    base.castShadow = true;
+    group.add(base);
+    const top = new THREE.Mesh(
+        new THREE.SphereGeometry(0.8, 16, 16),
+        new THREE.MeshStandardMaterial({ color: 0xffcc80, emissive: 0x2a1a00, roughness: 0.3 })
+    );
+    top.position.y = 0.5;
+    top.castShadow = true;
+    group.add(top);
+    return group;
+}
+
+function createLabel(text, color) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    div.style.color = color;
+    div.style.fontSize = '14px';
+    div.style.fontWeight = '700';
+    div.style.fontFamily = 'Assistant, sans-serif';
+    div.style.background = 'rgba(0,0,0,0.7)';
+    div.style.padding = '2px 10px';
+    div.style.borderRadius = '6px';
+    return new CSS2DObject(div);
+}
+
+droneMarker = createDroneModel();
+anchorMarker = createAnchorModel();
+scene.add(droneMarker);
+scene.add(anchorMarker);
+
+// ========== CATENARY COMPUTATION ==========
+const G = 9.8067;
+
+function computeCatenary(dronePos, anchorPos, L, m, windSpeed) {
+    const Dh = Math.sqrt((dronePos.x - anchorPos.x) ** 2 + (dronePos.z - anchorPos.z) ** 2);
+    const deltaH = dronePos.y - anchorPos.y;
+    const w = m * G;
+    const T_h = 50 + windSpeed * 8; // simple relation
+    const a = Math.max(T_h / w, 0.5);
+    const n = 100;
+    const points = [];
+    const sVals = [];
+    const tensions = [];
+    const bendRadii = [];
+    const dirX = (dronePos.z - anchorPos.z) / (Dh + 1e-6);
+    const dirZ = -(dronePos.x - anchorPos.x) / (Dh + 1e-6);
+    
+    for (let i = 0; i <= n; i++) {
+        const frac = i / n;
+        const xLocal = frac * Dh;
+        const z = a * Math.cosh((xLocal - Dh/2) / a) - a * Math.cosh(Dh/(2*a)) + anchorPos.y;
+        const windDeflect = (windSpeed > 0) ? (0.5 * 1.204 * 1.0 * 0.0032 * windSpeed**2) / (2 * T_h) * xLocal * (L - xLocal) : 0;
+        const px = anchorPos.x + windDeflect * 0.7;
+        const py = z;
+        const pz = anchorPos.z + xLocal * dirX + windDeflect * 0.3;
+        points.push(new THREE.Vector3(px, py, pz));
+        sVals.push(frac * L);
+        const dz = z - anchorPos.y;
+        tensions.push(Math.sqrt(T_h**2 + (w * dz)**2));
+        bendRadii.push(1e6); // simplified
+    }
+    return { points, sVals, tensions, bendRadii, T_h, a };
+}
+
+function computeSafetyRisk(sVals, tensions, T_break, bendRadii, R_min, windSpeed, humidity) {
+    const risks = [];
+    for (let i = 0; i < sVals.length; i++) {
+        const fT = Math.min(1, tensions[i] / T_break) ** 2;
+        const fB = bendRadii[i] > 0 ? Math.min(1, R_min / bendRadii[i]) ** 3 : 1;
+        const fW = Math.min(1, windSpeed / 20);
+        const fH = humidity / 100;
+        const risk = 0.35 * fT + 0.30 * fB + 0.20 * fW + 0.15 * fH;
+        risks.push(Math.min(1, risk));
+    }
+    return risks;
+}
+
+// ========== UPDATE FUNCTION ==========
+function updateScene() {
+    const height = parseFloat(slHeight.value);
+    const windSpeed = parseFloat(slWind.value);
+    const humidity = parseFloat(slHumidity.value);
+    const mass = parseFloat(slMass.value) / 1000; // g/m -> kg/m
+    const cableLen = parseFloat(slLength.value);
+    
+    valHeight.textContent = height;
+    valWind.textContent = windSpeed;
+    valHumidity.textContent = humidity;
+    valMass.textContent = (mass * 1000).toFixed(0);
+    valLength.textContent = cableLen;
+    
+    const dronePos = new THREE.Vector3(25, height, 45);
+    const anchorPos = new THREE.Vector3(25, 1.5, -25);
+    
+    droneMarker.position.copy(dronePos);
+    anchorMarker.position.copy(anchorPos);
+    
+    const result = computeCatenary(dronePos, anchorPos, cableLen, mass, windSpeed);
+    const { points, sVals, tensions, bendRadii, T_h, a } = result;
+    const T_break = 910;
+    const R_min = 0.0075;
+    
+    const risks = computeSafetyRisk(sVals, tensions, T_break, bendRadii, R_min, windSpeed, humidity);
+    
+    // Remove old wire
+    if (wireLine) scene.remove(wireLine);
+    riskMarkers.forEach(m => scene.remove(m));
+    labelObjects.forEach(l => scene.remove(l));
+    riskMarkers = [];
+    labelObjects = [];
+    
+    // Create wire with color gradient
+    const curve = new THREE.CatmullRomCurve3(points);
+    const tubePoints = curve.getPoints(200);
+    const colors = [];
+    for (let i = 0; i < tubePoints.length; i++) {
+        const t = i / (tubePoints.length - 1);
+        const risk = risks[Math.floor(t * (risks.length - 1))];
+        let color;
+        if (risk > 0.5) color = new THREE.Color(0xff5252);
+        else if (risk > 0.2) color = new THREE.Color(0xffa726);
+        else color = new THREE.Color(0x66bb6a);
+        colors.push(color.r, color.g, color.b);
+    }
+    const tubeGeo = new THREE.TubeGeometry(curve, 200, 0.2, 8, false);
+    const positions = tubeGeo.attributes.position;
+    const colorArr = new Float32Array(positions.count * 3);
+    for (let i = 0; i < positions.count; i++) {
+        const pt = new THREE.Vector3().fromBufferAttribute(positions, i);
+        const t = curve.getUtoTmapping(pt);
+        const riskIdx = Math.floor(t * (risks.length - 1));
+        const risk = risks[Math.min(riskIdx, risks.length - 1)];
+        let c;
+        if (risk > 0.5) c = new THREE.Color(0xff5252);
+        else if (risk > 0.2) c = new THREE.Color(0xffa726);
+        else c = new THREE.Color(0x66bb6a);
+        colorArr[i * 3] = c.r;
+        colorArr[i * 3 + 1] = c.g;
+        colorArr[i * 3 + 2] = c.b;
+    }
+    tubeGeo.setAttribute('color', new THREE.BufferAttribute(colorArr, 3));
+    const tubeMat = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.5, metalness: 0.1 });
+    wireLine = new THREE.Mesh(tubeGeo, tubeMat);
+    wireLine.castShadow = true;
+    wireLine.receiveShadow = true;
+    scene.add(wireLine);
+    
+    // Labels
+    const droneLabel = createLabel('חיבור רחפן (A)', '#4fc3f7');
+    droneLabel.position.copy(dronePos.clone().add(new THREE.Vector3(0, 2, 0)));
+    scene.add(droneLabel);
+    labelObjects.push(droneLabel);
+    
+    const anchorLabel = createLabel('עיגון קרקע (B)', '#ff9800');
+    anchorLabel.position.copy(anchorPos.clone().add(new THREE.Vector3(0, 2, 0)));
+    scene.add(anchorLabel);
+    labelObjects.push(anchorLabel);
+    
+    // Critical point
+    let maxRiskIdx = 0;
+    for (let i = 1; i < risks.length; i++) {
+        if (risks[i] > risks[maxRiskIdx]) maxRiskIdx = i;
+    }
+    const critPoint = points[maxRiskIdx];
+    const critSphere = new THREE.Mesh(
+        new THREE.SphereGeometry(0.7, 16, 16),
+        new THREE.MeshStandardMaterial({ color: 0xff5252, emissive: 0x330000, roughness: 0.2 })
+    );
+    critSphere.position.copy(critPoint);
+    critSphere.castShadow = true;
+    scene.add(critSphere);
+    riskMarkers.push(critSphere);
+    
+    const critLabel = createLabel(`⚠️ עומס מרבי (${(risks[maxRiskIdx]*100).toFixed(0)}%)`, '#ff5252');
+    critLabel.position.copy(critPoint.clone().add(new THREE.Vector3(0, 1.5, 0)));
+    scene.add(critLabel);
+    labelObjects.push(critLabel);
+    
+    // Stats
+    const maxRisk = risks[maxRiskIdx];
+    const vitality = 1 - risks.reduce((a, b) => a + b, 0) / risks.length;
+    const maxTension = tensions[maxRiskIdx];
+    const minBend = bendRadii[maxRiskIdx];
+    
+    statVitality.textContent = vitality.toFixed(2);
+    statVitality.className = 'val ' + (vitality > 0.7 ? 'ok' : vitality > 0.4 ? 'warning' : 'danger');
+    statMaxrisk.textContent = maxRisk.toFixed(2);
+    statMaxrisk.className = 'val ' + (maxRisk < 0.2 ? 'ok' : maxRisk < 0.5 ? 'warning' : 'danger');
+    statTension.textContent = Math.round(maxTension);
+    statBend.textContent = minBend > 1000 ? '∞' : (minBend * 1000).toFixed(1);
+    
+    // Formula display
+    const sag = (mass * G * (45+25)**2) / (8 * T_h);
+    formulaDisplay.innerHTML = `
+T<sub>h</sub> = ${T_h.toFixed(1)} N<br>
+a = T<sub>h</sub>/(m·g) = ${a.toFixed(1)} m<br>
+Sag ≈ (m·g·D<sub>h</sub>²)/(8·T<sub>h</sub>) = ${sag.toFixed(2)} m<br>
+T(s) = √(T<sub>h</sub>² + (m·g·Δz)²)<br>
+SafetyRisk(s) = 0.35·f<sub>T</sub> + 0.30·f<sub>B</sub> + 0.20·f<sub>W</sub> + 0.15·f<sub>H</sub><br>
+Vitality = 1 - (1/L)∫Risk ds = ${vitality.toFixed(3)}
+    `.trim();
+}
+
+// ========== EVENT LISTENERS ==========
+[slHeight, slWind, slHumidity, slMass, slLength].forEach(sl => {
+    sl.addEventListener('input', updateScene);
+});
+window.addEventListener('resize', () => {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    labelRenderer.setSize(container.clientWidth, container.clientHeight);
+});
+
+// ========== ANIMATION LOOP ==========
+function animate() {
+    requestAnimationFrame(animate);
+    controls.update();
+    renderer.render(scene, camera);
+    labelRenderer.render(scene, camera);
+}
+
+// Initial
+updateScene();
+animate();
+</script>
+<div class="cv-mobile-orbit" aria-hidden="true"></div>
+<script src="../assets/site-polish.js"></script>
+</body>
+</html>
+
+

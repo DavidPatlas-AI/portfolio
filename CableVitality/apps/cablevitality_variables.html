@@ -1,0 +1,111 @@
+﻿<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CableVitality | מאגר משתנים</title>
+<style id="cv-home-nav-style">
+.cv-home-nav{position:fixed;z-index:99999;left:14px;top:14px;display:flex;gap:8px;align-items:center;font-family:Arial,"Segoe UI",sans-serif;direction:rtl}.cv-home-nav a{min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:0 12px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:rgba(5,12,14,.72);backdrop-filter:blur(14px);color:#eef8f4;text-decoration:none;font-size:13px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.22)}.cv-home-nav a:hover{border-color:rgba(66,211,146,.6);color:#42d392}@media(max-width:640px){.cv-home-nav{left:8px;top:8px}.cv-home-nav a{font-size:12px;padding:0 10px}}
+</style>
+<style>
+:root{color-scheme:dark;--bg:#070b0d;--panel:#101718;--panel2:#172121;--ink:#f2fbf7;--muted:#9fb2ad;--line:rgba(242,251,247,.13);--green:#42d392;--cyan:#72d6ff;--amber:#ffd166;--red:#ff6b6b;--violet:#b69cff;--shadow:0 24px 90px rgba(0,0,0,.34)}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,"Segoe UI",sans-serif;background:radial-gradient(circle at 8% 8%,rgba(66,211,146,.16),transparent 30%),radial-gradient(circle at 92% 4%,rgba(114,214,255,.13),transparent 28%),linear-gradient(180deg,#07100f,#080b0d 62%,#050809);color:var(--ink)}button,input,select{font:inherit}.page{width:min(1420px,calc(100% - 28px));margin:0 auto;padding:72px 0 38px}.hero{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:18px;align-items:stretch}.headline,.qa-panel,.card,.side,.table-wrap{border:1px solid var(--line);border-radius:8px;background:rgba(16,23,24,.84);box-shadow:var(--shadow)}.headline{padding:28px}.eyebrow{margin:0 0 10px;color:var(--green);font-weight:900}.headline h1{margin:0;font-size:clamp(34px,5vw,66px);line-height:1;letter-spacing:0}.lead{max-width:760px;margin:16px 0 0;color:#d7ebe4;font-size:19px;line-height:1.65}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px}.stat{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.035);padding:13px}.stat strong{display:block;color:var(--cyan);font-size:25px}.stat span{display:block;color:var(--muted);font-size:13px;margin-top:4px}.qa-panel{padding:20px;display:flex;flex-direction:column;gap:12px}.qa-panel h2{margin:0;font-size:23px}.qa-row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding:9px 0;color:var(--muted)}.qa-row strong{color:var(--ink)}.toolbar{position:sticky;top:0;z-index:8;display:grid;grid-template-columns:minmax(220px,1fr) 210px 190px 150px;gap:10px;margin:18px 0;padding:12px;border:1px solid var(--line);border-radius:8px;background:rgba(7,11,13,.82);backdrop-filter:blur(16px)}.control{height:44px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--ink);padding:0 13px;outline:none}.control:focus{border-color:rgba(66,211,146,.64)}.btn{height:44px;border:0;border-radius:8px;background:var(--green);color:#03100d;font-weight:900;cursor:pointer}.layout{display:grid;grid-template-columns:1fr 340px;gap:14px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;min-width:980px}.table th{position:sticky;top:0;background:#172121;color:var(--muted);font-size:13px;text-align:right;padding:13px;border-bottom:1px solid var(--line);white-space:nowrap;cursor:pointer}.table td{padding:12px 13px;border-bottom:1px solid rgba(242,251,247,.08);vertical-align:middle}.table tr:hover td{background:rgba(66,211,146,.045)}.symbol{font-family:Consolas,monospace;color:var(--cyan);font-weight:900}.value{font-family:Consolas,monospace;color:var(--green);font-weight:900}.chip{display:inline-flex;align-items:center;min-height:26px;padding:0 9px;border-radius:999px;font-size:12px;font-weight:900;border:1px solid var(--line);background:rgba(255,255,255,.045)}.risk{color:var(--red)}.ok{color:var(--green)}.warn{color:var(--amber)}.side{padding:18px;min-height:520px;position:sticky;top:92px;align-self:start}.side h2{margin:0 0 8px;font-size:25px}.side .sym-big{font-family:Consolas,monospace;font-size:34px;color:var(--cyan);font-weight:900}.detail{display:grid;gap:12px;margin-top:18px}.detail div{border:1px solid var(--line);border-radius:8px;background:rgba(255,255,255,.035);padding:12px}.detail label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}.detail strong{font-size:16px}.bar{height:9px;border-radius:999px;background:#23302f;overflow:hidden;margin-top:8px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--cyan));width:50%}.empty{padding:44px;text-align:center;color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}.card{padding:18px}.card h3{margin:0 0 8px;font-size:21px}.card p{margin:0;color:var(--muted);line-height:1.55}.source{max-width:260px;color:var(--muted);font-size:13px;line-height:1.35}.mini{font-size:12px;color:var(--muted)}@media(max-width:1050px){.hero,.layout{grid-template-columns:1fr}.side{position:static}.toolbar{grid-template-columns:1fr 1fr}.stats,.cards{grid-template-columns:1fr 1fr}}@media(max-width:660px){.toolbar,.stats,.cards{grid-template-columns:1fr}.page{width:min(100% - 18px,1420px);padding-top:64px}.headline{padding:22px}.table th,.table td{padding:10px}}
+</style>
+<link rel="stylesheet" href="../assets/mobile-shell.css">
+<link rel="stylesheet" href="../assets/site-polish.css">
+</head>
+<body>
+<div class="cv-home-nav"><a href="../index.html">בית</a><a href="../index.html#apps">כל הדפים</a></div>
+<div class="page">
+  <section class="hero">
+    <div class="headline">
+      <p class="eyebrow">CableVitality Data Core</p>
+      <h1>מאגר משתנים חי</h1>
+      <p class="lead">זהו מרכז הנתונים של הפרויקט: פרמטרים לכבל, רחפן, סביבה, סיבים אופטיים, אווירודינמיקה ומדדי סיכון. כל משתנה כולל יחידות, ערך טיפוסי, טווח בדיקה, מקור ושימוש במודל.</p>
+      <div class="stats"><div class="stat"><strong id="s-total">0</strong><span>משתנים</span></div><div class="stat"><strong id="s-cats">0</strong><span>קטגוריות</span></div><div class="stat"><strong id="s-ok">0</strong><span>עברו QA</span></div><div class="stat"><strong id="s-risk">0</strong><span>משתני סיכון</span></div></div>
+    </div>
+    <aside class="qa-panel"><h2>בדיקת איכות</h2><div class="qa-row"><span>ערכים בתוך טווח</span><strong id="qa-range">-</strong></div><div class="qa-row"><span>יחידות מוגדרות</span><strong id="qa-units">-</strong></div><div class="qa-row"><span>מקורות/הערות</span><strong id="qa-source">-</strong></div><div class="qa-row"><span>סטטוס כולל</span><strong class="ok" id="qa-status">תקין</strong></div><button class="btn" onclick="downloadCsv()">ייצוא CSV</button></aside>
+  </section>
+
+  <section class="toolbar">
+    <input class="control" id="search" placeholder="חיפוש לפי שם, סמל, יחידה או מקור">
+    <select class="control" id="category"></select>
+    <select class="control" id="quality"><option value="all">כל הסטטוסים</option><option value="ok">QA תקין</option><option value="warn">דורש בדיקה</option></select>
+    <button class="btn" onclick="resetFilters()">איפוס</button>
+  </section>
+
+  <section class="layout">
+    <div class="table-wrap"><table class="table"><thead><tr><th data-sort="id">#</th><th data-sort="symbol">סמל</th><th data-sort="name">שם</th><th data-sort="value">ערך</th><th data-sort="unit">יחידות</th><th data-sort="category">קטגוריה</th><th>טווח QA</th><th>שימוש</th><th>מקור</th></tr></thead><tbody id="rows"></tbody></table></div>
+    <aside class="side" id="detail"><p class="mini">בחר משתנה מהטבלה כדי לראות פירוט מלא.</p></aside>
+  </section>
+
+  <section class="cards">
+    <div class="card"><h3>למה זה חשוב</h3><p>המודלים של הכבל רגישים ליחידות ולטווחי ערכים. המאגר מונע ערבוב בין מסה, מתיחות, רוח, גיאומטריה וסיכון.</p></div>
+    <div class="card"><h3>איך משתמשים</h3><p>מסננים קטגוריה, מחפשים סמל או שם, בוחרים משתנה, ובודקים שהערך הטיפוסי נמצא בטווח הסביר.</p></div>
+    <div class="card"><h3>QA מובנה</h3><p>הדף מסמן אוטומטית ערכים חסרי יחידות, ערכים מחוץ לטווח, או משתנים שחסר להם מקור.</p></div>
+  </section>
+</div>
+<script>
+const variables = [
+{id:1,symbol:'g',name:'תאוצת כבידה',value:9.80665,unit:'m/s²',min:9.7,max:9.9,category:'סביבה',use:'חישוב משקל, שקיעה ומתיחות אנכית',source:'CODATA standard gravity'},
+{id:2,symbol:'rho_air',name:'צפיפות אוויר',value:1.204,unit:'kg/m³',min:0.9,max:1.35,category:'סביבה',use:'גרר רוח לאורך הכבל',source:'ISA sea level, 20C'},
+{id:3,symbol:'T_air',name:'טמפרטורת סביבה',value:25,unit:'°C',min:-20,max:55,category:'סביבה',use:'חישובי חום, נקודת טל וצפיפות',source:'Operational envelope'},
+{id:4,symbol:'RH',name:'לחות יחסית',value:55,unit:'%',min:0,max:100,category:'סביבה',use:'נקודת טל וסיכון עיבוי',source:'Weather input'},
+{id:5,symbol:'v_wind',name:'מהירות רוח',value:8,unit:'m/s',min:0,max:28,category:'סביבה',use:'גרר, תנודות ו-lock-in',source:'Mission weather'},
+{id:6,symbol:'gust_factor',name:'מקדם משב רוח',value:1.35,unit:'ratio',min:1,max:2.5,category:'סביבה',use:'החמרת עומס רגעי',source:'Operational safety model'},
+{id:7,symbol:'L',name:'אורך כבל פרוס',value:120,unit:'m',min:5,max:500,category:'כבל',use:'גיאומטריית קטרניה ותדרי תהודה',source:'Tether configuration'},
+{id:8,symbol:'mu',name:'מסה ליחידת אורך',value:0.019,unit:'kg/m',min:0.0007,max:0.08,category:'כבל',use:'שקיעה, משקל ותהודה',source:'GORE 24AWG tether spec'},
+{id:9,symbol:'d_cable',name:'קוטר כבל',value:0.0032,unit:'m',min:0.0008,max:0.012,category:'כבל',use:'גרר רוח ורדיוס כיפוף',source:'GORE 24AWG tether spec'},
+{id:10,symbol:'T_break',name:'כוח שבירה',value:910,unit:'N',min:100,max:2500,category:'כבל',use:'מרווח בטיחות מכני',source:'Cable datasheet'},
+{id:11,symbol:'T_work',name:'מתיחות עבודה',value:85,unit:'N',min:5,max:400,category:'כבל',use:'בדיקת עומס מול כוח שבירה',source:'Simulation input'},
+{id:12,symbol:'R_bend_min',name:'רדיוס כיפוף מינימלי',value:0.0075,unit:'m',min:0.003,max:0.08,category:'כבל',use:'זיהוי סיכון כיפוף',source:'Cable datasheet'},
+{id:13,symbol:'E',name:'מודול יאנג',value:2.0,unit:'GPa',min:0.5,max:90,category:'חומר',use:'קשיחות והארכה אלסטית',source:'Composite tether assumption'},
+{id:14,symbol:'epsilon_max',name:'מאמץ מתיחה מותר',value:1.8,unit:'%',min:0.1,max:5,category:'חומר',use:'מגבלת עיוות לאורך הכבל',source:'Material safety estimate'},
+{id:15,symbol:'weibull_m',name:'מודול Weibull',value:50,unit:'-',min:5,max:80,category:'חומר',use:'מודל אמינות ושבר',source:'Fiber/cable reliability model'},
+{id:16,symbol:'MTOW',name:'משקל המראה מרבי',value:5,unit:'kg',min:0.5,max:60,category:'רחפן',use:'עומס כולל ובקרת יציבות',source:'Drone configuration'},
+{id:17,symbol:'payload',name:'מטען נשיאה',value:2,unit:'kg',min:0,max:20,category:'רחפן',use:'שינוי עומסי רחפן וכבל',source:'Mission payload'},
+{id:18,symbol:'h_drone',name:'גובה רחפן',value:80,unit:'m',min:2,max:400,category:'רחפן',use:'גיאומטריית כבל ושקיעה',source:'Mission profile'},
+{id:19,symbol:'D_h',name:'מרחק אופקי מהתחנה',value:95,unit:'m',min:1,max:500,category:'רחפן',use:'חישוב קטרניה',source:'Mission profile'},
+{id:20,symbol:'v_drone',name:'מהירות תנועה',value:3,unit:'m/s',min:0,max:20,category:'רחפן',use:'עומסים דינמיים',source:'Flight controller estimate'},
+{id:21,symbol:'Cd',name:'מקדם גרר גלילי',value:1.05,unit:'-',min:0.6,max:1.4,category:'אווירודינמיקה',use:'גרר רוח ליחידת אורך',source:'Cylinder drag coefficient'},
+{id:22,symbol:'St',name:'מספר Strouhal',value:0.2,unit:'-',min:0.15,max:0.25,category:'אווירודינמיקה',use:'תדר נשירת מערבולות',source:'Vortex shedding model'},
+{id:23,symbol:'f_drag',name:'גרר ליחידת אורך',value:0.005,unit:'N/m',min:0,max:2,category:'אווירודינמיקה',use:'עומס רוח על כבל',source:'0.5*rho*Cd*d*v^2'},
+{id:24,symbol:'f_s',name:'תדר Strouhal',value:500,unit:'Hz',min:0,max:2000,category:'אווירודינמיקה',use:'בדיקת lock-in מול תדר עצמי',source:'St*v/d'},
+{id:25,symbol:'lambda',name:'אורך גל אופטי',value:1550,unit:'nm',min:1260,max:1625,category:'סיב אופטי',use:'OFDR והנחתה אופטית',source:'Telecom C-band'},
+{id:26,symbol:'alpha_fiber',name:'הנחתת סיב',value:0.2,unit:'dB/km',min:0.15,max:1.0,category:'סיב אופטי',use:'בדיקת איכות חישה לאורך כבל',source:'ITU-T G.652.D'},
+{id:27,symbol:'ofdr_res',name:'רזולוציית OFDR',value:0.01,unit:'m',min:0.001,max:1,category:'חישה',use:'מיפוי סיכון מרחבי',source:'OFDR system setting'},
+{id:28,symbol:'strain_noise',name:'רעש מדידת מאמץ',value:2,unit:'µε',min:0,max:100,category:'חישה',use:'סף התראה וחלקות נתונים',source:'Sensor QA'},
+{id:29,symbol:'T_noise',name:'רעש טמפרטורה',value:0.2,unit:'°C',min:0,max:5,category:'חישה',use:'זיהוי חימום/עיבוי',source:'Sensor QA'},
+{id:30,symbol:'R_mech',name:'רכיב סיכון מכני',value:0.18,unit:'0-1',min:0,max:1,category:'סיכון',use:'Risk(s,t) משוקלל',source:'CableVitality model'},
+{id:31,symbol:'R_bend',name:'רכיב סיכון כיפוף',value:0.12,unit:'0-1',min:0,max:1,category:'סיכון',use:'איתור אזורי כיפוף בעייתיים',source:'CableVitality model'},
+{id:32,symbol:'R_vib',name:'רכיב סיכון תנודות',value:0.22,unit:'0-1',min:0,max:1,category:'סיכון',use:'התראה על lock-in ותהודה',source:'CableVitality model'},
+{id:33,symbol:'R_ofdr',name:'רכיב סיכון חישה',value:0.09,unit:'0-1',min:0,max:1,category:'סיכון',use:'חריגות strain/temperature',source:'CableVitality model'},
+{id:34,symbol:'V_index',name:'מדד Vitality',value:0.86,unit:'0-1',min:0,max:1,category:'סיכון',use:'בריאות כללית של הכבל',source:'CableVitality model'},
+{id:35,symbol:'alpha_smooth',name:'מקדם החלקה',value:0.2,unit:'0-1',min:0,max:1,category:'סיכון',use:'החלקת Vitality לאורך זמן',source:'EWMA'},
+{id:36,symbol:'spool_r',name:'רדיוס תוף',value:0.08,unit:'m',min:0.03,max:0.5,category:'תחנת קרקע',use:'כיפוף בעת גלילה',source:'Ground station design'},
+{id:37,symbol:'spool_torque',name:'מומנט תוף',value:4.2,unit:'N·m',min:0,max:80,category:'תחנת קרקע',use:'שמירת מתיחות',source:'Winch controller'},
+{id:38,symbol:'sample_rate',name:'קצב דגימה',value:20,unit:'Hz',min:1,max:2000,category:'תפעול',use:'רענון חיישנים וסימולציה',source:'Telemetry setting'},
+{id:39,symbol:'alarm_delay',name:'השהיית התראה',value:1.5,unit:'s',min:0,max:30,category:'תפעול',use:'מניעת התראות שווא',source:'Ops policy'},
+{id:40,symbol:'s_critical',name:'מיקום קריטי לאורך הכבל',value:0.62,unit:'0-1',min:0,max:1,category:'תפעול',use:'נקודת מקסימום R(s,t)',source:'argmax risk'}
+];
+let sortKey='id', sortDir=1, selected=variables[0];
+const cats=['כל הקטגוריות',...Array.from(new Set(variables.map(v=>v.category)))];
+const category=document.getElementById('category');category.innerHTML=cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+document.getElementById('search').addEventListener('input',render);category.addEventListener('change',render);document.getElementById('quality').addEventListener('change',render);
+document.querySelectorAll('th[data-sort]').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.sort;sortDir=sortKey===k?-sortDir:1;sortKey=k;render();}));
+function qa(v){const inRange=typeof v.value==='number'&&v.value>=v.min&&v.value<=v.max;const hasUnit=!!v.unit;const hasSource=!!v.source;return{inRange,hasUnit,hasSource,ok:inRange&&hasUnit&&hasSource};}
+function filtered(){const q=document.getElementById('search').value.trim().toLowerCase();const cat=category.value;const quality=document.getElementById('quality').value;return variables.filter(v=>{const text=[v.symbol,v.name,v.unit,v.category,v.use,v.source].join(' ').toLowerCase();const passQ=!q||text.includes(q);const passC=cat==='כל הקטגוריות'||v.category===cat;const passQa=quality==='all'||(quality==='ok'?qa(v).ok:!qa(v).ok);return passQ&&passC&&passQa;}).sort((a,b)=>{let av=a[sortKey],bv=b[sortKey];if(typeof av==='string')return av.localeCompare(bv,'he')*sortDir;return (av-bv)*sortDir;});}
+function render(){const data=filtered();document.getElementById('rows').innerHTML=data.length?data.map(v=>{const q=qa(v);const pct=Math.max(0,Math.min(100,((v.value-v.min)/(v.max-v.min))*100));return `<tr onclick="pick(${v.id})"><td>${v.id}</td><td class="symbol">${v.symbol}</td><td>${v.name}</td><td class="value">${v.value}</td><td>${v.unit}</td><td><span class="chip">${v.category}</span></td><td><span class="${q.ok?'ok':'warn'}">${q.ok?'תקין':'בדיקה'}</span><div class="bar"><i style="width:${pct}%"></i></div></td><td>${v.use}</td><td class="source">${v.source}</td></tr>`}).join(''):`<tr><td colspan="9" class="empty">לא נמצאו משתנים לפי הסינון הנוכחי</td></tr>`;updateStats();renderDetail();}
+function pick(id){selected=variables.find(v=>v.id===id);renderDetail();}
+function renderDetail(){const v=selected;if(!v)return;const q=qa(v);const pct=Math.max(0,Math.min(100,((v.value-v.min)/(v.max-v.min))*100));document.getElementById('detail').innerHTML=`<div class="sym-big">${v.symbol}</div><h2>${v.name}</h2><p class="mini">${v.use}</p><div class="detail"><div><label>ערך טיפוסי</label><strong>${v.value} ${v.unit}</strong><div class="bar"><i style="width:${pct}%"></i></div><p class="mini">טווח QA: ${v.min} עד ${v.max}</p></div><div><label>קטגוריה</label><strong>${v.category}</strong></div><div><label>מקור</label><strong>${v.source}</strong></div><div><label>סטטוס</label><strong class="${q.ok?'ok':'warn'}">${q.ok?'עבר בדיקת איכות':'דורש בדיקה'}</strong></div></div>`;}
+function updateStats(){const checks=variables.map(qa);document.getElementById('s-total').textContent=variables.length;document.getElementById('s-cats').textContent=new Set(variables.map(v=>v.category)).size;document.getElementById('s-ok').textContent=checks.filter(x=>x.ok).length;document.getElementById('s-risk').textContent=variables.filter(v=>v.category==='סיכון').length;document.getElementById('qa-range').textContent=checks.filter(x=>x.inRange).length+'/'+variables.length;document.getElementById('qa-units').textContent=checks.filter(x=>x.hasUnit).length+'/'+variables.length;document.getElementById('qa-source').textContent=checks.filter(x=>x.hasSource).length+'/'+variables.length;document.getElementById('qa-status').textContent=checks.every(x=>x.ok)?'תקין':'יש חריגות';}
+function resetFilters(){document.getElementById('search').value='';category.value='כל הקטגוריות';document.getElementById('quality').value='all';render();}
+function downloadCsv(){const header=['id','symbol','name','value','unit','min','max','category','use','source'];const rows=filtered().map(v=>header.map(k=>`"${String(v[k]).replaceAll('"','""')}"`).join(','));const blob=new Blob([[header.join(','),...rows].join('\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='cablevitality-variables.csv';a.click();URL.revokeObjectURL(a.href);}
+render();
+</script>
+<div class="cv-mobile-orbit" aria-hidden="true"></div>
+<script src="../assets/site-polish.js"></script>
+</body>
+</html>
+
+

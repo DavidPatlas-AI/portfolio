@@ -1,0 +1,1072 @@
+﻿<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CableVitality – הכבל כעורק חי</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #060a0f;
+  --panel: #0d1520;
+  --panel2: #111d2e;
+  --border: #1e3a5f;
+  --accent: #00d4ff;
+  --accent2: #00ff9d;
+  --warn: #ffcc00;
+  --danger: #ff4444;
+  --orange: #ff8800;
+  --text: #c8e6ff;
+  --muted: #4a7fa5;
+  --green: #00ff9d;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Heebo', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* grid bg */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background-image:
+    linear-gradient(rgba(0,212,255,.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events:none;
+  z-index:0;
+}
+
+header {
+  position:relative; z-index:1;
+  padding: 24px 32px 16px;
+  border-bottom: 1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  background: linear-gradient(180deg, rgba(0,212,255,.05) 0%, transparent 100%);
+}
+
+.logo {
+  display:flex; align-items:center; gap:12px;
+}
+.logo-icon {
+  width:38px; height:38px;
+  background: conic-gradient(var(--accent), var(--accent2), var(--accent));
+  border-radius:50%;
+  animation: spin 8s linear infinite;
+  position:relative;
+}
+.logo-icon::after {
+  content:'';
+  position:absolute; inset:4px;
+  background: var(--bg);
+  border-radius:50%;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+h1 { font-size:1.5rem; font-weight:900; letter-spacing:-.5px; }
+h1 span { color: var(--accent); }
+.subtitle { font-size:.75rem; color:var(--muted); font-family:'IBM Plex Mono', monospace; }
+
+.status-bar {
+  display:flex; gap:16px; align-items:center;
+}
+.status-dot {
+  width:8px; height:8px; border-radius:50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse 1.5s ease infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50% { opacity:.5; transform:scale(.7); }
+}
+.status-text { font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--muted); }
+
+/* layout */
+.main-grid {
+  position:relative; z-index:1;
+  display:grid;
+  grid-template-columns: 320px 1fr 280px;
+  grid-template-rows: auto 1fr;
+  gap:12px;
+  padding:12px 16px;
+  height: calc(100vh - 80px);
+}
+
+/* panels */
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
+}
+
+.panel-header {
+  padding:10px 14px;
+  background: var(--panel2);
+  border-bottom: 1px solid var(--border);
+  font-size:.7rem;
+  font-family:'IBM Plex Mono',monospace;
+  color:var(--muted);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  display:flex; align-items:center; justify-content:space-between;
+}
+.panel-header .dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--accent);
+}
+
+.panel-body { padding:14px; }
+
+/* sliders */
+.control-group {
+  margin-bottom:14px;
+}
+.control-label {
+  display:flex; justify-content:space-between; align-items:baseline;
+  margin-bottom:5px;
+}
+.control-name {
+  font-size:.75rem; font-weight:700; color:var(--text);
+}
+.control-value {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.75rem; color:var(--accent);
+  background: rgba(0,212,255,.08);
+  padding:1px 6px; border-radius:3px;
+}
+.control-formula {
+  font-size:.6rem; color:var(--muted);
+  font-family:'IBM Plex Mono',monospace;
+  margin-bottom:4px;
+}
+
+input[type=range] {
+  width:100%;
+  height:4px;
+  -webkit-appearance:none;
+  background: linear-gradient(90deg, var(--accent) var(--pct,50%), var(--border) var(--pct,50%));
+  border-radius:2px;
+  outline:none;
+  cursor:pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none;
+  width:14px; height:14px;
+  border-radius:50%;
+  background: var(--accent);
+  box-shadow: 0 0 6px var(--accent);
+  cursor:pointer;
+}
+
+/* canvas area */
+.viz-panel {
+  grid-column:2;
+  grid-row:1/3;
+  display:flex; flex-direction:column;
+}
+
+canvas {
+  width:100%;
+  flex:1;
+  display:block;
+}
+
+/* tooltip popup */
+.tooltip-box {
+  position:absolute;
+  pointer-events:none;
+  background: rgba(6,10,15,.95);
+  border: 1px solid var(--accent);
+  border-radius:8px;
+  padding:12px 16px;
+  max-width:260px;
+  z-index:100;
+  transform:translateX(-50%);
+  transition:opacity .2s;
+  box-shadow: 0 0 20px rgba(0,212,255,.15);
+}
+.tooltip-box.hidden { opacity:0; }
+.tooltip-title {
+  font-size:.7rem;
+  font-family:'IBM Plex Mono',monospace;
+  color:var(--accent);
+  text-transform:uppercase;
+  margin-bottom:6px;
+  letter-spacing:.05em;
+}
+.tooltip-formula {
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.72rem;
+  color:var(--accent2);
+  background: rgba(0,255,157,.05);
+  padding:4px 8px; border-radius:4px;
+  margin-bottom:6px;
+  line-height:1.5;
+}
+.tooltip-text {
+  font-size:.72rem; color:var(--text); line-height:1.5;
+}
+.tooltip-value {
+  margin-top:6px;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.7rem; color:var(--warn);
+}
+
+/* metrics */
+.metrics-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:8px;
+  margin-bottom:12px;
+}
+.metric-card {
+  background: var(--panel2);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:8px 10px;
+}
+.metric-label {
+  font-size:.6rem; color:var(--muted);
+  font-family:'IBM Plex Mono',monospace;
+  text-transform:uppercase; letter-spacing:.05em;
+}
+.metric-value {
+  font-size:1.1rem; font-weight:700;
+  font-family:'IBM Plex Mono',monospace;
+  margin-top:2px;
+}
+.metric-value.green { color:var(--green); }
+.metric-value.yellow { color:var(--warn); }
+.metric-value.orange { color:var(--orange); }
+.metric-value.red { color:var(--danger); }
+
+/* alert bar */
+.alert-bar {
+  border-radius:6px;
+  padding:10px 14px;
+  font-size:.78rem; font-weight:700;
+  display:flex; align-items:center; gap:8px;
+  margin-bottom:12px;
+  transition:background .5s, border-color .5s;
+}
+.alert-bar.green  { background:rgba(0,255,157,.08); border:1px solid rgba(0,255,157,.3); color:var(--green); }
+.alert-bar.yellow { background:rgba(255,204,0,.08);  border:1px solid rgba(255,204,0,.3); color:var(--warn); }
+.alert-bar.orange { background:rgba(255,136,0,.08);  border:1px solid rgba(255,136,0,.3); color:var(--orange); }
+.alert-bar.red    { background:rgba(255,68,68,.12);  border:1px solid rgba(255,68,68,.4); color:var(--danger); animation:flash .5s infinite; }
+@keyframes flash { 50% { opacity:.6; } }
+
+/* vitality bar */
+.vitality-wrap { margin-bottom:12px; }
+.vitality-label {
+  display:flex; justify-content:space-between;
+  font-size:.65rem; color:var(--muted);
+  font-family:'IBM Plex Mono',monospace;
+  margin-bottom:4px;
+}
+.vitality-track {
+  height:10px; background:var(--panel2); border-radius:5px;
+  border:1px solid var(--border); overflow:hidden;
+}
+.vitality-fill {
+  height:100%; border-radius:5px;
+  transition:width .4s ease, background .4s;
+}
+
+/* formula log */
+.formula-log {
+  background:var(--panel2);
+  border:1px solid var(--border);
+  border-radius:6px;
+  padding:8px;
+  max-height:160px;
+  overflow-y:auto;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:.62rem;
+  color:var(--muted);
+  line-height:1.8;
+}
+.formula-log::-webkit-scrollbar { width:4px; }
+.formula-log::-webkit-scrollbar-track { background:transparent; }
+.formula-log::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+.formula-log .log-line { border-bottom:1px solid rgba(30,58,95,.4); padding:2px 0; }
+.formula-log .log-line span { color:var(--accent); }
+
+/* legend */
+.legend { display:flex; gap:10px; flex-wrap:wrap; margin-top:8px; }
+.legend-item { display:flex; align-items:center; gap:5px; font-size:.62rem; color:var(--muted); }
+.legend-dot { width:8px; height:8px; border-radius:50%; }
+
+/* canvas container */
+.canvas-wrap {
+  position:relative;
+  flex:1;
+  min-height:0;
+}
+#mainCanvas { position:absolute; inset:0; width:100%; height:100%; }
+
+/* bottom strip */
+.bottom-strip {
+  grid-column:1/-1;
+  display:flex; gap:12px;
+  max-height:90px;
+}
+.bottom-strip .panel { flex:1; }
+
+.sparkline-wrap { padding:6px 10px; }
+canvas.spark { height:50px; width:100%; display:block; }
+</style>
+<style id="cv-home-nav-style">.cv-home-nav{position:fixed;z-index:99999;left:14px;top:14px;display:flex;gap:8px;align-items:center;font-family:Arial,"Segoe UI",sans-serif;direction:rtl}.cv-home-nav a{min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:0 12px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:rgba(5,12,14,.72);backdrop-filter:blur(14px);color:#eef8f4;text-decoration:none;font-size:13px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.22)}.cv-home-nav a:hover{border-color:rgba(66,211,146,.6);color:#42d392}@media(max-width:640px){.cv-home-nav{left:8px;top:8px}.cv-home-nav a{font-size:12px;padding:0 10px}}</style><link rel="stylesheet" href="../assets/mobile-shell.css">
+<link rel="stylesheet" href="../assets/site-polish.css">
+</head>
+<body><div class="cv-home-nav"><a href="../index.html">בית</a><a href="../index.html#apps">כל הדפים</a></div>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon"></div>
+    <div>
+      <h1>Cable<span>Vitality</span></h1>
+      <div class="subtitle">UAV TETHER HEALTH MONITOR v3.0</div>
+    </div>
+  </div>
+  <div class="status-bar">
+    <div class="status-dot"></div>
+    <div class="status-text">SIMULATION RUNNING · 10 Hz</div>
+  </div>
+</header>
+
+<div class="main-grid">
+
+  <!-- LEFT: controls -->
+  <div class="panel" style="grid-row:1/3; overflow-y:auto;">
+    <div class="panel-header"><span>// משתנים ופרמטרים</span><div class="dot"></div></div>
+    <div class="panel-body">
+
+      <div style="font-size:.65rem;color:var(--muted);margin-bottom:10px;font-family:'IBM Plex Mono',monospace;">גרור את הסליידרים לשינוי מצב הכבל</div>
+
+      <div class="control-group">
+        <div class="control-label">
+          <span class="control-name">🌬️ מהירות רוח</span>
+          <span class="control-value" id="val-wind">8 m/s</span>
+        </div>
+        <div class="control-formula">f_d = ½ρC_D·d·v²</div>
+        <input type="range" id="wind" min="0" max="25" value="8" step="0.5">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label">
+          <span class="control-name">✈️ גובה רחפן</span>
+          <span class="control-value" id="val-height">80 m</span>
+        </div>
+        <div class="control-formula">a = T_h / (m·g)</div>
+        <input type="range" id="height" min="20" max="150" value="80" step="1">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label">
+          <span class="control-name">↔️ מרחק אופקי</span>
+          <span class="control-value" id="val-dist">60 m</span>
+        </div>
+        <div class="control-formula">D_h = ‖pos_drone[:2]‖</div>
+        <input type="range" id="dist" min="10" max="120" value="60" step="1">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label">
+          <span class="control-name">⚡ מתח אופקי</span>
+          <span class="control-value" id="val-tension">50 N</span>
+        </div>
+        <div class="control-formula">T(s) = √(T_h² + (mg·Δz)²)</div>
+        <input type="range" id="tension" min="10" max="200" value="50" step="1">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label">
+          <span class="control-name">🌡️ טמפרטורה</span>
+          <span class="control-value" id="val-temp">28°C</span>
+        </div>
+        <div class="control-formula">T_wire(s) = T_amb + ΔT·e^(-s/λ)</div>
+        <input type="range" id="temp" min="-10" max="60" value="28" step="1">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label">
+          <span class="control-name">💧 לחות יחסית</span>
+          <span class="control-value" id="val-rh">75%</span>
+        </div>
+        <div class="control-formula">T_dew = b·γ/(a−γ)</div>
+        <input type="range" id="rh" min="10" max="100" value="75" step="1">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label">
+          <span class="control-name">📏 אורך כבל</span>
+          <span class="control-value" id="val-length">100 m</span>
+        </div>
+        <div class="control-formula">f_n = (n/2L)·√(T_h/μ)</div>
+        <input type="range" id="length" min="30" max="200" value="100" step="5">
+      </div>
+
+      <div class="control-group">
+        <div class="control-label">
+          <span class="control-name">⚙️ מסה ליח' אורך</span>
+          <span class="control-value" id="val-mass">19 g/m</span>
+        </div>
+        <div class="control-formula">w = m·g</div>
+        <input type="range" id="mass" min="5" max="60" value="19" step="1">
+      </div>
+
+      <div style="margin-top:16px; padding-top:12px; border-top:1px solid var(--border);">
+        <div style="font-size:.65rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:8px;">// GORE 24AWG – קבועי הכבל</div>
+        <div style="font-size:.62rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;line-height:2;">
+          T_break = <span style="color:var(--accent)">910 N</span><br>
+          E = <span style="color:var(--accent)">2.0 GPa</span><br>
+          R_bend_min = <span style="color:var(--accent)">7.5 mm</span><br>
+          d = <span style="color:var(--accent)">3.2 mm</span><br>
+          α₁₅₅₀ = <span style="color:var(--accent)">0.20 dB/km</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER: visualization -->
+  <div class="panel viz-panel">
+    <div class="panel-header">
+      <span>// ויזואליזציה – לחץ על נקודה לפרטים</span>
+      <div class="dot"></div>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="mainCanvas"></canvas>
+      <div class="tooltip-box hidden" id="tooltip">
+        <div class="tooltip-title" id="tt-title">—</div>
+        <div class="tooltip-formula" id="tt-formula">—</div>
+        <div class="tooltip-text" id="tt-text">—</div>
+        <div class="tooltip-value" id="tt-value">—</div>
+      </div>
+    </div>
+    <div style="padding:8px 14px; border-top:1px solid var(--border); background:var(--panel2);">
+      <div class="legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#00ff9d"></div>בטוח (MS>0.4)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ffcc00"></div>אזהרה (MS>0.15)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ff8800"></div>חירום (MS>-0.1)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ff4444"></div>כשל קרוב (MS<-0.1)</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#00d4ff"></div>נקודת עיגון</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#ffffff"></div>רחפן</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: metrics -->
+  <div class="panel" style="grid-row:1/3; overflow-y:auto;">
+    <div class="panel-header"><span>// מדדי בריאות</span><div class="dot"></div></div>
+    <div class="panel-body">
+
+      <div class="alert-bar green" id="alert-bar">
+        <span id="alert-icon">🟢</span>
+        <span id="alert-text">מרווח ביטחון גבוה</span>
+      </div>
+
+      <div class="vitality-wrap">
+        <div class="vitality-label">
+          <span>VITALITY INDEX</span>
+          <span id="vit-num">0.87</span>
+        </div>
+        <div class="vitality-track">
+          <div class="vitality-fill" id="vit-fill" style="width:87%;background:var(--green)"></div>
+        </div>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Safety Margin</div>
+          <div class="metric-value green" id="m-ms">0.72</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">מתח מקס׳</div>
+          <div class="metric-value" id="m-t" style="color:var(--accent)">53 N</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">רדיוס כיפוף מין׳</div>
+          <div class="metric-value" id="m-rb" style="color:var(--accent)">0.12 m</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">סיב תרמי</div>
+          <div class="metric-value" id="m-dew" style="color:var(--accent)">21°C</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">תדר טבעי</div>
+          <div class="metric-value" id="m-fn" style="color:var(--accent)">1.6 Hz</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">OFDR אנומליה</div>
+          <div class="metric-value" id="m-ofdr" style="color:var(--accent)">0.002</div>
+        </div>
+      </div>
+
+      <!-- margin components -->
+      <div style="margin-bottom:12px;">
+        <div style="font-size:.63rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:6px;">// MARGIN BREAKDOWN</div>
+        <div id="margin-bars"></div>
+      </div>
+
+      <div style="font-size:.63rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:6px;">// LOG נוסחאות פעילות</div>
+      <div class="formula-log" id="formula-log"></div>
+
+      <div style="margin-top:12px;">
+        <div style="font-size:.63rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-bottom:6px;">// VITALITY TIMELINE</div>
+        <canvas class="spark" id="sparkCanvas" height="50"></canvas>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ===== STATE =====
+const state = {
+  wind: 8, height: 80, dist: 60, tension: 50,
+  temp: 28, rh: 75, length: 100, mass: 19,
+  T_BREAK: 910, E: 2e9, R_MIN: 0.0075, DIAM: 0.0032,
+  vitHistory: Array(80).fill(0.87),
+  tick: 0
+};
+
+// ===== PHYSICS =====
+function computePhysics() {
+  const { wind, height, dist, tension, temp, rh, length, mass } = state;
+  const g = 9.8067, rhoAir = 1.204;
+  const m = mass / 1000; // kg/m
+  const w = m * g;
+  const T_h = tension;
+  const a = T_h / Math.max(w, 0.001);
+  const Dh = dist;
+  const L = length;
+  const n = 60; // points
+
+  // Catenary shape
+  const xs = [], ys = [], tensions = [], radii = [];
+  const xArr = Array.from({length:n}, (_,i) => i/(n-1) * Dh);
+
+  // z profile
+  xArr.forEach(x => {
+    const z = a * Math.cosh((x - Dh/2)/a) - a * Math.cosh(Dh/(2*a));
+    xs.push(x);
+    ys.push(z);
+  });
+
+  // wind deflection (y direction – shown as lateral offset in viz)
+  const fd = 0.5 * rhoAir * 1.0 * state.DIAM * wind * wind;
+  const deflections = xArr.map(x => (fd / Math.max(T_h, 1)) * x * (L - x) * 0.15);
+
+  // Tension at each point
+  xArr.forEach((x, i) => {
+    const dz = ys[i];
+    tensions.push(Math.sqrt(T_h*T_h + (w * dz)*(w * dz)));
+  });
+
+  // Bending radius (numerical curvature)
+  for (let i = 0; i < n; i++) {
+    const ip = Math.min(i+1, n-1), im = Math.max(i-1, 0);
+    const dx2 = (xs[ip]-xs[im]), dy2 = (ys[ip]-ys[im]);
+    const ddx = xs[ip] - 2*xs[i] + xs[im];
+    const ddy = ys[ip] - 2*ys[i] + ys[im];
+    const curv = Math.sqrt(ddx*ddx + ddy*ddy) / Math.max(1e-6, (dx2*dx2+dy2*dy2));
+    radii.push(curv < 1e-10 ? 999 : 1/curv);
+  }
+
+  // Natural frequencies
+  const f_n = (1/(2*L)) * Math.sqrt(T_h / m);
+
+  // Dew point
+  const a_dew = 17.27, b_dew = 237.7;
+  const rhF = rh/100;
+  const gamma = a_dew*temp/(b_dew+temp) + Math.log(Math.max(rhF, 0.001));
+  const T_dew = b_dew*gamma/(a_dew-gamma);
+
+  // Temperature profile along cable
+  const T_wire = xArr.map(x => temp + 5*Math.exp(-x/5) + 2*Math.exp(-(L-x)/5));
+
+  // Safety margin components
+  const T_max = Math.max(...tensions);
+  const R_min_actual = Math.min(...radii.filter(r=>r<100));
+  const MS_mech = Math.min((state.T_BREAK / Math.max(T_max, 0.1)) - 1, 1);
+  const MS_bend = R_min_actual > 0 ? Math.min((R_min_actual / state.R_MIN) - 1, 1) : -1;
+  const wind_norm = Math.min(wind/25, 1);
+  const MS_vib = 1 - wind_norm * 1.5;
+  const MS_ofdr = 1 - (T_max / state.T_BREAK) * 1.2;
+  const MS_fatigue = 1 - Math.min(state.tick/2000, 1);
+
+  const MS = Math.max(-1, Math.min(1,
+    0.35*MS_mech + 0.25*MS_bend + 0.15*MS_vib + 0.15*MS_ofdr + 0.10*MS_fatigue
+  ));
+
+  // Vitality
+  const risk_avg = (1 - MS) / 2;
+  const vit_spat = 1 - risk_avg;
+  const vit = 0.2 * vit_spat + 0.8 * (state.vitHistory[state.vitHistory.length-1] || 0.8);
+
+  // OFDR anomaly (simplified)
+  const strain = T_max / (state.E * Math.PI * (state.DIAM/2)**2);
+  const anom = strain * strain * 1e10;
+
+  return {
+    xs, ys, deflections, tensions, radii,
+    T_max, R_min_actual, f_n, T_dew, T_wire,
+    MS, MS_mech, MS_bend, MS_vib, MS_ofdr, MS_fatigue,
+    vit, anom, n, Dh, L
+  };
+}
+
+// ===== CANVAS DRAW =====
+const canvas = document.getElementById('mainCanvas');
+const ctx = canvas.getContext('2d');
+const tooltip = document.getElementById('tooltip');
+
+let hoveredPoint = null;
+
+function resizeCanvas() {
+  const rect = canvas.parentElement.getBoundingClientRect();
+  canvas.width = rect.width;
+  canvas.height = rect.height;
+}
+
+function msColor(ms) {
+  if (ms > 0.4) return '#00ff9d';
+  if (ms > 0.15) return '#ffcc00';
+  if (ms > -0.1) return '#ff8800';
+  return '#ff4444';
+}
+
+function draw(p) {
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  // background
+  ctx.fillStyle = '#060a0f';
+  ctx.fillRect(0,0,W,H);
+
+  // grid lines (subtle)
+  ctx.strokeStyle = 'rgba(0,212,255,0.04)';
+  ctx.lineWidth = 1;
+  for (let x=0; x<W; x+=40) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y=0; y<H; y+=40) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  // Ground line
+  const groundY = H - 60;
+  ctx.strokeStyle = 'rgba(0,212,255,0.15)';
+  ctx.lineWidth = 1;
+  ctx.setLineDash([8,8]);
+  ctx.beginPath(); ctx.moveTo(40, groundY); ctx.lineTo(W-40, groundY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(0,212,255,0.5)';
+  ctx.font = '10px IBM Plex Mono';
+  ctx.fillText('GROUND LEVEL', 44, groundY-5);
+
+  // Map model coordinates to canvas
+  const padX = 80, padY = 60;
+  const mapX = (x) => padX + (x / p.Dh) * (W - padX*2);
+  const mapY = (y) => groundY - (y / p.L) * (H - padY - 80);
+
+  // anchor position (0,0 → ground)
+  const ax = mapX(0), ay = groundY;
+  // drone position
+  const dx = mapX(p.Dh), dy = mapY(state.height);
+
+  // Draw cable glow pass (wider, blurry)
+  for (let pass = 0; pass < 2; pass++) {
+    for (let i = 0; i < p.n-1; i++) {
+      const t = i/(p.n-1);
+      const ms_pt = lerp(-1, p.MS, t);
+      const col = msColor(ms_pt);
+      const x1 = mapX(p.xs[i])   + p.deflections[i];
+      const y1 = mapY(p.ys[i] + state.height * (1-i/(p.n-1)));
+      const x2 = mapX(p.xs[i+1]) + p.deflections[i+1];
+      const y2 = mapY(p.ys[i+1] + state.height * (1-(i+1)/(p.n-1)));
+      ctx.beginPath();
+      ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+      if (pass === 0) {
+        ctx.strokeStyle = col.replace(')',',0.15)').replace('rgb','rgba').replace('#','').slice(0,0) + col + '22';
+        ctx.lineWidth = 8;
+        ctx.globalAlpha = 0.3;
+      } else {
+        ctx.strokeStyle = col;
+        ctx.lineWidth = 2.5;
+        ctx.globalAlpha = 1;
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // Cable points (clickable dots at key positions)
+  const keyPoints = [0, Math.floor(p.n*0.25), Math.floor(p.n*0.5), Math.floor(p.n*0.75), p.n-1];
+  keyPoints.forEach(i => {
+    const fx = mapX(p.xs[i]) + p.deflections[i];
+    const fy = mapY(p.ys[i] + state.height * (1 - i/(p.n-1)));
+    const ms_pt = lerp(-1, p.MS, i/(p.n-1));
+    const col = msColor(ms_pt);
+
+    ctx.beginPath();
+    ctx.arc(fx, fy, hoveredPoint===i ? 8 : 5, 0, Math.PI*2);
+    ctx.fillStyle = col;
+    ctx.fill();
+    ctx.strokeStyle = '#060a0f';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Glow
+    ctx.beginPath();
+    ctx.arc(fx, fy, 12, 0, Math.PI*2);
+    const grd = ctx.createRadialGradient(fx,fy,3,fx,fy,12);
+    grd.addColorStop(0, col+'66');
+    grd.addColorStop(1, 'transparent');
+    ctx.fillStyle = grd;
+    ctx.fill();
+
+    // label
+    const labels = ['עיגון','25%','אמצע','75%','רחפן'];
+    const pcts = [0, p.tensions[0]*(100/state.T_BREAK)|0, p.tensions[Math.floor(p.n/2)]*(100/state.T_BREAK)|0,0,0];
+    ctx.fillStyle = 'rgba(200,230,255,0.6)';
+    ctx.font = '9px IBM Plex Mono';
+    ctx.textAlign = 'center';
+    ctx.fillText(labels[keyPoints.indexOf(i)], fx, fy - 16);
+  });
+
+  // Anchor
+  ctx.beginPath();
+  ctx.arc(ax, ay, 10, 0, Math.PI*2);
+  ctx.fillStyle = '#00d4ff';
+  ctx.fill();
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 2; ctx.stroke();
+  // anchor label
+  ctx.fillStyle = '#00d4ff';
+  ctx.font = 'bold 10px Heebo';
+  ctx.textAlign = 'center';
+  ctx.fillText('⚓ נקודת עיגון', ax, ay + 22);
+
+  // Drone
+  const droneX = mapX(p.Dh), droneY = mapY(state.height);
+  drawDrone(droneX, droneY);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 10px Heebo';
+  ctx.textAlign = 'center';
+  ctx.fillText('✈ רחפן', droneX, droneY - 30);
+
+  // Vulnerability indicator – worst point
+  let worstIdx = 0, worstVal = 999;
+  p.radii.forEach((r,i) => { if (r < worstVal) { worstVal = r; worstIdx = i; } });
+  const wx = mapX(p.xs[worstIdx]) + p.deflections[worstIdx];
+  const wy = mapY(p.ys[worstIdx] + state.height * (1 - worstIdx/(p.n-1)));
+  // Pulsing ring
+  const pulseR = 14 + 4*Math.sin(state.tick*0.1);
+  ctx.beginPath();
+  ctx.arc(wx, wy, pulseR, 0, Math.PI*2);
+  ctx.strokeStyle = '#ff4444';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([4,4]);
+  ctx.globalAlpha = 0.7;
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#ff4444';
+  ctx.font = 'bold 9px IBM Plex Mono';
+  ctx.textAlign = 'right';
+  ctx.fillText('◀ נקודת תורפה', wx - 16, wy + 4);
+
+  // Wind arrow
+  if (state.wind > 1) {
+    const arrowLen = Math.min(state.wind * 4, 80);
+    ctx.strokeStyle = 'rgba(0,212,255,0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([4,3]);
+    for (let yi = 0; yi < 3; yi++) {
+      const yy = H * 0.3 + yi * 50;
+      ctx.beginPath();
+      ctx.moveTo(W - 140, yy);
+      ctx.lineTo(W - 140 + arrowLen, yy);
+      ctx.stroke();
+      // arrowhead
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(W-140+arrowLen, yy);
+      ctx.lineTo(W-140+arrowLen-8, yy-4);
+      ctx.lineTo(W-140+arrowLen-8, yy+4);
+      ctx.closePath();
+      ctx.fillStyle = 'rgba(0,212,255,0.4)';
+      ctx.fill();
+      ctx.setLineDash([4,3]);
+    }
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(0,212,255,0.5)';
+    ctx.font = '9px IBM Plex Mono';
+    ctx.textAlign = 'left';
+    ctx.fillText(`WIND ${state.wind} m/s`, W-140, H*0.3 - 10);
+  }
+
+  // Catenary param label
+  ctx.fillStyle = 'rgba(0,212,255,0.4)';
+  ctx.font = '9px IBM Plex Mono';
+  ctx.textAlign = 'left';
+  ctx.fillText(`a = T_h/mg = ${(state.tension/(state.mass/1000*9.8067)).toFixed(1)} m`, 16, H - 20);
+  ctx.fillText(`f_n = ${p.f_n.toFixed(2)} Hz`, 16, H - 8);
+}
+
+function lerp(a,b,t) { return a + (b-a)*t; }
+
+function drawDrone(x, y) {
+  ctx.save();
+  ctx.translate(x,y);
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 1.5;
+  // body
+  ctx.beginPath();
+  ctx.rect(-8,-4,16,8);
+  ctx.fillStyle = '#222d3e';
+  ctx.fill(); ctx.stroke();
+  // arms
+  [[-16,-10],[8,-10],[-16,4],[8,4]].forEach(([ax,ay]) => {
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(ax,ay);
+    ctx.stroke();
+    ctx.beginPath(); ctx.arc(ax,ay,4,0,Math.PI*2);
+    ctx.fillStyle = '#00d4ff44'; ctx.fill();
+    ctx.strokeStyle = '#00d4ff'; ctx.stroke();
+  });
+  ctx.restore();
+}
+
+// ===== MOUSE INTERACTION =====
+canvas.addEventListener('mousemove', e => {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+  const W = canvas.width, H = canvas.height;
+  const p = computePhysics();
+  const groundY = H - 60;
+  const padX = 80;
+  const mapX = (x) => padX + (x / p.Dh) * (W - padX*2);
+  const mapY = (y) => groundY - (y / p.L) * (H - 60 - 80);
+
+  const keyPoints = [0, Math.floor(p.n*0.25), Math.floor(p.n*0.5), Math.floor(p.n*0.75), p.n-1];
+  let found = null;
+  keyPoints.forEach(i => {
+    const fx = mapX(p.xs[i]) + p.deflections[i];
+    const fy = mapY(p.ys[i] + state.height * (1 - i/(p.n-1)));
+    if (Math.hypot(mx-fx, my-fy) < 20) found = i;
+  });
+
+  hoveredPoint = found;
+
+  if (found !== null) {
+    showTooltip(e.clientX, e.clientY, found, p);
+    canvas.style.cursor = 'pointer';
+  } else {
+    hideTooltip();
+    canvas.style.cursor = 'default';
+  }
+});
+
+canvas.addEventListener('mouseleave', hideTooltip);
+
+function showTooltip(cx, cy, idx, p) {
+  const frac = idx / (p.n-1);
+  const T_pt = p.tensions[idx];
+  const R_pt = p.radii[idx];
+  const ms_pt = lerp(-1, p.MS, frac);
+  const col = msColor(ms_pt);
+
+  const names = ['נקודת עיגון (0%)','רבע ראשון (25%)','אמצע הכבל (50%)','שלושה-רבעים (75%)','חיבור לרחפן (100%)'];
+  const formulas = [
+    'T(0) = T_h (מתח אופקי בסיס)',
+    'T(s) = √(T_h² + (mg·Δz)²)',
+    'z(s) = a·cosh((s-D_h/2)/a)',
+    'f_d = ½ρC_D·d·v² (כוח רוח)',
+    'T_max ≈ T_h + mg·h (כבל ישיר)'
+  ];
+  const explains = [
+    'נקודת העיגון ביבשה. המתח כאן הוא הנמוך ביותר – הכוח האנכי אפסי.',
+    'הכבל מתחיל לצבור מתח אנכי. הסיכון לכיפוף גדל עם זווית השיפוע.',
+    'נקודת המינימום של צורת הקטנריה – המתח הנמוך ביותר באורך, אבל הסיכון לתנודות הגבוה ביותר.',
+    'המתח גדל חדות לכיוון הרחפן. רוחות חזקות גורמות לסטייה צידית משמעותית.',
+    'נקודת החיבור לרחפן – המתח מקסימלי. תנועות חדות של הרחפן מועברות ישירות לסיב.'
+  ];
+
+  document.getElementById('tt-title').textContent = names[['','','','',''].indexOf('') > -1 ? [0,15,30,45,59].indexOf(idx)>-1 ? [0,15,30,45,59].indexOf(idx) : 0 : 0] || names[Math.round(idx/(p.n-1)*4)];
+  document.getElementById('tt-title').textContent = names[Math.round(frac*4)];
+  document.getElementById('tt-formula').textContent = formulas[Math.round(frac*4)];
+  document.getElementById('tt-text').textContent = explains[Math.round(frac*4)];
+  document.getElementById('tt-value').innerHTML =
+    `T = <b>${T_pt.toFixed(1)} N</b> | R_bend = <b>${R_pt < 99 ? R_pt.toFixed(3)+' m' : '∞'}</b> | MS = <b style="color:${col}">${ms_pt.toFixed(2)}</b>`;
+
+  // position
+  const box = canvas.getBoundingClientRect();
+  const left = cx - box.left;
+  const top = cy - box.top;
+  tooltip.style.left = left + 'px';
+  tooltip.style.top = (top - 140) + 'px';
+  tooltip.classList.remove('hidden');
+}
+
+function hideTooltip() {
+  tooltip.classList.add('hidden');
+  hoveredPoint = null;
+}
+
+// ===== UI UPDATE =====
+function updateUI(p) {
+  // alert
+  const ab = document.getElementById('alert-bar');
+  let cls, icon, txt;
+  if (p.MS > 0.4) { cls='green'; icon='🟢'; txt='מרווח ביטחון גבוה'; }
+  else if (p.MS > 0.15) { cls='yellow'; icon='🟡'; txt='אזהרה – ניטור מוגבר'; }
+  else if (p.MS > -0.1) { cls='orange'; icon='🟠'; txt='חירום חלקי – הפחת עומס'; }
+  else { cls='red'; icon='🔴'; txt='כשל קרוב – נוהל חירום!'; }
+  ab.className = 'alert-bar ' + cls;
+  document.getElementById('alert-icon').textContent = icon;
+  document.getElementById('alert-text').textContent = txt;
+
+  // vitality
+  const vp = Math.max(0, Math.min(1, p.vit));
+  document.getElementById('vit-num').textContent = vp.toFixed(2);
+  const vf = document.getElementById('vit-fill');
+  vf.style.width = (vp*100) + '%';
+  vf.style.background = msColor(p.MS);
+
+  // metrics
+  document.getElementById('m-ms').textContent = p.MS.toFixed(2);
+  document.getElementById('m-ms').className = 'metric-value ' + cls;
+  document.getElementById('m-t').textContent = p.T_max.toFixed(0) + ' N';
+  document.getElementById('m-t').style.color = p.T_max > state.T_BREAK*0.7 ? '#ff4444' : '#00d4ff';
+  document.getElementById('m-rb').textContent = p.R_min_actual < 99 ? p.R_min_actual.toFixed(3)+' m' : '—';
+  document.getElementById('m-rb').style.color = p.R_min_actual < state.R_MIN ? '#ff4444' : '#00d4ff';
+  document.getElementById('m-dew').textContent = p.T_dew.toFixed(1) + '°C';
+  document.getElementById('m-fn').textContent = p.f_n.toFixed(2) + ' Hz';
+  document.getElementById('m-ofdr').textContent = p.anom.toExponential(1);
+
+  // margin breakdown bars
+  const comps = [
+    {label:'מכני',  val: p.MS_mech,    formula:'T_break/T − 1'},
+    {label:'כיפוף', val: p.MS_bend,    formula:'R_bend/R_min − 1'},
+    {label:'רטט',   val: p.MS_vib,     formula:'1 − wind/25'},
+    {label:'OFDR',  val: p.MS_ofdr,    formula:'1 − T/T_break'},
+    {label:'עייפות', val: p.MS_fatigue, formula:'1 − D_fatigue'},
+  ];
+  const mb = document.getElementById('margin-bars');
+  mb.innerHTML = comps.map(c => {
+    const pct = ((c.val + 1) / 2 * 100).toFixed(0);
+    const col = msColor(c.val);
+    return `
+    <div style="margin-bottom:5px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:2px;">
+        <span style="font-size:.6rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;">${c.label} <span style="color:#3a5f80">${c.formula}</span></span>
+        <span style="font-size:.6rem;color:${col};font-family:'IBM Plex Mono',monospace;">${c.val.toFixed(2)}</span>
+      </div>
+      <div style="height:4px;background:var(--panel2);border-radius:2px;overflow:hidden;">
+        <div style="height:100%;width:${Math.max(0,Math.min(100,pct))}%;background:${col};border-radius:2px;transition:width .3s,background .3s;"></div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // formula log
+  const log = document.getElementById('formula-log');
+  const entry = `<div class="log-line">[t=${state.tick}] MS=<span>${p.MS.toFixed(3)}</span> T_max=<span>${p.T_max.toFixed(1)}N</span> f_n=<span>${p.f_n.toFixed(2)}Hz</span> R_b=<span>${p.R_min_actual<99?p.R_min_actual.toFixed(3):'∞'}m</span></div>`;
+  log.insertAdjacentHTML('afterbegin', entry);
+  if (log.children.length > 30) log.removeChild(log.lastChild);
+
+  // sparkline
+  state.vitHistory.push(vp);
+  if (state.vitHistory.length > 80) state.vitHistory.shift();
+  drawSparkline();
+}
+
+function drawSparkline() {
+  const sc = document.getElementById('sparkCanvas');
+  const sx = sc.getContext('2d');
+  const W = sc.width = sc.parentElement.offsetWidth;
+  const H = 50;
+  sx.clearRect(0,0,W,H);
+  const hist = state.vitHistory;
+  if (hist.length < 2) return;
+
+  sx.beginPath();
+  hist.forEach((v,i) => {
+    const x = (i/(hist.length-1)) * W;
+    const y = H - v * (H-4) - 2;
+    i===0 ? sx.moveTo(x,y) : sx.lineTo(x,y);
+  });
+  sx.strokeStyle = '#00d4ff';
+  sx.lineWidth = 1.5;
+  sx.stroke();
+
+  // fill under
+  sx.lineTo(W, H); sx.lineTo(0, H); sx.closePath();
+  const grd = sx.createLinearGradient(0,0,0,H);
+  grd.addColorStop(0,'rgba(0,212,255,0.15)');
+  grd.addColorStop(1,'rgba(0,212,255,0)');
+  sx.fillStyle = grd;
+  sx.fill();
+
+  // current value line
+  const last = hist[hist.length-1];
+  sx.beginPath();
+  sx.moveTo(0, H - last*(H-4)-2);
+  sx.lineTo(W, H - last*(H-4)-2);
+  sx.strokeStyle = 'rgba(0,255,157,0.2)';
+  sx.lineWidth = 0.5;
+  sx.setLineDash([3,3]);
+  sx.stroke();
+  sx.setLineDash([]);
+}
+
+// ===== SLIDER BINDINGS =====
+const sliders = [
+  {id:'wind',   key:'wind',    unit:' m/s', disp:'val-wind'},
+  {id:'height', key:'height',  unit:' m',   disp:'val-height'},
+  {id:'dist',   key:'dist',    unit:' m',   disp:'val-dist'},
+  {id:'tension',key:'tension', unit:' N',   disp:'val-tension'},
+  {id:'temp',   key:'temp',    unit:'°C',   disp:'val-temp'},
+  {id:'rh',     key:'rh',      unit:'%',    disp:'val-rh'},
+  {id:'length', key:'length',  unit:' m',   disp:'val-length'},
+  {id:'mass',   key:'mass',    unit:' g/m', disp:'val-mass'},
+];
+
+sliders.forEach(s => {
+  const el = document.getElementById(s.id);
+  const updateFill = () => {
+    const pct = ((el.value - el.min)/(el.max-el.min)*100).toFixed(1);
+    el.style.setProperty('--pct', pct+'%');
+  };
+  el.addEventListener('input', () => {
+    state[s.key] = parseFloat(el.value);
+    document.getElementById(s.disp).textContent = el.value + s.unit;
+    updateFill();
+  });
+  updateFill();
+});
+
+// ===== MAIN LOOP =====
+function loop() {
+  resizeCanvas();
+  state.tick++;
+  const p = computePhysics();
+  draw(p);
+  updateUI(p);
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+loop();
+</script>
+<div class="cv-mobile-orbit" aria-hidden="true"></div>
+<script src="../assets/site-polish.js"></script>
+</body>
+</html>
+
+
+

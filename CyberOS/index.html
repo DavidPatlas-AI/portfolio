@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CyberOS Platform</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Segoe UI,sans-serif;min-height:100vh;background:linear-gradient(180deg,#0f172a,#020617);color:#e2e8f0;overflow:hidden}
+.desktop{min-height:100vh;padding:48px 20px 80px;background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 60L60 0' stroke='%231e293b' fill='none'/%3E%3C/svg%3E")}
+.taskbar{position:fixed;bottom:0;left:0;right:0;height:52px;background:rgba(15,23,42,.92);border-top:1px solid #334155;display:flex;align-items:center;padding:0 16px;gap:12px;backdrop-filter:blur(12px)}
+.start{background:linear-gradient(135deg,#3b82f6,#8b5cf6);border:none;color:#fff;padding:10px 18px;border-radius:8px;font-weight:700;cursor:pointer}
+.clock{margin-right:auto;font-size:.9rem;opacity:.8}
+.apps{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:20px;max-width:900px}
+.app{text-decoration:none;color:#e2e8f0;text-align:center;padding:12px;border-radius:12px;transition:.2s}
+.app:hover{background:rgba(255,255,255,.08);transform:translateY(-2px)}
+.ico{font-size:2.2rem;display:block;margin-bottom:6px}
+h1{text-align:center;margin-bottom:32px;font-weight:300;letter-spacing:.2em;opacity:.9}
+</style></head>
+<body>
+<div class="desktop"><h1>CyberOS</h1><div class="apps"><a class="app" href="https://math-haredim.netlify.app" target="_blank" rel="noopener"><span class="ico">🎓</span><span>מתמטיקה לחרדים</span></a><a class="app" href="https://maslul-rechev-2026.netlify.app" target="_blank" rel="noopener"><span class="ico">🔧</span><span>מסלול רכב</span></a><a class="app" href="https://teshuva-algorithm.netlify.app" target="_blank" rel="noopener"><span class="ico">📎</span><span>האלגוריתם שחזר בתשובה</span></a><a class="app" href="https://storied-alfajores-6f10d2.netlify.app/%D7%9E%D7%96%D7%94%D7%94%20%D7%A8%D7%92%D7%A9%D7%95%D7%AA/index.html" target="_blank" rel="noopener"><span class="ico">😊</span><span>מזהה רגשות</span></a><a class="app" href="https://storied-alfajores-6f10d2.netlify.app/%D7%A4%D7%95%D7%9C%D7%99%D7%92%D7%A8%D7%A3%20%D7%93%D7%99%D7%92%D7%99%D7%98%D7%9C%D7%99/index.html" target="_blank" rel="noopener"><span class="ico">🔍</span><span>פוליגרף דיגיטלי</span></a><a class="app" href="https://storied-alfajores-6f10d2.netlify.app/%D7%A2%D7%99%D7%A6%D7%95%D7%91%D7%99%D7%9D%20CSS/gallery.html" target="_blank" rel="noopener"><span class="ico">✨</span><span>עיצובי CSS</span></a><a class="app" href="https://storied-alfajores-6f10d2.netlify.app/" target="_blank" rel="noopener"><span class="ico">📂</span><span>תיק עבודות</span></a></div></div>
+<div class="taskbar"><button class="start" onclick="location.href='https://storied-alfajores-6f10d2.netlify.app/'">התחל</button><span class="clock" id="clk"></span></div>
+<script>setInterval(()=>{document.getElementById('clk').textContent=new Date().toLocaleString('he-IL')},1000)</script>
+</body></html>

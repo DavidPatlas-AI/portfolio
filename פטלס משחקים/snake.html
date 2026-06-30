@@ -1,0 +1,12 @@
+<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8"><title>סנייק</title>
+<style>body{margin:0;background:#0f0a2e;color:#fff;font-family:sans-serif;text-align:center;padding:12px}
+canvas{border-radius:12px;margin-top:8px}a{color:#f5c842}</style></head><body>
+<a href="index.html">← חזרה</a><h2>סנייק</h2><canvas id="c" width="400" height="400"></canvas><script>
+const c=document.getElementById('c'),x=c.getContext('2d');let W=c.width=400,H=c.height=400,cell=20,s=[{x:10,y:10}],d={x:1,y:0},food,running=1,score=0;
+function rnd(){return{x:Math.floor(Math.random()*(W/cell)),y:Math.floor(Math.random()*(H/cell))}}
+food=rnd();
+document.onkeydown=e=>{const k=e.key;if(k==='ArrowUp'&&d.y!==1)d={x:0,y:-1};if(k==='ArrowDown'&&d.y!==-1)d={x:0,y:1};if(k==='ArrowLeft'&&d.x!==1)d={x:-1,y:0};if(k==='ArrowRight'&&d.x!==-1)d={x:1,y:0}};
+setInterval(()=>{if(!running)return;const h={x:s[0].x+d.x,y:s[0].y+d.y};if(h.x<0||h.y<0||h.x>=W/cell||h.y>=H/cell||s.some(p=>p.x===h.x&&p.y===h.y)){running=0;alert('Game Over! ניקוד: '+score);location.reload();return}
+s.unshift(h);if(h.x===food.x&&h.y===food.y){score++;do food=rnd();while(s.some(p=>p.x===food.x&&p.y===food.y))}else s.pop();
+x.fillStyle='#0a0a14';x.fillRect(0,0,W,H);x.fillStyle='#f5c842';x.fillRect(food.x*cell,food.y*cell,cell-2,cell-2);x.fillStyle='#4ade80';s.forEach((p,i)=>{x.fillStyle=i?'#22c55e':'#86efac';x.fillRect(p.x*cell,p.y*cell,cell-2,cell-2)})},120);
+</script></body></html>

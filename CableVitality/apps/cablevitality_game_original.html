@@ -1,0 +1,1293 @@
+﻿<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ghost Tether // CableVitality</title>
+<style>
+/* ── FONTS (offline-safe) ── */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Heebo:wght@400;700;900&display=swap');
+:root{
+  --bg:#04080f;--panel:rgba(6,14,28,.88);--border:rgba(0,200,255,.18);
+  --accent:#00c8ff;--green:#00ffa3;--warn:#ffc300;--red:#ff3a3a;
+  --text:#c5e0f5;--muted:#3f6a8a;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);
+  font-family:'Heebo','Segoe UI',Arial,sans-serif;color:var(--text);}
+#gameCanvas{position:fixed;inset:0;width:100%;height:100%;cursor:crosshair;}
+
+/* ── GLASS PANELS ── */
+.hud{position:fixed;z-index:10;pointer-events:none;}
+.hud.ia{pointer-events:auto;}
+.glass{background:var(--panel);border:1px solid var(--border);border-radius:10px;
+  backdrop-filter:blur(14px);padding:10px 12px;position:relative;overflow:hidden;}
+.glass::before{content:'';position:absolute;inset:0;border-radius:10px;
+  background:linear-gradient(135deg,rgba(0,200,255,.05),transparent 60%);pointer-events:none;}
+.sec{font-size:.5rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;
+  border-bottom:1px solid rgba(0,200,255,.1);padding-bottom:4px;margin-bottom:7px;
+  font-family:'IBM Plex Mono',monospace;}
+
+/* ── LEFT PANEL ── */
+#hud-left{top:14px;left:14px;width:255px;display:flex;flex-direction:column;gap:7px;}
+
+/* Detection tools (3 buttons in a row) */
+.det-row{display:flex;gap:5px;}
+.det-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;
+  border:1px solid var(--border);border-radius:7px;padding:6px 4px;cursor:pointer;
+  background:rgba(0,200,255,.04);color:var(--muted);font-size:.58rem;font-weight:700;
+  transition:.18s;font-family:'Heebo',sans-serif;}
+.det-btn:hover{background:rgba(0,200,255,.1);color:var(--text);}
+.det-btn.active{background:rgba(0,200,255,.15);border-color:rgba(0,200,255,.45);
+  color:var(--accent);box-shadow:0 0 10px rgba(0,200,255,.1);}
+.det-btn .dicon{font-size:.9rem;}
+.det-btn .dkey{font-size:.42rem;color:#1a3050;font-family:'IBM Plex Mono',monospace;}
+
+/* Weapons grid (2×3) */
+.weap-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.weap-btn{display:flex;flex-direction:column;align-items:center;gap:2px;
+  border:1px solid var(--border);border-radius:7px;padding:7px 4px;cursor:pointer;
+  background:rgba(0,200,255,.04);color:var(--muted);font-size:.58rem;font-weight:700;
+  transition:.18s;font-family:'Heebo',sans-serif;}
+.weap-btn:hover{background:rgba(0,200,255,.12);color:var(--text);}
+.weap-btn.active{background:rgba(255,58,58,.12);border-color:rgba(255,58,58,.4);
+  color:var(--red);box-shadow:0 0 10px rgba(255,58,58,.1);}
+.weap-btn.active.phosphor{background:rgba(180,50,255,.12);border-color:rgba(180,50,255,.4);color:#c070ff;}
+.weap-btn.active.barbed{background:rgba(180,100,30,.12);border-color:rgba(180,100,30,.4);color:#c87030;}
+.weap-btn.active.net{background:rgba(0,255,100,.08);border-color:rgba(0,255,100,.4);color:var(--green);}
+.weap-btn.active.data{background:rgba(0,220,220,.1);border-color:rgba(0,220,220,.4);color:#00dede;}
+.weap-btn.active.chemical{background:rgba(80,200,50,.1);border-color:rgba(80,200,50,.4);color:#50c830;}
+.weap-btn .wicon{font-size:1rem;}
+.weap-btn .wkey{font-size:.4rem;color:#1a3050;font-family:'IBM Plex Mono',monospace;}
+.weap-uses{font-size:.42rem;color:var(--warn);font-family:'IBM Plex Mono',monospace;margin-top:1px;}
+
+/* Active tool panel */
+.tp{display:none;flex-direction:column;gap:6px;}
+.tp.active{display:flex;}
+.gauge-wrap{background:rgba(0,0,0,.4);border:1px solid rgba(0,200,255,.1);border-radius:6px;padding:7px 10px;}
+.gauge-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;}
+.gname{font-size:.57rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+.greading{font-size:1rem;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--warn);}
+.gtrack{height:5px;background:rgba(0,0,0,.6);border-radius:4px;overflow:hidden;}
+.gfill{height:100%;border-radius:4px;transition:width .15s,background .15s;}
+.fsmall{font-family:'IBM Plex Mono',monospace;font-size:.52rem;color:#1e3550;margin-top:4px;line-height:1.7;}
+.fsmall b{color:var(--warn);}
+.ofdr-btn{background:rgba(0,200,255,.1);border:1px solid rgba(0,200,255,.25);border-radius:7px;
+  padding:7px;cursor:pointer;color:var(--accent);font-size:.68rem;font-weight:700;
+  transition:.2s;width:100%;font-family:'Heebo',sans-serif;}
+.ofdr-btn:hover:not(:disabled){background:rgba(0,200,255,.2);}
+.ofdr-btn:disabled{opacity:.38;cursor:default;}
+.fi-row{margin-bottom:5px;}
+.fi-top{display:flex;justify-content:space-between;margin-bottom:3px;}
+.fi-name{font-size:.6rem;font-weight:700;color:var(--text);}
+.fi-val{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--accent);
+  background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.15);padding:1px 6px;border-radius:4px;}
+input[type=range]{width:100%;height:3px;-webkit-appearance:none;outline:none;cursor:pointer;border-radius:2px;
+  background:linear-gradient(90deg,var(--accent) var(--p,40%),rgba(22,44,78,.9) var(--p,40%));}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:12px;height:12px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 7px var(--accent);}
+.fi-eq{font-size:.52rem;color:#1e3550;font-family:'IBM Plex Mono',monospace;margin-top:2px;}
+.match-bar{height:5px;border-radius:4px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);overflow:hidden;margin-top:4px;}
+.match-fill{height:100%;border-radius:4px;transition:width .3s,background .3s;}
+#match-label{font-size:.57rem;font-family:'IBM Plex Mono',monospace;margin-top:2px;text-align:center;}
+#formula-live{font-family:'IBM Plex Mono',monospace;font-size:.54rem;color:#1e3550;margin-top:3px;line-height:1.7;}
+.weap-hint{font-size:.62rem;line-height:1.55;color:#2a4a6a;border:1px solid rgba(0,200,255,.1);
+  border-radius:6px;padding:7px;background:rgba(0,0,0,.3);}
+#charge-wrap{display:none;}
+.charge-track{height:7px;background:rgba(0,0,0,.5);border-radius:5px;overflow:hidden;margin-top:5px;}
+.charge-fill-el{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:5px;width:0%;transition:width .1s;}
+#last-info{font-family:'IBM Plex Mono',monospace;font-size:.57rem;color:var(--muted);margin-top:5px;text-align:center;}
+
+/* Vitality bar */
+#vit-hud{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:10;pointer-events:none;min-width:280px;}
+.vit-label{font-size:.5rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:.12em;text-transform:uppercase;text-align:center;margin-bottom:3px;}
+.vit-track{height:9px;background:rgba(0,0,0,.5);border-radius:5px;overflow:hidden;border:1px solid rgba(255,255,255,.08);}
+.vit-fill{height:100%;border-radius:5px;transition:width .4s,background .4s;}
+#vit-txt{font-family:'IBM Plex Mono',monospace;font-size:.6rem;margin-top:3px;text-align:center;}
+.svi-row{display:flex;justify-content:space-between;font-family:'IBM Plex Mono',monospace;font-size:.55rem;margin-top:3px;color:var(--muted);}
+
+/* RIGHT panel */
+#hud-right{top:14px;right:14px;display:flex;flex-direction:column;gap:7px;}
+.logo-title{font-size:.98rem;font-weight:900;color:#fff;margin:2px 0;}
+.logo-title span{background:linear-gradient(90deg,var(--accent),var(--green));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.logo-op{font-size:.5rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:.12em;}
+.logo-sub{font-size:.55rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+#stat-row{display:flex;gap:14px;align-items:center;}
+.stat{display:flex;flex-direction:column;align-items:center;}
+.slabel{font-size:.48rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;text-transform:uppercase;}
+.sval{font-size:.85rem;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--accent);}
+.shots-dots{display:flex;gap:3px;margin-top:2px;flex-wrap:wrap;max-width:60px;}
+.sdot{width:8px;height:8px;border-radius:50%;background:var(--red);box-shadow:0 0 5px var(--red);transition:.3s;}
+.sdot.used{background:#1a3050;box-shadow:none;}
+#brief-txt{font-size:.57rem;color:var(--muted);line-height:1.7;font-family:'IBM Plex Mono',monospace;}
+
+/* RADAR */
+#radarCanvas{position:fixed;bottom:14px;right:14px;z-index:20;border-radius:50%;
+  border:1px solid rgba(0,200,100,.35);box-shadow:0 0 16px rgba(0,200,100,.12);}
+
+/* WIND */
+#wind-hud{position:fixed;bottom:14px;left:280px;z-index:10;pointer-events:none;}
+.wlabel{font-size:.52rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;}
+.wval{font-size:.85rem;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--accent);}
+
+/* BOTTOM MSG */
+#hud-bottom{bottom:14px;left:50%;transform:translateX(-50%);z-index:10;}
+#bottom-msg{font-family:'IBM Plex Mono',monospace;font-size:.62rem;color:var(--muted);
+  letter-spacing:.06em;text-align:center;padding:5px 18px;position:relative;}
+
+/* SETUP SCREEN */
+#setup{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.92);
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);transition:opacity .4s;}
+#setup.hide{opacity:0;pointer-events:none;}
+#setup-box{background:rgba(4,10,24,.97);border:1px solid rgba(0,200,255,.25);border-radius:18px;
+  padding:30px 36px;max-width:580px;width:92%;box-shadow:0 0 80px rgba(0,200,255,.1);overflow:hidden;position:relative;}
+#setup-box::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,200,255,.05),transparent 60%);pointer-events:none;}
+.sh{text-align:center;margin-bottom:20px;}
+.sh-title{font-size:1.55rem;font-weight:900;color:#fff;}
+.sh-title span{background:linear-gradient(90deg,var(--accent),var(--green));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sh-sub{font-size:.6rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;margin-top:3px;}
+.ss{font-size:.52rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase;
+  border-bottom:1px solid rgba(0,200,255,.1);padding-bottom:4px;margin-bottom:10px;font-family:'IBM Plex Mono',monospace;}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.sp{display:flex;flex-direction:column;gap:4px;}
+.sp label{font-size:.58rem;color:var(--text);font-weight:700;}
+.sp select,.sp input[type=range]{background:rgba(0,200,255,.07);border:1px solid rgba(0,200,255,.2);
+  border-radius:6px;color:var(--accent);font-family:'IBM Plex Mono',monospace;font-size:.68rem;padding:4px 7px;
+  outline:none;width:100%;}
+.sp select option{background:#04090e;}
+.pv{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--warn);text-align:right;}
+.intel{font-size:.56rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;
+  background:rgba(255,200,0,.05);border:1px solid rgba(255,200,0,.15);border-radius:5px;padding:5px 8px;margin-bottom:14px;}
+.intel b{color:var(--warn);}
+/* Weapon select grid in setup */
+.ws-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:16px;}
+.ws-card{border:1px solid var(--border);border-radius:8px;padding:8px;cursor:pointer;
+  background:rgba(0,200,255,.03);text-align:center;transition:.18s;}
+.ws-card:hover{background:rgba(0,200,255,.09);border-color:rgba(0,200,255,.3);}
+.ws-card.sel{background:rgba(0,200,255,.14);border-color:rgba(0,200,255,.5);box-shadow:0 0 10px rgba(0,200,255,.12);}
+.ws-card .wi{font-size:1.2rem;margin-bottom:3px;}
+.ws-card .wn{font-size:.6rem;font-weight:900;color:#fff;}
+.ws-card .wd{font-size:.5rem;color:var(--muted);line-height:1.35;margin-top:2px;}
+#start-btn{width:100%;padding:11px;background:linear-gradient(135deg,rgba(0,200,255,.2),rgba(0,255,163,.1));
+  border:1px solid rgba(0,200,255,.4);border-radius:9px;color:#fff;font-size:.82rem;font-weight:900;
+  cursor:pointer;font-family:'Heebo',sans-serif;transition:.2s;}
+#start-btn:hover{background:linear-gradient(135deg,rgba(0,200,255,.35),rgba(0,255,163,.2));box-shadow:0 0 18px rgba(0,200,255,.2);}
+
+/* WIN/LOSE overlay */
+#overlay{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);opacity:0;pointer-events:none;transition:opacity .4s;}
+#overlay.show{opacity:1;pointer-events:auto;}
+#ov-box{background:rgba(5,10,25,.96);border:1px solid rgba(0,200,255,.3);border-radius:16px;padding:36px 46px;text-align:center;max-width:400px;box-shadow:0 0 60px rgba(0,200,255,.15);position:relative;}
+#ov-icon{font-size:2.8rem;margin-bottom:8px;}
+#ov-title{font-size:1.45rem;font-weight:900;color:#fff;margin-bottom:4px;}
+#ov-sub{font-size:.75rem;color:var(--muted);margin-bottom:12px;font-family:'IBM Plex Mono',monospace;}
+#ov-score{font-size:.95rem;color:var(--green);font-family:'IBM Plex Mono',monospace;margin-bottom:20px;}
+#ov-btn{background:rgba(0,200,255,.15);border:1px solid rgba(0,200,255,.4);color:var(--accent);border-radius:8px;padding:9px 28px;font-size:.8rem;font-weight:700;cursor:pointer;font-family:'Heebo',sans-serif;transition:.2s;}
+#ov-btn:hover{background:rgba(0,200,255,.28);}
+
+/* Achievements */
+@keyframes ap{0%{transform:translateX(-50%) scale(.5);opacity:0;}50%{transform:translateX(-50%) scale(1.08);}100%{transform:translateX(-50%) scale(1);opacity:1;}}
+.ach{position:fixed;top:75px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#0a1e10,#0d2818);
+  border:1px solid rgba(0,255,100,.4);border-radius:20px;padding:7px 20px;
+  font-weight:900;font-size:.78rem;color:#00ff64;box-shadow:0 0 28px rgba(0,255,100,.2);
+  z-index:200;animation:ap .4s ease-out;pointer-events:none;}
+
+/* Phosphor cable reveal effect - drawn on canvas */
+</style>
+<style id="cv-home-nav-style">.cv-home-nav{position:fixed;z-index:99999;left:14px;top:14px;display:flex;gap:8px;align-items:center;font-family:Arial,"Segoe UI",sans-serif;direction:rtl}.cv-home-nav a{min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:0 12px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:rgba(5,12,14,.72);backdrop-filter:blur(14px);color:#eef8f4;text-decoration:none;font-size:13px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.22)}.cv-home-nav a:hover{border-color:rgba(66,211,146,.6);color:#42d392}@media(max-width:640px){.cv-home-nav{left:8px;top:8px}.cv-home-nav a{font-size:12px;padding:0 10px}}</style><link rel="stylesheet" href="../assets/mobile-shell.css">
+<link rel="stylesheet" href="../assets/site-polish.css">
+</head>
+<body><div class="cv-home-nav"><a href="../index.html">בית</a><a href="../index.html#apps">כל הדפים</a></div>
+<canvas id="gameCanvas"></canvas>
+<canvas id="radarCanvas" width="140" height="140"></canvas>
+
+<!-- ══ SETUP ══ -->
+<div id="setup">
+<div id="setup-box">
+  <div class="sh">
+    <div class="sh-title">Ghost<span>Tether</span></div>
+    <div class="sh-sub">// CABLEVITALITY UAV INTERDICTION SYSTEM v3.0</div>
+  </div>
+  <div class="ss">// פרמטרי סביבה</div>
+  <div class="sg">
+    <div class="sp"><label>סוג כבל</label>
+      <select id="s-cable">
+        <option value="gore">GORE 24AWG — 19 g/m — 910N</option>
+        <option value="tk3">TK3 CZI — 12 g/m — 200N</option>
+        <option value="ofs">OFS µlinx — 1 g/m — 200N</option>
+      </select></div>
+    <div class="sp"><label>גובה רחפן (m)</label>
+      <input type="range" id="s-alt" min="80" max="350" value="150" oninput="document.getElementById('sv-alt').textContent=this.value+'m'">
+      <div class="pv" id="sv-alt">150m</div></div>
+    <div class="sp"><label>מרחק אופקי (m)</label>
+      <input type="range" id="s-dist" min="100" max="480" value="220" oninput="document.getElementById('sv-dist').textContent=this.value+'m'">
+      <div class="pv" id="sv-dist">220m</div></div>
+    <div class="sp"><label>רוח (m/s)</label>
+      <input type="range" id="s-wind" min="0" max="25" value="5" oninput="document.getElementById('sv-wind').textContent=this.value+' m/s'">
+      <div class="pv" id="sv-wind">5 m/s</div></div>
+  </div>
+  <div class="intel"><b>⚠ לא ידוע:</b> מתח אופקי T_h — יש לגלות דרך סריקה ונוסחה. T_break תלוי בסוג הכבל.</div>
+  <div class="ss">// בחר 3 נשקים (מחסן מוגבל)</div>
+  <div class="ws-grid" id="ws-grid">
+    <div class="ws-card sel" data-w="laser"><div class="wi">🔴</div><div class="wn">לייזר</div><div class="wd">פגיעה מדויקת בכבל. 5 ירויות.</div></div>
+    <div class="ws-card" data-w="phosphor"><div class="wi">🟣</div><div class="wn">זרחן</div><div class="wd">מגלה כבל ל-15 שניות. 2 שימושים.</div></div>
+    <div class="ws-card" data-w="barbed"><div class="wi">🟤</div><div class="wn">גדר תיל</div><div class="wd">קו אופקי חותך כבל נמוך. 1 שימוש.</div></div>
+    <div class="ws-card" data-w="net"><div class="wi">🕸</div><div class="wn">רשת-רחפן</div><div class="wd">לוכד קרוב לרחפן. 2 שימושים.</div></div>
+    <div class="ws-card" data-w="data"><div class="wi">📡</div><div class="wn">Data Overload</div><div class="wd">שרוף טרנסיבר — כבל נותק. 1 שימוש.</div></div>
+    <div class="ws-card" data-w="chemical"><div class="wi">🧪</div><div class="wn">כימי</div><div class="wd">מחליש כבל באזור. 3 יישומים.</div></div>
+  </div>
+  <button id="start-btn">▶ התחל מבצע</button>
+</div>
+</div>
+
+<!-- ══ HUD LEFT ══ -->
+<div class="hud ia" id="hud-left">
+  <!-- Detection tools -->
+  <div class="glass">
+    <div class="sec">🔍 כלי סריקה</div>
+    <div class="det-row">
+      <button class="det-btn active" data-det="thermal"><span class="dicon">🌡</span>תרמי<span class="dkey">[1]</span></button>
+      <button class="det-btn" data-det="ofdr"><span class="dicon">📡</span>OFDR<span class="dkey">[2]</span></button>
+      <button class="det-btn" data-det="formula"><span class="dicon">📐</span>נוסחה<span class="dkey">[3]</span></button>
+    </div>
+  </div>
+
+  <!-- Active detection panel -->
+  <div class="glass" id="det-panel">
+    <div class="tp active" id="tp-thermal">
+      <div class="sec">// סורק תרמי IR</div>
+      <div class="gauge-wrap">
+        <div class="gauge-row"><span class="gname">טמפרטורה</span><span class="greading" id="th-reading">28.0°C</span></div>
+        <div class="gtrack"><div class="gfill" id="th-fill" style="width:10%;background:var(--accent)"></div></div>
+        <div class="fsmall">T = T_amb + ΔT·exp(-d/σ) · d=<b id="th-dist">—</b>px</div>
+      </div>
+      <div style="font-size:.58rem;color:#2a4a6a;line-height:1.5;">הזז עכבר מעל אזורי חשד.</div>
+    </div>
+    <div class="tp" id="tp-ofdr">
+      <div class="sec">// פולס OFDR אופטי</div>
+      <button class="ofdr-btn" id="ofdr-btn">▶ שלח פולס</button>
+      <div style="font-size:.57rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;">נותרו: <span id="ofdr-left">3</span></div>
+      <div style="font-size:.58rem;color:#2a4a6a;line-height:1.5;margin-top:4px;">גל אור מגלה כבל לשנייה.</div>
+    </div>
+    <div class="tp" id="tp-formula">
+      <div class="sec">// נוסחת קטנריה</div>
+      <div class="fi-row">
+        <div class="fi-top"><span class="fi-name">T_h (N)</span><span class="fi-val" id="fi-th-v">50</span></div>
+        <input type="range" id="fi-th" min="5" max="300" value="50" step="1">
+        <div class="fi-eq">S = m·g·D²/(8·T_h)</div>
+      </div>
+      <div class="fi-row">
+        <div class="fi-top"><span class="fi-name">m (g/m)</span><span class="fi-val" id="fi-m-v">19</span></div>
+        <input type="range" id="fi-m" min="1" max="50" value="19" step="0.5">
+        <div class="fi-eq">a = T_h/(m·g)</div>
+      </div>
+      <div class="match-bar"><div class="match-fill" id="match-fill" style="width:0%;background:var(--red)"></div></div>
+      <div id="match-label" style="color:var(--red)">התאמה: —</div>
+      <div id="formula-live">a = — · S = —</div>
+    </div>
+  </div>
+
+  <!-- Weapons grid -->
+  <div class="glass" id="weap-panel-sel">
+    <div class="sec">⚔️ נשקים</div>
+    <div class="weap-grid" id="weap-grid">
+      <!-- Populated by JS from selected loadout -->
+    </div>
+  </div>
+
+  <!-- Active weapon panel -->
+  <div class="glass" id="weap-panel">
+    <div id="wap-title" class="sec">// בחר נשק</div>
+    <div id="wap-hint" class="weap-hint">בחר נשק מהרשת למעלה.</div>
+    <div id="charge-wrap">
+      <div style="font-size:.57rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;">טוען RF...</div>
+      <div class="charge-track"><div class="charge-fill-el" id="charge-fill"></div></div>
+    </div>
+    <div id="last-info">—</div>
+  </div>
+
+  <!-- Briefing -->
+  <div class="glass"><div class="sec">// בריפינג</div><div id="brief-txt"></div></div>
+</div>
+
+<!-- ══ HUD RIGHT ══ -->
+<div class="hud" id="hud-right">
+  <div class="glass">
+    <div class="logo-op">// מבצע פעיל</div>
+    <div class="logo-title">Ghost<span>Tether</span></div>
+    <div class="logo-sub">UAV TETHER INTERDICTION</div>
+  </div>
+  <div class="glass" id="stat-row">
+    <div class="stat"><div class="slabel">ניקוד</div><div class="sval" id="score-val">0</div></div>
+    <div class="stat"><div class="slabel">נשק</div><div class="sval" id="active-weap-icon">—</div></div>
+    <div class="stat"><div class="slabel">נותרו</div><div class="shots-dots" id="shots-dots"></div></div>
+  </div>
+</div>
+
+<!-- ══ VITALITY BAR (top center) ══ -->
+<div class="hud" id="vit-hud">
+  <div class="glass" style="padding:7px 16px;">
+    <div class="vit-label">// cable vitality index</div>
+    <div class="vit-track"><div class="vit-fill" id="vit-fill" style="width:92%;background:var(--green)"></div></div>
+    <div class="svi-row"><span id="vit-txt" style="color:var(--green);">Vitality: 0.92</span><span id="svi-txt">SVI: 0.08</span></div>
+  </div>
+</div>
+
+<!-- ══ WIND ══ -->
+<div id="wind-hud"><div class="glass" style="padding:7px 12px;"><div class="wlabel">🌬 רוח</div><div class="wval" id="wind-disp">5 m/s</div></div></div>
+
+<!-- ══ BOTTOM MSG ══ -->
+<div class="hud" id="hud-bottom"><div class="glass" id="bottom-msg">בחר כלי סריקה · גלה את הכבל · יירט</div></div>
+
+<!-- ══ WIN/LOSE ══ -->
+<div id="overlay"><div id="ov-box">
+  <div id="ov-icon">🎯</div><div id="ov-title">פגיעה!</div>
+  <div id="ov-sub">הרחפן הופל</div><div id="ov-score">ניקוד: 0</div>
+  <button id="ov-btn">שחק שוב</button>
+</div></div>
+
+<script>
+'use strict';
+// ══════════════════════════════════════════════════════
+//  CONSTANTS
+// ══════════════════════════════════════════════════════
+const G=9.8067, RHO=1.204, SCALE=4, THSIG=45;
+
+const CABLES={
+  gore:{name:'GORE 24AWG',m:19,diam:3.2,Fb:910,E:2e9},
+  tk3: {name:'TK3 CZI',  m:12,diam:2.8,Fb:200,E:2e9},
+  ofs: {name:'OFS µlinx',m:1, diam:0.8,Fb:200,E:70e9},
+};
+
+const WEAP_CFG={
+  laser:   {icon:'🔴',name:'לייזר 50kW',    uses:5,  hint:'לחץ על מיקום הכבל. סבילות: 18px.',          key:'[4]'},
+  phosphor:{icon:'🟣',name:'זרחן',           uses:2,  hint:'לחץ בכל מקום — ענן מגלה כבל ל-15 שניות.', key:'[5]'},
+  barbed:  {icon:'🟤',name:'גדר תיל',        uses:1,  hint:'לחץ להנחת קו חיתוך אופקי.',                key:'[6]'},
+  net:     {icon:'🕸',name:'רשת-רחפן',       uses:2,  hint:'לחץ קרוב לרחפן — מיירט אוטומטי.',          key:'[7]'},
+  data:    {icon:'📡',name:'Data Overload',   uses:1,  hint:'לחץ בתוך 60px מהעוגן לשריפת טרנסיבר.',    key:'[8]'},
+  chemical:{icon:'🧪',name:'חומר כימי',       uses:3,  hint:'לחץ לריסוס — מחליש כבל. לאחר מכן לייזר.', key:'[9]'},
+};
+
+// Precomputed scene
+const STARS=Array.from({length:120},(_,i)=>({
+  x:((Math.sin(i*127.1)*43758.5453)%1+1)%1,y:((Math.sin(i*311.7)*43758.5453)%1+1)%1*0.65,
+  r:i%20===0?1.2:.5,tw:Math.sin(i*73.1)*6.28}));
+const BUILDINGS=Array.from({length:8},(_,i)=>{
+  const bx=80+i*120+((i*53)%60),bw=25+((i*37)%30),bh=30+((i*29)%50);
+  const rows=Math.ceil(bh/10),cols=Math.floor(bw/8);
+  return{bx,bw,bh,r:10+i*3,g:20+i*2,b:30+i*4,
+    wl:Array.from({length:rows*cols},(_,j)=>Math.sin(i*17+j*7)>0)};
+});
+const WPARTS=Array.from({length:28},()=>({x:Math.random()*1800,y:Math.random()*500+80,life:Math.random()}));
+
+// ══════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════
+const GS={
+  cableKey:'gore',windSpeed:5,windDir:-1,altM:150,distM:220,
+  loadout:['laser','phosphor','net'], // 3 selected weapons
+  weapUsed:{},          // {weapName: usesLeft}
+  detTool:'thermal',
+  weapTool:null,
+  phase:'setup',
+  tick:0,score:0,
+  anchor:{x:0,y:0},
+  drone:{x:0,y:0,baseX:0,baseY:0,hoverT:0,driftT:0,vx:0,vy:0,angle:0},
+  secretTh:50,
+  actualCable:[],predictedCable:[],
+  // Physics metrics
+  vitality:0.92,sviMax:0.08,tensions:[],
+  // Detection
+  mouse:{x:0,y:0},thermalR:28,thermalDist:999,
+  ofdrActive:false,ofdrT:0,ofdrReveal:0,ofdrLeft:3,
+  formulaTh:50,formulaM:19,matchPct:0,
+  // Weapon effects
+  phosphors:[],           // [{x,y,endT}]
+  barbedWire:null,        // {y,endT}
+  netDrone:null,          // {x,y,tx,ty,arrived,hit}
+  dataRings:[],           // [{x,y,r,endT}]
+  chemSpots:[],           // [{x,y,weakened}]
+  laserBeam:null,         // {ox,oy,tx,ty,hit,t}
+  // Falling
+  shots:[],
+  totalHits:0,totalCuts:0,
+  achievements:{fh:false,fc:false,t10:false},
+};
+
+// ══════════════════════════════════════════════════════
+//  CANVAS
+// ══════════════════════════════════════════════════════
+const canvas=document.getElementById('gameCanvas');
+const ctx=canvas.getContext('2d');
+const rdrCvs=document.getElementById('radarCanvas');
+const rdrCtx=rdrCvs.getContext('2d');
+
+function resize(){
+  canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+  if(GS.phase!=='setup') positionObjects();
+}
+window.addEventListener('resize',resize); resize();
+
+// ══════════════════════════════════════════════════════
+//  SETUP
+// ══════════════════════════════════════════════════════
+let selectedWeapons=new Set(['laser','phosphor','net']);
+
+document.getElementById('ws-grid').querySelectorAll('.ws-card').forEach(c=>{
+  c.addEventListener('click',()=>{
+    const w=c.dataset.w;
+    if(selectedWeapons.has(w)){
+      if(selectedWeapons.size>1){selectedWeapons.delete(w);c.classList.remove('sel');}
+    } else {
+      if(selectedWeapons.size<3){selectedWeapons.add(w);c.classList.add('sel');}
+      else{
+        // Replace oldest
+        const first=[...selectedWeapons][0]; selectedWeapons.delete(first);
+        document.querySelector(`.ws-card[data-w="${first}"]`).classList.remove('sel');
+        selectedWeapons.add(w); c.classList.add('sel');
+      }
+    }
+  });
+});
+
+document.getElementById('start-btn').addEventListener('click',()=>{
+  GS.cableKey=document.getElementById('s-cable').value;
+  GS.altM=+document.getElementById('s-alt').value;
+  GS.distM=+document.getElementById('s-dist').value;
+  GS.windSpeed=+document.getElementById('s-wind').value;
+  GS.loadout=[...selectedWeapons];
+  GS.weapUsed={};
+  GS.loadout.forEach(w=>{ GS.weapUsed[w]=WEAP_CFG[w].uses; });
+  GS.phase='playing';
+  GS.score=0; GS.shots=[];
+  GS.phosphors=[]; GS.barbedWire=null; GS.netDrone=null; GS.dataRings=[];
+  GS.chemSpots=[]; GS.laserBeam=null;
+  GS.ofdrLeft=3; GS.ofdrActive=false; GS.ofdrReveal=0;
+  GS.formulaTh=50; GS.formulaM=CABLES[GS.cableKey].m;
+  GS.weapTool=null; GS.detTool='thermal';
+  document.getElementById('setup').classList.add('hide');
+  positionObjects(true);
+  buildWeaponGrid();
+  syncDetUI('thermal');
+  document.getElementById('ofdr-btn').disabled=false;
+  document.getElementById('ofdr-left').textContent=GS.ofdrLeft;
+  document.getElementById('wind-disp').textContent=GS.windSpeed+' m/s';
+  document.getElementById('fi-m').value=GS.formulaM;
+  updateFormulaUI();
+  updateBriefing();
+  setMsg('בחר סריקה [1-3] · גלה כבל · בחר נשק [4+] · יירט');
+});
+
+function buildWeaponGrid(){
+  const g=document.getElementById('weap-grid'); g.innerHTML='';
+  GS.loadout.forEach((w,i)=>{
+    const cfg=WEAP_CFG[w];
+    const btn=document.createElement('button');
+    btn.className='weap-btn '+w; btn.dataset.w=w;
+    btn.innerHTML=`<span class="wicon">${cfg.icon}</span><span style="font-size:.58rem;">${cfg.name}</span><span class="weap-uses" id="wu-${w}">${GS.weapUsed[w]} ✦</span><span class="wkey">[${4+i}]</span>`;
+    btn.addEventListener('click',()=>selectWeap(w));
+    g.appendChild(btn);
+  });
+}
+
+function positionObjects(init){
+  const W=canvas.width,H=canvas.height;
+  GS.anchor.x=0.13*W; GS.anchor.y=terrainH(0.13*W,W,H)-20;
+  const dx=GS.anchor.x+GS.distM*SCALE, dy=GS.anchor.y-GS.altM*SCALE;
+  GS.drone.x=GS.drone.baseX=Math.min(dx,W*0.92);
+  GS.drone.y=GS.drone.baseY=Math.max(dy,H*0.07);
+  GS.drone.hoverT=0; GS.drone.driftT=0;
+  if(init){
+    GS.secretTh=20+Math.random()*130;
+    GS.matchPct=0;
+    document.getElementById('fi-th').value=50;
+    updateFormulaUI();
+  }
+  recomputeCable();
+}
+
+// ══════════════════════════════════════════════════════
+//  PHYSICS — catenary + SVI
+// ══════════════════════════════════════════════════════
+function getCablePoints(ax,ay,dx,dy,Th,m_gm){
+  const m=m_gm/1000, Dh=dx-ax, Dv=ay-dy;
+  if(Math.abs(Dh)<1) return [];
+  const Dh_m=Dh/SCALE;
+  const S_m=(m*G*Dh_m*Dh_m)/(8*Math.max(Th,1));
+  const S_px=S_m*SCALE;
+  const cable=CABLES[GS.cableKey];
+  const fd=0.5*RHO*1.0*(cable.diam/1000)*GS.windSpeed*GS.windSpeed;
+  const wDefl=(fd/Math.max(Th,1))*Dh_m*Dh_m*0.08*SCALE;
+  const pts=[];
+  for(let i=0;i<=80;i++){
+    const t=i/80, cx=ax+t*Dh, chordY=ay-t*Dv;
+    const sagY=4*S_px*t*(1-t);
+    const wd=GS.windDir<0?-wDefl*t*(1-t)*4:wDefl*t*(1-t)*4;
+    pts.push({x:cx+wd,y:chordY+sagY});
+  }
+  return pts;
+}
+
+function recomputeCable(){
+  const c=CABLES[GS.cableKey];
+  GS.actualCable=getCablePoints(GS.anchor.x,GS.anchor.y,GS.drone.x,GS.drone.y,GS.secretTh,c.m);
+  // Compute tensions and SVI
+  const Th=GS.secretTh, w=c.m/1000*G;
+  const sviVals=GS.actualCable.map((p,i)=>{
+    const tension=Math.sqrt(Th*Th+(w*(p.y-GS.anchor.y))**2);
+    const fT=Math.min(1,tension/c.Fb)**2;
+    return Math.min(1,0.4*fT+0.2*(GS.windSpeed/25));
+  });
+  GS.sviMax=Math.max(...sviVals,0.01);
+  GS.vitality=Math.max(0,1-sviVals.reduce((a,b)=>a+b,0)/sviVals.length);
+  updateVitalityUI();
+  updatePredictedCable();
+}
+
+function distToSeg(px,py,x1,y1,x2,y2){
+  const dx=x2-x1,dy=y2-y1,l=dx*dx+dy*dy;
+  if(!l) return Math.hypot(px-x1,py-y1);
+  const t=Math.max(0,Math.min(1,((px-x1)*dx+(py-y1)*dy)/l));
+  return Math.hypot(px-(x1+t*dx),py-(y1+t*dy));
+}
+function minDistCable(mx,my,cable){
+  let min=Infinity;
+  for(let i=0;i<cable.length-1;i++){
+    const d=distToSeg(mx,my,cable[i].x,cable[i].y,cable[i+1].x,cable[i+1].y);
+    if(d<min) min=d;
+  }
+  return min;
+}
+
+// ══════════════════════════════════════════════════════
+//  TERRAIN
+// ══════════════════════════════════════════════════════
+function terrainH(x,W,H){
+  return H*0.82+Math.sin(x*.008)*18+Math.sin(x*.02)*9+Math.sin(x*.05)*5+Math.sin(x*.003)*28;
+}
+function drawTerrain(){
+  const W=canvas.width,H=canvas.height;
+  const sky=ctx.createLinearGradient(0,0,0,H*.75);
+  sky.addColorStop(0,'#020509'); sky.addColorStop(.55,'#05101a'); sky.addColorStop(1,'#0a1a28');
+  ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+  STARS.forEach(s=>{
+    const tw=.35+.3*Math.sin(GS.tick*.015+s.tw);
+    ctx.fillStyle=`rgba(200,230,255,${tw.toFixed(2)})`;
+    ctx.beginPath(); ctx.arc(s.x*W,s.y*H,s.r,0,Math.PI*2); ctx.fill();
+  });
+  ctx.beginPath(); ctx.arc(W*.88,H*.08,22,0,Math.PI*2);
+  ctx.fillStyle='rgba(220,230,200,.85)'; ctx.fill();
+  ctx.beginPath(); ctx.arc(W*.88+8,H*.08-4,18,0,Math.PI*2);
+  ctx.fillStyle='#03060f'; ctx.fill();
+  ctx.beginPath(); ctx.moveTo(0,H);
+  for(let x=0;x<=W;x+=6) ctx.lineTo(x,terrainH(x,W,H));
+  ctx.lineTo(W,H); ctx.closePath();
+  const grd=ctx.createLinearGradient(0,H*.78,0,H);
+  grd.addColorStop(0,'#102418'); grd.addColorStop(.3,'#091a10'); grd.addColorStop(1,'#040c06');
+  ctx.fillStyle=grd; ctx.fill();
+  ctx.beginPath();
+  for(let x=0;x<=W;x+=6){ x===0?ctx.moveTo(x,terrainH(x,W,H)):ctx.lineTo(x,terrainH(x,W,H)); }
+  ctx.strokeStyle='rgba(0,200,80,.3)'; ctx.lineWidth=1.5; ctx.stroke();
+  for(let i=0;i<18;i++){
+    const tx=(i*137.5)%W,ty=terrainH(tx,W,H)-2,th=20+((i*73)%25);
+    ctx.fillStyle='#081408'; ctx.fillRect(tx-1.5,ty-th*.35,3,th*.35);
+    ctx.beginPath(); ctx.moveTo(tx,ty-th); ctx.lineTo(tx-th*.35,ty-th*.35); ctx.lineTo(tx+th*.35,ty-th*.35); ctx.closePath();
+    ctx.fillStyle=`rgba(0,${75+i*4},${18+i*2},.75)`; ctx.fill();
+  }
+  BUILDINGS.forEach((b,i)=>{
+    const by=terrainH(b.bx,W,H);
+    ctx.fillStyle=`rgba(${b.r},${b.g},${b.b},.85)`; ctx.fillRect(b.bx-b.bw/2,by-b.bh,b.bw,b.bh);
+    ctx.fillStyle='rgba(255,220,100,.28)';
+    let wi=0;
+    for(let wy=by-b.bh+6;wy<by-4;wy+=10)
+      for(let wx=b.bx-b.bw/2+4;wx<b.bx+b.bw/2-4;wx+=8)
+        if(b.wl[wi++%b.wl.length]) ctx.fillRect(wx,wy,4,5);
+  });
+  ctx.strokeStyle='rgba(0,200,100,.04)'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=80){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
+  for(let y=0;y<H;y+=80){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.fillStyle='rgba(0,200,100,.18)'; ctx.font='8px IBM Plex Mono,monospace';
+  for(let x=80;x<W;x+=80) ctx.fillText((x/SCALE|0)+'m',x+2,12);
+}
+
+// ══════════════════════════════════════════════════════
+//  GAME OBJECTS
+// ══════════════════════════════════════════════════════
+function drawAnchor(){
+  const{x,y}=GS.anchor,tgy=terrainH(x,canvas.width,canvas.height);
+  ctx.strokeStyle='rgba(0,200,255,.5)'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(x,tgy); ctx.lineTo(x,y); ctx.stroke();
+  ctx.beginPath(); ctx.arc(x,y-18,8,Math.PI,Math.PI*2);
+  ctx.strokeStyle='#00c8ff'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.fillStyle='#0a1e30'; ctx.strokeStyle='#00c8ff';
+  ctx.beginPath(); ctx.roundRect(x-13,tgy-20,26,20,2); ctx.fill(); ctx.stroke();
+  const g=ctx.createRadialGradient(x,tgy-10,0,x,tgy-10,30);
+  g.addColorStop(0,'rgba(0,200,255,.15)'); g.addColorStop(1,'transparent');
+  ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,tgy-10,30,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='rgba(0,200,255,.7)'; ctx.font='bold 9px IBM Plex Mono,monospace';
+  ctx.textAlign='center'; ctx.fillText('⚓ עיגון',x,tgy+13);
+}
+
+function updateDroneHover(){
+  if(GS.phase!=='playing') return;
+  GS.drone.hoverT+=.018; GS.drone.driftT+=.006;
+  GS.drone.x=GS.drone.baseX+Math.sin(GS.drone.driftT)*14;
+  GS.drone.y=GS.drone.baseY+Math.sin(GS.drone.hoverT)*11;
+}
+
+function drawDrone(){
+  const{x,y,angle}=GS.drone;
+  ctx.save(); ctx.translate(x,y); ctx.rotate(angle);
+  const g=ctx.createRadialGradient(0,0,4,0,0,30);
+  g.addColorStop(0,'rgba(0,200,255,.2)'); g.addColorStop(1,'transparent');
+  ctx.fillStyle=g; ctx.beginPath(); ctx.arc(0,0,30,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='#0d1e36'; ctx.strokeStyle='#00c8ff'; ctx.lineWidth=1.5;
+  ctx.shadowColor='#00c8ff'; ctx.shadowBlur=8;
+  ctx.beginPath(); ctx.roundRect(-10,-5,20,10,2); ctx.fill(); ctx.stroke();
+  ctx.shadowBlur=0;
+  [[-18,-12],[10,-12],[-18,6],[10,6]].forEach(([ax,ay])=>{
+    ctx.strokeStyle='rgba(0,200,255,.45)'; ctx.lineWidth=1.2;
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.lineTo(ax,ay); ctx.stroke();
+    ctx.beginPath(); ctx.arc(ax,ay,5,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,200,255,.1)'; ctx.fill(); ctx.strokeStyle='#00c8ff'; ctx.lineWidth=1; ctx.stroke();
+    ctx.save(); ctx.translate(ax,ay); ctx.rotate(GS.tick*.3);
+    ctx.strokeStyle='rgba(0,200,255,.85)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(-5,0); ctx.lineTo(5,0); ctx.stroke();
+    ctx.rotate(Math.PI/2); ctx.beginPath(); ctx.moveTo(-5,0); ctx.lineTo(5,0); ctx.stroke();
+    ctx.restore();
+  });
+  ctx.beginPath(); ctx.arc(0,0,2.5,0,Math.PI*2);
+  ctx.fillStyle='#00ffa3'; ctx.shadowColor='#00ffa3'; ctx.shadowBlur=10; ctx.fill(); ctx.shadowBlur=0;
+  ctx.restore();
+  ctx.fillStyle='rgba(255,255,255,.75)'; ctx.font='bold 9px Heebo,sans-serif';
+  ctx.textAlign='center'; ctx.fillText('UAV',x,y-36);
+  const hM=((terrainH(x,canvas.width,canvas.height)-y)/SCALE)|0;
+  ctx.fillStyle='rgba(0,200,255,.4)'; ctx.font='8px IBM Plex Mono,monospace';
+  ctx.fillText(hM+'m ↕',x+24,y);
+}
+
+// ══════════════════════════════════════════════════════
+//  CABLE DRAWING
+// ══════════════════════════════════════════════════════
+function drawCable(pts,alpha,color,dash){
+  if(!pts||pts.length<2) return;
+  if(dash) ctx.setLineDash(dash); else ctx.setLineDash([]);
+  ctx.globalAlpha=alpha;
+  [[22,.03],[12,.08],[6,.18],[2.5,.6],[1.5,1]].forEach(([w,a])=>{
+    ctx.beginPath(); pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+    ctx.strokeStyle=color+(a<1?Math.round(a*255).toString(16).padStart(2,'0'):'');
+    ctx.lineWidth=w; ctx.stroke();
+  });
+  ctx.globalAlpha=1; ctx.setLineDash([]);
+}
+
+// ══════════════════════════════════════════════════════
+//  THERMAL OVERLAY
+// ══════════════════════════════════════════════════════
+function drawThermal(){
+  if(GS.detTool!=='thermal'||GS.phase!=='playing') return;
+  const{x:mx,y:my}=GS.mouse,d=GS.thermalDist;
+  const intensity=Math.exp(-d/THSIG);
+  if(intensity>.01){
+    const r=Math.max(30,Math.min(130,d*1.3));
+    const g=ctx.createRadialGradient(mx,my,0,mx,my,r);
+    const col=thermalColor(GS.thermalR);
+    g.addColorStop(0,col.replace('1)',`${(intensity*.45).toFixed(2)})`)); g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(mx,my,r,0,Math.PI*2); ctx.fill();
+  }
+  const rgb=thermalRGB(GS.thermalR);
+  ctx.strokeStyle=`rgba(${rgb},.65)`; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(mx-22,my); ctx.lineTo(mx+22,my); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(mx,my-22); ctx.lineTo(mx,my+22); ctx.stroke();
+  ctx.setLineDash([]);
+}
+function thermalColor(t){return t<35?'rgba(0,150,255,1)':t<50?'rgba(0,255,150,1)':t<65?'rgba(255,200,0,1)':'rgba(255,60,0,1)';}
+function thermalRGB(t){return t<35?'0,150,255':t<50?'0,255,150':t<65?'255,200,0':'255,60,0';}
+
+// ══════════════════════════════════════════════════════
+//  OFDR
+// ══════════════════════════════════════════════════════
+function drawOFDR(){
+  if(!GS.ofdrActive) return;
+  const pts=GS.actualCable; if(!pts||pts.length<2) return;
+  const endIdx=Math.floor(GS.ofdrT*(pts.length-1));
+  if(endIdx>0){
+    ctx.beginPath();
+    for(let i=0;i<=endIdx;i++) i===0?ctx.moveTo(pts[0].x,pts[0].y):ctx.lineTo(pts[i].x,pts[i].y);
+    ctx.strokeStyle='#00c8ff'; ctx.lineWidth=2.5;
+    ctx.globalAlpha=GS.ofdrReveal; ctx.shadowColor='#00c8ff'; ctx.shadowBlur=14;
+    ctx.stroke(); ctx.shadowBlur=0; ctx.globalAlpha=1;
+  }
+  if(endIdx<pts.length-1){
+    const hp=pts[endIdx];
+    ctx.globalAlpha=GS.ofdrReveal;
+    const g=ctx.createRadialGradient(hp.x,hp.y,0,hp.x,hp.y,22);
+    g.addColorStop(0,'rgba(0,200,255,.95)'); g.addColorStop(.5,'rgba(0,200,255,.3)'); g.addColorStop(1,'transparent');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(hp.x,hp.y,22,0,Math.PI*2); ctx.fill();
+    ctx.globalAlpha=1;
+  }
+}
+
+// ══════════════════════════════════════════════════════
+//  WEAPON VISUALS
+// ══════════════════════════════════════════════════════
+
+// 1. LASER BEAM
+function drawLaser(){
+  if(!GS.laserBeam) return;
+  const{ox,oy,tx,ty,hit,t}=GS.laserBeam;
+  const alpha=Math.max(0,1-t*2);
+  ctx.globalAlpha=alpha; ctx.shadowColor='#ff3a3a'; ctx.shadowBlur=22;
+  ctx.strokeStyle='#ff3a3a'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(tx,ty); ctx.stroke();
+  ctx.lineWidth=.8; ctx.strokeStyle='rgba(255,200,200,.4)';
+  ctx.beginPath(); ctx.moveTo(ox,oy); ctx.lineTo(tx,ty); ctx.stroke();
+  ctx.shadowBlur=0;
+  if(hit){
+    for(let i=0;i<14;i++){
+      const ang=(i/14)*Math.PI*2+t*4, r=(35+i*4)*t;
+      ctx.strokeStyle='#ffc300'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(tx,ty); ctx.lineTo(tx+Math.cos(ang)*r,ty+Math.sin(ang)*r); ctx.stroke();
+    }
+    const g=ctx.createRadialGradient(tx,ty,0,tx,ty,60);
+    g.addColorStop(0,`rgba(255,200,0,${(alpha*.4).toFixed(2)})`); g.addColorStop(1,'transparent');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(tx,ty,60,0,Math.PI*2); ctx.fill();
+  } else {
+    ctx.strokeStyle='#ff3a3a'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(tx-9,ty-9); ctx.lineTo(tx+9,ty+9); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(tx+9,ty-9); ctx.lineTo(tx-9,ty+9); ctx.stroke();
+  }
+  ctx.globalAlpha=1;
+}
+
+// 2. PHOSPHOR CLOUD (reveals cable within radius)
+function drawPhosphorClouds(){
+  const now=Date.now();
+  GS.phosphors=GS.phosphors.filter(p=>now<p.endT);
+  GS.phosphors.forEach(p=>{
+    const left=(p.endT-now)/15000;
+    const alpha=.18*left;
+    const g=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);
+    g.addColorStop(0,`rgba(180,50,255,${(alpha*2).toFixed(2)})`);
+    g.addColorStop(.6,`rgba(120,30,200,${alpha.toFixed(2)})`);
+    g.addColorStop(1,'transparent');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+    // label
+    ctx.fillStyle=`rgba(180,80,255,${(left*.6).toFixed(2)})`;
+    ctx.font='9px IBM Plex Mono,monospace'; ctx.textAlign='center';
+    ctx.fillText('PHOSPHOR',p.x,p.y-p.r-5);
+    // Reveal cable portion within cloud
+    if(GS.actualCable.length>1){
+      const visiblePts=GS.actualCable.filter(pt=>Math.hypot(pt.x-p.x,pt.y-p.y)<p.r);
+      if(visiblePts.length>1){
+        ctx.beginPath(); visiblePts.forEach((pt,i)=>i===0?ctx.moveTo(pt.x,pt.y):ctx.lineTo(pt.x,pt.y));
+        ctx.strokeStyle=`rgba(180,80,255,${(left*.8).toFixed(2)})`; ctx.lineWidth=2.5;
+        ctx.shadowColor='#b432ff'; ctx.shadowBlur=10; ctx.stroke(); ctx.shadowBlur=0;
+      }
+    }
+  });
+}
+
+// 3. BARBED WIRE
+function drawBarbedWire(){
+  if(!GS.barbedWire||Date.now()>GS.barbedWire.endT){ GS.barbedWire=null; return; }
+  const W=canvas.width, y=GS.barbedWire.y;
+  const left=(GS.barbedWire.endT-Date.now())/5000;
+  ctx.globalAlpha=left;
+  ctx.strokeStyle='#c87030'; ctx.lineWidth=2.5;
+  ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke();
+  // Barbs
+  ctx.strokeStyle='#8b4513'; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=18){
+    ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+5,y-7); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x+9,y); ctx.lineTo(x+14,y+7); ctx.stroke();
+  }
+  ctx.fillStyle=`rgba(200,120,48,${(left*.6).toFixed(2)})`;
+  ctx.font='9px IBM Plex Mono,monospace'; ctx.textAlign='left';
+  ctx.fillText('━━ גדר תיל ━━',10,y-12);
+  ctx.globalAlpha=1;
+}
+
+// 4. NET DRONE (interceptor)
+function drawNetDrone(){
+  if(!GS.netDrone) return;
+  const{x,y,tx,ty,arrived}=GS.netDrone;
+  ctx.strokeStyle='rgba(0,255,100,.35)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+  ctx.beginPath(); ctx.moveTo(GS.anchor.x,GS.anchor.y); ctx.lineTo(x,y); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#002010'; ctx.strokeStyle='#00ff64'; ctx.lineWidth=1.5;
+  ctx.shadowColor='#00ff64'; ctx.shadowBlur=9;
+  ctx.beginPath(); ctx.arc(x,y,7,0,Math.PI*2); ctx.fill(); ctx.stroke(); ctx.shadowBlur=0;
+  if(arrived){
+    ctx.strokeStyle='rgba(0,255,100,.5)'; ctx.lineWidth=1.5; ctx.setLineDash([3,3]);
+    ctx.beginPath(); ctx.arc(x,y,28,0,Math.PI*2); ctx.stroke();
+    ctx.setLineDash([]);
+    // Net pattern
+    for(let r=8;r<28;r+=8){
+      ctx.strokeStyle=`rgba(0,255,100,${.25-r*.006})`; ctx.lineWidth=1;
+      ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.stroke();
+    }
+  }
+}
+
+// 5. DATA OVERLOAD RINGS
+function drawDataRings(){
+  const now=Date.now();
+  GS.dataRings=GS.dataRings.filter(r=>now<r.endT);
+  GS.dataRings.forEach(r=>{
+    const life=(r.endT-now)/2000;
+    ctx.globalAlpha=life*.8;
+    ctx.strokeStyle='#00dede'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(r.x,r.y,r.r,0,Math.PI*2); ctx.stroke();
+    ctx.globalAlpha=life*.3;
+    ctx.beginPath(); ctx.arc(r.x,r.y,r.r*.6,0,Math.PI*2); ctx.stroke();
+    ctx.globalAlpha=1;
+  });
+}
+
+// 6. CHEMICAL SPOTS
+function drawChemSpots(){
+  GS.chemSpots.forEach(s=>{
+    const alpha=s.weakened?.1:.15;
+    const color=s.weakened?'rgba(255,150,0,.2)':'rgba(80,200,50,.2)';
+    const g=ctx.createRadialGradient(s.x,s.y,0,s.x,s.y,35);
+    g.addColorStop(0,s.weakened?'rgba(255,150,0,.4)':'rgba(80,200,50,.5)');
+    g.addColorStop(1,'transparent');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(s.x,s.y,35,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=s.weakened?'rgba(255,150,0,.6)':'rgba(80,200,50,.6)';
+    ctx.font='8px IBM Plex Mono,monospace'; ctx.textAlign='center';
+    ctx.fillText(s.weakened?'⚡חלש':'🧪',s.x,s.y-38);
+  });
+}
+
+// Shot dots
+function drawShots(){
+  GS.shots.forEach(s=>{
+    ctx.beginPath(); ctx.arc(s.x,s.y,4,0,Math.PI*2);
+    ctx.fillStyle=s.hit?'#00ffa3':'#ff3a3a';
+    ctx.globalAlpha=.5; ctx.fill(); ctx.globalAlpha=1;
+  });
+}
+
+// Wind
+function drawWind(){
+  if(!GS.windSpeed) return;
+  const W=canvas.width,H=canvas.height;
+  WPARTS.forEach(p=>{
+    p.x+=GS.windDir*GS.windSpeed*.4; p.life-=.005;
+    if(p.life<=0||p.x<-50||p.x>W+50){p.x=GS.windDir<0?W+20:-20;p.y=Math.random()*H*.7+50;p.life=Math.random()*.6+.2;}
+    ctx.strokeStyle=`rgba(0,200,255,${(p.life*.12).toFixed(2)})`; ctx.lineWidth=1; ctx.setLineDash([6,4]);
+    ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p.x-GS.windDir*GS.windSpeed*2.5,p.y); ctx.stroke();
+    ctx.setLineDash([]);
+  });
+}
+
+// ══════════════════════════════════════════════════════
+//  RADAR
+// ══════════════════════════════════════════════════════
+function drawRadar(){
+  const cx=70,cy=70,R=62,W=canvas.width,H=canvas.height;
+  rdrCtx.clearRect(0,0,140,140);
+  rdrCtx.fillStyle='rgba(2,8,18,.95)';
+  rdrCtx.beginPath(); rdrCtx.arc(cx,cy,R+2,0,Math.PI*2); rdrCtx.fill();
+  [.25,.5,.75,1].forEach(f=>{
+    rdrCtx.strokeStyle=`rgba(0,200,100,${(.07+f*.04).toFixed(2)})`; rdrCtx.lineWidth=1;
+    rdrCtx.beginPath(); rdrCtx.arc(cx,cy,R*f,0,Math.PI*2); rdrCtx.stroke();
+  });
+  rdrCtx.strokeStyle='rgba(0,200,100,.1)'; rdrCtx.lineWidth=1;
+  rdrCtx.beginPath(); rdrCtx.moveTo(cx-R,cy); rdrCtx.lineTo(cx+R,cy); rdrCtx.stroke();
+  rdrCtx.beginPath(); rdrCtx.moveTo(cx,cy-R); rdrCtx.lineTo(cx,cy+R); rdrCtx.stroke();
+  // Sweep
+  const sw=(GS.tick*.025)%(Math.PI*2)-Math.PI/2;
+  rdrCtx.strokeStyle='rgba(0,255,100,.7)'; rdrCtx.lineWidth=1.5;
+  rdrCtx.beginPath(); rdrCtx.moveTo(cx,cy); rdrCtx.lineTo(cx+Math.cos(sw)*R,cy+Math.sin(sw)*R); rdrCtx.stroke();
+  rdrCtx.strokeStyle='rgba(0,255,100,.1)'; rdrCtx.lineWidth=5;
+  rdrCtx.beginPath(); rdrCtx.arc(cx,cy,R*.7,sw-1.2,sw); rdrCtx.stroke();
+  // Map scale
+  const sc=R/Math.max(W,H)*1.4;
+  function tor(gx,gy){return{rx:cx+(gx-GS.anchor.x)*sc*.8,ry:cy+(gy-GS.anchor.y)*sc*.8};}
+  // Anchor
+  const ap=tor(GS.anchor.x,GS.anchor.y);
+  rdrCtx.fillStyle='#00c8ff'; rdrCtx.beginPath(); rdrCtx.arc(ap.rx,ap.ry,3,0,Math.PI*2); rdrCtx.fill();
+  // Drone blip
+  const dp=tor(GS.drone.x,GS.drone.y);
+  if(GS.tick%30<20){
+    rdrCtx.fillStyle='#ff3a3a'; rdrCtx.shadowColor='#ff3a3a'; rdrCtx.shadowBlur=8;
+    rdrCtx.beginPath(); rdrCtx.arc(dp.rx,dp.ry,4,0,Math.PI*2); rdrCtx.fill(); rdrCtx.shadowBlur=0;
+  }
+  // Cable (when visible)
+  const showCable=GS.ofdrActive||(GS.phase==='falling')||(GS.phase==='won');
+  if(showCable){
+    rdrCtx.strokeStyle='rgba(0,200,255,.6)'; rdrCtx.lineWidth=1; rdrCtx.beginPath();
+    GS.actualCable.forEach((p,i)=>{const r=tor(p.x,p.y);i===0?rdrCtx.moveTo(r.rx,r.ry):rdrCtx.lineTo(r.rx,r.ry);});
+    rdrCtx.stroke();
+  }
+  // Chemical spots on radar
+  GS.chemSpots.forEach(s=>{
+    const r=tor(s.x,s.y);
+    rdrCtx.fillStyle='rgba(80,200,50,.6)'; rdrCtx.beginPath(); rdrCtx.arc(r.rx,r.ry,3,0,Math.PI*2); rdrCtx.fill();
+  });
+  rdrCtx.fillStyle='rgba(0,200,100,.4)'; rdrCtx.font='7px IBM Plex Mono,monospace';
+  rdrCtx.textAlign='center'; rdrCtx.fillText('RADAR',cx,cy+R+13);
+  rdrCtx.strokeStyle='rgba(0,200,100,.3)'; rdrCtx.lineWidth=1.5;
+  rdrCtx.beginPath(); rdrCtx.arc(cx,cy,R+1,0,Math.PI*2); rdrCtx.stroke();
+}
+
+// ══════════════════════════════════════════════════════
+//  DRONE FALL
+// ══════════════════════════════════════════════════════
+function updateFall(){
+  if(GS.phase!=='falling') return;
+  GS.drone.vy+=.42; GS.drone.vx+=(GS.windDir<0?-1:1)*.09;
+  GS.drone.x+=GS.drone.vx; GS.drone.y+=GS.drone.vy; GS.drone.angle+=.05;
+  GS.actualCable=getCablePoints(GS.anchor.x,GS.anchor.y,GS.drone.x,GS.drone.y,GS.secretTh*.3,CABLES[GS.cableKey].m);
+  const tgy=terrainH(GS.drone.x,canvas.width,canvas.height);
+  if(GS.drone.y>=tgy){GS.drone.y=tgy;GS.phase='won';showWin();}
+}
+
+// ══════════════════════════════════════════════════════
+//  FIRE WEAPONS
+// ══════════════════════════════════════════════════════
+function fireWeapon(cx,cy){
+  if(!GS.weapTool||GS.phase!=='playing') return;
+  const w=GS.weapTool;
+  if(!GS.weapUsed[w]||GS.weapUsed[w]<=0){setMsg('אין מנות נותרות לנשק הזה!'); return;}
+  GS.weapUsed[w]--;
+  updateWeapUsesUI(w);
+
+  switch(w){
+
+    case 'laser':{
+      const d=minDistCable(cx,cy,GS.actualCable);
+      const isWeak=GS.chemSpots.some(s=>Math.hypot(cx-s.x,cy-s.y)<40);
+      const hit=d<18||(isWeak&&d<50);
+      GS.laserBeam={ox:GS.anchor.x,oy:GS.anchor.y,tx:cx,ty:cy,hit,t:0};
+      GS.shots.push({x:cx,y:cy,hit});
+      if(hit){
+        GS.score+=500; setMsg('לייזר פגע! הכבל נחתך — רחפן נופל'); onCut();
+      } else {
+        GS.score+=0;
+        setMsg(`החטאה! ~${d|0}px מהכבל. השתמש בנוסחה לדיוק.`);
+        document.getElementById('last-info').textContent=`מרחק: ~${d|0}px מהכבל`;
+        if(allAmmoGone()) setTimeout(showLose,800);
+      }
+      break;
+    }
+
+    case 'phosphor':{
+      GS.phosphors.push({x:cx,y:cy,r:90,endT:Date.now()+15000});
+      GS.score+=50;
+      setMsg('זרחן! הכבל מוארג לסגול ל-15 שניות. מצא אותו וירה.');
+      document.getElementById('last-info').textContent='כבל מוארג — הסתכל על הענן הסגול';
+      break;
+    }
+
+    case 'barbed':{
+      GS.barbedWire={y:cy,endT:Date.now()+7000};
+      // Check if cable passes through this Y
+      const cableHit=GS.actualCable.some(p=>Math.abs(p.y-cy)<8);
+      if(cableHit){
+        GS.score+=400; setMsg('גדר תיל חתכה את הכבל! רחפן נופל.');
+        setTimeout(()=>{GS.shots.push({x:cx,y:cy,hit:true});onCut();},800);
+      } else {
+        setMsg('גדר הונחה — הכבל לא עברה דרכה. ייתכן שגבוה מדי.');
+        document.getElementById('last-info').textContent='הכבל מעל קו הגדר';
+        if(allAmmoGone()) setTimeout(showLose,800);
+      }
+      break;
+    }
+
+    case 'net':{
+      const drone={x:GS.drone.x,y:GS.drone.y};
+      GS.netDrone={x:GS.anchor.x,y:GS.anchor.y,tx:cx,ty:cy,arrived:false,hit:false};
+      const spd=5;
+      const iv=setInterval(()=>{
+        if(!GS.netDrone) {clearInterval(iv);return;}
+        const dx2=GS.netDrone.tx-GS.netDrone.x,dy2=GS.netDrone.ty-GS.netDrone.y;
+        const dist=Math.hypot(dx2,dy2);
+        if(dist<spd){
+          GS.netDrone.x=GS.netDrone.tx; GS.netDrone.y=GS.netDrone.ty; GS.netDrone.arrived=true;
+          clearInterval(iv);
+          const captDist=Math.hypot(GS.netDrone.x-drone.x,GS.netDrone.y-drone.y);
+          GS.netDrone.hit=captDist<60;
+          GS.shots.push({x:cx,y:cy,hit:GS.netDrone.hit});
+          if(GS.netDrone.hit){GS.score+=350;setMsg('רשת לכדה את הרחפן!'); onCut();}
+          else {setMsg(`רשת החטיאה — ${captDist|0}px מהרחפן.`); if(allAmmoGone()) setTimeout(showLose,800);}
+          setTimeout(()=>{GS.netDrone=null;},2000);
+        } else {GS.netDrone.x+=dx2/dist*spd; GS.netDrone.y+=dy2/dist*spd;}
+      },16);
+      setMsg('מיירט-רשת בדרכו...');
+      break;
+    }
+
+    case 'data':{
+      const anchorDist=Math.hypot(cx-GS.anchor.x,cy-GS.anchor.y);
+      // Ring animation
+      GS.dataRings.push({x:cx,y:cy,r:10,endT:Date.now()+2000});
+      setTimeout(()=>GS.dataRings.push({x:cx,y:cy,r:25,endT:Date.now()+2000}),300);
+      setTimeout(()=>GS.dataRings.push({x:cx,y:cy,r:50,endT:Date.now()+2000}),600);
+      if(anchorDist<80){
+        GS.score+=600; setMsg('טרנסיבר נשרף! חיבור נותק — רחפן נופל.');
+        GS.shots.push({x:cx,y:cy,hit:true});
+        setTimeout(()=>onCut(),1000);
+      } else {
+        setMsg(`Data Overload — חיי לכוון אל העוגן. מרחק: ${anchorDist|0}px.`);
+        document.getElementById('last-info').textContent=`מרחק מעוגן: ${anchorDist|0}px (נדרש <80px)`;
+        if(allAmmoGone()) setTimeout(showLose,800);
+      }
+      break;
+    }
+
+    case 'chemical':{
+      const d2=minDistCable(cx,cy,GS.actualCable);
+      GS.chemSpots.push({x:cx,y:cy,weakened:d2<35});
+      if(d2<35){
+        GS.score+=80; setMsg('חומר כימי פגע בציפוי! הכבל נחלש — לייזר יחדור ב-50px.');
+        document.getElementById('last-info').textContent='אזור מוחלש — יירה לייזר לכאן';
+      } else {
+        setMsg(`חומר רוסס — לא על הכבל (${d2|0}px). הכבל עדיין חזק.`);
+        document.getElementById('last-info').textContent=`מרחק מכבל: ${d2|0}px`;
+      }
+      break;
+    }
+  }
+
+  recomputeCable();
+}
+
+function onCut(){
+  GS.totalHits++; GS.totalCuts++;
+  GS.drone.vx=(GS.windDir<0?-1:1)*2.2; GS.drone.vy=-1.2;
+  GS.phase='falling';
+  checkAchievements();
+}
+
+function allAmmoGone(){
+  return GS.loadout.every(w=>!GS.weapUsed[w]||GS.weapUsed[w]<=0);
+}
+
+// ══════════════════════════════════════════════════════
+//  UI UPDATES
+// ══════════════════════════════════════════════════════
+function updateVitalityUI(){
+  const v=GS.vitality;
+  document.getElementById('vit-fill').style.width=(v*100).toFixed(0)+'%';
+  const col=v>.7?'#00ffa3':v>.4?'#ffc300':'#ff3a3a';
+  document.getElementById('vit-fill').style.background=col;
+  document.getElementById('vit-txt').textContent=`Vitality: ${v.toFixed(2)}`;
+  document.getElementById('vit-txt').style.color=col;
+  document.getElementById('svi-txt').textContent=`SVI: ${GS.sviMax.toFixed(3)}`;
+}
+function updateWeapUsesUI(w){
+  const el=document.getElementById('wu-'+w);
+  if(el) el.textContent=(GS.weapUsed[w]||0)+' ✦';
+  updateShotsDisplay();
+}
+function updateShotsDisplay(){
+  const el=document.getElementById('shots-dots'); el.innerHTML='';
+  const total=GS.loadout.reduce((s,w)=>s+(WEAP_CFG[w]?.uses||0),0);
+  const left=GS.loadout.reduce((s,w)=>s+(GS.weapUsed[w]||0),0);
+  for(let i=0;i<Math.min(total,10);i++){
+    const d=document.createElement('div'); d.className='sdot'+(i>=left?' used':''); el.appendChild(d);
+  }
+}
+function updatePredictedCable(){
+  GS.predictedCable=getCablePoints(GS.anchor.x,GS.anchor.y,GS.drone.x,GS.drone.y,GS.formulaTh,GS.formulaM);
+  if(GS.actualCable.length&&GS.predictedCable.length){
+    let err=0,n=0;
+    const step=Math.max(1,GS.actualCable.length>>3);
+    for(let i=0;i<GS.actualCable.length;i+=step){
+      const ap=GS.actualCable[i],pp=GS.predictedCable[Math.min(i,GS.predictedCable.length-1)];
+      err+=Math.hypot(ap.x-pp.x,ap.y-pp.y); n++;
+    }
+    GS.matchPct=Math.max(0,Math.min(1,1-err/80/Math.max(1,n)));
+  }
+}
+function updateFormulaUI(){
+  const th=GS.formulaTh,m=GS.formulaM;
+  document.getElementById('fi-th-v').textContent=th;
+  document.getElementById('fi-m-v').textContent=m;
+  document.getElementById('fi-th').style.setProperty('--p',((th-5)/295*100).toFixed(1)+'%');
+  document.getElementById('fi-m').style.setProperty('--p',((m-1)/49*100).toFixed(1)+'%');
+  const mk=m/1000,a=(th/(mk*G)).toFixed(1);
+  const Dh_m=(GS.drone.x-GS.anchor.x)/SCALE;
+  const S_m=((mk*G*Dh_m*Dh_m)/(8*th)).toFixed(2);
+  document.getElementById('formula-live').textContent=`a=${a}m · S=${S_m}m`;
+  const pct=Math.round(GS.matchPct*100);
+  document.getElementById('match-fill').style.width=pct+'%';
+  const col=pct>80?'#00ffa3':pct>50?'#ffc300':'#ff3a3a';
+  document.getElementById('match-fill').style.background=col;
+  const lbl=document.getElementById('match-label');
+  lbl.textContent='התאמה: '+pct+'%'; lbl.style.color=col;
+}
+function updateThermalUI(){
+  const t=GS.thermalR;
+  const pct=((t-28)/62*100);
+  document.getElementById('th-reading').textContent=t.toFixed(1)+'°C';
+  const fill=document.getElementById('th-fill');
+  fill.style.width=Math.max(5,pct)+'%'; fill.style.background=thermalColor(t);
+  document.getElementById('th-dist').textContent=GS.thermalDist<600?(GS.thermalDist|0)+'':'—';
+}
+function updateBriefing(){
+  const c=CABLES[GS.cableKey];
+  document.getElementById('brief-txt').textContent=
+    `כבל: ${c.name}\nמסה: ${c.m} g/m · קוטר: ${c.diam}mm\nT_break: ${c.Fb}N · מתח: 🔒\nרוח: ${GS.windSpeed} m/s\nגובה: ${GS.altM}m · מרחק: ${GS.distM}m`;
+}
+function setMsg(msg){document.getElementById('bottom-msg').textContent=msg;}
+
+// ══════════════════════════════════════════════════════
+//  WIN / LOSE
+// ══════════════════════════════════════════════════════
+function showWin(){
+  document.getElementById('ov-icon').textContent='🎯';
+  document.getElementById('ov-title').textContent='הרחפן הופל!';
+  document.getElementById('ov-sub').textContent='הכבל נחתך בהצלחה';
+  document.getElementById('ov-score').textContent=`ניקוד: ${GS.score}`;
+  document.getElementById('ov-btn').textContent='שחק שוב';
+  document.getElementById('ov-btn').onclick=restartGame;
+  document.getElementById('overlay').classList.add('show');
+}
+function showLose(){
+  GS.phase='lost';
+  document.getElementById('ov-icon').textContent='💥';
+  document.getElementById('ov-title').textContent='כישלון מבצעי';
+  document.getElementById('ov-sub').textContent='כל הנשקים אזלו. הרחפן ממשיך בפעולה.';
+  document.getElementById('ov-score').textContent=`ניקוד: ${GS.score}`;
+  document.getElementById('ov-btn').textContent='נסה שוב';
+  document.getElementById('ov-btn').onclick=restartGame;
+  document.getElementById('overlay').classList.add('show');
+}
+function restartGame(){
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('setup').classList.remove('hide');
+  GS.phase='setup';
+}
+
+// ══════════════════════════════════════════════════════
+//  ACHIEVEMENTS
+// ══════════════════════════════════════════════════════
+function checkAchievements(){
+  const a=GS.achievements;
+  if(GS.totalHits>=1&&!a.fh){a.fh=true;showAch('🎯 פגיעה ראשונה!');}
+  if(GS.totalCuts>=1&&!a.fc){a.fc=true;showAch('✂️ חיתוך ראשון!');}
+  if(GS.totalHits>=10&&!a.t10){a.t10=true;showAch('🏆 10 פגיעות!');}
+}
+function showAch(msg){
+  const d=document.createElement('div'); d.className='ach'; d.textContent=msg;
+  document.body.appendChild(d); setTimeout(()=>d.remove(),2500);
+}
+
+// ══════════════════════════════════════════════════════
+//  TOOL / WEAPON SELECTION
+// ══════════════════════════════════════════════════════
+function syncDetUI(t){
+  GS.detTool=t;
+  document.querySelectorAll('.det-btn').forEach(b=>b.classList.toggle('active',b.dataset.det===t));
+  document.querySelectorAll('.tp').forEach(p=>p.classList.remove('active'));
+  document.getElementById('tp-'+t).classList.add('active');
+  const msgs={thermal:'הזז עכבר לסריקה תרמית',ofdr:'לחץ שלח פולס לחשיפה קצרה',formula:'כוונן T_h ו-m עד התאמה >80%'};
+  setMsg(msgs[t]||'');
+  GS.weapTool=null;
+  document.querySelectorAll('.weap-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('active-weap-icon').textContent='—';
+}
+function selectWeap(w){
+  GS.weapTool=w;
+  const cfg=WEAP_CFG[w];
+  document.querySelectorAll('.weap-btn').forEach(b=>b.classList.toggle('active',b.dataset.w===w));
+  document.getElementById('wap-title').textContent=`// ${cfg.icon} ${cfg.name}`;
+  document.getElementById('wap-hint').textContent=cfg.hint;
+  document.getElementById('charge-wrap').style.display=w==='rf'?'block':'none';
+  document.getElementById('active-weap-icon').textContent=cfg.icon;
+  setMsg(`${cfg.icon} ${cfg.name}: ${cfg.hint}`);
+  // Deselect detection tool highlight
+  document.querySelectorAll('.det-btn').forEach(b=>b.classList.remove('active'));
+}
+
+// ══════════════════════════════════════════════════════
+//  EVENT HANDLERS
+// ══════════════════════════════════════════════════════
+canvas.addEventListener('mousemove',e=>{
+  GS.mouse.x=e.clientX; GS.mouse.y=e.clientY;
+  if(GS.phase!=='playing') return;
+  if(GS.detTool==='thermal'){
+    const d=minDistCable(e.clientX,e.clientY,GS.actualCable);
+    GS.thermalDist=d;
+    const T_cable=28+40+(GS.secretTh||50)*.28;
+    GS.thermalR=Math.max(27,28+(T_cable-28)*Math.exp(-d/THSIG)+(Math.random()-.5)*3);
+    updateThermalUI();
+  }
+});
+canvas.addEventListener('click',e=>{
+  if(GS.phase!=='playing') return;
+  if(GS.weapTool) fireWeapon(e.clientX,e.clientY);
+});
+document.querySelectorAll('.det-btn').forEach(b=>b.addEventListener('click',()=>syncDetUI(b.dataset.det)));
+document.getElementById('ofdr-btn').addEventListener('click',()=>{
+  if(GS.ofdrLeft<=0||GS.ofdrActive) return;
+  GS.ofdrLeft--; document.getElementById('ofdr-left').textContent=GS.ofdrLeft;
+  if(GS.ofdrLeft===0) document.getElementById('ofdr-btn').disabled=true;
+  GS.ofdrActive=true; GS.ofdrT=0; GS.ofdrReveal=1;
+  setTimeout(()=>{GS.ofdrActive=false;GS.ofdrReveal=0;},3500);
+});
+document.getElementById('fi-th').addEventListener('input',e=>{
+  GS.formulaTh=+e.target.value; updatePredictedCable(); updateFormulaUI();
+});
+document.getElementById('fi-m').addEventListener('input',e=>{
+  GS.formulaM=+e.target.value; updatePredictedCable(); updateFormulaUI();
+});
+window.addEventListener('keydown',e=>{
+  const k=e.key;
+  if(k==='1') syncDetUI('thermal');
+  if(k==='2') syncDetUI('ofdr');
+  if(k==='3') syncDetUI('formula');
+  if(k==='4'&&GS.loadout[0]) selectWeap(GS.loadout[0]);
+  if(k==='5'&&GS.loadout[1]) selectWeap(GS.loadout[1]);
+  if(k==='6'&&GS.loadout[2]) selectWeap(GS.loadout[2]);
+});
+
+// ══════════════════════════════════════════════════════
+//  MAIN LOOP
+// ══════════════════════════════════════════════════════
+function loop(){
+  GS.tick++;
+  if(GS.ofdrActive){
+    GS.ofdrT=Math.min(1,GS.ofdrT+.011);
+    GS.ofdrReveal=Math.max(0,GS.ofdrReveal-(GS.ofdrT>.95?.04:0));
+  }
+  if(GS.laserBeam){
+    GS.laserBeam.t=Math.min(1,GS.laserBeam.t+.025);
+    if(GS.laserBeam.t>=1) GS.laserBeam=null;
+  }
+  // Expand data rings
+  GS.dataRings.forEach(r=>r.r=Math.min(r.r+1.5,80));
+  updateDroneHover();
+  updateFall();
+  if(GS.phase==='playing') updatePredictedCable();
+
+  // ── DRAW ──
+  drawTerrain(); drawWind();
+  // Cable
+  const cAlpha=(GS.phase==='falling'||GS.phase==='won')?.88:0;
+  if(cAlpha>0) drawCable(GS.actualCable,cAlpha,'#00c8ff',null);
+  // Formula overlay (always when formula selected, or when weapon active to help aim)
+  if(GS.detTool==='formula'||GS.weapTool) drawCable(GS.predictedCable,.52,'#ffc300',[8,6]);
+  drawThermal(); drawOFDR();
+  drawPhosphorClouds(); drawBarbedWire(); drawNetDrone(); drawDataRings(); drawChemSpots();
+  drawShots(); drawLaser();
+  drawAnchor(); drawDrone(); drawRadar();
+  if(GS.phase==='playing'&&GS.tick%90===0) recomputeCable();
+  requestAnimationFrame(loop);
+}
+
+loop();
+</script>
+<div class="cv-mobile-orbit" aria-hidden="true"></div>
+<script src="../assets/site-polish.js"></script>
+</body>
+</html>
+
+
+

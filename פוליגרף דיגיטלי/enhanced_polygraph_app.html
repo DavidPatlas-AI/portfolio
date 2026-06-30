@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="מכשיר פוליגרף דיגיטלי מתקדם לזיהוי אמת ושקר">
+    <title>מכשיר פוליגרף דיגיטלי - זיהוי אמת ושקר</title>
+    
+    <!-- Preload Hebrew fonts for better performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS Custom Properties with Enhanced Color System */
+        :root {
+            --truth-gradient: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            --lie-gradient: linear-gradient(135deg, #ff416c 0%, #ff4757 100%);
+            --neutral-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --warning-gradient: linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%);
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.9);
+            --shadow-glow: 0 8px 32px rgba(31, 38, 135, 0.37);
+            --border-radius: 16px;
+            --font-hebrew: 'Noto Sans Hebrew', 'Arial Hebrew', Arial, sans-serif;
+            --line-height-hebrew: 1.8;
+            --animation-duration-fast: 0.2s;
+            --animation-duration-normal: 0.4s;
+            --animation-duration-slow: 0.8s;
+            --z-index-modal: 1000;
+            --z-index-overlay: 100;
+            --z-index-header: 10;
+        }
+
+        /* Reset and Base Styles with RTL Support */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        *:focus {
+            outline: 2px solid #fdbb2d;
+            outline-offset: 2px;
+        }
+
+        /* Hebrew Typography Optimizations */
+        body {
+            font-family: var(--font-hebrew);
+            font-feature-settings: "kern" 1, "liga" 1, "calt" 1;
+            background: var(--neutral-gradient);
+            min-height: 100vh;
+            padding-block: 20px;
+            padding-inline: 20px;
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: var(--line-height-hebrew);
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Container with RTL Grid */
+        .app-container {
+            max-inline-size: 600px;
+            margin-inline: auto;
+            position: relative;
+            contain: layout style paint;
+        }
+
+        /* Enhanced Header with Better Hebrew Typography */
+        .header {
+            text-align: center;
+            margin-block-end: 25px;
+            position: relative;
+        }
+
+        .logo {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 900;
+            background: linear-gradient(45deg, #FF6B35, #F7931E, #FFD23F, #06FFA5);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-block-end: 8px;
+            animation: logoFlow 4s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        @keyframes logoFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .tagline {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            font-weight: 600;
+            opacity: 0.95;
+            margin-block-end: 10px;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--warning-gradient);
+            padding-block: 8px;
+            padding-inline: 16px;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            animation: statusPulse 3s ease-in-out infinite;
+            box-shadow: 0 4px 20px rgba(253, 187, 45, 0.4);
+            transition: transform var(--animation-duration-fast) ease;
+        }
+
+        .status-badge:hover {
+            transform: scale(1.05);
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Enhanced Glass Cards with Better Performance */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding-block: 20px;
+            padding-inline: 20px;
+            margin-block-end: 18px;
+            box-shadow: var(--shadow-glow);
+            transition: transform var(--animation-duration-normal) cubic-bezier(0.4, 0, 0.2, 1),
+                        box-shadow var(--animation-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            will-change: transform;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.5);
+        }
+
+        /* Progress with Enhanced Animations */
+        .progress-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 25px;
+            block-size: 8px;
+            margin-block-end: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            block-size: 100%;
+            background: var(--warning-gradient);
+            transition: inline-size var(--animation-duration-slow) cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 25px;
+            position: relative;
+            will-change: width;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            inset-block-start: 0;
+            inset-inline-start: -100%;
+            inline-size: 100%;
+            block-size: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progressShine 2s infinite;
+        }
+
+        @keyframes progressShine {
+            0% { inset-inline-start: -100%; }
+            100% { inset-inline-start: 100%; }
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-block-end: 10px;
+            font-weight: 600;
+        }
+
+        /* Category Selection with Enhanced RTL Support */
+        .category-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin-block-end: 20px;
+        }
+
+        .category-btn {
+            padding-block: 12px;
+            padding-inline: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 600;
+            font-family: var(--font-hebrew);
+            cursor: pointer;
+            transition: all var(--animation-duration-normal) ease;
+            text-align: center;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            contain: layout style;
+        }
+
+        .category-btn:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .category-btn.active {
+            background: var(--warning-gradient);
+            border-color: transparent;
+            box-shadow: 0 4px 15px rgba(253, 187, 45, 0.3);
+        }
+
+        .category-btn:focus {
+            outline: 2px solid #fdbb2d;
+            outline-offset: 2px;
+        }
+
+        /* Enhanced Polygraph Display */
+        .polygraph-display {
+            position: relative;
+            block-size: 200px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-block-end: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            contain: layout style paint;
+        }
+
+        .polygraph-screen {
+            position: relative;
+            inline-size: 100%;
+            block-size: 100%;
+            background: linear-gradient(90deg, #001a1a 0%, #003333 50%, #001a1a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .waveform-container {
+            position: absolute;
+            inset-block-start: 0;
+            inset-inline-start: 0;
+            inline-size: 100%;
+            block-size: 100%;
+            pointer-events: none;
+        }
+
+        .waveform-line {
+            position: absolute;
+            inline-size: 100%;
+            block-size: 2px;
+            background: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+            will-change: transform;
+        }
+
+        .pulse-line {
+            inset-block-start: 25%;
+            animation: waveMove 3s linear infinite;
+        }
+
+        .breath-line {
+            inset-block-start: 50%;
+            animation: waveMove 3.5s linear infinite;
+        }
+
+        .skin-line {
+            inset-block-start: 75%;
+            animation: waveMove 4s linear infinite;
+        }
+
+        @keyframes waveMove {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .result-indicator {
+            position: absolute;
+            inset-block-start: 50%;
+            inset-inline-start: 50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(2rem, 6vw, 3rem);
+            font-weight: 900;
+            text-shadow: 0 0 20px currentColor;
+            z-index: var(--z-index-overlay);
+            transition: all var(--animation-duration-slow) ease;
+            user-select: none;
+        }
+
+        .result-indicator.truth {
+            color: #38ef7d;
+            animation: truthPulse 2s ease-in-out infinite;
+        }
+
+        .result-indicator.lie {
+            color: #ff4757;
+            animation: liePulse 2s ease-in-out infinite;
+        }
+
+        .result-indicator.analyzing {
+            color: #fdbb2d;
+            animation: analyzePulse 1s ease-in-out infinite;
+        }
+
+        @keyframes truthPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        @keyframes liePulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.15); }
+        }
+
+        @keyframes analyzePulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        }
+
+        /* Enhanced Question Card */
+        .question-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding-block: 25px;
+            padding-inline: 25px;
+            text-align: center;
+            margin-block-end: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            min-block-size: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            contain: layout style;
+        }
+
+        .question-text {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            font-weight: 600;
+            line-height: var(--line-height-hebrew);
+            color: #ffffff;
+            max-inline-size: 90%;
+        }
+
+        /* Enhanced Control Buttons */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-block-end: 20px;
+        }
+
+        .btn {
+            padding-block: 18px;
+            padding-inline: 24px;
+            border: none;
+            border-radius: 50px;
+            font-size: clamp(1rem, 2.5vw, 1.1rem);
+            font-weight: 700;
+            font-family: var(--font-hebrew);
+            cursor: pointer;
+            transition: all var(--animation-duration-normal) cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            contain: layout style;
+            will-change: transform;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            inset-block-start: 0;
+            inset-inline-start: -100%;
+            inline-size: 100%;
+            block-size: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: inset-inline-start var(--animation-duration-normal) ease;
+        }
+
+        .btn:hover:not(:disabled)::before {
+            inset-inline-start: 100%;
+        }
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-truth {
+            background: var(--truth-gradient);
+            color: white;
+        }
+
+        .btn-lie {
+            background: var(--lie-gradient);
+            color: white;
+        }
+
+        .btn-primary {
+            background: var(--warning-gradient);
+            color: white;
+            grid-column: 1 / -1;
+            font-size: clamp(1.1rem, 3vw, 1.3rem);
+            padding-block: 20px;
+            padding-inline: 24px;
+        }
+
+        /* Enhanced Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 12px;
+            margin-block-end: 20px;
+        }
+
+        .metric-card {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 12px;
+            padding-block: 16px;
+            padding-inline: 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all var(--animation-duration-normal) ease;
+            contain: layout style;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .metric-value {
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 700;
+            margin-block-end: 8px;
+            text-shadow: 0 0 10px currentColor;
+            line-height: 1.2;
+        }
+
+        .metric-label {
+            font-size: 0.9rem;
+            opacity: 0.85;
+            font-weight: 500;
+        }
+
+        .metric-card.truth .metric-value { color: #38ef7d; }
+        .metric-card.lie .metric-value { color: #ff4757; }
+        .metric-card.neutral .metric-value { color: #fdbb2d; }
+
+        /* Enhanced Results Area */
+        .results-area {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding-block: 20px;
+            padding-inline: 20px;
+            min-block-size: 120px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            font-size: 1rem;
+            line-height: var(--line-height-hebrew);
+            white-space: pre-wrap;
+            direction: rtl;
+            font-family: var(--font-hebrew);
+            overflow-y: auto;
+            max-block-size: 300px;
+            contain: layout style;
+        }
+
+        .results-area::-webkit-scrollbar {
+            inline-size: 8px;
+        }
+
+        .results-area::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .results-area::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+        }
+
+        .results-area::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Enhanced Animations and Scan Effect */
+        .scan-animation {
+            position: absolute;
+            inset-block-start: 0;
+            inset-inline-start: -100%;
+            inline-size: 100%;
+            block-size: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: scanMove 2s ease-in-out;
+            pointer-events: none;
+            z-index: var(--z-index-overlay);
+        }
+
+        @keyframes scanMove {
+            0% { inset-inline-start: -100%; }
+            100% { inset-inline-start: 100%; }
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            inline-size: 20px;
+            block-size: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fdbb2d;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error States */
+        .error-message {
+            background: linear-gradient(135deg, #ff416c 0%, #ff4757 100%);
+            color: white;
+            padding-block: 12px;
+            padding-inline: 16px;
+            border-radius: 8px;
+            margin-block-end: 16px;
+            font-weight: 600;
+            text-align: center;
+            animation: errorSlide 0.5s ease-out;
+        }
+
+        @keyframes errorSlide {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Accessibility Enhancements */
+        .sr-only {
+            position: absolute;
+            inline-size: 1px;
+            block-size: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* High Contrast Mode Support */
+        @media (prefers-contrast: high) {
+            .glass-card {
+                border-color: #ffffff;
+                background: rgba(0, 0, 0, 0.8);
+            }
+            
+            .btn {
+                border: 2px solid #ffffff;
+            }
+        }
+
+        /* Reduced Motion Support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 480px) {
+            .app-container {
+                padding-inline: 10px;
+            }
+            
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .category-selector {
+                grid-template-columns: 1fr;
+            }
+            
+            .polygraph-display {
+                block-size: 150px;
+            }
+            
+            .btn {
+                padding-block: 16px;
+                font-size: 1rem;
+            }
+        }
+
+        /* Tablet Optimizations */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Large Screen Optimizations */
+        @media (min-width: 1200px) {
+            .app-container {
+                max-inline-size: 800px;
+            }
+            
+            .glass-card {
+                padding-block: 30px;
+                padding-inline: 30px;
+            }
+        }
+
+        /* Dark Mode Enhanced */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --glass-bg: rgba(255, 255, 255, 0.08);
+                --glass-border: rgba(255, 255, 255, 0.15);
+                --text-secondary: rgba(255, 255, 255, 0.8);
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            .app-container {
+                background: white;
+                color: black;
+            }
+            
+            .glass-card {
+                background: white;
+                border: 1px solid #ccc;
+                box-shadow: none;
+            }
+            
+            .btn,
+            .polygraph-display {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to Main Content for Screen Readers -->
+    <a href="#main-content" class="sr-only">דלג לתוכן הראשי</a>
+    
+    <div class="app-container">
+        <!-- Header with Enhanced Accessibility -->
+        <header class="header" role="banner">
+            <h1 class="logo" aria-label="מכשיר פוליגרף דיגיטלי">🔍 פוליגרף דיגיטלי</h1>
+            <p class="tagline">מכשיר זיהוי אמת ושקר מתקדם</p>
+            <div class="status-badge" role="status" aria-live="polite">
+                <span aria-hidden="true">🎯</span>
+                <span>רמת דיוק: 95%</span>
+            </div>
+        </header>
+
+        <main id="main-content" role="main">
+            <!-- Progress Section -->
+            <section class="glass-card" aria-labelledby="progress-heading">
+                <h2 id="progress-heading" class="sr-only">התקדמות הבדיקה</h2>
+                <div class="progress-info">
+                    <span>🎯 התקדמות:</span>
+                    <span id="progressText" aria-live="polite">0/10 שאלות</span>
+                </div>
+                <div class="progress-container" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="התקדמות בבדיקה">
+                    <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+                </div>
+            </section>
+
+            <!-- Category Selection -->
+            <section class="glass-card" aria-labelledby="category-heading">
+                <h2 id="category-heading" style="text-align: center; margin-block-end: 15px;">📝 בחר קטגוריית שאלות:</h2>
+                <div class="category-selector" role="tablist" aria-label="קטגוריות שאלות">
+                    <button class="category-btn active" data-category="personal" role="tab" aria-selected="true" aria-controls="personal-panel">🤫 אישי</button>
+                    <button class="category-btn" data-category="relationships" role="tab" aria-selected="false" aria-controls="relationships-panel">💕 זוגיות</button>
+                    <button class="category-btn" data-category="work" role="tab" aria-selected="false" aria-controls="work-panel">💼 עבודה</button>
+                    <button class="category-btn" data-category="secrets" role="tab" aria-selected="false" aria-controls="secrets-panel">🔐 סודות</button>
+                </div>
+            </section>
+
+            <!-- Polygraph Display -->
+            <section class="glass-card" aria-labelledby="polygraph-heading">
+                <h2 id="polygraph-heading" class="sr-only">תצוגת מכשיר הפוליגרף</h2>
+                <div class="polygraph-display" role="img" aria-label="תצוגת פוליגרף עם גלי נתונים">
+                    <div class="polygraph-screen">
+                        <div class="waveform-container" aria-hidden="true">
+                            <div class="waveform-line pulse-line"></div>
+                            <div class="waveform-line breath-line"></div>
+                            <div class="waveform-line skin-line"></div>
+                        </div>
+                        <div class="result-indicator" id="resultIndicator" aria-live="assertive" aria-label="תוצאת הפוליגרף">🤔</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Question Card -->
+            <section class="glass-card" aria-labelledby="question-heading">
+                <h2 id="question-heading" class="sr-only">שאלה נוכחית</h2>
+                <div class="question-card">
+                    <div class="question-text" id="questionText" aria-live="polite" role="region" aria-label="שאלה נוכחית">
+                        לחץ על "שאלה חדשה" כדי להתחיל את הבדיקה
+                    </div>
+                </div>
+            </section>
+
+            <!-- Controls -->
+            <section class="glass-card" aria-labelledby="controls-heading">
+                <h2 id="controls-heading" class="sr-only">פקדי בקרה</h2>
+                <div class="controls-grid" role="group" aria-label="תשובות לשאלה">
+                    <button id="truthBtn" class="btn btn-truth" disabled aria-describedby="truth-desc">
+                        <span aria-hidden="true">✅</span>
+                        <span>אמת</span>
+                    </button>
+                    <button id="lieBtn" class="btn btn-lie" disabled aria-describedby="lie-desc">
+                        <span aria-hidden="true">❌</span>
+                        <span>שקר</span>
+                    </button>
+                    <button id="newQuestionBtn" class="btn btn-primary" aria-describedby="new-question-desc">
+                        <span aria-hidden="true">🎲</span>
+                        <span>שאלה חדשה</span>
+                    </button>
+                </div>
+                
+                <!-- Hidden descriptions for screen readers -->
+                <div id="truth-desc" class="sr-only">לחץ אם

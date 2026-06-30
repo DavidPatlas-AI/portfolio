@@ -1,0 +1,1083 @@
+﻿<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CableVitality – הכבל כעורק חי</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&family=Heebo:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#030610;--panel:rgba(8,16,32,.93);--panel2:rgba(12,22,42,.96);
+  --border:rgba(22,44,78,.75);--border-hi:rgba(0,200,255,.25);
+  --accent:#00c8ff;--green:#00ffa3;--warn:#ffc300;--orange:#ff8800;--red:#ff3a3a;
+  --text:#c5e0f5;--muted:#3f6a8a;--muted2:#1a3350;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--muted2);border-radius:2px;}
+::-webkit-scrollbar-thumb:hover{background:var(--muted);}
+
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);}
+body{font-family:'Heebo',sans-serif;color:var(--text);display:flex;flex-direction:column;position:relative;}
+
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 40%,rgba(0,200,255,.05) 0%,transparent 70%),
+    radial-gradient(ellipse 60% 50% at 85% 20%,rgba(0,255,163,.03) 0%,transparent 60%),
+    radial-gradient(ellipse 70% 70% at 50% 90%,rgba(0,80,200,.06) 0%,transparent 60%);
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,200,255,.02) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,200,255,.02) 1px,transparent 1px);
+  background-size:60px 60px;
+  animation:gridScroll 28s linear infinite;
+}
+@keyframes gridScroll{to{background-position:0 60px;}}
+body>*{position:relative;z-index:1;}
+
+/* ─── TOP BAR ─── */
+#topbar{
+  height:56px;flex-shrink:0;
+  background:rgba(6,12,24,.92);
+  border-bottom:1px solid var(--border);
+  box-shadow:0 1px 0 rgba(0,200,255,.07),0 4px 28px rgba(0,0,0,.7);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;z-index:20;
+  backdrop-filter:blur(18px) saturate(160%);
+}
+.logo{display:flex;align-items:center;gap:13px;}
+.logo-ring{
+  width:36px;height:36px;border-radius:50%;position:relative;flex-shrink:0;
+  background:conic-gradient(from 0deg,var(--accent),var(--green),#7f5fff,var(--accent));
+  animation:spin 8s linear infinite;
+  box-shadow:0 0 20px rgba(0,200,255,.5),0 0 6px rgba(0,200,255,.2);
+}
+.logo-ring::after{content:'';position:absolute;inset:5px;background:var(--bg);border-radius:50%;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.logo-text{font-size:1.28rem;font-weight:900;letter-spacing:-.02em;}
+.logo-text .hl{
+  background:linear-gradient(90deg,var(--accent),var(--green));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.logo-sub{font-size:.57rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;margin-top:1px;}
+.topbar-right{display:flex;gap:14px;align-items:center;}
+#clock{
+  font-family:'IBM Plex Mono',monospace;font-size:.65rem;color:var(--muted);
+  background:rgba(0,200,255,.05);border:1px solid var(--border);border-radius:5px;padding:4px 10px;
+  letter-spacing:.06em;
+}
+.status-pill{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(0,255,163,.06);border:1px solid rgba(0,255,163,.18);
+  border-radius:20px;padding:5px 14px;
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:blink 1.2s ease infinite;}
+@keyframes blink{50%{opacity:.2;}}
+.live-txt{font-family:'IBM Plex Mono',monospace;font-size:.6rem;color:var(--green);letter-spacing:.08em;}
+
+/* ─── TABS ─── */
+#tabs{
+  height:40px;flex-shrink:0;
+  background:rgba(5,10,20,.8);border-bottom:1px solid var(--border);
+  display:flex;align-items:stretch;padding:0 20px;gap:2px;
+  backdrop-filter:blur(10px);
+}
+.tab{
+  padding:0 22px;cursor:pointer;font-size:.69rem;font-weight:700;
+  color:var(--muted);border-bottom:2px solid transparent;
+  display:flex;align-items:center;gap:7px;transition:.2s all;
+  letter-spacing:.04em;position:relative;
+}
+.tab:hover{color:var(--text);}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent);}
+.tab.active::after{
+  content:'';position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);
+  width:50%;height:2px;
+  background:var(--accent);
+  box-shadow:0 0 10px var(--accent),0 0 20px rgba(0,200,255,.35);
+  border-radius:2px;
+}
+
+/* ─── MAIN ─── */
+#main{flex:1;display:flex;min-height:0;}
+
+/* ─── CONTROLS ─── */
+#controls{
+  width:294px;flex-shrink:0;
+  background:rgba(7,14,28,.9);
+  border-left:1px solid var(--border);
+  box-shadow:-4px 0 24px rgba(0,0,0,.4);
+  overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:11px;
+  backdrop-filter:blur(14px) saturate(140%);
+}
+.sec-head{
+  font-size:.58rem;color:var(--muted);
+  font-family:'IBM Plex Mono',monospace;
+  text-transform:uppercase;letter-spacing:.13em;
+  padding-bottom:7px;border-bottom:1px solid var(--border);
+  margin-bottom:2px;display:flex;align-items:center;gap:6px;
+}
+.sec-head::before{
+  content:'';width:3px;height:3px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 6px var(--accent);flex-shrink:0;
+}
+.ctrl{margin-bottom:3px;}
+.ctrl-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.ctrl-name{font-size:.72rem;font-weight:700;}
+.ctrl-val{
+  font-family:'IBM Plex Mono',monospace;font-size:.7rem;
+  color:var(--accent);background:rgba(0,200,255,.07);
+  border:1px solid rgba(0,200,255,.15);
+  padding:2px 9px;border-radius:5px;min-width:64px;text-align:center;
+  box-shadow:inset 0 0 8px rgba(0,200,255,.04);
+}
+.ctrl-eq{font-size:.56rem;color:var(--muted2);font-family:'IBM Plex Mono',monospace;margin-bottom:5px;padding-right:2px;}
+input[type=range]{
+  width:100%;height:4px;-webkit-appearance:none;outline:none;cursor:pointer;
+  background:linear-gradient(90deg,var(--accent) var(--p,40%),rgba(18,36,64,.9) var(--p,40%));
+  border-radius:3px;
+}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:14px;height:14px;border-radius:50%;
+  background:var(--accent);
+  border:2px solid rgba(255,255,255,.15);
+  box-shadow:0 0 10px var(--accent),0 0 4px rgba(0,200,255,.6);
+  transition:transform .12s;
+}
+input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.25);}
+
+/* ─── METRIC CARDS ─── */
+.mcards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px;}
+.mcard{
+  background:rgba(10,20,40,.85);border:1px solid var(--border);border-radius:9px;
+  padding:10px 12px;position:relative;overflow:hidden;
+  transition:border-color .3s,box-shadow .3s;
+}
+.mcard::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(0,200,255,.18),transparent);
+}
+.mcard:hover{border-color:var(--border-hi);box-shadow:0 4px 16px rgba(0,0,0,.3),0 0 12px rgba(0,200,255,.04);}
+.mcard-lbl{font-size:.55rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.06em;}
+.mcard-val{font-size:1.05rem;font-weight:700;font-family:'IBM Plex Mono',monospace;margin-top:2px;}
+.mg{color:var(--green);text-shadow:0 0 12px rgba(0,255,163,.4);}
+.my{color:var(--warn);text-shadow:0 0 12px rgba(255,195,0,.35);}
+.mo{color:var(--orange);text-shadow:0 0 12px rgba(255,136,0,.3);}
+.mr{color:var(--red);text-shadow:0 0 14px rgba(255,58,58,.45);}
+
+/* ─── ALERT ─── */
+.alert{
+  border-radius:9px;padding:10px 14px;font-size:.72rem;font-weight:700;
+  display:flex;align-items:center;gap:8px;margin-bottom:2px;
+  position:relative;overflow:hidden;
+}
+.alert::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(255,255,255,.04) 0%,transparent 60%);
+  pointer-events:none;
+}
+.alert.g{background:rgba(0,255,163,.07);border:1px solid rgba(0,255,163,.22);color:var(--green);}
+.alert.y{background:rgba(255,195,0,.07);border:1px solid rgba(255,195,0,.22);color:var(--warn);}
+.alert.o{background:rgba(255,136,0,.07);border:1px solid rgba(255,136,0,.26);color:var(--orange);}
+.alert.r{background:rgba(255,58,58,.09);border:1px solid rgba(255,58,58,.32);color:var(--red);animation:flash .55s infinite;}
+@keyframes flash{50%{opacity:.42;}}
+
+/* ─── VITALITY BAR ─── */
+.vbar-wrap{margin-bottom:4px;}
+.vbar-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+.vbar-label{font-size:.58rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;letter-spacing:.12em;}
+.vbar-num{font-family:'IBM Plex Mono',monospace;font-size:.95rem;font-weight:600;}
+.vbar-track{
+  height:10px;background:rgba(6,12,24,.9);border-radius:6px;
+  border:1px solid var(--border);overflow:hidden;
+}
+.vbar-fill{
+  height:100%;border-radius:6px;
+  transition:width .5s cubic-bezier(.4,0,.2,1),background .5s;
+  position:relative;overflow:hidden;
+}
+.vbar-fill::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.2) 50%,transparent 100%);
+  animation:shimmer 2.5s infinite;
+}
+@keyframes shimmer{from{transform:translateX(-100%);}to{transform:translateX(200%);}}
+
+/* ─── MARGIN BARS ─── */
+.mb-row{margin-bottom:6px;}
+.mb-label{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;}
+.mb-name{font-size:.57rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+.mb-val{font-size:.62rem;font-family:'IBM Plex Mono',monospace;font-weight:600;}
+.mb-track{height:3px;background:rgba(6,12,24,.9);border-radius:2px;overflow:hidden;}
+.mb-fill{height:100%;border-radius:2px;transition:width .4s,background .4s;}
+
+/* ─── CANVAS VIEWS ─── */
+#view-area{flex:1;position:relative;min-width:0;display:flex;flex-direction:column;}
+.view-page{flex:1;display:none;min-height:0;}
+.view-page.active{display:flex;}
+#view2d{position:relative;flex:1;}
+#canvas2d{position:absolute;inset:0;width:100%;height:100%;}
+
+/* ─── TOOLTIP ─── */
+#tooltip2d{
+  position:absolute;pointer-events:none;
+  background:rgba(3,6,16,.97);
+  border:1px solid rgba(0,200,255,.45);
+  border-radius:11px;padding:14px 17px;max-width:264px;z-index:50;
+  transform:translate(-50%,-112%);transition:opacity .15s;
+  box-shadow:0 0 32px rgba(0,200,255,.15),0 8px 32px rgba(0,0,0,.7);
+}
+#tooltip2d::before{
+  content:'';position:absolute;inset:0;border-radius:11px;
+  background:linear-gradient(135deg,rgba(0,200,255,.06) 0%,transparent 55%);
+  pointer-events:none;
+}
+#tooltip2d.off{opacity:0;pointer-events:none;}
+.tt-title{font-size:.61rem;font-family:'IBM Plex Mono',monospace;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;}
+.tt-formula{
+  font-family:'IBM Plex Mono',monospace;font-size:.67rem;color:var(--green);
+  background:rgba(0,255,163,.06);border:1px solid rgba(0,255,163,.12);
+  padding:5px 9px;border-radius:5px;margin-bottom:8px;line-height:1.65;
+}
+.tt-explain{font-size:.68rem;line-height:1.65;color:var(--text);}
+.tt-vals{
+  margin-top:8px;padding-top:7px;border-top:1px solid var(--border);
+  font-family:'IBM Plex Mono',monospace;font-size:.63rem;color:var(--warn);
+}
+
+/* ─── 3D ─── */
+#view3d{flex:1;position:relative;}
+#canvas3d{position:absolute;inset:0;width:100%;height:100%;}
+#drag-hint{
+  position:absolute;bottom:16px;left:50%;transform:translateX(-50%);
+  font-size:.6rem;font-family:'IBM Plex Mono',monospace;color:var(--muted);
+  background:rgba(3,6,16,.8);border:1px solid var(--border);
+  padding:5px 14px;border-radius:20px;pointer-events:none;
+  backdrop-filter:blur(8px);
+}
+
+/* ─── FORMULA PAGE ─── */
+#view-formula{flex:1;overflow-y:auto;padding:24px 30px;}
+#view-formula::-webkit-scrollbar{width:5px;}
+#view-formula::-webkit-scrollbar-thumb{background:var(--muted2);border-radius:3px;}
+.f-section{margin-bottom:30px;}
+.f-title{
+  font-size:.95rem;font-weight:900;color:var(--accent);
+  margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:8px;
+}
+.f-title::before{
+  content:'';width:3px;height:16px;flex-shrink:0;
+  background:var(--accent);border-radius:2px;
+  box-shadow:0 0 10px var(--accent),0 0 20px rgba(0,200,255,.3);
+}
+.f-row{
+  background:rgba(8,16,32,.88);border:1px solid var(--border);border-radius:10px;
+  padding:15px 17px;margin-bottom:9px;display:flex;gap:13px;align-items:flex-start;
+  transition:border-color .22s,box-shadow .22s;backdrop-filter:blur(4px);
+}
+.f-row:hover{border-color:var(--border-hi);box-shadow:0 4px 20px rgba(0,0,0,.25);}
+.f-num{
+  width:28px;height:28px;border-radius:50%;flex-shrink:0;margin-top:2px;
+  background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.63rem;font-family:'IBM Plex Mono',monospace;color:var(--accent);
+  box-shadow:0 0 10px rgba(0,200,255,.12);
+}
+.f-body{}
+.f-name{font-size:.77rem;font-weight:700;color:var(--text);margin-bottom:5px;}
+.f-eq{
+  font-family:'IBM Plex Mono',monospace;font-size:.69rem;color:var(--green);
+  background:rgba(0,255,163,.05);border:1px solid rgba(0,255,163,.1);
+  padding:5px 10px;border-radius:5px;margin-bottom:6px;direction:ltr;text-align:left;line-height:1.5;
+}
+.f-desc{font-size:.67rem;color:var(--muted);line-height:1.65;}
+.f-live{font-family:'IBM Plex Mono',monospace;font-size:.67rem;color:var(--warn);margin-top:5px;}
+
+/* ─── SPARK ─── */
+#spark-wrap{
+  background:rgba(8,18,36,.7);border:1px solid var(--border);
+  border-radius:7px;padding:8px;overflow:hidden;
+}
+
+/* ─── SPECS GRID ─── */
+.specs-grid{font-size:.6rem;font-family:'IBM Plex Mono',monospace;line-height:2.1;}
+.spec-row{display:flex;justify-content:space-between;}
+.spec-key{color:var(--muted);}
+.spec-val{color:var(--accent);}
+</style>
+<style id="cv-home-nav-style">.cv-home-nav{position:fixed;z-index:99999;left:14px;top:14px;display:flex;gap:8px;align-items:center;font-family:Arial,"Segoe UI",sans-serif;direction:rtl}.cv-home-nav a{min-height:34px;display:inline-flex;align-items:center;justify-content:center;padding:0 12px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:rgba(5,12,14,.72);backdrop-filter:blur(14px);color:#eef8f4;text-decoration:none;font-size:13px;font-weight:800;box-shadow:0 10px 30px rgba(0,0,0,.22)}.cv-home-nav a:hover{border-color:rgba(66,211,146,.6);color:#42d392}@media(max-width:640px){.cv-home-nav{left:8px;top:8px}.cv-home-nav a{font-size:12px;padding:0 10px}}</style><link rel="stylesheet" href="../assets/mobile-shell.css">
+<link rel="stylesheet" href="../assets/site-polish.css">
+</head>
+<body><div class="cv-home-nav"><a href="../index.html">בית</a><a href="../index.html#apps">כל הדפים</a></div>
+
+<div id="topbar">
+  <div class="logo">
+    <div class="logo-ring"></div>
+    <div>
+      <div class="logo-text">Cable<span class="hl">Vitality</span> <span style="font-size:.65rem;color:var(--muted);font-weight:400">v3.0</span></div>
+      <div class="logo-sub">UAV TETHER HEALTH MONITOR · THE LIVING ARTERY</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div id="clock">00:00:00</div>
+    <div class="status-pill">
+      <div class="live-dot"></div>
+      <div class="live-txt">LIVE · 10Hz</div>
+    </div>
+  </div>
+</div>
+
+<div id="tabs">
+  <div class="tab active" data-tab="2d">📐 תצוגה 2D</div>
+  <div class="tab" data-tab="3d">🧊 תצוגה 3D</div>
+  <div class="tab" data-tab="formula">📖 נוסחאות</div>
+</div>
+
+<div id="main">
+
+  <div id="view-area">
+
+    <div class="view-page active" id="view2d">
+      <canvas id="canvas2d"></canvas>
+      <div id="tooltip2d" class="off">
+        <div class="tt-title" id="tt-title">—</div>
+        <div class="tt-formula" id="tt-formula">—</div>
+        <div class="tt-explain" id="tt-explain">—</div>
+        <div class="tt-vals" id="tt-vals">—</div>
+      </div>
+    </div>
+
+    <div class="view-page" id="view3d-wrap">
+      <canvas id="canvas3d"></canvas>
+      <div id="drag-hint">🖱 גרור לסיבוב · גלגלת לזום</div>
+    </div>
+
+    <div class="view-page" id="view-formula">
+      <div class="f-section">
+        <div class="f-title">1. גאומטריית קטנריה (Catenary)</div>
+        <div class="f-row"><div class="f-num">1</div><div class="f-body"><div class="f-name">צורת הכבל תחת כבידה</div><div class="f-eq">z(x) = a · cosh((x − D_h/2) / a) + C</div><div class="f-desc">a = T_h / (m·g) הוא פרמטר הקטנריה. ככל ש-T_h גדול יותר, הכבל "פחות שמוט". D_h הוא המרחק האופקי בין עיגון לרחפן.</div><div class="f-live" id="fl-1">a = — m</div></div></div>
+        <div class="f-row"><div class="f-num">2</div><div class="f-body"><div class="f-name">שמיטה (Sag) קירוב פרבולי</div><div class="f-eq">S ≈ (m·g·D_h²) / (8·T_h)</div><div class="f-desc">הנקודה הנמוכה ביותר של הכבל ביחס לקו ישר בין עיגון לרחפן. מינימום שמיטה = כבל מתוח ובטוח יותר מבחינת כיפוף.</div><div class="f-live" id="fl-2">S = — m</div></div></div>
+        <div class="f-row"><div class="f-num">3</div><div class="f-body"><div class="f-name">פרופיל מתח לאורך הכבל</div><div class="f-eq">T(s) = √(T_h² + (m·g·Δz(s))²)</div><div class="f-desc">המתח גדל עם הגובה: בנקודת הרחפן המתח מרבי, בתחתית הכבל (Sag) המתח מינימלי. שבירה מתחילה כשT > T_break = 910 N.</div><div class="f-live" id="fl-3">T_max = — N</div></div></div>
+        <div class="f-row"><div class="f-num">4</div><div class="f-body"><div class="f-name">רדיוס כיפוף</div><div class="f-eq">R_bend(s) = 1 / ‖d²r/ds²‖</div><div class="f-desc">כיפוף חד מגדיל אובדן אופטי (נוסחת Marcuse). כשR_bend &lt; R_min = 7.5mm יש פגיעה בסיב. נקודת התורפה היא מינימום R_bend.</div><div class="f-live" id="fl-4">R_min = — m</div></div></div>
+      </div>
+      <div class="f-section">
+        <div class="f-title">2. אווירואלסטיות (Wake Oscillator)</div>
+        <div class="f-row"><div class="f-num">5</div><div class="f-body"><div class="f-name">כוח גרר רוח ליחידת אורך</div><div class="f-eq">f_d = ½ · ρ · C_D · d · v²</div><div class="f-desc">ρ=1.204 kg/m³ (אוויר), C_D=1.0 (גליל), d=3.2mm (קוטר). כוח זה גורם לסטייה צידית של הכבל.</div><div class="f-live" id="fl-5">f_d = — N/m</div></div></div>
+        <div class="f-row"><div class="f-num">6</div><div class="f-body"><div class="f-name">תדרי תהודה טבעיים</div><div class="f-eq">f_n = (n / 2L) · √(T_h / μ)</div><div class="f-desc">כשתדר וורטקס הסטרוהל (f_s = 0.2·v/d) מתקרב ל-f_n נוצר lock-in: תנודות תהודה מסוכנות שמגבירות עייפות.</div><div class="f-live" id="fl-6">f_n = — Hz</div></div></div>
+        <div class="f-row"><div class="f-num">7</div><div class="f-body"><div class="f-name">תדר Strouhal (וורטקס)</div><div class="f-eq">f_s = St · v / d = 0.2 · v / d</div><div class="f-desc">רוח חולפת על גליל יוצרת מערבולות בתדר זה. סכנת lock-in מתרחשת כש|f_s − f_n| &lt; 0.1·f_n.</div><div class="f-live" id="fl-7">f_s = — Hz</div></div></div>
+      </div>
+      <div class="f-section">
+        <div class="f-title">3. חישה אופטית OFDR</div>
+        <div class="f-row"><div class="f-num">8</div><div class="f-body"><div class="f-name">מעקב עיוות אקסיאלי</div><div class="f-eq">ε(s) = T(s) / (E · A)</div><div class="f-desc">E=2 GPa, A=π(d/2)². ה-OFDR מודד שינוי פאזה של פיזור Rayleigh שמקביל לעיוות. כל נקודת כבל היא חיישן.</div><div class="f-live" id="fl-8">ε_max = — μm/m</div></div></div>
+        <div class="f-row"><div class="f-num">9</div><div class="f-body"><div class="f-name">אובדן כיפוף (Marcuse)</div><div class="f-eq">α_bend(R) ≈ A·R^(−½)·exp(−B·R)</div><div class="f-desc">כיפוף חד מעלה את הנחה של האור מהסיב. ב-R=7.5mm האובדן עדיין קביל; מתחת לכך – אנומליה OFDR חדה.</div><div class="f-live" id="fl-9">—</div></div></div>
+      </div>
+      <div class="f-section">
+        <div class="f-title">4. מרווח ביטחון ו-Vitality</div>
+        <div class="f-row"><div class="f-num">10</div><div class="f-body"><div class="f-name">Safety Margin משוקלל</div><div class="f-eq">MS = 0.35·MS_mech + 0.25·MS_bend + 0.15·MS_vib + 0.15·MS_ofdr + 0.10·MS_fatigue</div><div class="f-desc">כל רכיב נורמל ל-[-1,1]: חיובי = מרווח בטיחות קיים. שלילי = חריגת גבול. MS&gt;0.4 ירוק, &lt;-0.1 אדום.</div><div class="f-live" id="fl-10">MS = —</div></div></div>
+        <div class="f-row"><div class="f-num">11</div><div class="f-body"><div class="f-name">Vitality מרחבי</div><div class="f-eq">V_spatial = 1 − (1/L)·∫₀ᴸ Risk(s) ds</div><div class="f-desc">ממוצע הסיכון לכל אורך הכבל, מומר לאינדקס בריאות. V=1 = כבל מושלם, V&lt;0.5 = דורש טיפול דחוף.</div><div class="f-live" id="fl-11">V = —</div></div></div>
+        <div class="f-row"><div class="f-num">12</div><div class="f-body"><div class="f-name">Vitality זמני (EWMA)</div><div class="f-eq">V(t) = α·V_spatial(t) + (1−α)·V(t−Δt), α=0.2</div><div class="f-desc">ממצע נע אקספוננציאלי מחליק רעשים ומשמר זיכרון היסטורי. שינוי מהיר ב-V_spatial משפיע לאט על V(t).</div><div class="f-live" id="fl-12">V(t) = —</div></div></div>
+        <div class="f-row"><div class="f-num">13</div><div class="f-body"><div class="f-name">נקודת טל (Magnus)</div><div class="f-eq">T_dew = b·γ/(a−γ),  γ = a·T/(b+T) + ln(RH)</div><div class="f-desc">a=17.27, b=237.7. כשT_wire &lt; T_dew מתרחשת עיבוי לחות על הסיב – מגדיל אובדן אופטי ומעלה סיכון לשבר.</div><div class="f-live" id="fl-13">T_dew = —°C</div></div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="controls">
+    <div class="sec-head">פרמטרי סביבה</div>
+
+    <div class="ctrl"><div class="ctrl-row"><span class="ctrl-name">🌬 מהירות רוח</span><span class="ctrl-val" id="cv-wind">8 m/s</span></div><div class="ctrl-eq">f_d = ½ρC_D·d·v²</div><input type="range" id="s-wind" min="0" max="25" value="8" step=".5"></div>
+    <div class="ctrl"><div class="ctrl-row"><span class="ctrl-name">✈ גובה רחפן</span><span class="ctrl-val" id="cv-height">80 m</span></div><div class="ctrl-eq">a = T_h/(m·g)</div><input type="range" id="s-height" min="20" max="150" value="80" step="1"></div>
+    <div class="ctrl"><div class="ctrl-row"><span class="ctrl-name">↔ מרחק אופקי</span><span class="ctrl-val" id="cv-dist">60 m</span></div><div class="ctrl-eq">D_h = distance(anchor,drone)</div><input type="range" id="s-dist" min="10" max="120" value="60" step="1"></div>
+    <div class="ctrl"><div class="ctrl-row"><span class="ctrl-name">⚡ מתח אופקי</span><span class="ctrl-val" id="cv-tension">50 N</span></div><div class="ctrl-eq">T(s)=√(T_h²+(mg·Δz)²)</div><input type="range" id="s-tension" min="10" max="300" value="50" step="1"></div>
+    <div class="ctrl"><div class="ctrl-row"><span class="ctrl-name">🌡 טמפרטורה</span><span class="ctrl-val" id="cv-temp">28°C</span></div><div class="ctrl-eq">T_wire(s)=T_amb+ΔT·e^(-s/λ)</div><input type="range" id="s-temp" min="-10" max="60" value="28" step="1"></div>
+    <div class="ctrl"><div class="ctrl-row"><span class="ctrl-name">💧 לחות יחסית</span><span class="ctrl-val" id="cv-rh">75%</span></div><div class="ctrl-eq">T_dew=b·γ/(a−γ)</div><input type="range" id="s-rh" min="10" max="100" value="75" step="1"></div>
+    <div class="ctrl"><div class="ctrl-row"><span class="ctrl-name">📏 אורך כבל</span><span class="ctrl-val" id="cv-length">100 m</span></div><div class="ctrl-eq">f_n=(n/2L)·√(T_h/μ)</div><input type="range" id="s-length" min="30" max="200" value="100" step="5"></div>
+    <div class="ctrl"><div class="ctrl-row"><span class="ctrl-name">⚙ מסה</span><span class="ctrl-val" id="cv-mass">19 g/m</span></div><div class="ctrl-eq">w = m·g</div><input type="range" id="s-mass" min="5" max="60" value="19" step="1"></div>
+
+    <div class="sec-head">מדדי בריאות</div>
+
+    <div class="alert g" id="alert-bar"><span id="alert-icon">🟢</span><span id="alert-txt">מרווח ביטחון גבוה</span></div>
+
+    <div class="vbar-wrap">
+      <div class="vbar-top">
+        <span class="vbar-label">VITALITY INDEX</span>
+        <span class="vbar-num mg" id="vit-num">0.87</span>
+      </div>
+      <div class="vbar-track"><div class="vbar-fill" id="vit-fill" style="width:87%;background:var(--green)"></div></div>
+    </div>
+
+    <div class="mcards">
+      <div class="mcard"><div class="mcard-lbl">Safety MS</div><div class="mcard-val mg" id="m-ms">0.72</div></div>
+      <div class="mcard"><div class="mcard-lbl">T_max (N)</div><div class="mcard-val" style="color:var(--accent)" id="m-t">—</div></div>
+      <div class="mcard"><div class="mcard-lbl">R_bend מין׳</div><div class="mcard-val" style="color:var(--accent)" id="m-rb">—</div></div>
+      <div class="mcard"><div class="mcard-lbl">f_n (Hz)</div><div class="mcard-val" style="color:var(--accent)" id="m-fn">—</div></div>
+      <div class="mcard"><div class="mcard-lbl">T_dew (°C)</div><div class="mcard-val" style="color:var(--accent)" id="m-dew">—</div></div>
+      <div class="mcard"><div class="mcard-lbl">ε_max (με)</div><div class="mcard-val" style="color:var(--accent)" id="m-eps">—</div></div>
+    </div>
+
+    <div>
+      <div class="sec-head">margin breakdown</div>
+      <div id="mb-container"></div>
+    </div>
+
+    <div class="sec-head">vitality history</div>
+    <div id="spark-wrap"><canvas id="spark" height="44" style="width:100%;display:block;"></canvas></div>
+
+    <div style="margin-top:4px;padding-top:8px;border-top:1px solid var(--border);">
+      <div class="sec-head">קבועי GORE 24AWG</div>
+      <div class="specs-grid">
+        <div class="spec-row"><span class="spec-key">T_break</span><span class="spec-val">910 N</span></div>
+        <div class="spec-row"><span class="spec-key">E</span><span class="spec-val">2.0 GPa</span></div>
+        <div class="spec-row"><span class="spec-key">R_bend_min</span><span class="spec-val">7.5 mm</span></div>
+        <div class="spec-row"><span class="spec-key">d</span><span class="spec-val">3.2 mm</span></div>
+        <div class="spec-row"><span class="spec-key">α₁₅₅₀</span><span class="spec-val">0.20 dB/km</span></div>
+        <div class="spec-row"><span class="spec-key">Weibull m</span><span class="spec-val">50</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+const S = {
+  wind:8, height:80, dist:60, tension:50, temp:28, rh:75, length:100, mass:19,
+  T_BREAK:910, E:2e9, DIAM:0.0032, R_MIN:0.0075,
+  tick:0, vitHist:Array(80).fill(.85), hov:null
+};
+
+// ═══════════════════════════════════════════════════
+//  PHYSICS
+// ═══════════════════════════════════════════════════
+function physics(){
+  const g=9.8067, rho=1.204;
+  const m=S.mass/1000, L=S.length, Dh=S.dist, Th=S.tension;
+  const a=Th/Math.max(m*g,.001);
+  const N=80;
+  const xs=[],ys=[],tens=[],rads=[];
+  for(let i=0;i<N;i++){
+    const f=i/(N-1);
+    const x=f*Dh;
+    const z=a*Math.cosh((x-Dh/2)/a)-a*Math.cosh(Dh/(2*a));
+    xs.push(x); ys.push(z);
+    const dz=z;
+    tens.push(Math.sqrt(Th*Th+(m*g*dz)*(m*g*dz)));
+  }
+  for(let i=0;i<N;i++){
+    const ip=Math.min(i+1,N-1),im=Math.max(i-1,0);
+    const ddx=xs[ip]-2*xs[i]+xs[im];
+    const ddy=ys[ip]-2*ys[i]+ys[im];
+    const dx=xs[ip]-xs[im],dy=ys[ip]-ys[im];
+    const len2=dx*dx+dy*dy;
+    const curv=Math.sqrt(ddx*ddx+ddy*ddy)/Math.max(len2,1e-8);
+    rads.push(curv<1e-10?999:1/curv);
+  }
+  const fd=0.5*rho*1.0*S.DIAM*S.wind*S.wind;
+  const deflections=xs.map(x=>(fd/Math.max(Th,1))*x*(L-x)*0.12);
+  const fn=(1/(2*L))*Math.sqrt(Th/m);
+  const fs=0.2*S.wind/S.DIAM;
+  const a_dew=17.27,b_dew=237.7,rhF=S.rh/100;
+  const gamma=a_dew*S.temp/(b_dew+S.temp)+Math.log(Math.max(rhF,.001));
+  const Tdew=b_dew*gamma/(a_dew-gamma);
+  const T_max=Math.max(...tens);
+  const R_min=Math.min(...rads.filter(r=>r<100));
+  const area=Math.PI*(S.DIAM/2)**2;
+  const eps_max=T_max/(S.E*area)*1e6;
+  const sag=(m*g*Dh*Dh)/(8*Th);
+  const MS_mech=Math.min((S.T_BREAK/Math.max(T_max,.1))-1,1);
+  const MS_bend=R_min>0?Math.min((R_min/S.R_MIN)-1,1):-1;
+  const MS_vib=1-Math.min(S.wind/25,1)*1.8;
+  const MS_ofdr=1-(T_max/S.T_BREAK)*1.3;
+  const MS_fat=1-Math.min(S.tick/3000,1);
+  const MS=Math.max(-1,Math.min(1,.35*MS_mech+.25*MS_bend+.15*MS_vib+.15*MS_ofdr+.1*MS_fat));
+  const risk_avg=(1-MS)/2;
+  const vit_s=1-risk_avg;
+  const vit=.2*vit_s+.8*(S.vitHist[S.vitHist.length-1]||.85);
+  return{xs,ys,deflections,tens,rads,fn,fs,Tdew,T_max,R_min,eps_max,sag,a,
+    MS,MS_mech,MS_bend,MS_vib,MS_ofdr,MS_fat,vit,Dh,L,m,g,Th,N};
+}
+
+function msColor(v){
+  if(v>.4)return'#00ffa3';
+  if(v>.15)return'#ffc300';
+  if(v>-.1)return'#ff8800';
+  return'#ff3a3a';
+}
+function lerp(a,b,t){return a+(b-a)*t;}
+
+// ═══════════════════════════════════════════════════
+//  2D CANVAS
+// ═══════════════════════════════════════════════════
+const c2=document.getElementById('canvas2d');
+const cx=c2.getContext('2d');
+const tt=document.getElementById('tooltip2d');
+
+function resizeCanvases(){
+  const r2=c2.parentElement.getBoundingClientRect();
+  c2.width=r2.width; c2.height=r2.height;
+  const sc=document.getElementById('spark');
+  sc.width=sc.parentElement.offsetWidth||240;
+  if(c3d)resize3d();
+}
+
+const KEY_FRACS=[0,.22,.5,.78,1];
+
+function draw2d(p){
+  const W=c2.width, H=c2.height;
+  cx.clearRect(0,0,W,H);
+
+  // Background gradient
+  const bgGrd=cx.createRadialGradient(W*.35,H*.4,0,W*.35,H*.4,W*.75);
+  bgGrd.addColorStop(0,'#070d1c');
+  bgGrd.addColorStop(1,'#030610');
+  cx.fillStyle=bgGrd; cx.fillRect(0,0,W,H);
+
+  // Fine grid
+  cx.lineWidth=1;
+  for(let x=0;x<W;x+=50){
+    cx.strokeStyle=x%200===0?'rgba(0,200,255,.055)':'rgba(0,200,255,.02)';
+    cx.beginPath();cx.moveTo(x,0);cx.lineTo(x,H);cx.stroke();
+  }
+  for(let y=0;y<H;y+=50){
+    cx.strokeStyle=y%200===0?'rgba(0,200,255,.055)':'rgba(0,200,255,.02)';
+    cx.beginPath();cx.moveTo(0,y);cx.lineTo(W,y);cx.stroke();
+  }
+
+  const GY=H-60, padX=80;
+  const mX=x=>padX+(x/p.Dh)*(W-padX*2);
+  const baseH=Math.min(S.height,p.L);
+  const mY=y=>GY-((y+baseH)/p.L)*(H-padX-60);
+
+  // Ground line with gradient
+  const gGrd=cx.createLinearGradient(36,0,W-20,0);
+  gGrd.addColorStop(0,'rgba(0,200,255,0)');
+  gGrd.addColorStop(.08,'rgba(0,200,255,.18)');
+  gGrd.addColorStop(.92,'rgba(0,200,255,.18)');
+  gGrd.addColorStop(1,'rgba(0,200,255,0)');
+  cx.strokeStyle=gGrd; cx.lineWidth=1.5;
+  cx.setLineDash([8,8]);
+  cx.beginPath(); cx.moveTo(36,GY); cx.lineTo(W-20,GY); cx.stroke();
+  cx.setLineDash([]);
+
+  // Ground fill
+  const gFill=cx.createLinearGradient(0,GY,0,GY+40);
+  gFill.addColorStop(0,'rgba(0,200,255,.07)'); gFill.addColorStop(1,'rgba(0,200,255,0)');
+  cx.fillStyle=gFill; cx.fillRect(36,GY,W-56,40);
+  cx.fillStyle='rgba(0,200,255,.4)'; cx.font='8px IBM Plex Mono';
+  cx.textAlign='left'; cx.fillText('GROUND LEVEL',44,GY-7);
+
+  // ── Cable multi-pass glow ──
+  const passes=[
+    {w:28,a:.025},{w:16,a:.06},{w:8,a:.14},{w:3.5,a:.55},{w:1.8,a:1}
+  ];
+  for(const pass of passes){
+    for(let i=0;i<p.N-1;i++){
+      const f=i/(p.N-1);
+      const col=msColor(lerp(p.MS_bend,p.MS,f));
+      const x1=mX(p.xs[i])+p.deflections[i];
+      const y1=mY(p.ys[i]);
+      const x2=mX(p.xs[i+1])+p.deflections[i+1];
+      const y2=mY(p.ys[i+1]);
+      cx.beginPath(); cx.moveTo(x1,y1); cx.lineTo(x2,y2);
+      cx.strokeStyle=col; cx.lineWidth=pass.w; cx.globalAlpha=pass.a;
+      cx.stroke();
+    }
+  }
+  cx.globalAlpha=1;
+
+  // ── Key point nodes ──
+  KEY_FRACS.forEach(f=>{
+    const i=Math.round(f*(p.N-1));
+    const px=mX(p.xs[i])+p.deflections[i];
+    const py=mY(p.ys[i]);
+    const col=msColor(lerp(p.MS_bend,p.MS,f));
+    const isHov=(S.hov===i);
+    const r=isHov?10:6;
+
+    // outer glow
+    const grd=cx.createRadialGradient(px,py,0,px,py,22);
+    grd.addColorStop(0,col+'44'); grd.addColorStop(1,'transparent');
+    cx.beginPath();cx.arc(px,py,22,0,Math.PI*2);cx.fillStyle=grd;cx.fill();
+
+    // dot ring
+    cx.beginPath();cx.arc(px,py,r+3,0,Math.PI*2);
+    cx.strokeStyle=col+'55';cx.lineWidth=1.5;cx.stroke();
+    // dot
+    cx.beginPath();cx.arc(px,py,r,0,Math.PI*2);
+    cx.fillStyle=col;cx.shadowColor=col;cx.shadowBlur=12;cx.fill();
+    cx.shadowBlur=0;
+    cx.strokeStyle='rgba(3,6,16,.8)';cx.lineWidth=1.5;cx.stroke();
+
+    // label with background
+    const lbls=['עיגון','25%','אמצע','75%','רחפן'];
+    const lbl=lbls[KEY_FRACS.indexOf(f)];
+    cx.font='bold 8px IBM Plex Mono';
+    cx.textAlign='center';
+    const tw=cx.measureText(lbl).width;
+    cx.fillStyle='rgba(3,6,16,.75)';
+    cx.beginPath();
+    cx.roundRect(px-tw/2-4,py-26,tw+8,14,3);
+    cx.fill();
+    cx.fillStyle='rgba(180,210,240,.65)';
+    cx.fillText(lbl,px,py-16);
+  });
+
+  // ── Anchor ──
+  const ax=mX(0), ay=GY;
+  // glow
+  cx.beginPath();cx.arc(ax,ay,18,0,Math.PI*2);
+  const aGrd=cx.createRadialGradient(ax,ay,2,ax,ay,18);
+  aGrd.addColorStop(0,'rgba(0,200,255,.35)');aGrd.addColorStop(1,'transparent');
+  cx.fillStyle=aGrd;cx.fill();
+  // circle
+  cx.beginPath();cx.arc(ax,ay,11,0,Math.PI*2);
+  cx.fillStyle='#0a1830';cx.fill();
+  cx.strokeStyle='#00c8ff';cx.lineWidth=2;
+  cx.shadowColor='#00c8ff';cx.shadowBlur=10;cx.stroke();cx.shadowBlur=0;
+  // icon
+  cx.fillStyle='#00c8ff';cx.font='bold 11px sans-serif';
+  cx.textAlign='center';cx.textBaseline='middle';cx.fillText('⚓',ax,ay);
+  cx.textBaseline='alphabetic';
+  // label
+  cx.font='bold 9px Heebo';cx.fillStyle='rgba(0,200,255,.8)';
+  cx.fillText('עיגון',ax,ay+24);
+
+  // ── Drone ──
+  const dx2=mX(p.Dh), dy2=mY(0);
+  drawDrone2d(dx2,dy2);
+  cx.fillStyle='rgba(255,255,255,.8)';cx.font='bold 9px Heebo';
+  cx.textAlign='center';cx.fillText('רחפן',dx2,dy2-38);
+
+  // ── Vulnerability ring ──
+  let wi=0,wr=999;
+  p.rads.forEach((r,i)=>{if(r<wr){wr=r;wi=i;}});
+  const wpx=mX(p.xs[wi])+p.deflections[wi];
+  const wpy=mY(p.ys[wi]);
+  const pr=16+4*Math.sin(S.tick*.1);
+  cx.beginPath();cx.arc(wpx,wpy,pr,0,Math.PI*2);
+  cx.strokeStyle='#ff3a3a';cx.lineWidth=1.5;
+  cx.setLineDash([4,4]);cx.globalAlpha=.85;
+  cx.shadowColor='#ff3a3a';cx.shadowBlur=8;cx.stroke();
+  cx.shadowBlur=0;cx.setLineDash([]);cx.globalAlpha=1;
+
+  // danger badge
+  cx.fillStyle='rgba(255,58,58,.15)';
+  cx.strokeStyle='rgba(255,58,58,.5)';cx.lineWidth=1;
+  const bw=80,bh=16,bx=wpx-bw-22,by=wpy-8;
+  cx.beginPath();cx.roundRect(bx,by,bw,bh,4);cx.fill();cx.stroke();
+  cx.fillStyle='#ff3a3a';cx.font='bold 8px IBM Plex Mono';
+  cx.textAlign='center';cx.fillText('◀ נקודת תורפה',bx+bw/2,by+11);
+
+  // ── Wind arrows ──
+  if(S.wind>0.5){
+    const wlen=Math.min(S.wind*3.8,75);
+    const wy=[H*.28,H*.44,H*.60];
+    wy.forEach(yy=>{
+      const wx=W-160;
+      // arrow line
+      cx.beginPath();
+      cx.moveTo(wx,yy);cx.lineTo(wx+wlen,yy);
+      cx.strokeStyle='rgba(0,200,255,.35)';cx.lineWidth=1.5;
+      cx.setLineDash([5,5]);cx.stroke();cx.setLineDash([]);
+      // arrowhead
+      cx.beginPath();
+      cx.moveTo(wx+wlen,yy);
+      cx.lineTo(wx+wlen-8,yy-4);
+      cx.lineTo(wx+wlen-8,yy+4);
+      cx.closePath();
+      cx.fillStyle='rgba(0,200,255,.4)';cx.fill();
+    });
+    // wind label badge
+    cx.fillStyle='rgba(0,200,255,.08)';
+    cx.strokeStyle='rgba(0,200,255,.2)';cx.lineWidth=1;
+    cx.beginPath();cx.roundRect(W-164,H*.28-20,70,14,3);cx.fill();cx.stroke();
+    cx.fillStyle='rgba(0,200,255,.55)';cx.font='8px IBM Plex Mono';
+    cx.textAlign='left';cx.fillText(`WIND ${S.wind}m/s`,W-160,H*.28-10);
+  }
+
+  // ── Bottom labels ──
+  cx.fillStyle='rgba(0,200,255,.4)';cx.font='8px IBM Plex Mono';cx.textAlign='left';
+  cx.fillText(`a = T_h/mg = ${p.a.toFixed(1)} m`,16,H-22);
+  cx.fillText(`f_n = ${p.fn.toFixed(2)} Hz  |  f_s = ${p.fs.toFixed(2)} Hz`,16,H-10);
+}
+
+function drawDrone2d(x,y){
+  cx.save(); cx.translate(x,y);
+  // body glow
+  cx.shadowColor='rgba(0,200,255,.6)';cx.shadowBlur=16;
+  cx.fillStyle='#0d1e36';cx.strokeStyle='#00c8ff';cx.lineWidth=1.5;
+  cx.beginPath();cx.roundRect(-10,-5,20,10,2);cx.fill();cx.stroke();
+  cx.shadowBlur=0;
+  // arms & rotors
+  const arms=[[-18,-12],[10,-12],[-18,6],[10,6]];
+  arms.forEach(([ax,ay])=>{
+    cx.beginPath();cx.moveTo(0,0);cx.lineTo(ax,ay);
+    cx.strokeStyle='rgba(0,200,255,.5)';cx.lineWidth=1;cx.stroke();
+    // rotor disc
+    cx.beginPath();cx.arc(ax,ay,5,0,Math.PI*2);
+    cx.fillStyle='rgba(0,200,255,.12)';cx.fill();
+    cx.strokeStyle='#00c8ff';cx.lineWidth=1.2;cx.stroke();
+    // spinning blade (animated)
+    const angle=S.tick*.25;
+    cx.save();cx.translate(ax,ay);cx.rotate(angle);
+    cx.beginPath();cx.moveTo(-5,0);cx.lineTo(5,0);
+    cx.strokeStyle='rgba(0,200,255,.7)';cx.lineWidth=1;cx.stroke();
+    cx.rotate(Math.PI/2);cx.beginPath();cx.moveTo(-5,0);cx.lineTo(5,0);cx.stroke();
+    cx.restore();
+  });
+  // center LED
+  cx.beginPath();cx.arc(0,0,2,0,Math.PI*2);
+  cx.fillStyle='#00ffa3';cx.shadowColor='#00ffa3';cx.shadowBlur=8;cx.fill();
+  cx.shadowBlur=0;
+  cx.restore();
+}
+
+// ═══════════════════════════════════════════════════
+//  TOOLTIP
+// ═══════════════════════════════════════════════════
+c2.addEventListener('mousemove',e=>{
+  const rect=c2.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  const W=c2.width,H=c2.height;
+  const p=physics();
+  const GY=H-60,padX=80;
+  const mX=x=>padX+(x/p.Dh)*(W-padX*2);
+  const baseH=Math.min(S.height,p.L);
+  const mY=y=>GY-((y+baseH)/p.L)*(H-padX-60);
+  let found=null;
+  KEY_FRACS.forEach(f=>{
+    const i=Math.round(f*(p.N-1));
+    const px=mX(p.xs[i])+p.deflections[i], py=mY(p.ys[i]);
+    if(Math.hypot(mx-px,my-py)<24)found=i;
+  });
+  S.hov=found;
+  if(found!==null){showTT(e.clientX,e.clientY,found,p);c2.style.cursor='pointer';}
+  else{hideTT();c2.style.cursor='default';}
+});
+c2.addEventListener('mouseleave',hideTT);
+
+const TT_DATA=[
+  {title:'נקודת עיגון (0%)',formula:'T(0) = T_h (בסיס)',explain:'נקודת הקרקע – מתח אנכי אפסי. כוח הכובד פועל ישר. הסיכון הנמוך ביותר לאורך הכבל.'},
+  {title:'רבע ראשון (25%)',formula:'T(s) = √(T_h² + (mg·Δz)²)',explain:'הכבל מתחיל לצבור מתח אנכי. זווית השיפוע עולה. רוח גורמת לסטייה צידית מוחשית כאן.'},
+  {title:'אמצע הכבל (50%)',formula:'z_min = a·cosh(0) − a·cosh(D_h/2a)',explain:'נקודת ה-Sag המינימלי – הכבל הכי נמוך. תנודות תהודה (lock-in) מגיעות לעוצמה מרבית באזור זה.'},
+  {title:'שלושה-רבעים (75%)',formula:'f_d = ½ρC_D·d·v² ← כוח רוח',explain:'הכבל מתחדד לכיוון הרחפן. רוחות חזקות גורמות לסטייה גדולה. מתח עולה בחדות.'},
+  {title:'חיבור לרחפן (100%)',formula:'T_max ≈ √(T_h² + (mg·h)²)',explain:'נקודת מתח מרבי. כל תנועה חדה של הרחפן מועברת ישירות. נקודת שבר ראשונה אפשרית.'},
+];
+
+function showTT(cx2,cy2,idx,p){
+  const ki=KEY_FRACS.indexOf(idx/(p.N-1));
+  const d=TT_DATA[ki]||TT_DATA[0];
+  const f=idx/(p.N-1);
+  const T_pt=p.tens[idx];
+  const R_pt=p.rads[idx];
+  const ms_pt=lerp(p.MS_bend,p.MS,f);
+  const col=msColor(ms_pt);
+  document.getElementById('tt-title').textContent=d.title;
+  document.getElementById('tt-formula').textContent=d.formula;
+  document.getElementById('tt-explain').textContent=d.explain;
+  document.getElementById('tt-vals').innerHTML=`T = <b>${T_pt.toFixed(1)} N</b>  |  R_bend = <b>${R_pt<99?R_pt.toFixed(3)+'m':'∞'}</b>  |  MS = <b style="color:${col}">${ms_pt.toFixed(2)}</b>`;
+  const box=c2.getBoundingClientRect();
+  tt.style.left=(cx2-box.left)+'px';
+  tt.style.top=(cy2-box.top)+'px';
+  tt.classList.remove('off');
+}
+function hideTT(){tt.classList.add('off');S.hov=null;}
+
+// ═══════════════════════════════════════════════════
+//  UI UPDATE
+// ═══════════════════════════════════════════════════
+function updateUI(p){
+  const cls=p.MS>.4?'g':p.MS>.15?'y':p.MS>-.1?'o':'r';
+  const icons=['🟢','🟡','🟠','🔴'],txts=['מרווח ביטחון גבוה','אזהרה – ניטור מוגבר','חירום – הפחת עומס','כשל קרוב!'];
+  const ci=['g','y','o','r'].indexOf(cls);
+  const ab=document.getElementById('alert-bar');
+  ab.className='alert '+cls;
+  document.getElementById('alert-icon').textContent=icons[ci];
+  document.getElementById('alert-txt').textContent=txts[ci];
+
+  const vp=Math.max(0,Math.min(1,p.vit));
+  const vnEl=document.getElementById('vit-num');
+  vnEl.textContent=vp.toFixed(2);
+  vnEl.className='vbar-num '+(p.MS>.4?'mg':p.MS>.15?'my':p.MS>-.1?'mo':'mr');
+  const vf=document.getElementById('vit-fill');
+  vf.style.width=(vp*100)+'%'; vf.style.background=msColor(p.MS);
+
+  const mc=msColor(p.MS);
+  document.getElementById('m-ms').textContent=p.MS.toFixed(2);
+  document.getElementById('m-ms').style.color=mc;
+  document.getElementById('m-t').textContent=p.T_max.toFixed(0)+' N';
+  document.getElementById('m-t').style.color=p.T_max>S.T_BREAK*.7?'#ff3a3a':'#00c8ff';
+  document.getElementById('m-rb').textContent=p.R_min<99?p.R_min.toFixed(3)+'m':'—';
+  document.getElementById('m-rb').style.color=p.R_min<S.R_MIN?'#ff3a3a':'#00c8ff';
+  document.getElementById('m-fn').textContent=p.fn.toFixed(2)+' Hz';
+  document.getElementById('m-dew').textContent=p.Tdew.toFixed(1)+'°C';
+  document.getElementById('m-eps').textContent=p.eps_max.toFixed(1)+' με';
+
+  // margin bars
+  const comps=[
+    {n:'מכני',v:p.MS_mech,eq:'T_break/T−1'},
+    {n:'כיפוף',v:p.MS_bend,eq:'R/R_min−1'},
+    {n:'רטט',v:p.MS_vib,eq:'1−wind/25'},
+    {n:'OFDR',v:p.MS_ofdr,eq:'1−T/T_break'},
+    {n:'עייפות',v:p.MS_fat,eq:'1−D'},
+  ];
+  document.getElementById('mb-container').innerHTML=comps.map(c=>{
+    const pct=Math.max(0,Math.min(100,((c.v+1)/2*100)));
+    const col=msColor(c.v);
+    return`<div class="mb-row"><div class="mb-label"><span class="mb-name">${c.n} <span style="color:var(--muted2)">${c.eq}</span></span><span class="mb-val" style="color:${col}">${c.v.toFixed(2)}</span></div><div class="mb-track"><div class="mb-fill" style="width:${pct}%;background:${col};box-shadow:0 0 4px ${col}44"></div></div></div>`;
+  }).join('');
+
+  S.vitHist.push(vp);
+  if(S.vitHist.length>80)S.vitHist.shift();
+  drawSpark();
+
+  // formula live
+  document.getElementById('fl-1').textContent=`a = ${p.a.toFixed(2)} m`;
+  document.getElementById('fl-2').textContent=`S = ${p.sag.toFixed(2)} m`;
+  document.getElementById('fl-3').textContent=`T_max = ${p.T_max.toFixed(1)} N`;
+  document.getElementById('fl-4').textContent=`R_min = ${p.R_min<99?p.R_min.toFixed(4):'∞'} m`;
+  const fd=0.5*1.204*1.0*S.DIAM*S.wind*S.wind;
+  document.getElementById('fl-5').textContent=`f_d = ${fd.toFixed(4)} N/m`;
+  document.getElementById('fl-6').textContent=`f_n = ${p.fn.toFixed(3)} Hz`;
+  document.getElementById('fl-7').textContent=`f_s = ${p.fs.toFixed(3)} Hz${Math.abs(p.fs-p.fn)<p.fn*.15?' ⚠️ LOCK-IN!':''}`;
+  document.getElementById('fl-8').textContent=`ε_max = ${p.eps_max.toFixed(1)} με`;
+  document.getElementById('fl-9').textContent=`R_bend = ${p.R_min<99?p.R_min.toFixed(4):'∞'} m`;
+  document.getElementById('fl-10').textContent=`MS = ${p.MS.toFixed(3)}`;
+  document.getElementById('fl-11').textContent=`V_spatial = ${(1-(1-p.MS)/2).toFixed(3)}`;
+  document.getElementById('fl-12').textContent=`V(t) = ${p.vit.toFixed(3)}`;
+  document.getElementById('fl-13').textContent=`T_dew = ${p.Tdew.toFixed(1)}°C${S.temp<p.Tdew?' ⚠️ עיבוי!':''}`;
+}
+
+function drawSpark(){
+  const sc=document.getElementById('spark');
+  const sx=sc.getContext('2d');
+  const W=sc.width, H=44;
+  sc.height=H;
+  sx.clearRect(0,0,W,H);
+
+  // background grid
+  sx.strokeStyle='rgba(0,200,255,.06)'; sx.lineWidth=1;
+  for(let y=0;y<H;y+=H/3){sx.beginPath();sx.moveTo(0,y);sx.lineTo(W,y);sx.stroke();}
+
+  const h=S.vitHist;
+  if(h.length<2)return;
+
+  // fill
+  sx.beginPath();
+  h.forEach((v,i)=>{const x=(i/(h.length-1))*W;const y=H-v*(H-4)-2;i===0?sx.moveTo(x,y):sx.lineTo(x,y);});
+  sx.lineTo(W,H);sx.lineTo(0,H);sx.closePath();
+  const g=sx.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,'rgba(0,200,255,.18)');g.addColorStop(1,'rgba(0,200,255,0)');
+  sx.fillStyle=g;sx.fill();
+
+  // line
+  sx.beginPath();
+  h.forEach((v,i)=>{const x=(i/(h.length-1))*W;const y=H-v*(H-4)-2;i===0?sx.moveTo(x,y):sx.lineTo(x,y);});
+  sx.strokeStyle='#00c8ff';sx.lineWidth=1.8;
+  sx.shadowColor='#00c8ff';sx.shadowBlur=6;sx.stroke();sx.shadowBlur=0;
+
+  // current value dot
+  const lastV=h[h.length-1];
+  const lx=W-1, ly=H-lastV*(H-4)-2;
+  sx.beginPath();sx.arc(lx,ly,3,0,Math.PI*2);
+  sx.fillStyle='#00c8ff';sx.shadowColor='#00c8ff';sx.shadowBlur=8;sx.fill();sx.shadowBlur=0;
+}
+
+// ═══════════════════════════════════════════════════
+//  SLIDERS
+// ═══════════════════════════════════════════════════
+const sliders=[
+  {id:'s-wind',key:'wind',disp:'cv-wind',unit:' m/s'},
+  {id:'s-height',key:'height',disp:'cv-height',unit:' m'},
+  {id:'s-dist',key:'dist',disp:'cv-dist',unit:' m'},
+  {id:'s-tension',key:'tension',disp:'cv-tension',unit:' N'},
+  {id:'s-temp',key:'temp',disp:'cv-temp',unit:'°C'},
+  {id:'s-rh',key:'rh',disp:'cv-rh',unit:'%'},
+  {id:'s-length',key:'length',disp:'cv-length',unit:' m'},
+  {id:'s-mass',key:'mass',disp:'cv-mass',unit:' g/m'},
+];
+sliders.forEach(s=>{
+  const el=document.getElementById(s.id);
+  const upd=()=>{
+    S[s.key]=parseFloat(el.value);
+    document.getElementById(s.disp).textContent=el.value+s.unit;
+    const pct=((el.value-el.min)/(el.max-el.min)*100).toFixed(1)+'%';
+    el.style.setProperty('--p',pct);
+  };
+  el.addEventListener('input',upd);upd();
+});
+
+// ═══════════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════════
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    const id=t.dataset.tab;
+    document.querySelectorAll('.view-page').forEach(p=>p.classList.remove('active'));
+    if(id==='2d')document.getElementById('view2d').classList.add('active');
+    else if(id==='3d')document.getElementById('view3d-wrap').classList.add('active');
+    else if(id==='formula')document.getElementById('view-formula').classList.add('active');
+    resizeCanvases();
+  });
+});
+
+// ═══════════════════════════════════════════════════
+//  3D WebGL
+// ═══════════════════════════════════════════════════
+const c3d=document.getElementById('canvas3d');
+const gl=c3d.getContext('webgl')||c3d.getContext('experimental-webgl');
+let cam3={theta:0.6,phi:1.1,dist:180,tx:30,ty:40,tz:0};
+let dragging=false,lastMX=0,lastMY=0;
+
+function resize3d(){
+  const r=c3d.parentElement.getBoundingClientRect();
+  c3d.width=r.width;c3d.height=r.height;
+  if(gl){gl.viewport(0,0,c3d.width,c3d.height);}
+}
+c3d.addEventListener('mousedown',e=>{dragging=true;lastMX=e.clientX;lastMY=e.clientY;});
+window.addEventListener('mouseup',()=>dragging=false);
+window.addEventListener('mousemove',e=>{
+  if(!dragging)return;
+  const dx=e.clientX-lastMX,dy=e.clientY-lastMY;
+  cam3.theta+=dx*.008;cam3.phi=Math.max(.2,Math.min(Math.PI-.1,cam3.phi+dy*.008));
+  lastMX=e.clientX;lastMY=e.clientY;
+});
+c3d.addEventListener('wheel',e=>{cam3.dist=Math.max(60,Math.min(400,cam3.dist+e.deltaY*.3));});
+
+let glReady=false,prog3d=null;
+const vsrc=`attribute vec3 aPos;attribute vec3 aCol;uniform mat4 uMVP;varying vec3 vCol;void main(){gl_Position=uMVP*vec4(aPos,1.);vCol=aCol;gl_PointSize=9.;}`;
+const fsrc=`precision mediump float;varying vec3 vCol;void main(){gl_FragColor=vec4(vCol,1.);}`;
+
+function initGL(){
+  if(!gl)return;
+  const vs=gl.createShader(gl.VERTEX_SHADER);gl.shaderSource(vs,vsrc);gl.compileShader(vs);
+  const fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,fsrc);gl.compileShader(fs);
+  prog3d=gl.createProgram();gl.attachShader(prog3d,vs);gl.attachShader(prog3d,fs);
+  gl.linkProgram(prog3d);gl.useProgram(prog3d);
+  gl.enable(gl.DEPTH_TEST);gl.clearColor(.01,.02,.06,1);
+  glReady=true;
+}
+function mat4Mul(a,b){
+  const r=new Float32Array(16);
+  for(let i=0;i<4;i++)for(let j=0;j<4;j++){let s=0;for(let k=0;k<4;k++)s+=a[i*4+k]*b[k*4+j];r[i*4+j]=s;}
+  return r;
+}
+function perspective(fov,asp,near,far){
+  const f=1/Math.tan(fov/2),nf=1/(near-far);
+  return new Float32Array([f/asp,0,0,0,0,f,0,0,0,0,(far+near)*nf,-1,0,0,(2*far*near)*nf,0]);
+}
+function lookAt(ex,ey,ez,cx2,cy2,cz,ux,uy,uz){
+  let fx=cx2-ex,fy=cy2-ey,fz=cz-ez;
+  const fl=Math.sqrt(fx*fx+fy*fy+fz*fz);fx/=fl;fy/=fl;fz/=fl;
+  let sx=fy*uz-fz*uy,sy=fz*ux-fx*uz,sz=fx*uy-fy*ux;
+  const sl=Math.sqrt(sx*sx+sy*sy+sz*sz);sx/=sl;sy/=sl;sz/=sl;
+  const ux2=sy*fz-sz*fy,uy2=sz*fx-sx*fz,uz2=sx*fy-sy*fx;
+  return new Float32Array([sx,ux2,-fx,0,sy,uy2,-fy,0,sz,uz2,-fz,0,
+    -(sx*ex+sy*ey+sz*ez),-(ux2*ex+uy2*ey+uz2*ez),(fx*ex+fy*ey+fz*ez),1]);
+}
+function draw3d(p){
+  if(!gl||!glReady)return;
+  const W=c3d.width,H=c3d.height;
+  gl.viewport(0,0,W,H);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+  const eye=[
+    cam3.tx+cam3.dist*Math.sin(cam3.phi)*Math.sin(cam3.theta),
+    cam3.ty+cam3.dist*Math.cos(cam3.phi),
+    cam3.tz+cam3.dist*Math.sin(cam3.phi)*Math.cos(cam3.theta)
+  ];
+  const proj=perspective(55*Math.PI/180,W/H,.5,800);
+  const view=lookAt(...eye,cam3.tx,cam3.ty,cam3.tz,0,1,0);
+  const mvp=mat4Mul(proj,view);
+  const uMVP=gl.getUniformLocation(prog3d,'uMVP');
+  gl.uniformMatrix4fv(uMVP,false,mvp);
+  const aPos=gl.getAttribLocation(prog3d,'aPos');
+  const aCol=gl.getAttribLocation(prog3d,'aCol');
+  // ground grid
+  const gv=[];
+  for(let i=-5;i<=15;i++){for(let j=-5;j<=10;j++){
+    gv.push(i*10,0,j*10,.06,.11,.17,(i+1)*10,0,j*10,.06,.11,.17);
+    gv.push(i*10,0,j*10,.06,.11,.17,i*10,0,(j+1)*10,.06,.11,.17);
+  }}
+  const gbuf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,gbuf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(gv),gl.STATIC_DRAW);
+  gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,24,0);gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,24,12);gl.enableVertexAttribArray(aCol);
+  gl.drawArrays(gl.LINES,0,gv.length/6);
+  // cable
+  const cv=[];
+  for(let i=0;i<p.N;i++){
+    const f=i/(p.N-1);
+    const x3=p.xs[i]+p.deflections[i],y3=p.ys[i]+S.height,z3=0;
+    const ms_pt=lerp(p.MS_bend,p.MS,f);
+    let r,g2,b2;
+    if(ms_pt>.4){r=0;g2=1;b2=.64;}
+    else if(ms_pt>.15){r=1;g2=.76;b2=0;}
+    else if(ms_pt>-.1){r=1;g2=.53;b2=0;}
+    else{r=1;g2=.23;b2=.23;}
+    cv.push(x3,y3,z3,r,g2,b2);
+  }
+  const cbuf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,cbuf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(cv),gl.STATIC_DRAW);
+  gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,24,0);gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,24,12);gl.enableVertexAttribArray(aCol);
+  gl.lineWidth(3);gl.drawArrays(gl.LINE_STRIP,0,cv.length/6);
+  // markers
+  const mv=[];
+  mv.push(0,0,0,0,.78,1);
+  mv.push(p.Dh+p.deflections[p.N-1],S.height,0,1,1,1);
+  let wi=0,wr=999;
+  p.rads.forEach((r,i)=>{if(r<wr){wr=r;wi=i;}});
+  mv.push(p.xs[wi]+p.deflections[wi],p.ys[wi]+S.height,0,1,.23,.23);
+  const mbuf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,mbuf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array(mv),gl.STATIC_DRAW);
+  gl.vertexAttribPointer(aPos,3,gl.FLOAT,false,24,0);gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aCol,3,gl.FLOAT,false,24,12);gl.enableVertexAttribArray(aCol);
+  gl.drawArrays(gl.POINTS,0,3);
+}
+
+// ═══════════════════════════════════════════════════
+//  CLOCK
+// ═══════════════════════════════════════════════════
+function updateClock(){
+  const now=new Date();
+  const hh=String(now.getHours()).padStart(2,'0');
+  const mm=String(now.getMinutes()).padStart(2,'0');
+  const ss=String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent=`${hh}:${mm}:${ss}`;
+}
+setInterval(updateClock,1000);
+updateClock();
+
+// ═══════════════════════════════════════════════════
+//  MAIN LOOP
+// ═══════════════════════════════════════════════════
+function loop(){
+  S.tick++;
+  const p=physics();
+  const tab=document.querySelector('.tab.active')?.dataset.tab;
+  if(tab==='2d')draw2d(p);
+  else if(tab==='3d')draw3d(p);
+  updateUI(p);
+  requestAnimationFrame(loop);
+}
+
+window.addEventListener('resize',resizeCanvases);
+resizeCanvases();
+initGL();
+loop();
+</script>
+<div class="cv-mobile-orbit" aria-hidden="true"></div>
+<script src="../assets/site-polish.js"></script>
+</body>
+</html>
+
+
+

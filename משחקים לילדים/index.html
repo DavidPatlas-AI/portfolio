@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="משחקים חינוכיים בעברית לגן וכיתה א">
+<title>משחקים לילדים</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans Hebrew',Segoe UI,sans-serif;min-height:100vh;background:linear-gradient(135deg,#be185d 0%,#7c3aed 50%,#4c1d95 100%);color:#fff;padding:20px;line-height:1.6}
+.top-nav a{color:rgba(255,255,255,.92);text-decoration:none;font-weight:600;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);display:inline-block;margin-bottom:18px}
+.wrap{max-width:900px;margin:0 auto}
+h1{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:8px}
+.sub{opacity:.85;margin-bottom:24px}
+.panel{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:24px;backdrop-filter:blur(8px)}
+.btn{display:inline-block;margin-top:16px;padding:12px 22px;border-radius:999px;background:#f5c842;color:#1a1a2e;font-weight:700;border:none;cursor:pointer;font-size:1rem}
+.btn:hover{filter:brightness(1.08)}
+.score{font-size:2rem;font-weight:900;color:#f5c842;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px}
+.card{background:rgba(0,0,0,.2);border-radius:12px;padding:16px;text-align:center;cursor:pointer;border:2px solid transparent;transition:.2s}
+.card:hover,.card.active{border-color:#f5c842;transform:translateY(-2px)}
+canvas{display:block;margin:16px auto;border-radius:12px;background:#0a0a14;max-width:100%}
+input[type=range]{width:100%;margin:8px 0}
+label{font-size:.9rem;opacity:.9}
+</style>
+</head>
+<body>
+<nav class="top-nav"><a href="https://storied-alfajores-6f10d2.netlify.app/">← תיק עבודות Patlas</a></nav>
+<div class="wrap">
+
+<h1>👶 משחקים לילדים</h1>
+<p class="sub">מספרים, אותיות וזיכרון — בעברית</p>
+<div class="panel">
+  <p id="q" style="font-size:2rem;font-weight:900;margin:16px 0"></p>
+  <div class="grid" id="opts"></div>
+  <p class="score">ניקוד: <span id="sc">0</span></p>
+  <button class="btn" id="mode">מצב: מספרים</button>
+</div>
+</div>
+<script>
+const heb='אבגדהוזחטיכלמנסעפצקרשת';let mode='num',score=0;
+function rand(n){return Math.floor(Math.random()*n)}
+function question(){
+  const opts=document.getElementById('opts');opts.innerHTML='';
+  let correct,answers=[];
+  if(mode==='num'){
+    const a=rand(9)+1,b=rand(9)+1;correct=a+b;
+    document.getElementById('q').textContent=a+' + '+b+' = ?';
+    answers=[correct,rand(18),rand(18),rand(18)];
+  }else{
+    const i=rand(heb.length);correct=heb[i];
+    document.getElementById('q').textContent='איזו אות? '+correct;
+    answers=[correct,heb[rand(heb.length)],heb[rand(heb.length)],heb[rand(heb.length)]];
+  }
+  answers.sort(()=>Math.random()-.5);
+  answers.forEach(v=>{
+    const d=document.createElement('div');d.className='card';d.textContent=v;
+    d.onclick=()=>{if(v===correct){score+=10;document.getElementById('sc').textContent=score;question()}
+    else{d.style.borderColor='#f43f5e';setTimeout(question,600)}};
+    opts.appendChild(d);
+  });
+}
+document.getElementById('mode').onclick=()=>{mode=mode==='num'?'let':'num';document.getElementById('mode').textContent='מצב: '+(mode==='num'?'מספרים':'אותיות');question()};
+question();
+</script></body></html>

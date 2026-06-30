@@ -1,0 +1,16 @@
+<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8"><title>ברייקאוט</title>
+<style>body{margin:0;background:#0f0a2e;color:#fff;font-family:sans-serif;text-align:center;padding:12px}
+canvas{border-radius:12px;margin-top:8px}a{color:#f5c842}</style></head><body>
+<a href="index.html">← חזרה</a><h2>ברייקאוט</h2><canvas id="c" width="400" height="400"></canvas><script>
+const c=document.getElementById('c'),x=c.getContext('2d');c.width=480;c.height=360;
+let paddle=200,balls=[{x:240,y:300,vx:3,vy:-3}],bricks=[],score=0;
+for(let r=0;r<5;r++)for(let col=0;col<8;col++)bricks.push({x:col*58+12,y:r*22+40,w:52,h:16,hit:0});
+c.onmousemove=e=>{const r=c.getBoundingClientRect();paddle=e.clientX-r.left-40};
+function loop(){x.fillStyle='#0a0a14';x.fillRect(0,0,480,360);x.fillStyle='#94a3b8';x.fillRect(paddle,340,80,10);
+bricks.forEach(b=>{if(!b.hit){x.fillStyle=['#f43f5e','#f97316','#eab308','#22c55e','#3b82f6'][Math.floor(b.y/22)%5];x.fillRect(b.x,b.y,b.w,b.h)}});
+balls.forEach(b=>{b.x+=b.vx;b.y+=b.vy;if(b.x<8||b.x>472)b.vx*=-1;if(b.y<8)b.vy*=-1;if(b.y>340&&b.x>paddle&&b.x<paddle+80)b.vy=-Math.abs(b.vy);
+bricks.forEach(br=>{if(!br.hit&&b.x>br.x&&b.x<br.x+br.w&&b.y>br.y&&b.y<br.y+br.h){br.hit=1;b.vy*=-1;score+=10}});
+x.fillStyle='#fff';x.beginPath();x.arc(b.x,b.y,6,0,7);x.fill();if(b.y>380){alert('נגמר! ניקוד: '+score);location.reload()}});
+if(bricks.every(b=>b.hit)){alert('ניצחון! '+score);location.reload()}
+requestAnimationFrame(loop)}loop();
+</script></body></html>

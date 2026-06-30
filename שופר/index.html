@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="תקיעות שופר, מידע הלכתי ומצב הדרכה לחגי תשרי">
+<title>שופר — תקיעות והלכה</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans Hebrew',Segoe UI,sans-serif;min-height:100vh;background:linear-gradient(135deg,#5c3d1e 0%,#2a1810 60%,#1a0f08 100%);color:#fff;padding:20px;line-height:1.6}
+.top-nav a{color:rgba(255,255,255,.92);text-decoration:none;font-weight:600;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);display:inline-block;margin-bottom:18px}
+.wrap{max-width:900px;margin:0 auto}
+h1{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:8px}
+.sub{opacity:.85;margin-bottom:24px}
+.panel{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:24px;backdrop-filter:blur(8px)}
+.btn{display:inline-block;margin-top:16px;padding:12px 22px;border-radius:999px;background:#f5c842;color:#1a1a2e;font-weight:700;border:none;cursor:pointer;font-size:1rem}
+.btn:hover{filter:brightness(1.08)}
+.score{font-size:2rem;font-weight:900;color:#f5c842;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px}
+.card{background:rgba(0,0,0,.2);border-radius:12px;padding:16px;text-align:center;cursor:pointer;border:2px solid transparent;transition:.2s}
+.card:hover,.card.active{border-color:#f5c842;transform:translateY(-2px)}
+canvas{display:block;margin:16px auto;border-radius:12px;background:#0a0a14;max-width:100%}
+input[type=range]{width:100%;margin:8px 0}
+label{font-size:.9rem;opacity:.9}
+</style>
+</head>
+<body>
+<nav class="top-nav"><a href="https://storied-alfajores-6f10d2.netlify.app/">← תיק עבודות Patlas</a></nav>
+<div class="wrap">
+
+<h1>📯 שופר</h1>
+<p class="sub">תקיעות, שברים ותרועה — עם הסבר הלכתי קצר</p>
+<div class="panel">
+  <div class="grid" id="grid"></div>
+  <p id="info" style="margin-top:18px;font-size:1.05rem"></p>
+  <label>עוצמה <input type="range" id="vol" min="0" max="100" value="70"></label>
+</div>
+</div>
+<script>
+const BLASTS=[
+  {id:'tk',name:'תקיעה',desc:'תקיעה אחת ארוכה — מינימום שיעור אחד (כשני תיבות)',dur:.8,freq:220},
+  {id:'sh',name:'שברים',desc:'שלוש תקיעות קצרות — כל אחת לפחות שיעור אחד',dur:.25,freq:240,count:3,gap:.15},
+  {id:'tr',name:'תרועה',desc:'רצף צלילים מהירים — לפחות שיעור אחד',dur:.6,freq:280,wobble:1},
+  {id:'tksh',name:'תש"ת',desc:'תקיעה, שברים, תרועה — סדר הרשות',seq:['tk','sh','tr']},
+  {id:'shtk',name:'שת"ך',desc:'שברים, תרועה, תקיעה גדולה',seq:['sh','tr','tk']},
+];
+let ctx;
+function playTone(freq,dur,vol,wobble){
+  if(!ctx)ctx=new(window.AudioContext||window.webkitAudioContext)();
+  const v=+document.getElementById('vol').value/100;
+  const t0=ctx.currentTime;
+  const o=ctx.createOscillator(),g=ctx.createGain();
+  o.type='sawtooth';o.frequency.value=freq;
+  if(wobble){const l=ctx.createOscillator();l.frequency.value=18;const lg=ctx.createGain();lg.gain.value=40;l.connect(lg);lg.connect(o.frequency);l.start(t0);l.stop(t0+dur)}
+  g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v*.35,t0+.05);g.gain.exponentialRampToValueAtTime(.001,t0+dur);
+  o.connect(g);g.connect(ctx.destination);o.start(t0);o.stop(t0+dur+.05);
+}
+function playBlast(b){
+  if(b.seq){let t=0;b.seq.forEach(sid=>{const x=BLASTS.find(z=>z.id===sid);setTimeout(()=>playOne(x),t*1000);t+=(x.dur||.5)+.2});return}
+  playOne(b);
+}
+function playOne(b){
+  const n=b.count||1;
+  for(let i=0;i<n;i++)setTimeout(()=>playTone(b.freq,b.dur,1,b.wobble),(b.gap||0)*1000*i);
+}
+const grid=document.getElementById('grid'),info=document.getElementById('info');
+BLASTS.forEach(b=>{
+  const d=document.createElement('div');d.className='card';
+  d.innerHTML='<strong>'+b.name+'</strong>';
+  d.onclick=()=>{document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));d.classList.add('active');info.textContent=b.desc;playBlast(b)};
+  grid.appendChild(d);
+});
+info.textContent='לחצו על תקיעה כדי לשמוע ולקרוא את ההסבר';
+</script></body></html>

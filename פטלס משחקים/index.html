@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="אוסף משחקי HTML5 — אסטרואידים, ברייקאוט, סנייק ועוד">
+<title>פטלס משחקים</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Hebrew:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Noto Sans Hebrew',Segoe UI,sans-serif;min-height:100vh;background:linear-gradient(135deg,#312e81 0%,#1e1b4b 50%,#0f0a2e 100%);color:#fff;padding:20px;line-height:1.6}
+.top-nav a{color:rgba(255,255,255,.92);text-decoration:none;font-weight:600;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);display:inline-block;margin-bottom:18px}
+.wrap{max-width:900px;margin:0 auto}
+h1{font-size:clamp(1.8rem,4vw,2.6rem);margin-bottom:8px}
+.sub{opacity:.85;margin-bottom:24px}
+.panel{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:24px;backdrop-filter:blur(8px)}
+.btn{display:inline-block;margin-top:16px;padding:12px 22px;border-radius:999px;background:#f5c842;color:#1a1a2e;font-weight:700;border:none;cursor:pointer;font-size:1rem}
+.btn:hover{filter:brightness(1.08)}
+.score{font-size:2rem;font-weight:900;color:#f5c842;margin:12px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:16px}
+.card{background:rgba(0,0,0,.2);border-radius:12px;padding:16px;text-align:center;cursor:pointer;border:2px solid transparent;transition:.2s}
+.card:hover,.card.active{border-color:#f5c842;transform:translateY(-2px)}
+canvas{display:block;margin:16px auto;border-radius:12px;background:#0a0a14;max-width:100%}
+input[type=range]{width:100%;margin:8px 0}
+label{font-size:.9rem;opacity:.9}
+</style>
+</head>
+<body>
+<nav class="top-nav"><a href="https://storied-alfajores-6f10d2.netlify.app/">← תיק עבודות Patlas</a></nav>
+<div class="wrap">
+
+<h1>🎮 פטלס משחקים</h1>
+<p class="sub">אוסף HTML5 — בחרו משחק</p>
+<div class="grid">
+  <a class="card" href="snake.html" style="text-decoration:none;color:inherit"><strong>🐍 סנייק</strong><br><small>חצים לניווט</small></a>
+  <a class="card" href="breakout.html" style="text-decoration:none;color:inherit"><strong>🧱 ברייקאוט</strong><br><small>העכבר / מגע</small></a>
+  <a class="card" href="asteroids.html" style="text-decoration:none;color:inherit"><strong>☄️ אסטרואידים</strong><br><small>חצים + רווח</small></a>
+</div>
+</div></body></html>

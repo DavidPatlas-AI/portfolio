@@ -1,0 +1,21 @@
+<!DOCTYPE html><html lang="he" dir="rtl"><head><meta charset="UTF-8"><title>אסטרואידים</title>
+<style>body{margin:0;background:#0f0a2e;color:#fff;font-family:sans-serif;text-align:center;padding:12px}
+canvas{border-radius:12px;margin-top:8px}a{color:#f5c842}</style></head><body>
+<a href="index.html">← חזרה</a><h2>אסטרואידים</h2><canvas id="c" width="400" height="400"></canvas><script>
+const c=document.getElementById('c'),x=c.getContext('2d');c.width=500;c.height=500;
+let ship={x:250,y:250,a:0,vx:0,vy:0},rocks=[],bullets=[],score=0,keys={};
+for(let i=0;i<6;i++)rocks.push({x:Math.random()*500,y:Math.random()*500,r:20+Math.random()*25,vx:(Math.random()-.5)*2,vy:(Math.random()-.5)*2});
+document.onkeydown=e=>{keys[e.key]=1;if(e.key===' ')bullets.push({x:ship.x,y:ship.y,vx:Math.cos(ship.a)*7,vy:Math.sin(ship.a)*7,life:50})};
+document.onkeyup=e=>keys[e.key]=0;
+function wrap(o){if(o.x<0)o.x=500;if(o.x>500)o.x=0;if(o.y<0)o.y=500;if(o.y>500)o.y=0}
+function loop(){if(keys.ArrowLeft)ship.a-=.08;if(keys.ArrowUp){ship.vx+=Math.cos(ship.a)*.15;ship.vy+=Math.sin(ship.a)*.15}
+ship.vx*=.99;ship.vy*=.99;ship.x+=ship.vx;ship.y+=ship.vy;wrap(ship);
+x.fillStyle='#000';x.fillRect(0,0,500,500);x.strokeStyle='#fff';x.save();x.translate(ship.x,ship.y);x.rotate(ship.a);x.beginPath();x.moveTo(12,0);x.lineTo(-8,-7);x.lineTo(-5,0);x.lineTo(-8,7);x.closePath();x.stroke();x.restore();
+rocks.forEach(r=>{r.x+=r.vx;r.y+=r.vy;wrap(r);x.strokeStyle='#a78bfa';x.beginPath();x.arc(r.x,r.y,r.r,0,7);x.stroke()});
+bullets=bullets.filter(b=>{b.x+=b.vx;b.y+=b.vy;b.life--;wrap(b);x.fillStyle='#fef08a';x.fillRect(b.x-2,b.y-2,4,4);
+rocks.forEach((r,i)=>{if(Math.hypot(b.x-r.x,b.y-r.y)<r.r){rocks.splice(i,1);score+=50;rocks.push({x:Math.random()*500,y:Math.random()*500,r:18+Math.random()*20,vx:(Math.random()-.5)*2.5,vy:(Math.random()-.5)*2.5})}});
+return b.life>0});
+x.fillStyle='#fff';x.fillText('ניקוד: '+score,12,24);
+if(!rocks.length){alert('ניצחון!');location.reload()}
+requestAnimationFrame(loop)}loop();
+</script></body></html>
