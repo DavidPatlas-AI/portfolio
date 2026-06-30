@@ -71,8 +71,8 @@ function tabs(ids) {
   if(ids.length){document.querySelector('.tab').classList.add('on');document.getElementById(ids[0]).classList.add('on');}
 }
 const KITS=[{n:'מנורת LED',p:49,ic:'💡'},{n:'רובוט נייר',p:89,ic:'🤖'},{n:'ערכת לחמה',p:129,ic:'🔧'},{n:'מכונית סולארית',p:79,ic:'🚗'}];
-let cart=[];kits.innerHTML=KITS.map((k,i)=>'<div class="card" style="cursor:pointer" data-i="'+i+'"><span style="font-size:2rem">'+k.ic+'</span><strong>'+k.n+'</strong><p>₪'+k.p+'</p></div>').join('');
-kits.onclick=e=>{const c=e.target.closest('[data-i]');if(!c)return;const k=KITS[+c.dataset.i];cart.push(k);document.getElementById('cart').textContent=cart.length;total.textContent='₪'+cart.reduce((s,x)=>s+x.p,0)};
+let cart=[];const kitsEl=document.getElementById('kits');kitsEl.innerHTML=KITS.map((k,i)=>'<div class="card" style="cursor:pointer" data-i="'+i+'"><span style="font-size:2rem">'+k.ic+'</span><strong>'+k.n+'</strong><p>₪'+k.p+'</p></div>').join('');
+kitsEl.onclick=e=>{const c=e.target.closest('[data-i]');if(!c)return;const k=KITS[+c.dataset.i];cart.push(k);document.getElementById('cart').textContent=cart.length;total.textContent='₪'+cart.reduce((s,x)=>s+x.p,0)};
 checkout.onclick=()=>alert(cart.length?'תודה! '+cart.length+' פריטים בהזמנה':'הוסף ערכות לסל');
 </script>
 </body>
