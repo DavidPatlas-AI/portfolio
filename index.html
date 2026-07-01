@@ -529,7 +529,7 @@ section{padding:5rem 1.5rem;}
     var(--bg2);
 }
 .design-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(300px,.95fr);gap:1.2rem;align-items:stretch;}
-.design-board,.design-flow,.case-card,.service-chip{
+.design-board,.design-flow,.case-deep,.service-chip{
   background:var(--surface);border:1.5px solid var(--border);box-shadow:var(--shadow);
 }
 .design-board{border-radius:18px;padding:1.2rem;display:flex;flex-direction:column;gap:1rem;}
@@ -549,22 +549,38 @@ section{padding:5rem 1.5rem;}
 .flow-step strong{display:block;font-size:.88rem;}
 .flow-step span{display:block;font-size:.76rem;color:var(--muted);line-height:1.4;}
 .flow-tag{font-size:.68rem;font-weight:900;color:var(--gold);border:1px solid rgba(245,200,66,.24);border-radius:99px;padding:.18rem .48rem;white-space:nowrap;}
-.case-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.2rem;}
-.case-card{border-radius:18px;overflow:hidden;text-decoration:none;color:inherit;transition:transform .25s,border-color .25s;}
-.case-card:hover{transform:translateY(-4px);border-color:rgba(245,200,66,.35);}
-.case-shot{aspect-ratio:16/9;background:#090912;position:relative;overflow:hidden;}
-.case-shot.thumb-fallback{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e293b,#5b4fcf);}
-.case-shot.thumb-fallback svg{width:2.35rem;height:2.35rem;color:#fff;opacity:.9;}
-.case-shot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s;}
-.case-card:hover .case-shot img{transform:scale(1.04);}
-.case-shot::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(5,5,8,.88));}
+.case-studies{margin-top:2.5rem;display:flex;flex-direction:column;gap:1.8rem;}
+.case-studies-head{text-align:center;margin-bottom:.25rem;}
+.case-studies-head h3{font-family:var(--display);font-size:clamp(1.15rem,2.2vw,1.4rem);font-weight:800;}
+.case-studies-head p{font-size:.88rem;color:var(--muted);margin-top:.35rem;max-width:36rem;margin-inline:auto;}
+.case-deep{background:var(--surface);border:1.5px solid var(--border);border-radius:20px;overflow:hidden;box-shadow:var(--shadow);transition:border-color .25s;}
+.case-deep:hover{border-color:rgba(245,200,66,.28);}
+.case-deep-hero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);min-height:210px;}
+.case-deep-shot{position:relative;min-height:200px;overflow:hidden;background:#090912;}
+.case-deep-shot img{width:100%;height:100%;object-fit:cover;display:block;}
+.case-deep-shot::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,5,8,.15),rgba(5,5,8,.55));}
+html[dir="ltr"] .case-deep-shot::after{background:linear-gradient(270deg,rgba(5,5,8,.15),rgba(5,5,8,.55));}
 .case-badge{position:absolute;bottom:.65rem;inset-inline-start:.65rem;z-index:2;font-size:.7rem;font-weight:900;color:#fff;background:rgba(0,0,0,.58);border:1px solid rgba(255,255,255,.16);border-radius:99px;padding:.25rem .58rem;backdrop-filter:blur(8px);}
-.case-body{padding:1rem;}
-.case-body h4{font-size:1rem;font-weight:900;margin-bottom:.35rem;}
-.case-body p{font-size:.8rem;color:var(--muted);line-height:1.5;margin-bottom:.8rem;}
-.case-metrics{display:flex;gap:.45rem;flex-wrap:wrap;}
-.case-metrics span{font-size:.68rem;font-weight:900;color:var(--accent);background:rgba(124,106,245,.1);border:1px solid rgba(124,106,245,.18);border-radius:8px;padding:.22rem .5rem;}
-@media(max-width:900px){.design-grid,.case-grid{grid-template-columns:1fr}.service-grid{grid-template-columns:1fr;}}
+.case-deep-intro{padding:1.25rem 1.4rem;display:flex;flex-direction:column;justify-content:center;gap:.4rem;}
+.case-deep-intro h4{font-size:1.15rem;font-weight:900;line-height:1.25;}
+.case-deep-intro .case-tagline{font-size:.82rem;color:var(--muted);line-height:1.55;}
+.case-stat-row{display:flex;gap:.85rem;flex-wrap:wrap;margin-top:.55rem;}
+.case-stat-row div{min-width:4rem;}
+.case-stat-row strong{display:block;font-family:var(--display);font-size:1.15rem;color:var(--gold);line-height:1.1;}
+.case-stat-row span{font-size:.64rem;color:var(--muted);font-weight:700;}
+.case-deep-body{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.85rem;padding:1.1rem 1.4rem;border-top:1px solid var(--border);}
+.case-pillar{padding:.8rem .95rem;border-radius:12px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);}
+[data-theme="light"] .case-pillar{background:rgba(91,79,207,.04);border-color:rgba(91,79,207,.1);}
+.case-pillar-label{display:block;font-size:.66rem;font-weight:900;text-transform:uppercase;letter-spacing:.07em;color:var(--gold);margin-bottom:.35rem;font-family:var(--mono);}
+.case-pillar p{font-size:.8rem;color:var(--muted);line-height:1.62;}
+.case-deep-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;padding:.95rem 1.4rem 1.15rem;border-top:1px solid var(--border);}
+.case-tech-wrap{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;}
+.case-tech-lbl{font-size:.68rem;font-weight:900;color:var(--muted);font-family:var(--mono);}
+.case-tech-tags{display:flex;gap:.35rem;flex-wrap:wrap;}
+.case-tech-tags span{font-size:.7rem;font-weight:800;padding:.22rem .52rem;border-radius:8px;background:rgba(124,106,245,.1);border:1px solid rgba(124,106,245,.18);color:var(--accent2);}
+.case-deep-actions{display:flex;gap:.55rem;flex-wrap:wrap;}
+.case-deep-actions .btn{font-size:.82rem;padding:.55rem 1.1rem;}
+@media(max-width:900px){.design-grid{grid-template-columns:1fr}.service-grid{grid-template-columns:1fr}.case-deep-hero{grid-template-columns:1fr}.case-deep-shot{aspect-ratio:16/9;min-height:auto}.case-deep-body{grid-template-columns:1fr}}
 
 .projects-section{background:var(--bg2);}
 .filter-row{
@@ -1394,19 +1410,107 @@ html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
       </div>
     </div>
 
-    <div class="case-grid" aria-label="Case studies">
-      <a class="case-card" href="#" data-open-preview="https://math-haredim.netlify.app" data-preview-title="מתמטיקה לחרדים">
-        <div class="case-shot"><img src="https://math-haredim.netlify.app/banners/banner-2.png" alt="מתמטיקה לחרדים" loading="lazy" onerror="thumbFallback(this,'graduation-cap')"><span class="case-badge" data-i18n="case_badge1">חינוך</span></div>
-        <div class="case-body"><h4 data-i18n="case1_t">מתמטיקה לחרדים</h4><p data-i18n="case1_d">פלטפורמת לימוד מלאה עם שיעורים, מבחנים, GeoGebra וחוויית PWA.</p><div class="case-metrics"><span>90+ lessons</span><span>PWA</span><span>Live</span></div></div>
-      </a>
-      <a class="case-card" href="#" data-open-preview="https://maslul-rechev-2026.netlify.app" data-preview-title="מסלול רכב">
-        <div class="case-shot"><img src="https://maslul-rechev-2026.netlify.app/assets/hero-command-center-2026.png" alt="מסלול רכב" loading="lazy" onerror="thumbFallback(this,'wrench')"><span class="case-badge" data-i18n="case_badge2">קורס</span></div>
-        <div class="case-body"><h4 data-i18n="case2_t">מסלול רכב</h4><p data-i18n="case2_d">קורס מכונאות עם מאגר רכבים, מוסך חי, חוויית למידה ובוט תומך.</p><div class="case-metrics"><span>19K cars</span><span>Bot</span><span>Netlify</span></div></div>
-      </a>
-      <a class="case-card" href="#" data-open-preview="https://teshuva-algorithm.netlify.app" data-preview-title="האלגוריתם שחזר בתשובה">
-        <div class="case-shot"><img src="https://teshuva-algorithm.netlify.app/og-image.png" alt="האלגוריתם שחזר בתשובה" loading="lazy" onerror="thumbFallback(this,'brain')"><span class="case-badge" data-i18n="case_badge3">AI</span></div>
-        <div class="case-body"><h4 data-i18n="case3_t">האלגוריתם שחזר בתשובה</h4><p data-i18n="case3_d">שקיפות אלגוריתמית בעברית: למה ראית כל פוסט, ואיך מסבירים את זה למשתמש.</p><div class="case-metrics"><span>AI agent</span><span>Privacy</span><span>Demo</span></div></div>
-      </a>
+    <div class="case-studies" id="case-studies" aria-label="Case studies">
+      <div class="case-studies-head">
+        <h3 data-i18n="cases_title">פרויקטי דגל — לעומק</h3>
+        <p data-i18n="cases_sub">בעיה, פתרון, תהליך ותוצאה — לא רעיון בסוף שבוע, מוצר חי עם גרסאות ונתונים.</p>
+      </div>
+
+      <article class="case-deep">
+        <div class="case-deep-hero">
+          <div class="case-deep-shot">
+            <img src="https://math-haredim.netlify.app/banners/banner-2.png" alt="מתמטיקה לחרדים" loading="lazy" onerror="thumbFallback(this,'graduation-cap')">
+            <span class="case-badge" data-i18n="case_badge1">חינוך</span>
+          </div>
+          <div class="case-deep-intro">
+            <h4 data-i18n="case1_t">מתמטיקה לחרדים</h4>
+            <p class="case-tagline" data-i18n="case1_d">פלטפורמת לימוד מלאה עם שיעורים, מבחנים, GeoGebra וחוויית PWA.</p>
+            <div class="case-stat-row">
+              <div><strong>90+</strong><span data-i18n="case1_s1">שיעורים</span></div>
+              <div><strong>PWA</strong><span data-i18n="case1_s2">אופליין</span></div>
+              <div><strong>v3</strong><span data-i18n="case1_s3">גרסאות</span></div>
+              <div><strong>Live</strong><span data-i18n="case1_s4">Netlify</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="case-deep-body">
+          <div class="case-pillar"><span class="case-pillar-label" data-i18n="case_lbl_problem">הבעיה</span><p data-i18n="case1_problem">לקהילה החרדית לא הייתה פלטפורמת מתמטיקה דיגיטלית אחת — שיעורים מפוזרים, בלי מבחנים מסודרים, בלי תמיכה מלאה בעברית וללא אפשרות ללמוד בלי אינטרנט.</p></div>
+          <div class="case-pillar"><span class="case-pillar-label" data-i18n="case_lbl_solution">הפתרון</span><p data-i18n="case1_solution">בניתי פלטפורמה אחת: 90+ שיעורים מובנים, GeoGebra אינטראקטיבי, מבחנים עם ציונים, ו-PWA שעובד גם אופליין — מותאם לכיתה ולבית.</p></div>
+          <div class="case-pillar"><span class="case-pillar-label" data-i18n="case_lbl_process">התהליך</span><p data-i18n="case1_process">אפיון עם מורים → מבנה שיעורים ונושאים → שילוב GeoGebra → מערכת מבחנים → PWA ואופליין → פרסום ל-Netlify וגרסאות ב-GitHub.</p></div>
+          <div class="case-pillar"><span class="case-pillar-label" data-i18n="case_lbl_result">התוצאה</span><p data-i18n="case1_result">אתר חי ב-math-haredim.netlify.app, 3 גרסאות מתועדות, קוד פתוח — מוצר שלם שמשרת תלמידים, מורים ולמידה עצמאית.</p></div>
+        </div>
+        <div class="case-deep-foot">
+          <div class="case-tech-wrap"><span class="case-tech-lbl" data-i18n="case_lbl_tech">טכנולוגיה</span><div class="case-tech-tags"><span>HTML5</span><span>GeoGebra</span><span>PWA</span><span>Netlify</span></div></div>
+          <div class="case-deep-actions">
+            <a href="#" class="btn btn-main" data-open-preview="https://math-haredim.netlify.app" data-preview-title="מתמטיקה לחרדים"><i data-lucide="external-link"></i><span data-i18n="case_btn_open">פתח אתר</span></a>
+            <button type="button" class="btn btn-outline" onclick="openVersions('math')"><i data-lucide="clock-3"></i><span data-i18n="case_btn_versions">גירסאות</span></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="case-deep">
+        <div class="case-deep-hero">
+          <div class="case-deep-shot">
+            <img src="https://maslul-rechev-2026.netlify.app/assets/hero-command-center-2026.png" alt="מסלול רכב" loading="lazy" onerror="thumbFallback(this,'wrench')">
+            <span class="case-badge" data-i18n="case_badge2">קורס</span>
+          </div>
+          <div class="case-deep-intro">
+            <h4 data-i18n="case2_t">מסלול רכב</h4>
+            <p class="case-tagline" data-i18n="case2_d">קורס מכונאות עם מאגר רכבים, מוסך חי, חוויית למידה ובוט תומך.</p>
+            <div class="case-stat-row">
+              <div><strong>19K</strong><span data-i18n="case2_s1">רכבים</span></div>
+              <div><strong>95</strong><span data-i18n="case2_s2">פרקים</span></div>
+              <div><strong>Bot</strong><span data-i18n="case2_s3">וואטסאפ</span></div>
+              <div><strong>Live</strong><span data-i18n="case2_s4">Netlify</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="case-deep-body">
+          <div class="case-pillar"><span class="case-pillar-label" data-i18n="case_lbl_problem">הבעיה</span><p data-i18n="case2_problem">תלמידי מכונאות צריכים קורס אינטראקטיבי עם מאגר רכבים אמיתי, מוסך חי ותמיכה — לא חומר סטטי ב-PDF או מצגות מפוזרות.</p></div>
+          <div class="case-pillar"><span class="case-pillar-label" data-i18n="case_lbl_solution">הפתרון</span><p data-i18n="case2_solution">קורס 95 פרקים אינטראקטיבי, מאגר 19,000+ רכבים, Command Center למוסך חי עם תזמון תורים, ובוט WhatsApp שעונה על שאלות נפוצות.</p></div>
+          <div class="case-pillar"><span class="case-pillar-label" data-i18n="case_lbl_process">התהליך</span><p data-i18n="case2_process">מיפוי תוכן הקורס → עיצוב Command Center → חיבור מאגר רכבים → חוויית למידה ומבחנים → בוט ווצאפ → פרסום ותחזוקה ב-Netlify.</p></div>
+          <div class="case-pillar"><span class="case-pillar-label" data-i18n="case_lbl_result">התוצאה</span><p data-i18n="case2_result">אתר חי ב-maslul-rechev-2026.netlify.app — מערכת שלמה ללמידה, ניהול מוסך ותמיכה. 3 גרסאות מאז 2025, כולל הרחבה ל-19,000 רכבים.</p></div>
+        </div>
+        <div class="case-deep-foot">
+          <div class="case-tech-wrap"><span class="case-tech-lbl" data-i18n="case_lbl_tech">טכנולוגיה</span><div class="case-tech-tags"><span>HTML5</span><span>Node.js</span><span>WhatsApp</span><span>Netlify</span></div></div>
+          <div class="case-deep-actions">
+            <a href="#" class="btn btn-main" data-open-preview="https://maslul-rechev-2026.netlify.app" data-preview-title="מסלול רכב"><i data-lucide="external-link"></i><span data-i18n="case_btn_open">פתח אתר</span></a>
+            <button type="button" class="btn btn-outline" onclick="openVersions('maslul')"><i data-lucide="clock-3"></i><span data-i18n="case_btn_versions">גירסאות</span></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="case-deep">
+        <div class="case-deep-hero">
+          <div class="case-deep-shot">
+            <img src="https://teshuva-algorithm.netlify.app/og-image.png" alt="האלגוריתם שחזר בתשובה" loading="lazy" onerror="thumbFallback(this,'brain')">
+            <span class="case-badge" data-i18n="case_badge3">AI</span>
+          </div>
+          <div class="case-deep-intro">
+            <h4 data-i18n="case3_t">האלגוריתם שחזר בתשובה</h4>
+            <p class="case-tagline" data-i18n="case3_d">שקיפות אלגוריתמית בעברית: למה ראית כל פוסט, ואיך מסבירים את זה למשתמש.</p>
+            <div class="case-stat-row">
+              <div><strong>AI</strong><span data-i18n="case3_s1">סוכן</span></div>
+              <div><strong>Ext</strong><span data-i18n="case3_s2">Chrome</span></div>
+              <div><strong>v2.1</strong><span data-i18n="case3_s3">גרסה</span></div>
+              <div><strong>Live</strong><span data-i18n="case3_s4">דמו</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="case-deep-body">
+          <div class="case-pillar"><span class="case-pillar-label" data-i18n="case_lbl_problem">הבעיה</span><p data-i18n="case3_problem">משתמשים לא מבינים למה האלגוריתם מציג להם תוכן מסוים — אין שקיפות, אין הסבר בעברית, ואין כלי שמחבר בין הפיד לבין ההבנה.</p></div>
+          <div class="case-pillar"><span class="case-pillar-label" data-i18n="case_lbl_solution">הפתרון</span><p data-i18n="case3_solution">תוסף Chrome שמנתח את הפיד בזמן אמת, סוכן AI שמסביר בעברית למה כל פוסט הופיע, ודמו אינטראקטיבי שמדגים שקיפות אלגוריתמית.</p></div>
+          <div class="case-pillar"><span class="case-pillar-label" data-i18n="case_lbl_process">התהליך</span><p data-i18n="case3_process">מחקר אלגוריתמים → אפליקציית Electron → תוסף Chrome → דמו ויזואלי ואנימציה → בדיקות Playwright ל-YouTube, X ו-Threads.</p></div>
+          <div class="case-pillar"><span class="case-pillar-label" data-i18n="case_lbl_result">התוצאה</span><p data-i18n="case3_result">דמו חי ב-teshuva-algorithm.netlify.app, 4 גרסאות מתועדות, קוד פתוח — מוצר שמדגים מומחיות ב-AI, פרטיות ותקשורת מורכבת בעברית.</p></div>
+        </div>
+        <div class="case-deep-foot">
+          <div class="case-tech-wrap"><span class="case-tech-lbl" data-i18n="case_lbl_tech">טכנולוגיה</span><div class="case-tech-tags"><span>Electron</span><span>Chrome Ext</span><span>AI Agent</span><span>Playwright</span></div></div>
+          <div class="case-deep-actions">
+            <a href="#" class="btn btn-main" data-open-preview="https://teshuva-algorithm.netlify.app" data-preview-title="האלגוריתם שחזר בתשובה"><i data-lucide="external-link"></i><span data-i18n="case_btn_open">פתח אתר</span></a>
+            <button type="button" class="btn btn-outline" onclick="openVersions('teshuva')"><i data-lucide="clock-3"></i><span data-i18n="case_btn_versions">גירסאות</span></button>
+          </div>
+        </div>
+      </article>
     </div>
   </div>
 </section>
@@ -1555,9 +1659,27 @@ Object.assign(T.he,{
   flow3_t:'ממירים לקוד עובד',flow3_d:'HTML, React, Python או Node לפי הצורך.',
   flow4_t:'בודקים ומפרסמים',flow4_d:'QA, תיקוני באגים, גרסאות וקישור חי.',
   case_badge1:'חינוך',case_badge2:'קורס',case_badge3:'AI',
+  cases_title:'פרויקטי דגל — לעומק',cases_sub:'בעיה, פתרון, תהליך ותוצאה — לא רעיון בסוף שבוע, מוצר חי עם גרסאות ונתונים.',
+  case_lbl_problem:'הבעיה',case_lbl_solution:'הפתרון',case_lbl_process:'התהליך',case_lbl_result:'התוצאה',case_lbl_tech:'טכנולוגיה',
+  case_btn_open:'פתח אתר',case_btn_versions:'גירסאות',
   case1_t:'מתמטיקה לחרדים',case1_d:'פלטפורמת לימוד מלאה עם שיעורים, מבחנים, GeoGebra וחוויית PWA.',
+  case1_s1:'שיעורים',case1_s2:'אופליין',case1_s3:'גרסאות',case1_s4:'Netlify',
+  case1_problem:'לקהילה החרדית לא הייתה פלטפורמת מתמטיקה דיגיטלית אחת — שיעורים מפוזרים, בלי מבחנים מסודרים, בלי תמיכה מלאה בעברית וללא אפשרות ללמוד בלי אינטרנט.',
+  case1_solution:'בניתי פלטפורמה אחת: 90+ שיעורים מובנים, GeoGebra אינטראקטיבי, מבחנים עם ציונים, ו-PWA שעובד גם אופליין — מותאם לכיתה ולבית.',
+  case1_process:'אפיון עם מורים → מבנה שיעורים ונושאים → שילוב GeoGebra → מערכת מבחנים → PWA ואופליין → פרסום ל-Netlify וגרסאות ב-GitHub.',
+  case1_result:'אתר חי ב-math-haredim.netlify.app, 3 גרסאות מתועדות, קוד פתוח — מוצר שלם שמשרת תלמידים, מורים ולמידה עצמאית.',
   case2_t:'מסלול רכב',case2_d:'קורס מכונאות עם מאגר רכבים, מוסך חי, חוויית למידה ובוט תומך.',
+  case2_s1:'רכבים',case2_s2:'פרקים',case2_s3:'וואטסאפ',case2_s4:'Netlify',
+  case2_problem:'תלמידי מכונאות צריכים קורס אינטראקטיבי עם מאגר רכבים אמיתי, מוסך חי ותמיכה — לא חומר סטטי ב-PDF או מצגות מפוזרות.',
+  case2_solution:'קורס 95 פרקים אינטראקטיבי, מאגר 19,000+ רכבים, Command Center למוסך חי עם תזמון תורים, ובוט WhatsApp שעונה על שאלות נפוצות.',
+  case2_process:'מיפוי תוכן הקורס → עיצוב Command Center → חיבור מאגר רכבים → חוויית למידה ומבחנים → בוט ווצאפ → פרסום ותחזוקה ב-Netlify.',
+  case2_result:'אתר חי ב-maslul-rechev-2026.netlify.app — מערכת שלמה ללמידה, ניהול מוסך ותמיכה. 3 גרסאות מאז 2025, כולל הרחבה ל-19,000 רכבים.',
   case3_t:'האלגוריתם שחזר בתשובה',case3_d:'שקיפות אלגוריתמית בעברית: למה ראית כל פוסט, ואיך מסבירים את זה למשתמש.',
+  case3_s1:'סוכן',case3_s2:'Chrome',case3_s3:'גרסה',case3_s4:'דמו',
+  case3_problem:'משתמשים לא מבינים למה האלגוריתם מציג להם תוכן מסוים — אין שקיפות, אין הסבר בעברית, ואין כלי שמחבר בין הפיד לבין ההבנה.',
+  case3_solution:'תוסף Chrome שמנתח את הפיד בזמן אמת, סוכן AI שמסביר בעברית למה כל פוסט הופיע, ודמו אינטראקטיבי שמדגים שקיפות אלגוריתמית.',
+  case3_process:'מחקר אלגוריתמים → אפליקציית Electron → תוסף Chrome → דמו ויזואלי ואנימציה → בדיקות Playwright ל-YouTube, X ו-Threads.',
+  case3_result:'דמו חי ב-teshuva-algorithm.netlify.app, 4 גרסאות מתועדות, קוד פתוח — מוצר שמדגים מומחיות ב-AI, פרטיות ותקשורת מורכבת בעברית.',
   hero_position:'אני בונה מערכות דיגיטליות חכמות לקהילות, חינוך, תוכן ועסקים — משלב הרעיון ועד אתר עובד.',
   co_cta_main:'רוצה שאבנה לך מערכת?',co_wa:'דבר איתי בוואטסאפ',
   faitools:'AI וכלים',flab:'מעבדה',clab:'מעבדת ניסויים',
@@ -1585,9 +1707,27 @@ Object.assign(T.en,{
   flow3_t:'Build working code',flow3_d:'HTML, React, Python or Node as needed.',
   flow4_t:'QA and publish',flow4_d:'Bug fixes, versions and a live link.',
   case_badge1:'Education',case_badge2:'Course',case_badge3:'AI',
+  cases_title:'Flagship projects — in depth',cases_sub:'Problem, solution, process and outcome — live products with versions and real data, not weekend demos.',
+  case_lbl_problem:'Problem',case_lbl_solution:'Solution',case_lbl_process:'Process',case_lbl_result:'Outcome',case_lbl_tech:'Tech stack',
+  case_btn_open:'Open site',case_btn_versions:'Versions',
   case1_t:'Math for Haredim',case1_d:'A full learning platform with lessons, quizzes, GeoGebra and PWA experience.',
+  case1_s1:'lessons',case1_s2:'offline',case1_s3:'versions',case1_s4:'Netlify',
+  case1_problem:'The Haredi community lacked one digital math platform — scattered lessons, no structured quizzes, incomplete Hebrew support and no offline learning.',
+  case1_solution:'One platform: 90+ structured lessons, interactive GeoGebra, scored quizzes and a PWA that works offline — built for classroom and home.',
+  case1_process:'Teacher brief → lesson structure → GeoGebra integration → quiz system → PWA & offline → Netlify launch and versioned GitHub releases.',
+  case1_result:'Live at math-haredim.netlify.app, 3 documented versions, open source — a complete product serving students, teachers and self-study.',
   case2_t:'Car Mechanics Course',case2_d:'A mechanics course with a car database, live garage, learning flow and bot support.',
+  case2_s1:'cars',case2_s2:'chapters',case2_s3:'WhatsApp',case2_s4:'Netlify',
+  case2_problem:'Mechanics students need an interactive course with a real car database, live garage workflow and support — not static PDFs or scattered slides.',
+  case2_solution:'95 interactive chapters, 19,000+ car database, live garage Command Center with scheduling, and a WhatsApp bot for common questions.',
+  case2_process:'Course mapping → Command Center design → car database → learning flow & quizzes → WhatsApp bot → Netlify launch and maintenance.',
+  case2_result:'Live at maslul-rechev-2026.netlify.app — full system for learning, garage management and support. 3 versions since 2025, scaled to 19,000 cars.',
   case3_t:'The Algorithm That Repented',case3_d:'Algorithmic transparency in Hebrew: why each post appeared and how to explain it.',
+  case3_s1:'agent',case3_s2:'Chrome',case3_s3:'version',case3_s4:'demo',
+  case3_problem:'Users don\'t understand why the algorithm shows specific content — no transparency, no Hebrew explanation, no tool connecting the feed to understanding.',
+  case3_solution:'Chrome extension analyzing the feed in real time, AI agent explaining in Hebrew why each post appeared, and an interactive demo of algorithmic transparency.',
+  case3_process:'Algorithm research → Electron app → Chrome extension → visual demo & animation → Playwright tests for YouTube, X and Threads.',
+  case3_result:'Live demo at teshuva-algorithm.netlify.app, 4 documented versions, open source — showcasing AI, privacy and complex Hebrew communication.',
   hero_position:'I build smart digital systems for communities, education, content and business — from idea to live product.',
   co_cta_main:'Want me to build your system?',co_wa:'Chat on WhatsApp',
   faitools:'AI & Tools',flab:'Lab',clab:'Research Lab',
@@ -1615,9 +1755,27 @@ Object.assign(T.ru,{
   flow3_t:'Пишем рабочий код',flow3_d:'HTML, React, Python или Node по задаче.',
   flow4_t:'Проверяем и публикуем',flow4_d:'QA, исправления, версии и живая ссылка.',
   case_badge1:'Образование',case_badge2:'Курс',case_badge3:'AI',
+  cases_title:'Флагманские проекты — подробно',cases_sub:'Проблема, решение, процесс и результат — живые продукты с версиями и данными, а не демо за выходные.',
+  case_lbl_problem:'Проблема',case_lbl_solution:'Решение',case_lbl_process:'Процесс',case_lbl_result:'Результат',case_lbl_tech:'Технологии',
+  case_btn_open:'Открыть сайт',case_btn_versions:'Версии',
   case1_t:'Математика для харедим',case1_d:'Полная учебная платформа с уроками, тестами, GeoGebra и PWA.',
+  case1_s1:'уроков',case1_s2:'офлайн',case1_s3:'версий',case1_s4:'Netlify',
+  case1_problem:'У сообщества харедим не было единой цифровой платформы математики — разрозненные уроки, без тестов, без полной поддержки иврита и офлайн-режима.',
+  case1_solution:'Одна платформа: 90+ уроков, интерактивный GeoGebra, тесты с оценками и PWA с офлайн-режимом — для класса и дома.',
+  case1_process:'Бриф с учителями → структура уроков → GeoGebra → система тестов → PWA и офлайн → публикация на Netlify и версии на GitHub.',
+  case1_result:'Живой сайт math-haredim.netlify.app, 3 версии, открытый код — полноценный продукт для учеников, учителей и самообучения.',
   case2_t:'Курс автомеханики',case2_d:'Курс с базой автомобилей, живой мастерской, учебным потоком и ботом.',
+  case2_s1:'авто',case2_s2:'глав',case2_s3:'WhatsApp',case2_s4:'Netlify',
+  case2_problem:'Студентам-механикам нужен интерактивный курс с реальной базой авто, живой мастерской и поддержкой — не статичные PDF.',
+  case2_solution:'95 интерактивных глав, база 19 000+ авто, Command Center для мастерской с записью, и WhatsApp-бот для частых вопросов.',
+  case2_process:'Карта курса → Command Center → база авто → учебный поток и тесты → WhatsApp-бот → публикация и поддержка на Netlify.',
+  case2_result:'Живой сайт maslul-rechev-2026.netlify.app — полная система обучения, мастерской и поддержки. 3 версии с 2025, масштаб до 19 000 авто.',
   case3_t:'Алгоритм раскаяния',case3_d:'Прозрачность алгоритмов на иврите: почему появился каждый пост и как это объяснить.',
+  case3_s1:'агент',case3_s2:'Chrome',case3_s3:'версия',case3_s4:'демо',
+  case3_problem:'Пользователи не понимают, почему алгоритм показывает определённый контент — нет прозрачности, нет объяснения на иврите.',
+  case3_solution:'Расширение Chrome анализирует ленту в реальном времени, AI-агент объясняет на иврите каждый пост, и интерактивное демо прозрачности алгоритмов.',
+  case3_process:'Исследование алгоритмов → Electron → расширение Chrome → визуальное демо → тесты Playwright для YouTube, X и Threads.',
+  case3_result:'Живое демо teshuva-algorithm.netlify.app, 4 версии, открытый код — демонстрация AI, приватности и сложной коммуникации на иврите.',
   hero_position:'Создаю умные цифровые системы для сообществ, образования, контента и бизнеса — от идеи до рабочего сайта.',
   co_cta_main:'Хотите, чтобы я построил систему?',co_wa:'Написать в WhatsApp',
   faitools:'AI и инструменты',flab:'Лаборатория',clab:'Исслед. лаборатория',
