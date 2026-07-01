@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodePlayer • משמיע שורות קוד</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap');
+        
+        body { font-family: 'Inter', system_ui, sans-serif; }
+        .font-display { font-family: 'Space Grotesk', 'Inter', sans-serif; font-weight: 600; letter-spacing: -0.025em; }
+        .font-mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+
+        .premium-bg { background: #0c0c0f; }
+        .section-card { background: #18181b; border: 1px solid #27251f; }
+
+        .code-line {
+            font-family: 'IBM Plex Mono', ui-monospace, monospace;
+            transition: all 0.2s ease;
+            padding: 6px 12px;
+            border-radius: 6px;
+            margin: 2px 0;
+        }
+        
+        .code-line.active {
+            background: #1e40af;
+            color: white;
+            box-shadow: 0 0 0 2px #3b82f6;
+            transform: scale(1.01);
+        }
+
+        .code-line.keyword { color: #c084fc; }
+        .code-line.string { color: #4ade80; }
+        .code-line.number { color: #fbbf24; }
+        .code-line.comment { color: #64748b; font-style: italic; }
+        .code-line.function { color: #60a5fa; }
+
+        .status-pill {
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body class="premium-bg text-zinc-200">
+    <!-- Top Bar -->
+    <div class="border-b border-zinc-800 bg-black/70 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-screen-2xl mx-auto px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-x-3.5">
+                <div class="w-9 h-9 bg-emerald-600 rounded-2xl flex items-center justify-center ring-1 ring-emerald-500/30">
+                    <i class="fa-solid fa-play text-white text-[21px]"></i>
+                </div>
+                <div>
+                    <div class="font-display text-[26px] tracking-[-1.5px] font-semibold leading-none">CodePlayer</div>
+                    <div class="text-[9px] text-zinc-500 -mt-0.5 tracking-[1px]">משמיע שורות קוד עם צליל</div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-x-2">
+                <button onclick="showHelp()" class="flex items-center gap-x-2 px-4 h-9 text-xs font-medium hover:bg-zinc-900 border border-zinc-700 rounded-2xl transition-colors">
+                    <i class="fa-solid fa-info-circle"></i>
+                    <span>עזרה</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-screen-2xl mx-auto px-8 pt-8 pb-10">
+        
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-y-5 mb-8">
+            <div>
+                <div class="inline-flex items-center gap-x-2 px-4 h-8 rounded-3xl bg-zinc-900 border border-zinc-800 text-xs tracking-[1px] font-medium mb-3">
+                    <i class="fa-solid fa-magic text-emerald-400"></i>
+                    <span>כמו MorseViz — אבל לקוד</span>
+                </div>
+                <h1 class="font-display text-6xl lg:text-7xl tracking-[-3.2px] font-semibold leading-none">משמיעים<br>שורות קוד</h1>
+                <p class="mt-3 text-lg text-zinc-400 max-w-md">הדבק קוד → לחץ Play → שמיע שורה אחר שורה עם צלילים שונים.</p>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+                <button onclick="loadDemoCode()" class="group flex items-center justify-center gap-x-3 px-7 h-14 bg-white hover:bg-emerald-50 active:bg-emerald-100 transition-all text-zinc-950 font-semibold rounded-3xl text-sm shadow-inner">
+                    <i class="fa-solid fa-magic group-active:rotate-12 transition-transform"></i>
+                    <span>טען דמו</span>
+                </button>
+                <button onclick="clearAll()" class="flex items-center justify-center gap-x-3 px-7 h-14 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 active:bg-zinc-950 transition-all font-semibold rounded-3xl text-sm">
+                    <i class="fa-solid fa-trash"></i>
+                    <span>נקה</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            
+            <!-- Input -->
+            <div class="xl:col-span-5 section-card rounded-3xl p-7 border border-zinc-800">
+                <div class="mb-4">
+                    <div class="font-semibold text-xl flex items-center gap-x-3">
+                        <i class="fa-solid fa-keyboard text-emerald-400"></i>
+                        <span>הדבק קוד כאן</span>
+                    </div>
+                    <p class="text-xs text-zinc-500 mt-1">Python / JavaScript / כל שפה</p>
+                </div>
+
+                <textarea id="code-input" rows="12" 
+                          class="w-full bg-zinc-950 border border-zinc-700 focus:border-emerald-600 transition-colors rounded-2xl p-5 font-mono text-sm placeholder:text-zinc-600 resize-y"
+                          placeholder="הדבק כאן קוד..."></textarea>
+
+                <div class="grid grid-cols-2 gap-3 mt-5">
+                    <button onclick="playCode()" 
+                            class="col-span-2 flex items-center justify-center gap-x-3 h-14 bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 transition-all text-white font-semibold rounded-2xl text-base">
+                        <i class="fa-solid fa-play mr-1"></i>
+                        <span>הפעל + השמע קוד</span>
+                    </button>
+                    
+                    <button onclick="stopPlayback()" class="flex items-center justify-center gap-x-2 h-11 bg-zinc-900 hover:bg-red-950/60 border border-zinc-700 rounded-2xl text-sm font-medium">
+                        <i class="fa-solid fa-stop"></i>
+                        <span>עצור</span>
+                    </button>
+                    <button onclick="pausePlayback()" class="flex items-center justify-center gap-x-2 h-11 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 rounded-2xl text-sm font-medium">
+                        <i class="fa-solid fa-pause"></i>
+                        <span>השהה</span>
+                    </button>
+                </div>
+
+                <!-- Speed -->
+                <div class="mt-6 pt-5 border-t border-zinc-800">
+                    <div class="flex items-center justify-between text-xs mb-1.5 px-1">
+                        <span class="font-medium text-zinc-400">מהירות ניגון</span>
+                        <span id="speed-value" class="font-mono text-emerald-400">1.0×</span>
+                    </div>
+                    <input type="range" id="speed-slider" min="0.4" max="3" step="0.1" value="1.0" class="w-full accent-emerald-600">
+                </div>
+            </div>
+
+            <!-- Player -->
+            <div class="xl:col-span-7 section-card rounded-3xl p-6 border border-zinc-800">
+                <div class="flex items-center justify-between mb-3 px-2">
+                    <div class="flex items-center gap-x-3">
+                        <div class="font-semibold">ניגון קוד</div>
+                        <div id="status-text" class="status-pill px-3 py-px rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-400 text-xs font-medium">מוכן</div>
+                    </div>
+                    <div id="progress-info" class="font-mono text-xs text-zinc-500"></div>
+                </div>
+
+                <div class="bg-zinc-950 border border-zinc-700 rounded-2xl p-4 min-h-[380px] max-h-[420px] overflow-auto" id="code-display">
+                    <div class="text-zinc-500 text-sm px-3 py-8 text-center">
+                        הדבק קוד ולחץ "הפעל + השמע קוד"<br>
+                        השורות יודגשו אחת אחרי השנייה עם צליל
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between text-xs mt-3 px-2">
+                    <div id="current-line-info" class="text-zinc-400">—</div>
+                    <div class="flex items-center gap-x-2">
+                        <button onclick="prevLine()" class="px-3 py-1 text-xs bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 rounded-lg">הקודם</button>
+                        <button onclick="nextLine()" class="px-3 py-1 text-xs bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 rounded-lg">הבא</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="text-center text-xs text-zinc-500 pb-7">
+        בהשראת MorseViz • כלי להשמעת קוד עם צליל
+    </footer>
+
+    <script>
+        let audioContext;
+        let isPlaying = false;
+        let isPaused = false;
+        let currentLineIndex = 0;
+        let lines = [];
+        let speedFactor = 1.0;
+        let playbackInterval = null;
+
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playTone(frequency, duration, type = 'sine', volume = 0.6) {
+            if (!audioContext) initAudio();
+            
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+
+            osc.type = type;
+            osc.frequency.value = frequency;
+            
+            filter.type = 'lowpass';
+            filter.frequency.value = 1800;
+
+            const now = audioContext.currentTime;
+            gain.gain.value = 0.001;
+            gain.gain.linearRampToValueAtTime(volume, now + 0.01);
+            gain.gain.linearRampToValueAtTime(0.001, now + duration / 1000 + 0.05);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(audioContext.destination);
+
+            osc.start(now);
+            osc.stop(now + duration / 1000 + 0.08);
+        }
+
+        function playSoundForLine(line) {
+            const trimmed = line.trim().toLowerCase();
+            
+            // Different sounds based on content
+            if (trimmed.startsWith('#') || trimmed.startsWith('//')) {
+                // Comment
+                playTone(420, 180, 'sawtooth', 0.3);
+            } 
+            else if (trimmed.includes('def ') || trimmed.includes('function ')) {
+                // Function definition
+                playTone(680, 220, 'sine', 0.7);
+                setTimeout(() => playTone(820, 160, 'sine', 0.5), 180);
+            }
+            else if (trimmed.includes('if ') || trimmed.includes('else') || trimmed.includes('for ') || trimmed.includes('while ')) {
+                // Control flow
+                playTone(750, 140, 'square', 0.6);
+            }
+            else if (trimmed.includes('"') || trimmed.includes("'")) {
+                // String
+                playTone(920, 200, 'sine', 0.5);
+            }
+            else if (/\d/.test(trimmed)) {
+                // Contains number
+                playTone(580, 160, 'sawtooth', 0.55);
+            }
+            else if (trimmed.includes('return') || trimmed.includes('print') || trimmed.includes('console.log')) {
+                // Output
+                playTone(1050, 180, 'sine', 0.65);
+            }
+            else {
+                // Default line sound
+                playTone(620, 150, 'sine', 0.5);
+            }
+        }
+
+        function updateSpeedLabel() {
+            const slider = document.getElementById('speed-slider');
+            speedFactor = parseFloat(slider.value);
+            document.getElementById('speed-value').textContent = speedFactor.toFixed(1) + '×';
+        }
+
+        function highlightLine(index) {
+            const display = document.getElementById('code-display');
+            const allLines = display.querySelectorAll('.code-line');
+            
+            allLines.forEach((el, i) => {
+                el.classList.toggle('active', i === index);
+            });
+
+            // Scroll to current line
+            if (allLines[index]) {
+                allLines[index].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function updateProgress() {
+            const progress = document.getElementById('progress-info');
+            progress.textContent = `${currentLineIndex + 1} / ${lines.length}`;
+            
+            const info = document.getElementById('current-line-info');
+            if (lines[currentLineIndex]) {
+                const preview = lines[currentLineIndex].trim().substring(0, 45);
+                info.textContent = preview + (lines[currentLineIndex].length > 45 ? '...' : '');
+            }
+        }
+
+        function updateStatus(text, color = 'normal') {
+            const el = document.getElementById('status-text');
+            el.textContent = text;
+            el.style.borderColor = color === 'playing' ? '#166534' : '#27251f';
+            el.style.color = color === 'playing' ? '#4ade80' : '#64748b';
+        }
+
+        async function playCode() {
+            const input = document.getElementById('code-input').value.trim();
+            if (!input) {
+                alert('אנא הדבק קוד תחילה');
+                return;
+            }
+
+            if (isPlaying) {
+                stopPlayback();
+                await new Promise(r => setTimeout(r, 100));
+            }
+
+            lines = input.split('\n');
+            currentLineIndex = 0;
+            isPlaying = true;
+            isPaused = false;
+
+            const display = document.getElementById('code-display');
+            display.innerHTML = '';
+
+            // Create line elements
+            lines.forEach((line, index) => {
+                const div = document.createElement('div');
+                div.className = `code-line font-mono text-sm whitespace-pre`;
+                
+                // Simple syntax coloring
+                let colored = line
+                    .replace(/(def |function |class |if |else|for |while |return|print|console\.log)/g, '<span class="keyword">$1</span>')
+                    .replace(/(".*?"|'.*?')/g, '<span class="string">$1</span>')
+                    .replace(/\b(\d+\.?\d*)\b/g, '<span class="number">$1</span>')
+                    .replace(/(#.*|\/\/.*)/g, '<span class="comment">$1</span>');
+                
+                div.innerHTML = colored || '&nbsp;';
+                display.appendChild(div);
+            });
+
+            updateStatus('מנגן...', 'playing');
+            updateProgress();
+
+            // Start playback loop
+            playbackLoop();
+        }
+
+        async function playbackLoop() {
+            while (isPlaying && currentLineIndex < lines.length) {
+                if (isPaused) {
+                    await new Promise(r => setTimeout(r, 100));
+                    continue;
+                }
+
+                const currentLine = lines[currentLineIndex];
+                
+                highlightLine(currentLineIndex);
+                updateProgress();
+
+                // Play sound based on line content
+                playSoundForLine(currentLine);
+
+                // Wait based on line length + speed
+                const baseDelay = 420;
+                const lineLengthFactor = Math.min(currentLine.length * 8, 650);
+                const delay = (baseDelay + lineLengthFactor) / speedFactor;
+
+                await new Promise(r => setTimeout(r, delay));
+
+                currentLineIndex++;
+
+                if (currentLineIndex >= lines.length) {
+                    isPlaying = false;
+                    updateStatus('הושלם ✓', 'done');
+                    setTimeout(() => {
+                        if (!isPlaying) updateStatus('מוכן');
+                    }, 1500);
+                }
+            }
+        }
+
+        function stopPlayback() {
+            isPlaying = false;
+            isPaused = false;
+            clearTimeout(playbackInterval);
+            updateStatus('נעצר');
+            
+            const display = document.getElementById('code-display');
+            display.querySelectorAll('.code-line').forEach(el => el.classList.remove('active'));
+        }
+
+        function pausePlayback() {
+            if (!isPlaying) return;
+            
+            isPaused = !isPaused;
+            
+            const btns = document.querySelectorAll('button');
+            if (isPaused) {
+                updateStatus('מושהה');
+            } else {
+                updateStatus('מנגן...', 'playing');
+                playbackLoop();
+            }
+        }
+
+        function nextLine() {
+            if (!lines.length) return;
+            
+            currentLineIndex = Math.min(currentLineIndex + 1, lines.length - 1);
+            highlightLine(currentLineIndex);
+            updateProgress();
+            
+            if (lines[currentLineIndex]) {
+                playSoundForLine(lines[currentLineIndex]);
+            }
+        }
+
+        function prevLine() {
+            if (!lines.length) return;
+            
+            currentLineIndex = Math.max(currentLineIndex - 1, 0);
+            highlightLine(currentLineIndex);
+            updateProgress();
+            
+            if (lines[currentLineIndex]) {
+                playSoundForLine(lines[currentLineIndex]);
+            }
+        }
+
+        function loadDemoCode() {
+            const demo = `def greet(name):
+    if name:
+        print("Hello, " + name)
+    else:
+        print("Hello, World!")
+
+# Main execution
+greet("Tzvi")
+for i in range(3):
+    print(i)`;
+
+            document.getElementById('code-input').value = demo;
+            playCode();
+        }
+
+        function clearAll() {
+            stopPlayback();
+            document.getElementById('code-input').value = '';
+            document.getElementById('code-display').innerHTML = `
+                <div class="text-zinc-500 text-sm px-3 py-8 text-center">
+                    הדבק קוד ולחץ "הפעל + השמע קוד"<br>
+                    השורות יודגשו אחת אחרי השנייה עם צליל
+                </div>
+            `;
+            document.getElementById('progress-info').textContent = '';
+            document.getElementById('current-line-info').textContent = '—';
+            lines = [];
+            currentLineIndex = 0;
+        }
+
+        function showHelp() {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black/90 flex items-center justify-center z-[200] p-6';
+            modal.innerHTML = `
+                <div class="max-w-md w-full bg-zinc-900 border border-zinc-700 rounded-3xl p-8 text-sm">
+                    <div class="flex justify-between mb-6">
+                        <div class="font-semibold text-2xl tracking-tight">איך משתמשים</div>
+                        <button onclick="this.closest('.fixed').remove()" class="text-zinc-400 hover:text-white text-xl">×</button>
+                    </div>
+                    <div class="space-y-4 text-zinc-300 text-[13.5px]">
+                        <div>1. הדבק קוד בתיבת הטקסט (Python, JS וכו')</div>
+                        <div>2. לחץ <span class="font-semibold">"הפעל + השמע קוד"</span></div>
+                        <div>3. הקוד יושמע שורה אחר שורה עם צלילים שונים לפי סוג השורה</div>
+                        <div>4. אפשר להשהות, לעצור, או לעבור שורה ידנית</div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.onclick = e => { if (e.target === modal) modal.remove(); };
+        }
+
+        function setupControls() {
+            const speedSlider = document.getElementById('speed-slider');
+            speedSlider.oninput = () => {
+                speedFactor = parseFloat(speedSlider.value);
+                document.getElementById('speed-value').textContent = speedFactor.toFixed(1) + '×';
+            };
+        }
+
+        function initialize() {
+            setupControls();
+            
+            // Demo code on load
+            setTimeout(() => {
+                const input = document.getElementById('code-input');
+                if (!input.value) {
+                    input.value = `def hello(name):\n    print("Hello " + name)\n\nhello("Tzvi")`;
+                }
+            }, 800);
+
+            console.log('%c[CodePlayer] Tool ready — like MorseViz but for code', 'color:#10b981');
+        }
+
+        window.onload = initialize;
+    </script>
+</body>
+</html>

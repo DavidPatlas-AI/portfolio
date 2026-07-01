@@ -1831,14 +1831,14 @@ const PROJECT_CATALOG = [
     name:{he:'קורס מה"ט — הכנה למתמטיקה',en:'Mahat Math Prep Course',ru:'Курс Махат — математика'},
     desc:{he:'קורס הכנה למבחני מה"ט במתמטיקה — שיעורים, תרגול ומבחנים.',en:'Math prep course for Mahat exams — lessons, practice and tests.',ru:'Подготовка к экзаменам Махат по математике.'}, tags:['Mahat','Math','Edu'],
     versions:[{v:'v1.0',date:'2026',label:'השקה',desc:'קורס הכנה למבחני מה"ט — שיעורים, תרגול ומבחנים.',url:'wip-mahat/index.html'}] },
-  { id:'morseviz', icon:'📡', cat:['edu','dev'], status:'live', demo:'https://davidpatlas-ai.github.io/morseviz/', gh:'https://github.com/DavidPatlas-AI/morseviz',
-    name:{he:'MorseViz — בונה מורס',en:'MorseViz — Morse Builder',ru:'MorseViz — Морзе Конструктор'},
-    desc:{he:'בנה מילים בקוד מורס — ויזואליזציה, השמעה ולמידה אינטראקטיבית.',en:'Build words in Morse code — visualization, audio playback and interactive learning.',ru:'Создавай слова в коде Морзе — визуализация и аудио.'}, tags:['Morse','Audio','Edu'],
-    versions:[{v:'v1.0',date:'2026',label:'השקה',desc:'ויזואליזציה וניגון קוד מורס — Tailwind CSS + Web Audio API.',url:'https://davidpatlas-ai.github.io/morseviz/'}] },
-  { id:'codeplayer', icon:'▶️', cat:['dev','edu'], status:'live', demo:'https://davidpatlas-ai.github.io/code-player/', gh:'https://github.com/DavidPatlas-AI/code-player',
-    name:{he:'CodePlayer — משמיע קוד',en:'CodePlayer — Code Audio Player',ru:'CodePlayer — Аудио плеер кода'},
-    desc:{he:'נגן קוד שמשמיע כל שורה בצליל — ללמידה ולהרצאות.',en:'Code player that plays each line as a musical tone — for learning and presentations.',ru:'Плеер кода — каждая строка звучит.'}, tags:['Audio','Dev','Edu'],
-    versions:[{v:'v1.0',date:'2026',label:'השקה',desc:'משמיע שורות קוד עם Web Audio API.',url:'https://davidpatlas-ai.github.io/code-player/'}] },
+  { id:'signallab', icon:'📻', cat:['edu','dev','flag'], status:'live', demo:'https://davidpatlas-ai.github.io/signal-lab/', gh:'https://github.com/DavidPatlas-AI/signal-lab', featured:1,
+    name:{he:'SignalLab — מעבדת אותות',en:'SignalLab — Signal Audio Lab',ru:'SignalLab — Лаборатория сигналов'},
+    desc:{he:'מערכת מאוחדת: MorseViz (מורס) + CodePlayer (קוד) + מסמך חקירה — אותו עיצוב, Web Audio API.',en:'Unified platform: MorseViz + CodePlayer + investigation brief — shared design and Web Audio API.',ru:'Единая платформа: Morse + Code + документ.'}, tags:['Morse','Audio','Code','Edu'],
+    versions:[
+      {v:'v2.0',date:'יולי 2026',label:'מערכת מאוחדת',desc:'Hub אחד, ניווט משותף, ארכיון כפילויות — מיזוג morseviz + code-player.',url:'https://davidpatlas-ai.github.io/signal-lab/'},
+      {v:'v1.1',date:'2026',label:'CodePlayer',desc:'משמיע שורות קוד — כמו MorseViz אבל לקוד.',url:'https://davidpatlas-ai.github.io/signal-lab/code.html'},
+      {v:'v1.0',date:'2026',label:'MorseViz',desc:'ויזואליזציה וניגון קוד מורס.',url:'https://davidpatlas-ai.github.io/signal-lab/morse.html'}
+    ]},
   { id:'bridgeos', icon:'🧵', cat:['dev','ai','flag'], status:'live', url:'BridgeOS/index.html', featured:1,
     name:{he:'BRIDGE OS — שולחן העבודה',en:'BRIDGE OS — Human Desktop',ru:'BRIDGE OS — Рабочий стол'},
     desc:{he:'מוח 3D מקומי: 6 עולמות, 10 חוטים בעברית, סוכן לכל פרויקט, overlay שקוף על שולחן העבודה.',en:'Local 3D brain: 6 worlds, 10 Hebrew thread labels, per-project agent, transparent desktop overlay.',ru:'Локальный 3D: 6 миров, 10 нитей, overlay на рабочем столе.'}, tags:['3D','Local','MCP','Rainmeter'],
@@ -2410,7 +2410,7 @@ function openVersions(id){
   if(liveBtn&&liveUrl){liveBtn.href=liveUrl;liveBtn.style.display='flex';}
   else if(liveBtn)liveBtn.style.display='none';
   const tl=document.getElementById('verTimeline');
-  const vers=p.versions||[{v:'v1.0',date:'2025',label:'השקה ראשונה',desc:'גירסה ראשונית של הפרויקט.',url:'https://davidpatlas-ai.github.io/code-player/'}];
+  const vers=p.versions||[{v:'v1.0',date:'2025',label:'השקה ראשונה',desc:'גירסה ראשונית של הפרויקט.',url:'https://davidpatlas-ai.github.io/signal-lab/'}];
   const openLbl=t.vers_open||'פתח גרסה';
   tl.innerHTML=vers.map((v,i)=>{
     const vUrl=resolveVersionUrl(p,v,i);

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SignalLab — מעבדת אותות | מורס + קוד + חקירה</title>
+<meta name="description" content="מערכת מאוחדת: MorseViz, CodePlayer ומסמך חקירת מורס — ויזואליזציה והשמעה">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap');
+:root{--bg:#0a0a0f;--card:#14141c;--border:#2a2a38;--text:#eceaf8;--muted:#8b89a8;--blue:#3b82f6;--emerald:#10b981;--violet:#8b5cf6;--gold:#f5c842}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;
+  background-image:radial-gradient(ellipse 70% 50% at 50% -10%,rgba(59,130,246,.15),transparent),
+                   radial-gradient(ellipse 40% 30% at 90% 80%,rgba(16,185,129,.08),transparent)}
+.font-display{font-family:'Space Grotesk',Inter,sans-serif;font-weight:600}
+.wrap{max-width:1100px;margin:0 auto;padding:2rem 1.25rem 4rem}
+header{text-align:center;margin-bottom:2.5rem}
+.logo{display:inline-flex;align-items:center;gap:.75rem;margin-bottom:1rem}
+.logo-icon{width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg,var(--blue),var(--violet));
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;box-shadow:0 0 30px rgba(59,130,246,.3)}
+h1{font-size:clamp(2rem,5vw,3.2rem);letter-spacing:-.03em;margin-bottom:.5rem;
+  background:linear-gradient(135deg,#fff,var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{color:var(--muted);font-size:1.05rem;max-width:520px;margin:0 auto;line-height:1.6}
+.badge-row{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin-top:1.25rem}
+.badge{font-size:.75rem;padding:.35rem .75rem;border-radius:999px;border:1px solid var(--border);color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;margin-top:2rem}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:1.5rem;
+  text-decoration:none;color:inherit;transition:.25s;display:flex;flex-direction:column;gap:.75rem}
+.card:hover{transform:translateY(-4px);border-color:rgba(59,130,246,.4);box-shadow:0 16px 40px rgba(0,0,0,.35)}
+.card-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.3rem}
+.card h2{font-size:1.2rem}
+.card p{color:var(--muted);font-size:.88rem;line-height:1.55;flex:1}
+.card-cta{font-size:.82rem;font-weight:600;color:var(--blue)}
+.card.morse .card-icon{background:rgba(59,130,246,.15);color:var(--blue)}
+.card.code .card-icon{background:rgba(16,185,129,.15);color:var(--emerald)}
+.card.brief .card-icon{background:rgba(139,92,246,.15);color:var(--violet)}
+.unified{margin-top:2.5rem;padding:1.25rem 1.5rem;border-radius:16px;border:1px solid rgba(245,200,66,.2);
+  background:rgba(245,200,66,.06);font-size:.88rem;color:var(--muted);line-height:1.6}
+.unified b{color:var(--gold)}
+footer{margin-top:3rem;text-align:center;color:var(--muted);font-size:.8rem}
+footer a{color:var(--blue);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">
+      <div class="logo-icon"><i class="fa-solid fa-wave-square"></i></div>
+      <div style="text-align:right">
+        <div class="font-display" style="font-size:1.5rem">SignalLab</div>
+        <div style="font-size:.72rem;color:var(--muted);letter-spacing:.08em">מעבדת אותות</div>
+      </div>
+    </div>
+    <h1 class="font-display">מורס · קוד · חקירה</h1>
+    <p class="sub">מערכת אחת שמאחדת את MorseViz ו-CodePlayer — אותה שפה ויזואלית, אותו מנוע שמע, שלושה כלים.</p>
+    <div class="badge-row">
+      <span class="badge">Web Audio API</span>
+      <span class="badge">עברית RTL</span>
+      <span class="badge">ללא שרת</span>
+      <span class="badge">חינוך + פיתוח</span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <a class="card morse" href="morse.html">
+      <div class="card-icon"><i class="fa-solid fa-tower-broadcast"></i></div>
+      <h2 class="font-display">MorseViz — בונה מורס</h2>
+      <p>בנה מילים בקוד מורס בזמן אמת — ויזואליזציה של נקודות וקווים, השמעה מדויקת, טבלת אותיות אינטראקטיבית.</p>
+      <span class="card-cta">פתח כלי מורס ←</span>
+    </a>
+    <a class="card code" href="code.html">
+      <div class="card-icon"><i class="fa-solid fa-play"></i></div>
+      <h2 class="font-display">CodePlayer — משמיע קוד</h2>
+      <p>הדבק קוד → לחץ Play → שמיע שורה אחר שורה עם צלילים שונים. כמו MorseViz, אבל לקוד מקור.</p>
+      <span class="card-cta">פתח נגן קוד ←</span>
+    </a>
+    <a class="card brief" href="brief.html">
+      <div class="card-icon"><i class="fa-solid fa-file-lines"></i></div>
+      <h2 class="font-display">מסמך מורס וחקירה</h2>
+      <p>מורס, רעש לבן וחקירת אירוע 7500 — מסמך עומק עם כלי סימולציה מובנים.</p>
+      <span class="card-cta">פתח מסמך ←</span>
+    </a>
+  </div>
+
+  <div class="unified">
+    <b>למה מערכת אחת?</b> CodePlayer נבנה במפורש «כמו MorseViz — אבל לקוד». שני הכלים חולקים עיצוב, Web Audio API וממשק עברי. הגרסאות ב-<code>archive/</code> הן היסטוריית פיתוח מכפילויות בשולחן העבודה.
+  </div>
+
+  <footer>
+    <p>© 2026 David Patlas · <a href="https://github.com/DavidPatlas-AI/signal-lab" target="_blank" rel="noopener">GitHub</a>
+    · <a href="https://storied-alfajores-6f10d2.netlify.app/portfolio.html" target="_blank" rel="noopener">תיק עבודות</a></p>
+  </footer>
+</div>
+</body>
+</html>

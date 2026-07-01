@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מורסוויז • בונה מילים במורס • v2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap');
+
+        :root {
+            --blue: #2563eb;
+            --blue-light: #3b82f6;
+            --red: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        
+        .font-display {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-weight: 600;
+            letter-spacing: -0.025em;
+        }
+
+        .font-mono {
+            font-family: 'IBM Plex Mono', ui-monospace, monospace;
+        }
+
+        .premium-bg {
+            background: #0f0f12;
+        }
+
+        .section-card {
+            background: #18181b;
+            border: 1px solid #27251f;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2);
+        }
+
+        .letter-display {
+            font-size: 9rem;
+            line-height: 0.9;
+            font-weight: 700;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), 
+                        opacity 0.3s ease,
+                        text-shadow 0.3s ease;
+            text-shadow: 
+                0 0 30px rgb(37 99 235 / 0.25),
+                0 0 60px rgb(37 99 235 / 0.15);
+            font-family: 'Space Grotesk', system_ui, -apple-system, sans-serif;
+            color: #f4f4f5;
+        }
+
+        .visualizer-container {
+            background: #111114;
+            border: 1px solid #27251f;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .visualizer-container::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(63, 66, 71, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(63, 66, 71, 0.035) 1px, transparent 1px);
+            background-size: 32px 32px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .signal-grid {
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(transparent 50%, rgba(37, 99, 235, 0.025) 50%),
+                linear-gradient(90deg, transparent 50%, rgba(37, 99, 235, 0.025) 50%);
+            background-size: 48px 48px;
+            animation: grid-move 25s linear infinite;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.6;
+        }
+
+        @keyframes grid-move {
+            0% { background-position: 0 0; }
+            100% { background-position: 48px 48px; }
+        }
+
+        .morse-symbol {
+            transition: all 0.12s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+        }
+
+        .morse-dot {
+            width: 17px;
+            height: 17px;
+            background: #3b82f6;
+            border-radius: 9999px;
+            box-shadow: 
+                0 0 0 1px #1e40af,
+                0 0 12px #3b82f6,
+                inset 0 1px 2px rgba(255,255,255,0.4);
+        }
+
+        .morse-dash {
+            width: 48px;
+            height: 9px;
+            background: linear-gradient(#3b82f6, #2563eb);
+            border-radius: 9999px;
+            box-shadow: 
+                0 0 0 1px #1e40af,
+                0 0 14px #3b82f6,
+                inset 0 1px 3px rgba(255,255,255,0.35);
+        }
+
+        .morse-symbol.active {
+            box-shadow: 
+                0 0 0 1px #1e40af,
+                0 0 25px #60a5fa,
+                0 0 45px #3b82f6;
+            transform: scale(1.18);
+            z-index: 10;
+        }
+
+        .morse-symbol.active::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: inherit;
+            background: radial-gradient(circle, rgba(59,130,246,0.25) 0%, transparent 70%);
+            z-index: -1;
+            animation: pulse-glow 0.6s ease forwards;
+        }
+
+        @keyframes pulse-glow {
+            0% { transform: scale(0.6); opacity: 0.8; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
+
+        .led {
+            width: 13px;
+            height: 13px;
+            background: #3f1f1f;
+            border-radius: 9999px;
+            box-shadow: 
+                inset 0 2px 3px rgba(0,0,0,0.6),
+                0 0 0 1px #4a2a2a;
+            transition: all 0.06s ease;
+        }
+
+        .led.active {
+            background: #f87171;
+            box-shadow: 
+                0 0 14px #ef4444,
+                0 0 26px #b91c1c,
+                inset 0 1px 2px rgba(255,255,255,0.6),
+                0 0 0 1px #9f1239;
+        }
+
+        .sentence-letter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 2.1rem;
+            height: 2.85rem;
+            padding: 0 0.55rem;
+            margin: 0 0.12rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 1.55rem;
+            line-height: 1;
+            transition: all 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+            user-select: none;
+            background: #27251f;
+            border: 1px solid #3f3f46;
+            color: #e4e4e7;
+        }
+
+        .sentence-letter:hover {
+            background: #32302a;
+            border-color: #52525b;
+            transform: translateY(-1px);
+        }
+
+        .sentence-letter.active {
+            background: #1e40af;
+            border-color: #3b82f6;
+            color: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+            transform: scale(1.08);
+            z-index: 20;
+        }
+
+        .sentence-letter.space {
+            background: #18181b;
+            border-color: #27251f;
+            color: #52525b;
+            font-size: 1rem;
+            min-width: 1.6rem;
+            height: 2.4rem;
+        }
+
+        .morse-chart-letter {
+            transition: all 0.2s cubic-bezier(0.23, 1.0, 0.32, 1);
+            background: #18181b;
+            border: 1px solid #27251f;
+        }
+
+        .morse-chart-letter:hover {
+            transform: translateY(-3px) scale(1.03);
+            border-color: #3b82f6;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+        }
+
+        .premium-shadow {
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+        }
+
+        .morse-key {
+            filter: drop-shadow(0 10px 15px rgb(0 0 0 / 0.5));
+            transition: transform 0.1s ease;
+        }
+
+        .morse-key.pressing {
+            transform: rotate(-22deg);
+        }
+
+        .status-pill {
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body class="premium-bg text-zinc-200">
+    <!-- Top Bar -->
+    <div class="border-b border-zinc-800 bg-black/60 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-screen-2xl mx-auto px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-x-4">
+                <div class="flex items-center gap-x-3">
+                    <div class="w-9 h-9 bg-blue-600 rounded-2xl flex items-center justify-center ring-1 ring-blue-500/30">
+                        <i class="fa-solid fa-satellite text-white text-[22px]"></i>
+                    </div>
+                    <div>
+                        <div class="font-display text-[27px] tracking-[-1.5px] font-semibold leading-none">MorseViz</div>
+                        <div class="text-[9px] text-zinc-500 -mt-0.5 tracking-[1px]">PREMIUM • v2</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-x-2 text-sm">
+                <div class="flex items-center bg-zinc-900 border border-zinc-800 rounded-2xl px-1 py-1 text-xs">
+                    <div class="px-3 flex items-center gap-x-1.5">
+                        <div class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                        <span class="text-emerald-400 font-medium">מוכן</span>
+                    </div>
+                </div>
+                
+                <button onclick="toggleFocusMode()" 
+                        class="flex items-center gap-x-2 px-4 h-9 text-xs font-medium bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 rounded-2xl transition-colors">
+                    <i class="fa-solid fa-expand"></i>
+                    <span>Focus Mode</span>
+                </button>
+                
+                <button onclick="showHelp()" 
+                        class="flex items-center gap-x-2 px-4 h-9 text-xs font-medium hover:bg-zinc-900 border border-zinc-700 rounded-2xl transition-colors">
+                    <i class="fa-solid fa-info-circle"></i>
+                    <span>עזרה</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-screen-2xl mx-auto px-8 pt-9 pb-12">
+        
+        <!-- Hero -->
+        <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-y-6 mb-9">
+            <div class="max-w-xl">
+                <div class="inline-flex items-center gap-x-2 px-4 h-8 rounded-3xl bg-zinc-900 border border-zinc-800 text-xs tracking-[1.2px] font-medium mb-4">
+                    <i class="fa-solid fa-magic text-blue-400"></i>
+                    <span>מבוסס על האנימציה הוויזואלית המקורית</span>
+                </div>
+                
+                <h1 class="font-display text-6xl lg:text-7xl tracking-[-3.5px] font-semibold leading-[0.92]">
+                    בונים מילים<br>ומשפטים שלמים
+                </h1>
+                <p class="mt-4 text-xl text-zinc-400 max-w-md">
+                    עם אותה אנימציה פרימיום + צליל מורס מדויק.<br>
+                    מושלם ללמידה, תרגול והשראה.
+                </p>
+            </div>
+
+            <div class="flex flex-wrap gap-3">
+                <button onclick="loadRandomWord()" 
+                        class="group flex items-center justify-center gap-x-3 px-7 h-14 bg-white hover:bg-amber-50 active:bg-amber-100 transition-all text-zinc-950 font-semibold rounded-3xl text-sm shadow-inner">
+                    <i class="fa-solid fa-dice group-active:rotate-12 transition-transform"></i>
+                    <span>מילה נפוצה אקראית</span>
+                </button>
+                <button onclick="loadRandomSentence()" 
+                        class="group flex items-center justify-center gap-x-3 px-7 h-14 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 active:bg-zinc-950 transition-all font-semibold rounded-3xl text-sm">
+                    <i class="fa-solid fa-paragraph"></i>
+                    <span>משפט נפוץ</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+            
+            <!-- INPUT PANEL -->
+            <div class="xl:col-span-5 section-card rounded-3xl p-7 border border-zinc-800">
+                <div class="mb-5">
+                    <div class="font-semibold text-xl flex items-center gap-x-3">
+                        <i class="fa-solid fa-keyboard text-blue-400"></i>
+                        <span>הקלד טקסט</span>
+                    </div>
+                    <p class="text-xs text-zinc-500 mt-1">אנגלית, מספרים ורווחים • מורס בינלאומי</p>
+                </div>
+
+                <textarea id="text-input" rows="3" 
+                          class="w-full bg-zinc-950 border border-zinc-700 focus:border-blue-600 transition-colors rounded-2xl p-5 text-2xl font-medium placeholder:text-zinc-600 resize-y leading-tight"
+                          placeholder="הקלד כאן... לדוגמה: HELLO WORLD"></textarea>
+
+                <div class="grid grid-cols-2 gap-3 mt-5">
+                    <button onclick="prepareAndPlay()" 
+                            class="col-span-2 flex items-center justify-center gap-x-3 h-14 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 transition-all text-white font-semibold rounded-2xl text-base shadow-inner">
+                        <i class="fa-solid fa-play mr-1"></i>
+                        <span>הפעל אנימציה + צליל</span>
+                    </button>
+                    
+                    <button onclick="stopPlayback()" 
+                            class="flex items-center justify-center gap-x-2 h-11 bg-zinc-900 hover:bg-red-950/60 border border-zinc-700 hover:border-red-900 transition-all rounded-2xl text-sm font-medium">
+                        <i class="fa-solid fa-stop"></i>
+                        <span>עצור</span>
+                    </button>
+                    
+                    <button onclick="clearAll()" 
+                            class="flex items-center justify-center gap-x-2 h-11 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 transition-all rounded-2xl text-sm font-medium">
+                        <i class="fa-solid fa-eraser"></i>
+                        <span>נקה</span>
+                    </button>
+                </div>
+
+                <!-- Controls row -->
+                <div class="mt-6 pt-6 border-t border-zinc-800 grid grid-cols-2 gap-x-4 gap-y-5">
+                    <!-- Speed -->
+                    <div>
+                        <div class="flex items-center justify-between text-xs mb-2 px-1">
+                            <span class="font-medium text-zinc-400">מהירות</span>
+                            <span id="speed-value" class="font-mono text-blue-400 bg-zinc-950 px-2 py-px rounded text-xs">1.00×</span>
+                        </div>
+                        <input type="range" id="speed-slider" min="0.55" max="2.6" step="0.05" value="1.0"
+                               class="w-full accent-blue-600">
+                    </div>
+                    
+                    <!-- Volume -->
+                    <div>
+                        <div class="flex items-center justify-between text-xs mb-2 px-1">
+                            <span class="font-medium text-zinc-400">עוצמת צליל</span>
+                            <span id="volume-value" class="font-mono text-blue-400 bg-zinc-950 px-2 py-px rounded text-xs">75%</span>
+                        </div>
+                        <input type="range" id="volume-slider" min="0" max="100" step="5" value="75"
+                               class="w-full accent-blue-600">
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISUALIZER -->
+            <div class="xl:col-span-7 section-card rounded-3xl p-6 border border-zinc-800">
+                <div class="flex items-center justify-between mb-3 px-2">
+                    <div class="flex items-center gap-x-3">
+                        <div class="font-semibold">אנימציה חיה</div>
+                        <div id="status-text" 
+                             class="status-pill px-3 py-px rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-400 font-medium">מוכן</div>
+                    </div>
+                    <div id="progress-info" class="font-mono text-xs text-zinc-500"></div>
+                </div>
+
+                <!-- Main Visualizer -->
+                <div id="visualizer-card"
+                     class="visualizer-container premium-shadow rounded-3xl p-8 flex flex-col items-center justify-center min-h-[355px] relative">
+                    
+                    <!-- Subtle moving signal lines -->
+                    <div class="signal-grid rounded-3xl"></div>
+                    
+                    <!-- Letter Container -->
+                    <div id="letter-container"
+                         class="w-[210px] h-[210px] flex items-center justify-center rounded-[4rem] bg-zinc-950 border border-zinc-700 relative z-10 mb-7"
+                         style="box-shadow: 0 0 0 1px #27251f, 0 30px 60px -15px rgb(0 0 0 / 0.5);">
+                        
+                        <div id="letter-display" 
+                             class="letter-display select-none drop-shadow-2xl">A</div>
+                        
+                        <!-- Decorative rings -->
+                        <div class="absolute inset-0 rounded-[4rem] border border-white/5"></div>
+                    </div>
+
+                    <!-- Morse Visuals -->
+                    <div class="w-full max-w-[460px] z-10">
+                        <!-- Blue symbols -->
+                        <div class="mb-3.5">
+                            <div class="text-[10px] font-medium text-zinc-500 mb-1.5 px-2 flex items-center gap-x-2">
+                                <i class="fa-solid fa-waveform-lines text-blue-400"></i>
+                                <span class="tracking-wider">סימני מורס</span>
+                            </div>
+                            <div id="morse-viz" 
+                                 class="min-h-[46px] flex items-center justify-center gap-x-3.5 bg-black/50 border border-zinc-700 rounded-2xl px-6 py-[13px]">
+                            </div>
+                        </div>
+
+                        <!-- Red LED bar -->
+                        <div>
+                            <div class="text-[10px] font-medium text-zinc-500 mb-1.5 px-2 flex items-center gap-x-2">
+                                <i class="fa-solid fa-lightbulb text-red-400"></i>
+                                <span class="tracking-wider">תזמון אורות (כמו בסרטון)</span>
+                            </div>
+                            <div id="led-container" 
+                                 class="h-9 bg-zinc-950 border border-zinc-700 rounded-2xl flex items-center justify-center gap-x-2 px-5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Morse Key -->
+                    <div class="absolute bottom-6 right-6 z-20 flex flex-col items-end">
+                        <div onclick="demoKeyPress()" class="cursor-pointer">
+                            <svg id="morse-key" width="68" height="52" viewBox="0 0 68 52" fill="none" xmlns="http://www.w3.org/2000/svg" class="morse-key">
+                                <!-- Base plate -->
+                                <rect x="5" y="32" width="58" height="16" rx="4" fill="#18181b"/>
+                                <rect x="5" y="32" width="58" height="16" rx="4" fill="#27251f" stroke="#3f3f46" stroke-width="1.5"/>
+                                
+                                <!-- Lever arm -->
+                                <g id="lever-group">
+                                    <rect x="19" y="19" width="29" height="8" rx="2.5" fill="#52525b" transform="rotate(-14 33.5 23)"/>
+                                    <rect x="19" y="19" width="29" height="8" rx="2.5" fill="#3f3f46" stroke="#27251f" stroke-width="1.2"/>
+                                </g>
+                                
+                                <!-- Knob -->
+                                <circle cx="45" cy="22" r="8.5" fill="#18181b" stroke="#52525b" stroke-width="2.8"/>
+                                <circle cx="45" cy="22" r="4.2" fill="#27251f"/>
+                                
+                                <!-- Contact points -->
+                                <circle cx="12" cy="38" r="2.5" fill="#3f3f46"/>
+                                <circle cx="12" cy="38" r="1.3" fill="#18181b"/>
+                            </svg>
+                        </div>
+                        <div class="text-[9px] text-zinc-500 pr-1 tracking-widest">KEY</div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between text-xs mt-3 px-2">
+                    <div id="current-info" class="text-zinc-400">בחר טקסט והפעל</div>
+                    <div id="word-info" class="font-medium text-blue-400 text-xs"></div>
+                </div>
+            </div>
+
+            <!-- Sentence Display -->
+            <div class="xl:col-span-12 section-card rounded-3xl p-6 border border-zinc-800">
+                <div class="flex items-center justify-between mb-3 px-2">
+                    <div class="font-semibold flex items-center gap-x-2 text-sm">
+                        <i class="fa-solid fa-stream text-blue-400"></i>
+                        <span>המשפט / המילה שבונים</span>
+                    </div>
+                    <div class="text-[10px] text-zinc-500">לחץ על אות כדי לנגן אותה</div>
+                </div>
+                
+                <div id="sentence-display" 
+                     class="min-h-[72px] bg-zinc-950 border border-zinc-700 rounded-2xl px-6 py-4 flex flex-wrap items-center text-[27px] font-semibold tracking-[-0.4px]">
+                </div>
+            </div>
+
+            <!-- Morse Reference -->
+            <div class="xl:col-span-12 section-card rounded-3xl p-6 border border-zinc-800">
+                <div class="flex items-center justify-between mb-4 px-2">
+                    <div>
+                        <div class="font-semibold">טבלת מורס — לחץ על אות לניסיון מיידי</div>
+                        <div class="text-xs text-zinc-500">כמו במדריך הוויזואלי המקורי</div>
+                    </div>
+                    <button onclick="playFullMorseAlphabet()" 
+                            class="text-xs flex items-center gap-x-2 px-5 h-9 bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 rounded-2xl transition-colors font-medium">
+                        <i class="fa-solid fa-play text-xs"></i>
+                        <span>נגן את כל האלפבית</span>
+                    </button>
+                </div>
+
+                <div id="morse-chart" class="grid grid-cols-6 sm:grid-cols-9 md:grid-cols-11 lg:grid-cols-13 gap-2">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="text-center text-xs text-zinc-500 pb-8">
+        בהשראת <a href="https://x.com/Rainmaker1973/status/2071148080934596749" target="_blank" class="underline hover:text-zinc-300">@Rainmaker1973</a> • 
+        גרסה משודרגת ומושקעת • נבנה עבורך
+    </footer>
+
+    <script>
+        // Tailwind + variables
+        function initTailwind() {
+            const style = document.createElement('style');
+            style.innerHTML = `
+                .letter-display { font-feature-settings: "ss02"; }
+            `;
+            document.head.appendChild(style);
+        }
+
+        const morseCode = {
+            'A': '.-', 'B': '-...', 'C': '-.-.', 'D': '-..', 'E': '.', 'F': '..-.',
+            'G': '--.', 'H': '....', 'I': '..', 'J': '.---', 'K': '-.-', 'L': '.-..',
+            'M': '--', 'N': '-.', 'O': '---', 'P': '.--.', 'Q': '--.-', 'R': '.-.',
+            'S': '...', 'T': '-', 'U': '..-', 'V': '...-', 'W': '.--', 'X': '-..-',
+            'Y': '-.--', 'Z': '--..',
+            '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-',
+            '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.'
+        };
+
+        const commonWords = [
+            "THE","AND","FOR","YOU","SAY","HELLO","WORLD","LOVE","PEACE","IDEA",
+            "GOOD","TIME","WORK","YEAR","PEOPLE","WAY","DAY","MAN","LIFE","HAND",
+            "PART","CHILD","EYE","WOMAN","PLACE","WEEK","CASE","POINT","GOVERNMENT",
+            "COMPANY","NUMBER","GROUP","PROBLEM","FACT","HAVE","DO","GET","MAKE","GO",
+            "KNOW","TAKE","SEE","COME","THINK","LOOK","WANT","GIVE","USE","FIND"
+        ];
+
+        const commonSentences = [
+            "HELLO WORLD", "HOW ARE YOU", "THANK YOU VERY MUCH", "I LOVE YOU",
+            "GOOD MORNING", "SEE YOU LATER", "HAVE A NICE DAY", "WHAT IS YOUR NAME",
+            "WHERE ARE YOU FROM", "NICE TO MEET YOU", "HOW CAN I HELP YOU",
+            "THIS IS AMAZING", "STAY STRONG", "LET US BUILD SOMETHING GREAT"
+        ];
+
+        let audioContext;
+        let masterGain;
+        let isPlaying = false;
+        let currentText = "";
+        let currentIndex = 0;
+        let speedFactor = 1.0;
+        let volumeLevel = 0.75;
+        let sentenceSpans = [];
+        let isFocusMode = false;
+
+        function initAudio() {
+            if (!audioContext) {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                masterGain = audioContext.createGain();
+                masterGain.gain.value = volumeLevel;
+                masterGain.connect(audioContext.destination);
+            }
+        }
+
+        function updateVolume() {
+            const slider = document.getElementById('volume-slider');
+            volumeLevel = parseFloat(slider.value) / 100;
+            document.getElementById('volume-value').textContent = Math.round(volumeLevel * 100) + '%';
+            
+            if (masterGain) {
+                masterGain.gain.value = volumeLevel;
+            }
+        }
+
+        function playBeep(durationMs, frequency = 680) {
+            if (!audioContext) initAudio();
+            
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            const filter = audioContext.createBiquadFilter();
+            
+            osc.type = 'sine';
+            osc.frequency.value = frequency;
+            
+            filter.type = 'lowpass';
+            filter.frequency.value = 1350;
+            
+            const now = audioContext.currentTime;
+            
+            gain.gain.value = 0.001;
+            gain.gain.linearRampToValueAtTime(0.9 * volumeLevel, now + 0.007);
+            gain.gain.linearRampToValueAtTime(0.001, now + (durationMs / 1000) + 0.018);
+            
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(masterGain);
+            
+            osc.start(now);
+            osc.stop(now + (durationMs / 1000) + 0.06);
+        }
+
+        function updateSpeedLabel() {
+            const slider = document.getElementById('speed-slider');
+            speedFactor = parseFloat(slider.value);
+            document.getElementById('speed-value').textContent = speedFactor.toFixed(2) + '×';
+        }
+
+        function getDurations() {
+            const base = {
+                dot: 72,
+                dash: 215,
+                gap: 68,
+                letterGap: 265,
+                wordGap: 520
+            };
+            return {
+                dot: Math.max(38, Math.round(base.dot / speedFactor)),
+                dash: Math.max(115, Math.round(base.dash / speedFactor)),
+                gap: Math.max(32, Math.round(base.gap / speedFactor)),
+                letterGap: Math.max(130, Math.round(base.letterGap / speedFactor)),
+                wordGap: Math.max(280, Math.round(base.wordGap / speedFactor))
+            };
+        }
+
+        async function sleep(ms) {
+            return new Promise(r => setTimeout(r, ms));
+        }
+
+        function updateStatus(text, color = 'normal') {
+            const el = document.getElementById('status-text');
+            el.textContent = text;
+            
+            if (color === 'playing') {
+                el.style.borderColor = '#1e40af';
+                el.style.color = '#60a5fa';
+            } else if (color === 'done') {
+                el.style.borderColor = '#166534';
+                el.style.color = '#4ade80';
+            } else {
+                el.style.borderColor = '#27251f';
+                el.style.color = '#64748b';
+            }
+        }
+
+        function updateProgress(current, total) {
+            document.getElementById('progress-info').textContent = `${current} / ${total}`;
+        }
+
+        function updateCurrentInfo(html) {
+            document.getElementById('current-info').innerHTML = html;
+        }
+
+        function highlightCurrentLetter(idx) {
+            sentenceSpans.forEach((span, i) => {
+                span.classList.toggle('active', i === idx);
+            });
+        }
+
+        function updateWordInfo(text) {
+            document.getElementById('word-info').textContent = text;
+        }
+
+        // === CORE ANIMATION ===
+        async function animateLetter(letter, isSequence = true) {
+            const display = document.getElementById('letter-display');
+            const container = document.getElementById('letter-container');
+            const morseViz = document.getElementById('morse-viz');
+            const ledContainer = document.getElementById('led-container');
+            const key = document.getElementById('morse-key');
+
+            const upper = letter.toUpperCase();
+            const morse = morseCode[upper];
+
+            if (!morse || morse === ' ') {
+                display.style.transition = 'opacity 0.2s ease';
+                display.style.opacity = '0.25';
+                await sleep(340 / speedFactor);
+                display.style.opacity = '1';
+                return;
+            }
+
+            // Letter entrance
+            display.textContent = upper;
+            display.style.transition = 'all 0.35s cubic-bezier(0.23,1,0.32,1)';
+            display.style.transform = 'scale(0.55)';
+            display.style.opacity = '0.15';
+            
+            await sleep(35);
+            display.style.transform = 'scale(1)';
+            display.style.opacity = '1';
+
+            // Clear previous
+            morseViz.innerHTML = '';
+            ledContainer.innerHTML = '';
+
+            const durs = getDurations();
+            const symbols = morse.split('');
+            const vizEls = [];
+
+            // Create beautiful symbols
+            symbols.forEach(sym => {
+                const isDot = sym === '.';
+                
+                const blue = document.createElement('div');
+                blue.className = `morse-symbol ${isDot ? 'morse-dot' : 'morse-dash'}`;
+                
+                const led = document.createElement('div');
+                led.className = `led`;
+                
+                morseViz.appendChild(blue);
+                ledContainer.appendChild(led);
+                
+                vizEls.push({ blue, led, isDot });
+            });
+
+            // Play sequence
+            for (let i = 0; i < vizEls.length; i++) {
+                if (!isPlaying) break;
+
+                const { blue, led, isDot } = vizEls[i];
+                const dur = isDot ? durs.dot : durs.dash;
+
+                // Activate
+                blue.classList.add('active');
+                led.classList.add('active');
+
+                // Sound
+                playBeep(dur, isDot ? 735 : 645);
+
+                // Key press
+                key.classList.add('pressing');
+                setTimeout(() => key.classList.remove('pressing'), Math.min(dur * 0.7, 160));
+
+                await sleep(dur);
+
+                // Release
+                blue.classList.remove('active');
+                led.classList.remove('active');
+
+                await sleep(durs.gap);
+            }
+
+            // Subtle finish pulse on container
+            if (isSequence) {
+                container.style.boxShadow = '0 0 0 1px #1e40af, 0 30px 60px -15px rgb(0 0 0 / 0.5)';
+                setTimeout(() => {
+                    if (container) container.style.boxShadow = '0 0 0 1px #27251f, 0 30px 60px -15px rgb(0 0 0 / 0.5)';
+                }, 420);
+            }
+            
+            await sleep(70);
+        }
+
+        function buildSentenceDisplay(text) {
+            const container = document.getElementById('sentence-display');
+            container.innerHTML = '';
+            sentenceSpans = [];
+
+            const chars = text.toUpperCase().split('');
+            
+            chars.forEach((ch, idx) => {
+                const span = document.createElement('span');
+                span.className = ch === ' ' ? 'sentence-letter space' : 'sentence-letter';
+                span.textContent = ch === ' ' ? '␣' : ch;
+                
+                span.onclick = () => {
+                    if (!isPlaying) {
+                        currentIndex = idx;
+                        playSingleLetter(ch);
+                    }
+                };
+                
+                span.dataset.index = idx;
+                container.appendChild(span);
+                sentenceSpans.push(span);
+            });
+        }
+
+        async function playFromIndex(startIdx = 0) {
+            if (isPlaying || !currentText) return;
+            isPlaying = true;
+            updateStatus('מנגן...', 'playing');
+
+            const chars = currentText.toUpperCase().split('');
+            const durs = getDurations();
+
+            for (let i = startIdx; i < chars.length; i++) {
+                if (!isPlaying) break;
+
+                currentIndex = i;
+                const ch = chars[i];
+                
+                highlightCurrentLetter(i);
+                updateProgress(i + 1, chars.length);
+
+                if (ch === ' ' || ch === '\t') {
+                    updateCurrentInfo('רווח');
+                    updateWordInfo('');
+                    await sleep(durs.wordGap);
+                    continue;
+                }
+
+                if (!morseCode[ch]) {
+                    await sleep(90);
+                    continue;
+                }
+
+                // Show current word
+                const words = currentText.toUpperCase().split(' ');
+                let wordIndex = 0;
+                let charCount = 0;
+                for (let w = 0; w < words.length; w++) {
+                    if (charCount + words[w].length > i) {
+                        wordIndex = w;
+                        break;
+                    }
+                    charCount += words[w].length + 1;
+                }
+                updateWordInfo(words[wordIndex] || '');
+
+                updateCurrentInfo(`אות <span class="font-bold text-blue-400">${ch}</span>`);
+                await animateLetter(ch, true);
+
+                if (i < chars.length - 1) {
+                    await sleep(durs.letterGap);
+                }
+            }
+
+            if (isPlaying) {
+                updateStatus('הושלם ✓', 'done');
+                updateCurrentInfo('סיום ניגון');
+                updateWordInfo('');
+                
+                setTimeout(() => {
+                    if (!isPlaying) {
+                        updateStatus('מוכן');
+                        document.querySelectorAll('.sentence-letter').forEach(s => s.classList.remove('active'));
+                    }
+                }, 1350);
+            }
+            
+            isPlaying = false;
+        }
+
+        async function prepareAndPlay() {
+            let input = document.getElementById('text-input').value.trim();
+            if (!input) input = "HELLO WORLD";
+            
+            currentText = input;
+            document.getElementById('text-input').value = input;
+            
+            buildSentenceDisplay(currentText);
+            currentIndex = 0;
+            
+            // Show first letter immediately
+            const first = currentText[0] || 'A';
+            document.getElementById('letter-display').textContent = first;
+            
+            await sleep(80);
+            await playFromIndex(0);
+        }
+
+        async function playSingleLetter(letter) {
+            if (isPlaying) return;
+            isPlaying = true;
+            
+            const display = document.getElementById('letter-display');
+            const old = display.textContent;
+            
+            updateStatus('מנגן אות', 'playing');
+            updateCurrentInfo(`אות <span class="font-bold">${letter}</span>`);
+            
+            await animateLetter(letter, false);
+            
+            isPlaying = false;
+            updateStatus('מוכן');
+            updateCurrentInfo('מוכן');
+            
+            setTimeout(() => {
+                if (!isPlaying) display.textContent = old;
+            }, 650);
+        }
+
+        function stopPlayback() {
+            isPlaying = false;
+            updateStatus('נעצר');
+            updateCurrentInfo('הניגון נעצר');
+            updateWordInfo('');
+            
+            setTimeout(() => {
+                document.getElementById('morse-viz').innerHTML = '';
+                document.getElementById('led-container').innerHTML = '';
+                document.querySelectorAll('.sentence-letter').forEach(el => el.classList.remove('active'));
+                if (!isPlaying) updateStatus('מוכן');
+            }, 140);
+        }
+
+        function prepareDisplay(text) {
+            currentText = text.toUpperCase();
+            document.getElementById('text-input').value = currentText;
+            buildSentenceDisplay(currentText);
+            currentIndex = 0;
+            
+            const first = currentText[0] || 'A';
+            document.getElementById('letter-display').textContent = first;
+            document.getElementById('morse-viz').innerHTML = '';
+            document.getElementById('led-container').innerHTML = '';
+            updateCurrentInfo('מוכן לניגון');
+            updateWordInfo('');
+        }
+
+        function loadRandomWord() {
+            const word = commonWords[Math.floor(Math.random() * commonWords.length)];
+            prepareDisplay(word);
+            setTimeout(() => prepareAndPlay(), 220);
+        }
+
+        function loadRandomSentence() {
+            const s = commonSentences[Math.floor(Math.random() * commonSentences.length)];
+            prepareDisplay(s);
+            setTimeout(() => prepareAndPlay(), 220);
+        }
+
+        function clearAll() {
+            stopPlayback();
+            document.getElementById('text-input').value = '';
+            document.getElementById('sentence-display').innerHTML = 
+                '<span class="text-zinc-500 px-2 text-lg">הטקסט יופיע כאן...</span>';
+            document.getElementById('letter-display').textContent = 'A';
+            document.getElementById('morse-viz').innerHTML = '';
+            document.getElementById('led-container').innerHTML = '';
+            updateCurrentInfo('בחר טקסט והפעל');
+            updateWordInfo('');
+            document.getElementById('progress-info').textContent = '';
+            sentenceSpans = [];
+            currentText = '';
+        }
+
+        function createMorseChart() {
+            const container = document.getElementById('morse-chart');
+            container.innerHTML = '';
+
+            const letters = Object.keys(morseCode)
+                .filter(k => k.length === 1 && /[A-Z0-9]/.test(k))
+                .sort((a, b) => {
+                    const na = parseInt(a), nb = parseInt(b);
+                    if (!isNaN(na) && isNaN(nb)) return -1;
+                    if (isNaN(na) && !isNaN(nb)) return 1;
+                    if (!isNaN(na) && !isNaN(nb)) return na - nb;
+                    return a.localeCompare(b);
+                });
+
+            letters.forEach(letter => {
+                const morse = morseCode[letter];
+                const div = document.createElement('div');
+                
+                div.className = `morse-chart-letter cursor-pointer flex flex-col items-center justify-center rounded-2xl py-3 px-1 text-center active:scale-[0.985]`;
+                div.innerHTML = `
+                    <div class="text-[27px] font-bold tracking-[-1px] text-white mb-px">${letter}</div>
+                    <div class="font-mono text-[9.5px] text-blue-400 tracking-[1.8px] leading-none">${morse}</div>
+                `;
+                
+                div.onclick = () => {
+                    playSingleLetter(letter);
+                    div.style.borderColor = '#3b82f6';
+                    setTimeout(() => {
+                        if (div) div.style.borderColor = '#27251f';
+                    }, 580);
+                };
+                
+                container.appendChild(div);
+            });
+        }
+
+        async function playFullMorseAlphabet() {
+            if (isPlaying) stopPlayback();
+            
+            const letters = Object.keys(morseCode)
+                .filter(k => k.length === 1 && /[A-Z]/.test(k))
+                .sort();
+            
+            isPlaying = true;
+            updateStatus('מנגן אלפבית...', 'playing');
+            const display = document.getElementById('letter-display');
+            
+            for (let i = 0; i < letters.length; i++) {
+                if (!isPlaying) break;
+                const L = letters[i];
+                display.textContent = L;
+                updateCurrentInfo(`אות ${L} (${i+1}/${letters.length})`);
+                await animateLetter(L, false);
+                await sleep(195 / speedFactor);
+            }
+            
+            isPlaying = false;
+            updateStatus('האלפבית הושלם', 'done');
+            setTimeout(() => updateStatus('מוכן'), 1500);
+        }
+
+        function demoKeyPress() {
+            const key = document.getElementById('morse-key');
+            if (!key) return;
+            key.classList.add('pressing');
+            playBeep(165, 660);
+            setTimeout(() => key.classList.remove('pressing'), 210);
+        }
+
+        function toggleFocusMode() {
+            const card = document.getElementById('visualizer-card');
+            isFocusMode = !isFocusMode;
+            
+            if (isFocusMode) {
+                card.style.position = 'fixed';
+                card.style.top = '4%';
+                card.style.left = '4%';
+                card.style.right = '4%';
+                card.style.bottom = '4%';
+                card.style.zIndex = '999';
+                card.style.padding = '3rem';
+                card.style.borderRadius = '2.25rem';
+            } else {
+                card.style.position = '';
+                card.style.top = '';
+                card.style.left = '';
+                card.style.right = '';
+                card.style.bottom = '';
+                card.style.zIndex = '';
+                card.style.padding = '';
+                card.style.borderRadius = '';
+            }
+        }
+
+        function showHelp() {
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black/90 flex items-center justify-center z-[200] p-6';
+            modal.innerHTML = `
+                <div class="max-w-md w-full bg-zinc-900 border border-zinc-700 rounded-3xl p-8 text-sm">
+                    <div class="flex justify-between mb-6">
+                        <div class="font-semibold text-2xl tracking-tight">איך משתמשים</div>
+                        <button onclick="this.closest('.fixed').remove()" class="text-zinc-400 hover:text-white text-xl leading-none">×</button>
+                    </div>
+                    
+                    <div class="space-y-5 text-zinc-300 text-[13.5px]">
+                        <div>1. הקלד מילה או משפט (או השתמש בכפתורי המילים/משפטים הנפוצים).</div>
+                        <div>2. לחץ <span class="font-semibold text-white">"הפעל אנימציה + צליל"</span> — האותות נבנים עם אנימציה וצליל מדויק.</div>
+                        <div>3. לחץ על כל אות ב"המשפט שבונים" כדי לנגן אותה בנפרד.</div>
+                        <div>4. השתמש בטבלת המורס למטה ללימוד מהיר של אותות בודדים.</div>
+                    </div>
+                    
+                    <div class="mt-7 pt-5 border-t border-zinc-700 text-xs text-zinc-400">
+                        טיפ: אפשר לשנות מהירות ועוצמת צליל. ב-Focus Mode האנימציה מתרחבת.
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            modal.onclick = e => { if (e.target === modal) modal.remove(); };
+        }
+
+        function setupControls() {
+            // Speed
+            const speedSlider = document.getElementById('speed-slider');
+            speedSlider.value = "1.0";
+            document.getElementById('speed-value').textContent = "1.00×";
+            speedSlider.oninput = updateSpeedLabel;
+            
+            // Volume
+            const volSlider = document.getElementById('volume-slider');
+            volSlider.oninput = updateVolume;
+            document.getElementById('volume-value').textContent = "75%";
+            
+            // Keyboard
+            document.addEventListener('keydown', e => {
+                if (e.key === '/' && document.activeElement.tagName === 'BODY') {
+                    e.preventDefault();
+                    document.getElementById('text-input').focus();
+                }
+                if (e.key === ' ' && document.activeElement.id !== 'text-input') {
+                    e.preventDefault();
+                    if (isPlaying) stopPlayback();
+                    else if (currentText) playFromIndex(currentIndex);
+                    else prepareAndPlay();
+                }
+                if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'r') {
+                    e.preventDefault();
+                    loadRandomWord();
+                }
+            });
+
+            const input = document.getElementById('text-input');
+            input.addEventListener('keydown', e => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    prepareAndPlay();
+                }
+            });
+        }
+
+        function initialize() {
+            initTailwind();
+            
+            // Default
+            const defaultText = "HELLO WORLD";
+            document.getElementById('text-input').value = defaultText;
+            currentText = defaultText;
+            buildSentenceDisplay(defaultText);
+            document.getElementById('letter-display').textContent = 'H';
+            
+            createMorseChart();
+            setupControls();
+            
+            updateStatus('מוכן');
+            updateCurrentInfo('לחץ "הפעל" או בחר מילה נפוצה');
+            
+            // Easter egg on logo
+            const logo = document.querySelector('.fa-satellite');
+            if (logo) {
+                logo.parentElement.onclick = () => loadRandomSentence();
+                logo.style.cursor = 'pointer';
+            }
+
+            console.log('%c[MorseViz v2] Premium version ready — more beautiful & polished.', 'color:#2563eb');
+        }
+
+        window.onload = initialize;
+    </script>
+</body>
+</html>

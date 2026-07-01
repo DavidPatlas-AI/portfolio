@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>מורס, רעש לבן וחקירת 7500 - מסמך עומק בטוח</title>
+<style>
+:root{
+  --bg:#07111f;--bg2:#0f172a;--card:#111c33;--card2:#17223d;--text:#edf2ff;--muted:#a9b4cc;
+  --accent:#7dd3fc;--accent2:#a78bfa;--warn:#fbbf24;--good:#34d399;--bad:#fb7185;--line:#2b3b5f;
+}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,"Noto Sans Hebrew",sans-serif;background:radial-gradient(circle at top,#1e3a8a 0,#0f172a 36%,#050914 100%);color:var(--text);line-height:1.78}.wrap{max-width:1200px;margin:auto;padding:28px}header{padding:46px 30px;border:1px solid var(--line);border-radius:30px;background:linear-gradient(135deg,rgba(125,211,252,.18),rgba(167,139,250,.14));box-shadow:0 22px 70px rgba(0,0,0,.38)}h1{font-size:clamp(30px,5vw,58px);margin:0 0 12px}h2{font-size:30px;margin:44px 0 18px;border-right:5px solid var(--accent);padding-right:14px}h3{font-size:22px;margin:24px 0 10px;color:#dbeafe}h4{font-size:18px;margin:20px 0 8px;color:#e0f2fe}p{margin:10px 0}.lead{font-size:20px;color:#dbeafe;max-width:980px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px}.card{background:rgba(17,28,51,.9);border:1px solid var(--line);border-radius:22px;padding:22px;box-shadow:0 12px 30px rgba(0,0,0,.25)}.card2{background:rgba(23,34,61,.92);border:1px solid var(--line);border-radius:20px;padding:18px}.tag{display:inline-block;padding:5px 11px;border-radius:999px;background:rgba(125,211,252,.14);border:1px solid rgba(125,211,252,.35);color:#dff7ff;font-size:14px;margin:3px}.good{color:var(--good)}.bad{color:var(--bad)}.warn{color:var(--warn)}.muted{color:var(--muted)}.timeline{position:relative;margin:20px 0}.step{position:relative;margin:0 0 14px;padding:16px 20px;background:rgba(22,33,61,.88);border:1px solid var(--line);border-radius:18px}.step b{color:var(--accent)}table{width:100%;border-collapse:collapse;margin:14px 0;background:rgba(17,28,51,.72);border-radius:18px;overflow:hidden}th,td{border:1px solid var(--line);padding:12px 14px;vertical-align:top}th{background:#1e2c4f;color:#e0f2fe}.quote{border-right:4px solid var(--accent2);background:rgba(167,139,250,.1);padding:14px 18px;border-radius:14px;margin:14px 0}.warning{border:1px solid rgba(251,191,36,.45);background:rgba(251,191,36,.12);padding:18px;border-radius:18px}.ok{border:1px solid rgba(52,211,153,.38);background:rgba(52,211,153,.1);padding:18px;border-radius:18px}.no{border:1px solid rgba(251,113,133,.38);background:rgba(251,113,133,.1);padding:18px;border-radius:18px}.toc a{color:#e0f2fe;text-decoration:none}.toc li{margin:7px 0}.small{font-size:14px;color:var(--muted)}footer{margin:50px 0 20px;color:var(--muted);text-align:center}.ltr{direction:ltr;text-align:left}code{background:#07111f;border:1px solid #243454;border-radius:7px;padding:1px 6px}.print{position:sticky;top:12px;float:left;background:#38bdf8;color:#05111f;border:0;border-radius:999px;padding:10px 18px;font-weight:bold;cursor:pointer}.diagram{font-family:Arial,"Noto Sans Hebrew",sans-serif;background:#07111f;border:1px solid #263b60;border-radius:18px;padding:18px;margin:14px 0;overflow:auto}.mono{font-family:Consolas,Menlo,monospace;direction:ltr;text-align:left;white-space:pre-wrap}.badge{display:inline-block;border:1px solid var(--line);border-radius:10px;padding:2px 8px;background:#0b1530;color:#bfdbfe;font-size:13px}.split{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}@media(max-width:850px){.split{grid-template-columns:1fr}.wrap{padding:16px}header{padding:30px 20px}.print{float:none;margin-bottom:12px}}@media print{body{background:white;color:#111}.card,.card2,.step,header,.diagram{box-shadow:none;background:white;color:#111}.print{display:none}a{color:#111}.tag,.badge{color:#111}}
+</style>
+<style>
+.tool-panel{background:rgba(5,14,31,.82);border:1px solid var(--line);border-radius:22px;padding:20px;margin:18px 0}.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:12px 0}.controls label{display:block;color:#dbeafe;font-weight:bold;margin-bottom:5px}.controls input,.controls select,.controls textarea{width:100%;border:1px solid #33476d;border-radius:12px;background:#07111f;color:var(--text);padding:10px;font-size:15px}.btn{border:0;border-radius:999px;padding:10px 16px;margin:5px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#07111f;font-weight:bold;cursor:pointer}.btn.secondary{background:#1e2c4f;color:#dbeafe;border:1px solid #3d5686}.result{background:#081224;border:1px solid #243454;border-radius:16px;padding:14px;margin-top:12px;white-space:pre-wrap}.meter{height:14px;background:#07111f;border:1px solid #263b60;border-radius:999px;overflow:hidden}.meter span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--good),var(--warn),var(--bad));transition:.3s}.pill-row{display:flex;flex-wrap:wrap;gap:8px}.pill{border:1px solid #33476d;border-radius:999px;padding:7px 10px;background:#0b1530;color:#dbeafe;cursor:pointer}.pill.active{background:#38bdf8;color:#05111f}.canvasbox{width:100%;height:160px;background:#07111f;border:1px solid #263b60;border-radius:16px}.hypo{display:none}.hypo.show{display:block}
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<!-- SignalLab unified nav — injected in all tool pages -->
+<style>
+.sl-nav{background:#050508;border-bottom:1px solid #27272f;padding:.45rem 1rem;display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;font-family:Inter,system-ui,sans-serif;font-size:.8rem;position:sticky;top:0;z-index:9999}
+.sl-nav a{color:#a1a1aa;text-decoration:none;padding:.3rem .65rem;border-radius:8px;transition:.15s}
+.sl-nav a:hover{color:#fff;background:#18181b}
+.sl-nav a.on{color:#60a5fa;background:rgba(59,130,246,.12);font-weight:600}
+.sl-brand{color:#fff!important;font-weight:700;letter-spacing:-.02em}
+.sl-brand span{color:#71717a;font-weight:400;font-size:.72rem;margin-inline-start:.35rem}
+</style>
+<nav class="sl-nav">
+  <a class="sl-brand" href="index.html"><i class="fa-solid fa-wave-square"></i> SignalLab <span>מעבדת אותות</span></a>
+  <a href="morse.html" data-sl="morse">📡 מורס</a>
+  <a href="code.html" data-sl="code">▶️ קוד</a>
+  <a href="brief.html" data-sl="brief">📋 מסמך</a>
+  <a href="index.html" style="margin-inline-start:auto">🏠 בית</a>
+</nav>
+<script>document.querySelectorAll('.sl-nav a[data-sl]').forEach(a=>{if(location.pathname.includes(a.dataset.sl)||location.href.includes(a.getAttribute('href')))a.classList.add('on');});</script>
+<div class="wrap">
+<button class="print" onclick="window.print()">הדפסה / PDF</button>
+<header>
+<h1>מורס, רעש לבן וחקירת אירוע 7500</h1>
+<p class="lead">מסמך עומק שמארגן את כל השיחה: מהאירוע החדשותי, דרך ההשערות על טרנספונדר, VHF, מורס, רעש לבן, EMI, הארקות, TCAS, FMS, ADS-B ומערכות קרקע - ועד למסגרת חקירה ראייתית. המסמך מסביר לעומק איך מורס ורעש לבן עובדים מבחינת תקשורת ואותות, בלי להפוך את זה למדריך תקיפה על מערכת תעופתית.</p>
+<div><span class="tag">7500</span><span class="tag">טרנספונדר</span><span class="tag">מורס</span><span class="tag">רעש לבן</span><span class="tag">EMI</span><span class="tag">Mode A / Mode S</span><span class="tag">ראיות לפני מסקנות</span></div>
+</header>
+
+<section class="card toc">
+<h2>תוכן עניינים</h2>
+<ol>
+<li><a href="#boundary">גבולות המסמך</a></li>
+<li><a href="#event">רקע האירוע והשאלה המרכזית</a></li>
+<li><a href="#codes">מהו קוד 7500</a></li>
+<li><a href="#morse">איך עובד מורס באמת</a></li>
+<li><a href="#white-noise">איך עובד רעש לבן</a></li>
+<li><a href="#ook">מורס עטוף רעש לבן - הסבר אותות מלא</a></li>
+<li><a href="#aircraft-audio">מה קורה כשאות כזה נכנס לערוץ שמע תעופתי</a></li>
+<li><a href="#not-direct">למה זה לא אמור לשנות טרנספונדר ישירות</a></li>
+<li><a href="#hypotheses">כל ההשערות שעלו בשיחה</a></li>
+<li><a href="#ground">הארקה משותפת, EMI ו-Latch-up - מה כן אמיתי פיזיקלית</a></li>
+<li><a href="#ground-systems">אפשרות אחרת: הקרקע ראתה 7500 גם אם המטוס לא שידר</a></li>
+<li><a href="#evidence">תוכנית חקירה ראייתית</a></li>
+<li><a href="#expert">נוסח פנייה לאיש מקצוע</a></li>
+<li><a href="#bottom">שורה תחתונה</a></li>
+</ol>
+</section>
+
+<section id="boundary">
+<h2>1. גבולות המסמך</h2>
+<div class="warning">
+<b>חשוב:</b> המסמך אינו מדריך ליצירת הפרעה, שיבוש או הפעלה של מערכות מטוס. הוא מסביר את העקרונות של מורס, רעש לבן, ערוצי שמע, הפרעות אלקטרומגנטיות וחקירת אירועים. כל שחזור מעשי של תרחיש במערכות תעופה חייב להיעשות רק על ידי יצרן, מעבדה מוסמכת או גורם בטיחות מוסמך, בסביבה מבוקרת וללא סיכון למערכות מבצעיות.
+</div>
+<div class="ok">
+<b>מטרת המסמך:</b> להפוך רצף ארוך של רעיונות לשפה מקצועית: עובדות, השערות, מה לא מסתדר, מה ניתן לבדוק, ומה צריך לשאול אדם שמכיר אוויוניקה אמיתית.
+</div>
+</section>
+
+<section id="event">
+<h2>2. רקע האירוע והשאלה המרכזית</h2>
+<div class="card">
+<p>השיחה התחילה מדיווח על מטוס שהיה בדרכו מוורשה לנתב״ג ולכאורה הופעל בו קוד חירום ביטחוני. בעקבות כך הוזנקו מטוסי קרב. לאחר מכן נאמר שצוות המטוס טען שמדובר בתקלה במערכת ולא באירוע אמת.</p>
+<p>התגובה הראשונה הייתה לשאול: האם זו פריצה? האם מישהו הפעיל התרעה ישנה? האם קיים מנגנון ישן, כמעט נשכח, שיכול לגרום לכך?</p>
+<div class="quote"><b>השאלה המקצועית המדויקת:</b> האם יש הוכחה שהמטוס עצמו שידר קוד 7500, או שמערכת הקרקע פירשה, הציגה או קישרה מידע באופן שגרם להופעת 7500?</div>
+<div class="grid">
+<div class="card2"><h3>תרחיש א - המטוס שידר</h3><p>הטרנספונדר של המטוס שידר בפועל 7500. אז החקירה עוברת ללוח הבקרה, טרנספונדר, חיווט, לוגים, תחזוקה, FDR/QAR/CVR ותיעוד יצרן.</p></div>
+<div class="card2"><h3>תרחיש ב - הקרקע פירשה</h3><p>מערכת מכ״ם, ADS-B, קורלציה, תצוגה או שרשרת בקרה זיהתה או הציגה 7500, אך ייתכן שהמטוס לא שידר אותו בפועל.</p></div>
+</div>
+</div>
+</section>
+
+<section id="codes">
+<h2>3. מהו קוד 7500?</h2>
+<div class="grid">
+<div class="card"><h3>7500</h3><p>קוד טרנספונדר בינלאומי שמשמעותו התערבות בלתי חוקית או חשד לחטיפה. הופעה שלו מחייבת תגובה מבצעית מיידית.</p></div>
+<div class="card"><h3>7600</h3><p>אובדן קשר רדיו. מתאים למצב שבו הצוות אינו מצליח לתקשר עם הבקרה.</p></div>
+<div class="card"><h3>7700</h3><p>מצב חירום כללי. אינו מצביע בהכרח על חטיפה או אובדן קשר.</p></div>
+</div>
+<p class="quote">אחד הבלבולים לאורך השיחה היה בין אובדן קשר, שיבוש קשר, התרעה ביטחונית וקוד חטיפה. אלה דברים שונים, גם אם בפועל כולם יכולים לגרום להזנקת מטוסי קרב או לתגובה מבצעית.</p>
+</section>
+
+<section id="morse">
+<h2>4. איך עובד מורס באמת</h2>
+<div class="split">
+<div class="card">
+<h3>מורס אינו ״קוד מחשב״</h3>
+<p>מורס הוא שיטת קידוד של תווים באמצעות יחידות זמן קצרות וארוכות. נקודה היא פולס קצר, קו הוא פולס ארוך, ובין סימנים יש רווחים. מבחינה הנדסית, מורס הוא לא קסם ולא פרוטוקול דיגיטלי חכם. הוא פשוט תבנית בזמן.</p>
+<p>אפשר להעביר מורס באמצעות צליל, אור, אות רדיו, זרם חשמלי, נקישות או כל אמצעי שמסוגל להדליק ולכבות מצב.</p>
+</div>
+<div class="card">
+<h3>המידע נמצא בזמן</h3>
+<p>המידע במורס אינו נמצא בתדר אחד מסוים, אלא ביחס בין משכי הפולסים והרווחים. לכן, כל מערכת שיכולה למדוד ״יש אות / אין אות״ לאורך זמן יכולה עקרונית לקודד מורס, גם אם היא לא מבינה שזה מורס.</p>
+</div>
+</div>
+<div class="diagram mono">דוגמה רעיונית בלבד:
+
+אות בסיסי:
+ON  קצר  = נקודה
+ON  ארוך = קו
+OFF קצר  = רווח פנימי
+OFF ארוך = רווח בין תווים
+
+כלומר מורס = תבנית תזמון, לא בהכרח צליל.</div>
+<div class="warning"><b>דיוק חשוב:</b> העובדה שמורס הוא תבנית זמן לא אומרת שכל מערכת שחשופה אליו תגיב אליו. כדי שמורס ישפיע על מערכת, חייב להיות מסלול קלט פיזי או לוגי שמתרגם את התבנית למשהו שהמערכת קוראת.</div>
+</section>
+
+<section id="white-noise">
+<h2>5. איך עובד רעש לבן</h2>
+<div class="card">
+<p>רעש לבן הוא אות שמכיל רכיבי תדר רבים. בעולם השמע הוא נשמע כמו ״שששש״ רציף. השם ״לבן״ מגיע מהאנלוגיה לאור לבן שמכיל צבעים רבים.</p>
+<p>באופן אינטואיטיבי: אם טון רגיל הוא קו דק על ספקטרום, רעש לבן הוא ענן רחב של אנרגיה על פני תחום תדרים.</p>
+</div>
+<table>
+<tr><th>סוג אות</th><th>איך הוא נשמע</th><th>מה מאפיין אותו</th><th>מה רואים בספקטרום</th></tr>
+<tr><td>טון נקי</td><td>צפצוף</td><td>תדר דומיננטי אחד</td><td>שיא צר</td></tr>
+<tr><td>דיבור</td><td>קול אנושי</td><td>תדרים משתנים ותבניות הברות</td><td>מבנה משתנה</td></tr>
+<tr><td>רעש לבן</td><td>שששש</td><td>אנרגיה מפוזרת בתחום רחב</td><td>רצפה רחבה</td></tr>
+<tr><td>רעש לבן מפוסק</td><td>ששש - שקט - ששש</td><td>רעש שמופעל ומכובה בזמן</td><td>רצפה רחבה עם מעטפת בזמן</td></tr>
+</table>
+<div class="quote">הנקודה העמוקה: רעש לבן יכול להסתיר תבנית, כי האוזן שומעת ״רעש״ ולא בהכרח שומעת את המעטפת שמדליקה ומכבה אותו.</div>
+</section>
+
+<section id="ook">
+<h2>6. מורס עטוף רעש לבן - הסבר אותות מלא</h2>
+<div class="card">
+<h3>הרעיון הכללי</h3>
+<p>במקום להעביר מורס כצפצוף ברור, אפשר להעביר אותו כמעטפת שמדליקה ומכבה רעש. מבחינת אדם, זה עשוי להישמע כמו רעש שמשתנה בעוצמה. מבחינת מכשיר שמודד נוכחות אות, זה יכול להיראות כמו פולסים.</p>
+<p>השם הכללי לזה הוא <span class="badge">On-Off Keying</span> - מפתוח על ידי הפעלה וכיבוי. המידע אינו בתוכן הרעש, אלא ברגעים שבהם הרעש מופעל או נעלם.</p>
+</div>
+<div class="diagram mono">מבנה רעיוני:
+
+נושא/ערוץ שמע:     ─────────────────────────
+רעש לבן:            ██████      ███████████
+מעטפת מורס:          ON          ON ארוך
+מה שאוזן שומעת:      שששש        שששששששש
+מה שמודד סף רואה:    1           1
+                     0 בין הפולסים</div>
+<div class="grid">
+<div class="card2"><h3>מה מסתיר?</h3><p>האדם לא שומע בהכרח ״נקודה-קו״ אלא רעש. אם הרעש חלש, הוא יכול להיראות כמו הפרעת קשר.</p></div>
+<div class="card2"><h3>מה נשאר גלוי?</h3><p>בניתוח ספקטרלי או בדיקת מעטפת אפשר לראות שהרעש אינו אקראי לחלוטין, אלא מופעל וכבה לפי תבנית זמן.</p></div>
+<div class="card2"><h3>מה לא נכון לומר?</h3><p>לא נכון לומר שהרעש ״מכיל פקודה״ למערכת שלא תוכננה לקרוא אותו. הוא רק אות פיזיקלי. צריך מסלול קלט רלוונטי כדי שתהיה השפעה.</p></div>
+</div>
+<h3>שלוש שכבות של האות</h3>
+<table>
+<tr><th>שכבה</th><th>מה היא עושה</th><th>מה המשמעות לחקירה</th></tr>
+<tr><td>שכבת הרעש</td><td>יוצרת תוכן שמע רחב-סרט</td><td>אפשר לזהות בספקטרוגרמה כענן תדרים</td></tr>
+<tr><td>שכבת המעטפת</td><td>מדליקה ומכבה את הרעש</td><td>אפשר לזהות בניתוח עוצמה לאורך זמן</td></tr>
+<tr><td>שכבת הפרשנות</td><td>אדם או מערכת מפרשים את התבנית</td><td>בלי פרשן או מסלול קלט, אין ״פקודה״</td></tr>
+</table>
+</section>
+
+<section id="aircraft-audio">
+<h2>7. מה קורה כשאות כזה נכנס לערוץ שמע תעופתי</h2>
+<div class="card">
+<p>במערכת קשר תעופתית, אות רדיו בתחום VHF מתקבל במקלט, עובר גילוי AM, וממנו יוצא שמע אל מערכת האודיו של תא הטייס. במקביל, במקלטים רבים קיימת פונקציית squelch שמחליטה האם לפתוח את השמע או להשתיק רעש רקע.</p>
+</div>
+<div class="diagram mono">שרשרת רעיונית ולא דגם ספציפי:
+
+אנטנת VHF
+   ↓
+מקלט רדיו
+   ↓                 ↘
+יציאת שמע לאוזניות     החלטת Squelch: יש אות / אין אות
+   ↓                    ↓
+Audio Panel             חיווי / פתיחת שמע / לוגיקה פנימית
+   ↓
+אוזניות / רמקול</div>
+<div class="grid">
+<div class="card2"><h3>RX Audio</h3><p>האות שהטייס עשוי לשמוע: דיבור, רעש, צפצוף או שילוב. במקרה של רעש לבן מפוסק, הוא עשוי לשמוע שינויי רעש.</p></div>
+<div class="card2"><h3>Squelch</h3><p>מנגנון שמנסה להחליט מתי לפתוח את השמע. הוא אינו אמור להיות פקודה לטרנספונדר. הוא קשור לרדיו או למערכת השמע.</p></div>
+<div class="card2"><h3>Audio Panel</h3><p>מערכת ניהול שמע בתא הטייס. היא מנתבת מה הטייס שומע ומה נכנס למיקרופון, אבל אינה אמורה לבחור קוד טרנספונדר.</p></div>
+</div>
+<div class="warning"><b>המסקנה:</b> מורס עם רעש לבן יכול להסביר הפרעת שמע, פתיחת squelch או חיווי קשר. זה עדיין לא מסביר שינוי קוד טרנספונדר.</div>
+</section>
+
+<section id="not-direct">
+<h2>8. למה זה לא אמור לשנות טרנספונדר ישירות</h2>
+<div class="card">
+<p>טרנספונדר אינו ״מאזין״ למורס או לשמע. הוא מקבל קוד מלוח בקרה, מאפיק נתונים או מממשק מוגדר. מערכת הקשר הקולית ומערכת הטרנספונדר הן מערכות שונות, גם אם הן חולקות מטוס, חשמל, מקום או חלקים ממערכת תצוגה.</p>
+</div>
+<table>
+<tr><th>טענה שעלתה</th><th>בדיקה מקצועית</th><th>מסקנה זהירה</th></tr>
+<tr><td>מורס ברדיו משנה 7500</td><td>האם הטרנספונדר מפענח שמע?</td><td>לא אמור להיות כך</td></tr>
+<tr><td>Squelch שולח קוד</td><td>האם קו Squelch מחובר למסלול בחירת קוד?</td><td>צריך שרטוט. בלי שרטוט זו ספקולציה</td></tr>
+<tr><td>TCAS משנה קוד</td><td>האם TCAS שולח פקודות קוד לטרנספונדר?</td><td>בדרך כלל TCAS משתמש במידע, לא בוחר את הקוד</td></tr>
+<tr><td>FMS / ACARS מעדכנים קוד</td><td>האם קיימת פקודת שינוי קוד מהקרקע?</td><td>לא להניח בלי תיעוד יצרן</td></tr>
+<tr><td>ELT או 121.5 משפיעים</td><td>האם ELT מחובר למסלול קוד?</td><td>לא ידוע כמנגנון רגיל לשינוי Squawk</td></tr>
+</table>
+<div class="quote">העיקרון: עצם זה ששתי מערכות נמצאות באותו מטוס לא אומר שיש ביניהן מסלול מידע שמסוגל לשנות קוד.</div>
+</section>
+
+<section id="hypotheses">
+<h2>9. כל ההשערות שעלו בשיחה</h2>
+<div class="timeline">
+<div class="step"><b>פריצה ישירה:</b> נבחנה האפשרות שמישהו חדר למערכות המטוס ושינה את הקוד. לא נמצאה ראיה פומבית לכך.</div>
+<div class="step"><b>טעות אנוש או תקלה:</b> האפשרות הפשוטה ביותר, ועדיין אחת הסבירות: הזנה שגויה, כשל רגעי, תקלה במערכת או בלבול בדיווח.</div>
+<div class="step"><b>מורס ישן:</b> עלה הרעיון שמנגנון עתיק כמו מורס יפעיל טריגר נשכח. המסקנה: מורס יכול להיות תבנית זמן, אבל צריך מסלול קלט אמיתי.</div>
+<div class="step"><b>SELCAL / ADF / VOR Ident:</b> מערכות שקשורות לטונים או זיהוי שמע. הן יכולות להסביר חיווי או צליל, לא שינוי Squawk ללא מסלול נוסף.</div>
+<div class="step"><b>VHF / PTT / MIC / Intercom:</b> נבדקו כנקודות כניסה לשמע או רעש. הן קשורות לקול ולתקשורת, לא ישירות לטרנספונדר.</div>
+<div class="step"><b>Gillham / ARINC:</b> נבדק האם קווי קוד או אפיקי נתונים יכולים להיקרא לא נכון. זה תלוי דגם ושרטוט.</div>
+<div class="step"><b>EMI / Crosstalk:</b> מנגנון פיזיקלי אמיתי: אותות יכולים להשפיע על כבלים סמוכים. השאלה היא האם העוצמה, המסלול והסף מספיקים.</div>
+<div class="step"><b>Ground bounce / הארקה משותפת:</b> מנגנון אמיתי בהנדסת חומרה. דורש הוכחה שיש הארקה משותפת רלוונטית ושיש השפעה על קלטי הקוד.</div>
+<div class="step"><b>Brown-out / Reset:</b> איפוס רגעי יכול לגרום להתנהגות לא צפויה. אבל אין בסיס להניח שברירת המחדל תהיה דווקא 7500.</div>
+<div class="step"><b>Latch-up:</b> תופעה אמיתית בשבבים, אבל בדרך כלל דורשת תנאים קיצוניים או כשל ממשי. לא מספיק לומר ״RF״.</div>
+<div class="step"><b>Mode S / 1090 / Ghost Track:</b> אפשרות שהבעיה אינה במטוס אלא במערכת הקרקע או בזיהוי מכ״ם. זה כיוון ראייתי חשוב.</div>
+</div>
+</section>
+
+<section id="ground">
+<h2>10. הארקה משותפת, EMI ו-Latch-up - מה כן אמיתי פיזיקלית</h2>
+<div class="grid">
+<div class="card"><h3>EMI</h3><p>הפרעה אלקטרומגנטית יכולה להיכנס דרך כבלים, מחברים, אנטנות, ספקי כוח והארקות. זה תחום אמיתי לחלוטין.</p></div>
+<div class="card"><h3>Common Impedance Coupling</h3><p>כאשר שני מעגלים חולקים מסלול הארקה או הזנה, זרם במעגל אחד יכול ליצור נפילת מתח שמורגשת במעגל אחר.</p></div>
+<div class="card"><h3>Ground Bounce</h3><p>קפיצה רגעית בפוטנציאל ההארקה בזמן מעבר זרם. יכולה לגרום לקריאה שגויה במעגלים רגישים.</p></div>
+<div class="card"><h3>Latch-up</h3><p>מצב שבו מבנה טפילי בשבב CMOS נכנס להולכה חריגה. זה קיים, אך לא מניחים אותו בלי ראיה פיזית.</p></div>
+</div>
+<div class="warning"><b>דיוק קריטי:</b> כל המנגנונים האלה אמיתיים, אבל הם אינם מוכיחים שהאירוע קרה כך. כדי לטעון זאת צריך שרטוט, מדידות, לוגים ושחזור מבוקר.</div>
+</section>
+
+<section id="ground-systems">
+<h2>11. אפשרות אחרת: הקרקע ראתה 7500 גם אם המטוס לא שידר</h2>
+<div class="card">
+<p>בשלב מתקדם בשיחה התחזק כיוון אחר: אולי אין צורך להסביר איך מורס נכנס לטרנספונדר, כי ייתכן שהטרנספונדר לא שינה קוד בכלל. ייתכן שמערכת הקרקע, מכ״ם משני, קורלציית מטרות, תצוגת בקרה או מקור נתונים אחר יצרו או הציגו את 7500.</p>
+</div>
+<table>
+<tr><th>אפשרות</th><th>מה צריך לבדוק</th></tr>
+<tr><td>Ghost Track</td><td>האם הופיעה מטרה מדומה או קורלציה שגויה בין שתי מטרות?</td></tr>
+<tr><td>False Reply</td><td>האם התקבלה תשובה ממקור אחר שיוחסה למטוס?</td></tr>
+<tr><td>ADS-B / Mode S mismatch</td><td>האם נתוני ADS-B, Mode A/C ו-Mode S הסכימו ביניהם?</td></tr>
+<tr><td>תצוגת בקרה</td><td>האם הקוד הופיע במערכת אחת בלבד או בכל שרשרת הבקרה?</td></tr>
+<tr><td>אובדן קשר</td><td>האם בכלל מדובר ב-7500 או באירוע 7600/אובדן קשר שדווח לא נכון?</td></tr>
+</table>
+<div class="quote">זו שאלה חזקה לאיש מקצוע: איפה בדיוק נוצרה האינדיקציה הראשונה ל-7500 - במטוס, במכ״ם, במערכת קורלציה או בתצוגת הבקר?</div>
+</section>
+
+<section id="evidence">
+<h2>12. תוכנית חקירה ראייתית</h2>
+<div class="card">
+<p>הדרך המדעית אינה לשאול ״איך אני מוכיח שההשערה נכונה״, אלא ״מה יפריך אותה״. לכן החקירה צריכה להתחיל מהנתונים, לא מהמנגנון.</p>
+</div>
+<table>
+<tr><th>שאלה</th><th>ראיה דרושה</th><th>מה המשמעות</th></tr>
+<tr><td>האם המטוס שידר 7500?</td><td>נתוני ATC, ADS-B, Mode A/C/S, FDR/QAR אם קיימים</td><td>מכריע אם לחקור את המטוס או את הקרקע</td></tr>
+<tr><td>האם הקוד נבחר בלוח?</td><td>לוג Selected Code או נתוני תחזוקה</td><td>אם כן, הבעיה קרובה ללוח/קלטים. אם לא, ייתכן בעיית שידור/קרקע</td></tr>
+<tr><td>האם היה רעש קשר?</td><td>CVR, הקלטות ATC, תלונות צוות</td><td>יכול לתמוך בהפרעת קשר, לא בהכרח בשינוי קוד</td></tr>
+<tr><td>האם היו חריגות חשמל?</td><td>FDR, Bus voltage, תקלות ELEC, תחזוקה</td><td>יכול לתמוך בכשל חשמלי או EMI</td></tr>
+<tr><td>האם יש דפוס בצי?</td><td>דוחות תחזוקה, SDR, אירועים חוזרים</td><td>כשל חוזר חזק יותר מאירוע בודד</td></tr>
+<tr><td>האם קיימת ארכיטקטורה מתאימה?</td><td>WDM, AMM, CMM, Wiring Diagram</td><td>בלי זה אין מסלול פיזי מאומת</td></tr>
+</table>
+</section>
+
+<section id="expert">
+<h2>13. נוסח פנייה לאיש מקצוע</h2>
+<div class="card">
+<p>זה הנוסח הכי נכון לשלוח למורה שהוא תת-אלוף לשעבר או לאיש אוויוניקה:</p>
+<div class="quote">
+שלום,<br><br>
+בעקבות אירוע שפורסם על מטוס שלכאורה שידר קוד חירום 7500, ניסיתי לבנות עץ השערות ולא לקבוע מסקנה. אני לא טוען שמצאתי פריצה. להפך - אני רוצה להבין איפה ההנחות שלי נשברות.<br><br>
+השאלה המרכזית שלי היא: באירוע כזה, איך בודקים האם המטוס עצמו שידר 7500, או שמערכת הקרקע פירשה/הציגה 7500?<br><br>
+חשבתי על כיווני בדיקה כמו FDR/QAR, CVR, נתוני ATC/ADS-B/Mode S, בדיקת לוח בקרה, טרנספונדר, חיווט, הארקות, תקלות EMI והיסטוריית תחזוקה.<br><br>
+אשמח אם תוכל לומר לי אילו כיוונים מקצועית רלוונטיים, אילו הנחות שגויות, ומה הדבר הראשון שחוקר אמיתי היה בודק.
+</div>
+</div>
+</section>
+
+<section id="bottom">
+<h2>14. שורה תחתונה</h2>
+<div class="ok">
+<p><b>מורס עם רעש לבן:</b> עובד כטכניקת הסתרה/מעטפת של אות. הוא יכול להיראות כמו רעש ולהכיל תבנית זמן ניתנת לזיהוי.</p>
+<p><b>אבל:</b> אין בכך כדי להראות שהוא יכול לשנות קוד טרנספונדר. כדי שזה יקרה צריך מסלול פיזי או לוגי מוכח ממערכת הקשר אל מערכת בחירת הקוד.</p>
+<p><b>הכיוון החזק ביותר כרגע:</b> לא להוסיף עוד מנגנונים, אלא לברר איפה הופיעה האינדיקציה הראשונה ל-7500 ומה אומר התיעוד של המטוס והמערכות.</p>
+</div>
+<div class="warning"><b>משפט סיכום:</b> רעש לבן ומורס יכולים להסביר הפרעת קשר או חתימת אות חשודה; הם לא מסבירים לבדם שינוי Squawk. ההפרדה הזאת היא ההבדל בין חקירה מקצועית לבין סיפור טכני שנשמע משכנע.</div>
+</section>
+
+
+<section id="functions">
+<h2>15. פונקציות אינטראקטיביות בתוך הקובץ</h2>
+<div class="warning"><b>גבול בטיחות:</b> הפונקציות כאן מיועדות ללמידה, ארגון ראיות וחשיבה חקירתית. הן לא מייצרות הוראות שידור, לא בונות אות RF, ולא מתארות איך לשבש מערכת תעופה.</div>
+
+<div class="tool-panel">
+<h3>א. ממיר מורס בטוח לטקסט</h3>
+<p class="muted">מראה איך רצף מורס בנוי ברמת תזמון מושגית בלבד.</p>
+<div class="controls">
+<div><label>טקסט/מספרים</label><input id="morseInput" value="7500" /></div>
+<div><label>משך נקודה רעיוני במילישניות</label><input id="dotMs" type="number" value="100" min="20" max="1000" /></div>
+</div>
+<button class="btn" onclick="showMorse()">הצג מורס ותזמון</button>
+<div id="morseOut" class="result"></div>
+</div>
+
+<div class="tool-panel">
+<h3>ב. תרשים רעש לבן + מעטפת מורס - הדגמה חזותית</h3>
+<p class="muted">הדגמה גרפית: רעש אקראי שמופיע ונעלם לפי מעטפת. זו המחשה בלבד, לא אות אמיתי לשימוש.</p>
+<canvas id="noiseCanvas" class="canvasbox"></canvas>
+<button class="btn" onclick="drawNoiseEnvelope()">צייר הדגמה</button>
+<button class="btn secondary" onclick="clearCanvas()">נקה</button>
+</div>
+
+<div class="tool-panel">
+<h3>ג. מטריצת ראיות - מה מחזק ומה מפריך</h3>
+<div class="controls">
+<div><label>FDR/QAR מראה שהקוד נבחר?</label><select id="evSelected"><option value="0">לא ידוע</option><option value="2">כן</option><option value="-2">לא</option></select></div>
+<div><label>נתוני קרקע ממספר מקורות מסכימים?</label><select id="evGround"><option value="0">לא ידוע</option><option value="2">כן</option><option value="-1">לא</option></select></div>
+<div><label>יש חריגת EMI/חשמל מתועדת?</label><select id="evEmi"><option value="0">לא ידוע</option><option value="1">כן</option><option value="-1">לא</option></select></div>
+<div><label>יש תקלות דומות בדגם?</label><select id="evFleet"><option value="0">לא ידוע</option><option value="1">כן</option><option value="-1">לא</option></select></div>
+</div>
+<button class="btn" onclick="scoreEvidence()">חשב כיוון חקירה</button>
+<div class="meter"><span id="evidenceMeter"></span></div>
+<div id="evidenceOut" class="result"></div>
+</div>
+
+<div class="tool-panel">
+<h3>ד. עץ השערות מהיר</h3>
+<div class="pill-row">
+<span class="pill active" onclick="filterHypotheses('all',this)">הכול</span>
+<span class="pill" onclick="filterHypotheses('aircraft',this)">במטוס</span>
+<span class="pill" onclick="filterHypotheses('ground',this)">בקרקע</span>
+<span class="pill" onclick="filterHypotheses('human',this)">אנושי/תפעולי</span>
+<span class="pill" onclick="filterHypotheses('rf',this)">RF/EMI</span>
+</div>
+<div class="grid" style="margin-top:12px">
+<div class="card2 hypo show" data-cat="aircraft rf"><h4>כשל חשמלי/EMI במטוס</h4><p>דורש ראיות של חריגה חשמלית, דגם רגיש או שחזור מבוקר. בלי זה - השערה בלבד.</p></div>
+<div class="card2 hypo show" data-cat="aircraft"><h4>תקלה פנימית בטרנספונדר</h4><p>דורשת בדיקת יחידה, לוגים, היסטוריית תחזוקה ובדיקת יצרן.</p></div>
+<div class="card2 hypo show" data-cat="ground"><h4>פירוש שגוי במערכת הקרקע</h4><p>בודקים איפה הופיעה האינדיקציה הראשונה: מכ״ם, ADS-B, קורלציה או תצוגה.</p></div>
+<div class="card2 hypo show" data-cat="human"><h4>טעות הזנה/בלבול דיבור</h4><p>נבדק מול CVR, הקלטות ATC, תזמון ופעולות צוות.</p></div>
+<div class="card2 hypo show" data-cat="rf ground"><h4>הפרעת קשר או שיבוש RF</h4><p>יכולה להסביר אובדן קשר או רעש, אך לא מוכיחה שינוי קוד בלי ראיות נוספות.</p></div>
+</div>
+</div>
+
+<div class="tool-panel">
+<h3>ה. מחולל נוסח פנייה קצר לאיש מקצוע</h3>
+<div class="controls">
+<div><label>שם/תואר</label><input id="expertName" value="שלום" /></div>
+<div><label>סגנון</label><select id="tone"><option value="short">קצר</option><option value="formal">רשמי</option><option value="technical">טכני</option></select></div>
+</div>
+<button class="btn" onclick="makeExpertMessage()">צור נוסח</button>
+<div id="expertOut" class="result"></div>
+</div>
+</section>
+
+<footer>נבנה כמסמך חקירה, לא כמדריך פעולה. גרסה מעמיקה עם דגש על מורס ורעש לבן.</footer>
+</div>
+
+<script>
+const MORSE={"A":".-","B":"-...","C":"-.-.","D":"-..","E":".","F":"..-.","G":"--.","H":"....","I":"..","J":".---","K":"-.-","L":".-..","M":"--","N":"-.","O":"---","P":".--.","Q":"--.-","R":".-.","S":"...","T":"-","U":"..-","V":"...-","W":".--","X":"-..-","Y":"-.--","Z":"--..","0":"-----","1":".----","2":"..---","3":"...--","4":"....-","5":".....","6":"-....","7":"--...","8":"---..","9":"----."};
+function morseFor(text){return text.toUpperCase().split('').map(ch=>ch===' '?' / ':(MORSE[ch]||'?')).join(' ')}
+function timingFor(seq,dot){let units=[];for(const ch of seq){if(ch==='.')units.push(`נקודה ${dot}ms`);else if(ch==='-')units.push(`קו ${dot*3}ms`);else if(ch===' ')units.push(`רווח אות ${dot*3}ms`);else if(ch==='/')units.push(`רווח מילה ${dot*7}ms`)}return units.join('
+')}
+function showMorse(){const txt=document.getElementById('morseInput').value||'';const dot=parseInt(document.getElementById('dotMs').value||100);const seq=morseFor(txt);document.getElementById('morseOut').textContent=`קלט: ${txt}
+מורס: ${seq}
+
+תזמון מושגי:
+${timingFor(seq,dot)}`}
+function drawNoiseEnvelope(){const c=document.getElementById('noiseCanvas'),ctx=c.getContext('2d');const dpr=window.devicePixelRatio||1;c.width=c.clientWidth*dpr;c.height=c.clientHeight*dpr;ctx.scale(dpr,dpr);const w=c.clientWidth,h=c.clientHeight;ctx.clearRect(0,0,w,h);ctx.strokeStyle='#263b60';ctx.beginPath();ctx.moveTo(0,h/2);ctx.lineTo(w,h/2);ctx.stroke();const seq=morseFor(document.getElementById('morseInput')?.value||'7500').replace(/ /g,'');let pattern=[];for(const ch of seq){if(ch==='.')pattern.push(1,0);if(ch==='-')pattern.push(3,0);if(ch==='/')pattern.push(0,0,0)}let total=pattern.reduce((a,b)=>a+b,0)||1;let x=0;ctx.strokeStyle='#7dd3fc';ctx.beginPath();for(const p of pattern){const seg=w*p/total;for(let i=0;i<seg;i++){const amp=p?45:8;const y=h/2+(Math.random()*2-1)*amp;ctx.lineTo(x+i,y)}x+=seg}ctx.stroke();ctx.fillStyle='#a9b4cc';ctx.fillText('המחשה בלבד: רעש אקראי בתוך מעטפת זמן של מורס',12,18)}
+function clearCanvas(){const c=document.getElementById('noiseCanvas');c.getContext('2d').clearRect(0,0,c.width,c.height)}
+function scoreEvidence(){const vals=['evSelected','evGround','evEmi','evFleet'].map(id=>parseInt(document.getElementById(id).value));const score=vals.reduce((a,b)=>a+b,0);const pct=Math.max(0,Math.min(100,(score+5)*10));document.getElementById('evidenceMeter').style.width=pct+'%';let msg='';if(score>=4)msg='יש בסיס ראשוני לחקירה טכנית ממוקדת, אבל עדיין לא למסקנה.';else if(score>=1)msg='יש כיוון, אך חסרים נתונים מכריעים. צריך לאסוף לוגים ושרטוטים.';else if(score===0)msg='אין מספיק מידע. המצב נשאר פתוח.';else msg='הראיות כרגע מחלישות את ההשערה הטכנית ומחייבות לבדוק הסברים פשוטים יותר.';document.getElementById('evidenceOut').textContent=`ציון ראייתי: ${score}
+${msg}
+
+כלל זהירות: אין להסיק פריצה או שיבוש מכוון בלי מקור נתונים בלתי תלוי שמראה איפה נוצר הקוד.`}
+function filterHypotheses(cat,el){document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');document.querySelectorAll('.hypo').forEach(h=>{h.classList.toggle('show',cat==='all'||h.dataset.cat.includes(cat))})}
+function makeExpertMessage(){const name=document.getElementById('expertName').value||'שלום';const tone=document.getElementById('tone').value;let body=`${name},
+
+בעקבות דיווח על אירוע שבו הופיע לכאורה קוד חירום 7500, אני מנסה לבנות עץ השערות ולא לקבוע מסקנה. השאלה המרכזית שלי היא: איך בודקים האם המטוס עצמו שידר 7500, או שמערכת הקרקע פירשה/הציגה 7500?
+
+אשמח אם תוכל לעזור לי להבין אילו נתונים בודקים קודם: FDR/QAR, CVR, ATC/ADS-B/Mode S, לוגי תחזוקה, טרנספונדר, לוח בקרה, חיווט, הארקות ו-EMI.
+
+אני לא מחפש אישור לתיאוריה, אלא ביקורת מקצועית: איפה ההנחות שלי נשברות ומה הדבר הראשון שחוקר אמיתי היה בודק.`;if(tone==='short')body=body.replace('אשמח אם תוכל לעזור לי להבין אילו נתונים בודקים קודם: FDR/QAR, CVR, ATC/ADS-B/Mode S, לוגי תחזוקה, טרנספונדר, לוח בקרה, חיווט, הארקות ו-EMI.','אשמח לדעת מה הדבר הראשון שהיית בודק, ואילו הנחות שלי כנראה לא נכונות.');if(tone==='technical')body+='
+
+במיוחד מעניין אותי להפריד בין שלושה מצבים: הקוד נבחר בלוח, הקוד שודר מהטרנספונדר בלי בחירה, או שהקוד הופיע רק במערכות הקרקע.';document.getElementById('expertOut').textContent=body}
+window.addEventListener('load',()=>{showMorse();drawNoiseEnvelope();scoreEvidence();});
+</script>
+
+</body>
+</html>
