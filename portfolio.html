@@ -549,6 +549,7 @@ section{padding:5rem 1.5rem;}
 .flow-step strong{display:block;font-size:.88rem;}
 .flow-step span{display:block;font-size:.76rem;color:var(--muted);line-height:1.4;}
 .flow-tag{font-size:.68rem;font-weight:900;color:var(--gold);border:1px solid rgba(245,200,66,.24);border-radius:99px;padding:.18rem .48rem;white-space:nowrap;}
+#case-studies{scroll-margin-top:calc(var(--nav-h) + 3.5rem);}
 .case-studies{margin-top:2.5rem;display:flex;flex-direction:column;gap:1.8rem;}
 .case-studies-head{text-align:center;margin-bottom:.25rem;}
 .case-studies-head h3{font-family:var(--display);font-size:clamp(1.15rem,2.2vw,1.4rem);font-weight:800;}
@@ -580,7 +581,32 @@ html[dir="ltr"] .case-deep-shot::after{background:linear-gradient(270deg,rgba(5,
 .case-tech-tags span{font-size:.7rem;font-weight:800;padding:.22rem .52rem;border-radius:8px;background:rgba(124,106,245,.1);border:1px solid rgba(124,106,245,.18);color:var(--accent2);}
 .case-deep-actions{display:flex;gap:.55rem;flex-wrap:wrap;}
 .case-deep-actions .btn{font-size:.82rem;padding:.55rem 1.1rem;}
-@media(max-width:900px){.design-grid{grid-template-columns:1fr}.service-grid{grid-template-columns:1fr}.case-deep-hero{grid-template-columns:1fr}.case-deep-shot{aspect-ratio:16/9;min-height:auto}.case-deep-body{grid-template-columns:1fr}}
+.case-more-head{margin-top:1.5rem;text-align:center;}
+.case-more-head h4{font-size:1rem;font-weight:800;color:var(--muted);}
+.case-compact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:.85rem;}
+.case-compact{background:var(--surface);border:1.5px solid var(--border);border-radius:16px;padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.65rem;transition:border-color .2s,transform .2s;}
+.case-compact:hover{border-color:rgba(245,200,66,.3);transform:translateY(-2px);}
+.case-compact-top{display:flex;gap:.7rem;align-items:flex-start;}
+.case-compact-ico{font-size:1.5rem;line-height:1;flex-shrink:0;}
+.case-compact-meta{flex:1;min-width:0;}
+.case-compact-meta h5{font-size:.92rem;font-weight:900;margin-bottom:.2rem;}
+.case-compact-badge{display:inline-block;font-size:.64rem;font-weight:900;color:var(--gold);background:rgba(245,200,66,.1);border:1px solid rgba(245,200,66,.22);border-radius:99px;padding:.15rem .45rem;margin-bottom:.35rem;}
+.case-compact-summary{font-size:.77rem;color:var(--muted);line-height:1.52;}
+.case-compact-result{font-size:.75rem;color:var(--text);line-height:1.5;border-inline-start:2px solid var(--gold);padding-inline-start:.55rem;opacity:.92;}
+.case-compact-foot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;margin-top:.15rem;}
+.case-compact-stats{display:flex;gap:.35rem;flex-wrap:wrap;}
+.case-compact-stats span{font-size:.64rem;font-weight:800;color:var(--accent2);background:rgba(124,106,245,.1);border:1px solid rgba(124,106,245,.16);border-radius:6px;padding:.18rem .42rem;}
+.case-compact-links{display:flex;gap:.4rem;}
+.case-compact-links .btn{font-size:.72rem;padding:.4rem .75rem;}
+.trust-strip{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem;
+  margin-top:2rem;padding:1.1rem 1.25rem;border-radius:16px;
+  background:rgba(124,106,245,.08);border:1.5px solid var(--border);text-align:center;
+}
+.trust-strip strong{display:block;font-family:var(--display);font-size:1.35rem;color:var(--gold);line-height:1.1;}
+.trust-strip span{font-size:.68rem;color:var(--muted);font-weight:700;}
+@media(max-width:900px){.design-grid{grid-template-columns:1fr}.service-grid{grid-template-columns:1fr}.case-deep-hero{grid-template-columns:1fr}.case-deep-shot{aspect-ratio:16/9;min-height:auto}.case-deep-body{grid-template-columns:1fr}.case-compact-grid{grid-template-columns:1fr}.trust-strip{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.trust-strip{grid-template-columns:1fr}}
 
 .projects-section{background:var(--bg2);}
 .filter-row{
@@ -1186,6 +1212,7 @@ html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
     <li><a href="#channels"><i data-lucide="share-2"></i><span data-i18n="nav_channels">ערוצים</span></a></li>
     <li><a href="#live"><i data-lucide="radio"></i><span data-i18n="nav_live">חי</span></a></li>
     <li><a href="#design"><i data-lucide="figma"></i><span data-i18n="nav_design">מעבדה</span></a></li>
+    <li><a href="#case-studies"><i data-lucide="rocket"></i><span data-i18n="nav_cases">דגל</span></a></li>
     <li><a href="#projects"><i data-lucide="layout-grid"></i><span data-i18n="nav_projects">פרויקטים</span></a></li>
     <li><a href="#contact"><i data-lucide="mail"></i><span data-i18n="nav_contact">צור קשר</span></a></li>
   </ul>
@@ -1236,9 +1263,9 @@ html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
           <button type="button" class="launch-tile t-dev" onclick="quickFilter('lab')"><i data-lucide="flask-conical"></i><span data-i18n="flab">מעבדה</span></button>
         </div>
         <div class="btns">
-          <a href="#projects" class="btn btn-main"><i data-lucide="layout-grid"></i><span data-i18n="b1">הפרויקטים שלי</span></a>
-          <a href="#design" class="btn btn-outline"><i data-lucide="figma"></i><span data-i18n="b_design">מעבדת עיצוב</span></a>
-          <a href="#channels" class="btn btn-outline"><i data-lucide="share-2"></i><span data-i18n="b2">ערוצי התוכן</span></a>
+          <a href="#case-studies" class="btn btn-main"><i data-lucide="rocket"></i><span data-i18n="b_cases">פרויקטי דגל לעומק</span></a>
+          <a href="#projects" class="btn btn-outline"><i data-lucide="layout-grid"></i><span data-i18n="b1">כל הפרויקטים</span></a>
+          <a href="#contact" class="btn btn-outline"><i data-lucide="mail"></i><span data-i18n="nav_contact">צור קשר</span></a>
         </div>
       </div>
       <div class="hero-visual visible" id="photoStage" aria-label="תמונת משפחה">
@@ -1511,6 +1538,91 @@ html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
           </div>
         </div>
       </article>
+
+      <div class="case-more-head">
+        <h4 data-i18n="cases_more_title">עוד פרויקטי דגל</h4>
+      </div>
+      <div class="case-compact-grid">
+        <article class="case-compact">
+          <div class="case-compact-top">
+            <span class="case-compact-ico" aria-hidden="true">🛒</span>
+            <div class="case-compact-meta">
+              <span class="case-compact-badge" data-i18n="case_badge4">פורטל עסקים</span>
+              <h5 data-i18n="case4_t">משנת יוסף — פורטל לקוחות</h5>
+              <p class="case-compact-summary" data-i18n="case4_problem">חנות עם מאות לקוחות צריכה פורטל — סלים, רשימות קנייה וסנכרון מוצרים. אקסל ווואטסאפ לא מספיקים.</p>
+            </div>
+          </div>
+          <p class="case-compact-result" data-i18n="case4_result">פורטל חי ב-Netlify עם Firebase מחובר ו-Functions לייבוא לקוחות וסנכרון מוצרים.</p>
+          <div class="case-compact-foot">
+            <div class="case-compact-stats"><span>Firebase</span><span>Functions</span><span>Live</span></div>
+            <div class="case-compact-links">
+              <a href="#" class="btn btn-main" data-open-preview="https://mishnat-yosef-dashboard.netlify.app" data-preview-title="משנת יוסף"><span data-i18n="case_btn_open">פתח</span></a>
+              <button type="button" class="btn btn-outline" onclick="openVersions('mishnat')"><span data-i18n="case_btn_versions">גירסאות</span></button>
+            </div>
+          </div>
+        </article>
+        <article class="case-compact">
+          <div class="case-compact-top">
+            <span class="case-compact-ico" aria-hidden="true">📘</span>
+            <div class="case-compact-meta">
+              <span class="case-compact-badge" data-i18n="case_badge5">מבחנים</span>
+              <h5 data-i18n="case5_t">אתר מבחן דפ״ר</h5>
+              <p class="case-compact-summary" data-i18n="case5_problem">מועמדים לדפ"ר צריכים להתאמן על מבחנים אמיתיים — גם בלי אינטרנט, בפורמט נוח לטלפון ולמחשב.</p>
+            </div>
+          </div>
+          <p class="case-compact-result" data-i18n="case5_result">200+ שאלות מבחן, גלריה מלאה ו-PWA אופליין — סימולטור שעובד בכל מקום.</p>
+          <div class="case-compact-foot">
+            <div class="case-compact-stats"><span>200+</span><span>PWA</span><span>Offline</span></div>
+            <div class="case-compact-links">
+              <a href="#" class="btn btn-main" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/%D7%9E%D7%91%D7%97%D7%9F%20%D7%93%D7%A4%D7%A8/gallery.html" data-preview-title="מבחן דפ״ר"><span data-i18n="case_btn_open">פתח</span></a>
+              <button type="button" class="btn btn-outline" onclick="openVersions('dapor')"><span data-i18n="case_btn_versions">גירסאות</span></button>
+            </div>
+          </div>
+        </article>
+        <article class="case-compact">
+          <div class="case-compact-top">
+            <span class="case-compact-ico" aria-hidden="true">🛡️</span>
+            <div class="case-compact-meta">
+              <span class="case-compact-badge" data-i18n="case_badge6">ולידציה</span>
+              <h5 data-i18n="case6_t">מרכז הבודק המקצועי</h5>
+              <p class="case-compact-summary" data-i18n="case6_problem">אימות ת"ז, טלפון, רכב ודרכון מפוזר בכלים נפרדים — אין מרכז אחד למקצוענים ולעסקים.</p>
+            </div>
+          </div>
+          <p class="case-compact-result" data-i18n="case6_result">12 כלי בדיקה בממשק אחד — כולל OCR לסריקת ת"ז מתמונות ו-React מלא.</p>
+          <div class="case-compact-foot">
+            <div class="case-compact-stats"><span>12 tools</span><span>OCR</span><span>React</span></div>
+            <div class="case-compact-links">
+              <a href="#" class="btn btn-main" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/ID%20%D7%9E%D7%A4%D7%A2%D7%A0%D7%97%20%D7%95%D7%91%D7%95%D7%93%D7%A7/index.html" data-preview-title="מרכז הבודק"><span data-i18n="case_btn_open">פתח</span></a>
+              <button type="button" class="btn btn-outline" onclick="openVersions('idcheck')"><span data-i18n="case_btn_versions">גירסאות</span></button>
+            </div>
+          </div>
+        </article>
+        <article class="case-compact">
+          <div class="case-compact-top">
+            <span class="case-compact-ico" aria-hidden="true">📻</span>
+            <div class="case-compact-meta">
+              <span class="case-compact-badge" data-i18n="case_badge7">אודיו+קוד</span>
+              <h5 data-i18n="case7_t">SignalLab — מעבדת אותות</h5>
+              <p class="case-compact-summary" data-i18n="case7_problem">לימוד מורס וקוד היה מפוזר בכלים נפרדים עם עיצוב שונה — בלי חוויה אחידה לתלמידים.</p>
+            </div>
+          </div>
+          <p class="case-compact-result" data-i18n="case7_result">Hub מאוחד: MorseViz + CodePlayer + מסמך חקירה — עיצוב אחד ו-Web Audio API.</p>
+          <div class="case-compact-foot">
+            <div class="case-compact-stats"><span>Morse</span><span>Web Audio</span><span>v2</span></div>
+            <div class="case-compact-links">
+              <a href="#" class="btn btn-main" data-open-preview="https://davidpatlas-ai.github.io/signal-lab/" data-preview-title="SignalLab"><span data-i18n="case_btn_open">פתח</span></a>
+              <button type="button" class="btn btn-outline" onclick="openVersions('signallab')"><span data-i18n="case_btn_versions">גירסאות</span></button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="trust-strip" aria-label="הוכחות">
+        <div><strong>7</strong><span data-i18n="trust1">פרויקטי דגל חיים</span></div>
+        <div><strong>46</strong><span data-i18n="trust2">מוצגים בתיק</span></div>
+        <div><strong>3</strong><span data-i18n="trust3">שפות ממשק</span></div>
+        <div><strong>GitHub</strong><span data-i18n="trust4">קוד פתוח + גרסאות</span></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1680,6 +1792,14 @@ Object.assign(T.he,{
   case3_solution:'תוסף Chrome שמנתח את הפיד בזמן אמת, סוכן AI שמסביר בעברית למה כל פוסט הופיע, ודמו אינטראקטיבי שמדגים שקיפות אלגוריתמית.',
   case3_process:'מחקר אלגוריתמים → אפליקציית Electron → תוסף Chrome → דמו ויזואלי ואנימציה → בדיקות Playwright ל-YouTube, X ו-Threads.',
   case3_result:'דמו חי ב-teshuva-algorithm.netlify.app, 4 גרסאות מתועדות, קוד פתוח — מוצר שמדגים מומחיות ב-AI, פרטיות ותקשורת מורכבת בעברית.',
+  cases_more_title:'עוד פרויקטי דגל',
+  case_badge4:'פורטל עסקים',case_badge5:'מבחנים',case_badge6:'ולידציה',case_badge7:'אודיו+קוד',
+  case4_t:'משנת יוסף — פורטל לקוחות',case4_problem:'חנות עם מאות לקוחות צריכה פורטל — סלים, רשימות קנייה וסנכרון מוצרים. אקסל ווואטסאפ לא מספיקים.',case4_result:'פורטל חי ב-Netlify עם Firebase מחובר ו-Functions לייבוא לקוחות וסנכרון מוצרים.',
+  case5_t:'אתר מבחן דפ״ר',case5_problem:'מועמדים לדפ"ר צריכים להתאמן על מבחנים אמיתיים — גם בלי אינטרנט, בפורמט נוח לטלפון ולמחשב.',case5_result:'200+ שאלות מבחן, גלריה מלאה ו-PWA אופליין — סימולטור שעובד בכל מקום.',
+  case6_t:'מרכז הבודק המקצועי',case6_problem:'אימות ת"ז, טלפון, רכב ודרכון מפוזר בכלים נפרדים — אין מרכז אחד למקצוענים ולעסקים.',case6_result:'12 כלי בדיקה בממשק אחד — כולל OCR לסריקת ת"ז מתמונות ו-React מלא.',
+  case7_t:'SignalLab — מעבדת אותות',case7_problem:'לימוד מורס וקוד היה מפוזר בכלים נפרדים עם עיצוב שונה — בלי חוויה אחידה לתלמידים.',case7_result:'Hub מאוחד: MorseViz + CodePlayer + מסמך חקירה — עיצוב אחד ו-Web Audio API.',
+  trust1:'פרויקטי דגל חיים',trust2:'מוצגים בתיק',trust3:'שפות ממשק',trust4:'קוד פתוח + גרסאות',
+  nav_cases:'דגל',b_cases:'פרויקטי דגל לעומק',b1:'כל הפרויקטים',
   hero_position:'אני בונה מערכות דיגיטליות חכמות לקהילות, חינוך, תוכן ועסקים — משלב הרעיון ועד אתר עובד.',
   co_cta_main:'רוצה שאבנה לך מערכת?',co_wa:'דבר איתי בוואטסאפ',
   faitools:'AI וכלים',flab:'מעבדה',clab:'מעבדת ניסויים',
@@ -1728,6 +1848,14 @@ Object.assign(T.en,{
   case3_solution:'Chrome extension analyzing the feed in real time, AI agent explaining in Hebrew why each post appeared, and an interactive demo of algorithmic transparency.',
   case3_process:'Algorithm research → Electron app → Chrome extension → visual demo & animation → Playwright tests for YouTube, X and Threads.',
   case3_result:'Live demo at teshuva-algorithm.netlify.app, 4 documented versions, open source — showcasing AI, privacy and complex Hebrew communication.',
+  cases_more_title:'More flagship projects',
+  case_badge4:'Business portal',case_badge5:'Exams',case_badge6:'Validation',case_badge7:'Audio+Code',
+  case4_t:'Mishnat Yosef — Customer Portal',case4_problem:'A store with hundreds of customers needs a portal — baskets, shopping lists and product sync. Excel and WhatsApp aren\'t enough.',case4_result:'Live Netlify portal with Firebase connected and Functions for customer import and product sync.',
+  case5_t:'IDF Dapor Exam Simulator',case5_problem:'Dapor candidates need to practice real exams — offline too, on phone and desktop.',case5_result:'200+ exam questions, full gallery and offline PWA — a simulator that works anywhere.',
+  case6_t:'ID & Data Validator Hub',case6_problem:'ID, phone, car and passport validation scattered across separate tools — no single hub for professionals.',case6_result:'12 validators in one interface — including OCR for ID photos and full React UI.',
+  case7_t:'SignalLab — Signal Audio Lab',case7_problem:'Morse and code learning was split across tools with different designs — no unified student experience.',case7_result:'Unified hub: MorseViz + CodePlayer + investigation brief — one design and Web Audio API.',
+  trust1:'live flagship projects',trust2:'in portfolio',trust3:'UI languages',trust4:'open source + versions',
+  nav_cases:'Flagship',b_cases:'Deep-dive flagships',b1:'All projects',
   hero_position:'I build smart digital systems for communities, education, content and business — from idea to live product.',
   co_cta_main:'Want me to build your system?',co_wa:'Chat on WhatsApp',
   faitools:'AI & Tools',flab:'Lab',clab:'Research Lab',
@@ -1776,6 +1904,14 @@ Object.assign(T.ru,{
   case3_solution:'Расширение Chrome анализирует ленту в реальном времени, AI-агент объясняет на иврите каждый пост, и интерактивное демо прозрачности алгоритмов.',
   case3_process:'Исследование алгоритмов → Electron → расширение Chrome → визуальное демо → тесты Playwright для YouTube, X и Threads.',
   case3_result:'Живое демо teshuva-algorithm.netlify.app, 4 версии, открытый код — демонстрация AI, приватности и сложной коммуникации на иврите.',
+  cases_more_title:'Ещё флагманские проекты',
+  case_badge4:'Бизнес-портал',case_badge5:'Экзамены',case_badge6:'Валидация',case_badge7:'Аудио+Код',
+  case4_t:'Мишнат Йосеф — портал клиентов',case4_problem:'Магазину с сотнями клиентов нужен портал — корзины, списки покупок и синхронизация. Excel и WhatsApp не хватает.',case4_result:'Живой портал на Netlify с Firebase и Functions для импорта клиентов и синхронизации товаров.',
+  case5_t:'Симулятор экзамена ЦАХАЛ',case5_problem:'Кандидатам нужна практика на реальных экзаменах — в том числе офлайн, на телефоне и ПК.',case5_result:'200+ вопросов, полная галерея и офлайн PWA — симулятор, который работает везде.',
+  case6_t:'Центр проверки данных',case6_problem:'Проверка удостоверений, телефона, авто и паспорта разбросана по разным инструментам.',case6_result:'12 валидаторов в одном интерфейсе — включая OCR для фото удостоверений и React.',
+  case7_t:'SignalLab — лаборатория сигналов',case7_problem:'Морзе и код изучались в разных инструментах с разным дизайном — без единого опыта.',case7_result:'Единый hub: MorseViz + CodePlayer + документ — один дизайн и Web Audio API.',
+  trust1:'живых флагманов',trust2:'в портфолио',trust3:'языка интерфейса',trust4:'открытый код + версии',
+  nav_cases:'Флагман',b_cases:'Флагманы подробно',b1:'Все проекты',
   hero_position:'Создаю умные цифровые системы для сообществ, образования, контента и бизнеса — от идеи до рабочего сайта.',
   co_cta_main:'Хотите, чтобы я построил систему?',co_wa:'Написать в WhatsApp',
   faitools:'AI и инструменты',flab:'Лаборатория',clab:'Исслед. лаборатория',
@@ -1849,7 +1985,7 @@ const PROJECT_CATALOG = [
       {v:'v2.0',date:'ינואר 2026',label:'עברית מלאה',desc:'תמיכה מלאה בעברית ב-Rainmeter, תאריך עברי מ-Hebcal.',url:'adhd_home/index.html'},
       {v:'v1.0',date:'2025',label:'השקה',desc:'ויג\'ט בסיסי עם שעון ותאריך לועזי.',url:'adhd_home/index.html'}
     ]},
-  { id:'dapor', icon:'📘', cat:['flag','edu'], status:'live', url:'מבחן דפר/gallery.html', gh:'https://github.com/DavidPatlas-AI/dapper-test', featured:1,
+  { id:'dapor', icon:'📘', cat:['flag','edu'], status:'live', url:'מבחן דפר/gallery.html', preview:'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=900&q=80', gh:'https://github.com/DavidPatlas-AI/dapper-test', featured:1,
     name:{he:'אתר מבחן דפ״ר',en:'IDF Dapor Exam Simulator',ru:'Симулятор экзамена ЦАХАЛ'},
     desc:{he:'מבחני דפ"ר אינטראקטיביים — עובד גם אופליין.',en:'Interactive Dapor exams — works offline.',ru:'Интерактивные экзамены — офлайн.'}, tags:['HTML5','Offline','LMS'],
     versions:[
@@ -1974,7 +2110,7 @@ const PROJECT_CATALOG = [
     desc:{he:'ניהול תקציב offline — הכנסות, הוצאות, קטגוריות חרדיות, שמירה ב-localStorage.',en:'Offline budget — income, expenses, Haredi categories, localStorage.',ru:'Офлайн бюджет — localStorage.'}, tags:['HTML5','Offline','Budget'],
     gh:'https://github.com/DavidPatlas-AI/haredi-household-manager',
     versions:[{v:'v1.0',date:'יולי 2026',label:'גרסה עובדת',desc:'מעקב הכנסות/הוצאות עם קטגוריות חרדיות ושמירה מקומית.',url:'budget/index.html'}]},
-  { id:'mishnat', icon:'🛒', cat:['flag','biz','jewish'], status:'live', url:'https://mishnat-yosef-dashboard.netlify.app', demo:'https://mishnat-yosef-dashboard.netlify.app', gh:'https://github.com/DavidPatlas-AI/mishnat-yosef', contact:1, featured:1,
+  { id:'mishnat', icon:'🛒', cat:['flag','biz','jewish'], status:'live', url:'https://mishnat-yosef-dashboard.netlify.app', demo:'https://mishnat-yosef-dashboard.netlify.app', preview:'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80', gh:'https://github.com/DavidPatlas-AI/mishnat-yosef', contact:1, featured:1,
     name:{he:'משנת יוסף — פורטל לקוחות',en:'Mishnat Yosef Portal',ru:'Портал Mishnat Yosef'},
     desc:{he:'פורטל חי — ניהול סלים ורשימות קנייה, Firebase מחובר, Netlify Functions.',en:'Live portal — baskets & shopping lists, Firebase connected, Netlify Functions.',ru:'Живой портал — корзины, Firebase, Netlify Functions.'}, tags:['CRM','Firebase','PWA'],
     versions:[{v:'v1.2',date:'יולי 2026',label:'Netlify חי',desc:'פרוס ל-mishnat-yosef-dashboard.netlify.app עם Functions לייבוא לקוחות וסנכרון מוצרים.',url:'https://mishnat-yosef-dashboard.netlify.app'},
@@ -2070,7 +2206,7 @@ const PROJECT_CATALOG = [
     name:{he:'קורס מה"ט — הכנה למתמטיקה',en:'Mahat Math Prep Course',ru:'Курс Махат — математика'},
     desc:{he:'הכנה למתמטיקה — חידון אינטראקטיבי באלגברה, גיאומטריה וחדו"א.',en:'Math prep — interactive quiz in algebra, geometry and calculus.',ru:'Интерактивный тест по математике.'}, tags:['Mahat','Math','Edu'],
     versions:[{v:'v1.0',date:'יולי 2026',label:'חידון עובד',desc:'תרגול אינטראקטיבי — 4 נושאים, משוב מיידי.',url:'mahat/index.html'}] },
-  { id:'signallab', icon:'📻', cat:['edu','dev','flag'], status:'live', demo:'https://davidpatlas-ai.github.io/signal-lab/', gh:'https://github.com/DavidPatlas-AI/signal-lab', featured:1,
+  { id:'signallab', icon:'📻', cat:['edu','dev','flag'], status:'live', demo:'https://davidpatlas-ai.github.io/signal-lab/', preview:'https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=900&q=80', gh:'https://github.com/DavidPatlas-AI/signal-lab', featured:1,
     name:{he:'SignalLab — מעבדת אותות',en:'SignalLab — Signal Audio Lab',ru:'SignalLab — Лаборатория сигналов'},
     desc:{he:'מערכת מאוחדת: MorseViz (מורס) + CodePlayer (קוד) + מסמך חקירה — אותו עיצוב, Web Audio API.',en:'Unified platform: MorseViz + CodePlayer + investigation brief — shared design and Web Audio API.',ru:'Единая платформа: Morse + Code + документ.'}, tags:['Morse','Audio','Code','Edu'],
     versions:[
@@ -2579,7 +2715,7 @@ function animateStat(el){
   requestAnimationFrame(step);
 }
 
-const SECTIONS=['about','channels','live','design','projects','contact'];
+const SECTIONS=['about','channels','live','design','case-studies','projects','contact'];
 const NAV_OFFSET=120;
 
 function syncCatalogStat(){
@@ -2913,9 +3049,11 @@ function buildHeroSpotlight(){
   const el=document.getElementById('heroSpotlight');
   if(!el)return;
   const lang=currentLang||'he';
-  el.innerHTML=PROJECT_CATALOG.filter(p=>p.featured&&p.demo).map(p=>{
+  el.innerHTML=PROJECT_CATALOG.filter(p=>p.featured).map(p=>{
+    const url=projectUrl(p);
+    if(!url)return '';
     const name=esc((p.name[lang]||p.name.he||'').replace(/<[^>]+>/g,''));
-    return '<a class="spot-card" href="'+esc(p.demo)+'" target="_blank" rel="noopener">'+
+    return '<a class="spot-card" href="'+esc(url)+'" target="_blank" rel="noopener">'+
       '<img src="'+esc(p.preview||'')+'" alt="" loading="lazy" onerror="this.style.opacity=\'0.25\'">'+
       '<span class="spot-glow"></span><span class="spot-info"><em>'+p.icon+'</em>'+name+'</span></a>';
   }).join('');
