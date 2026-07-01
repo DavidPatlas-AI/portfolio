@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="דוד פטלס — מפתח Full Stack שבונה מערכות דיגיטליות לחינוך, קהילות ועסקים. 46 פרויקטים מוצגים בתיק · 60+ בארכיון.">
 <meta name="author" content="David Patlas">
-<meta property="og:title" content="David Patlas — Developer & Creator">
-<meta property="og:description" content="Educational platforms, AI tools, games — multi-channel digital presence in Hebrew, Russian and English.">
+<meta property="og:title" content="דוד פטלס — מפתח Full Stack · מערכות דיגיטליות">
+<meta property="og:description" content="פלטפורמות חינוך, כלי AI ופורטלים עסקיים — 7 פרויקטי דגל חיים, 46 בתיק. משלב הרעיון ועד מוצר ב-Netlify.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://storied-alfajores-6f10d2.netlify.app/portfolio.html">
 <meta property="og:image" content="https://math-haredim.netlify.app/banners/banner-2.png">
@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Rubik:wght@400;500;600;700;800&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-<title>דוד פטלס — מפתח ויוצר דיגיטלי</title>
+<title>דוד פטלס — מפתח Full Stack · מערכות דיגיטליות</title>
 <style>
 :root {
   --bg:#050508;--bg2:#0e0e16;--surface:rgba(14,14,22,0.82);
@@ -703,6 +703,7 @@ html[dir="ltr"] .case-deep-shot::after{background:linear-gradient(270deg,rgba(5,
 .proj-icon{font-size:1.35rem;line-height:1;}
 .proj-cat{font-size:0.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-weight:700;}
 .proj-head{display:flex;justify-content:space-between;align-items:flex-start;gap:0.4rem;}
+.proj-badges{display:flex;gap:.3rem;flex-wrap:wrap;justify-content:flex-end;flex-shrink:0;}
 .proj-name{font-size:0.97rem;font-weight:900;color:var(--text);}
 .badge{font-size:0.68rem;padding:0.2rem 0.6rem;border-radius:99px;font-weight:800;white-space:nowrap;}
 .live{background:rgba(16,185,129,0.1);color:var(--green);border:1.5px solid rgba(16,185,129,0.25);}
@@ -982,6 +983,26 @@ button.plink.demo{border:none;font-family:inherit;}
 .contact-links{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;align-items:center;}
 .contact-links-secondary{display:flex;gap:.65rem;justify-content:center;flex-wrap:wrap;margin-top:1.2rem;opacity:.85;}
 .contact-links-secondary .btn-ghost{font-size:.82rem;padding:.55rem 1rem;}
+.contact-services{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.85rem;margin-bottom:2rem;text-align:start;}
+.contact-svc{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);border-radius:14px;
+  padding:1rem 1.1rem;display:flex;flex-direction:column;gap:.35rem;
+}
+.contact-svc svg{width:1.35rem;height:1.35rem;color:var(--gold);margin-bottom:.15rem;}
+.contact-svc strong{font-size:.88rem;color:#fff;}
+.contact-svc span{font-size:.76rem;color:rgba(255,255,255,.72);line-height:1.5;}
+.flagship-banner{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.85rem;
+  margin-bottom:1.25rem;padding:1rem 1.15rem;border-radius:14px;
+  background:linear-gradient(135deg,rgba(124,106,245,.14),rgba(245,200,66,.1));
+  border:1.5px solid rgba(245,200,66,.22);
+}
+.flagship-banner[hidden]{display:none!important;}
+.flagship-banner-text strong{display:block;font-size:.92rem;font-weight:900;}
+.flagship-banner-text p{font-size:.78rem;color:var(--muted);margin-top:.2rem;}
+.flagship-banner .btn{font-size:.82rem;padding:.55rem 1rem;white-space:nowrap;}
+.badge.flagship{background:rgba(245,200,66,.15);color:var(--gold);border:1px solid rgba(245,200,66,.3);}
+@media(max-width:720px){.contact-services{grid-template-columns:1fr}.flagship-banner{flex-direction:column;align-items:flex-start}}
 .btn-white{background:#fff;color:var(--accent);font-weight:800;}
 .btn-white:hover{transform:translateY(-2px);box-shadow:0 8px 25px rgba(0,0,0,0.2);}
 .btn-ghost{background:rgba(255,255,255,0.15);color:#fff;border:1.5px solid rgba(255,255,255,0.3);}
@@ -1642,6 +1663,13 @@ html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
       <span class="filter-status-text" id="filterStatusText"></span>
       <button type="button" class="filter-reset" id="filterReset"><i data-lucide="rotate-ccw"></i><span data-i18n="show_all">הצג הכל</span></button>
     </div>
+    <div class="flagship-banner" id="flagshipBanner">
+      <div class="flagship-banner-text">
+        <strong data-i18n="fb_title">7 פרויקטי דגל — עם פירוט מלא למעלה</strong>
+        <p data-i18n="fb_sub">בעיה, פתרון, תהליך ותוצאה — לפני שצוללים לארכיון</p>
+      </div>
+      <a href="#case-studies" class="btn btn-outline"><i data-lucide="book-open"></i><span data-i18n="fb_btn">לפירוט המלא</span></a>
+    </div>
     <div class="filter-row">
       <button class="fbtn active" data-cat="flag" onclick="filter('flag',this)"><i data-lucide="rocket"></i><span data-i18n="ff">פרויקטי דגל</span></button>
       <button class="fbtn" data-cat="edu" onclick="filter('edu',this)"><i data-lucide="graduation-cap"></i><span data-i18n="fe">חינוך</span></button>
@@ -1696,6 +1724,11 @@ html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
     <div class="contact-box">
       <h3 class="contact-cta-main" data-i18n="co_cta_main">רוצה שאבנה לך מערכת?</h3>
       <p data-i18n="co_s">פלטפורמות חינוך, כלי AI, פורטלים ואוטומציה — משלב הרעיון ועד מוצר חי ב-Netlify.</p>
+      <div class="contact-services">
+        <div class="contact-svc"><i data-lucide="graduation-cap"></i><strong data-i18n="co_svc1_t">פלטפורמות חינוך</strong><span data-i18n="co_svc1_d">קורסים, מבחנים, PWA ותוכן לקהילה — כמו מתמטיקה לחרדים ומסלול רכב.</span></div>
+        <div class="contact-svc"><i data-lucide="brain-circuit"></i><strong data-i18n="co_svc2_t">כלי AI ואוטומציה</strong><span data-i18n="co_svc2_d">סוכנים, OCR, ניתוח תוכן וכלים פנימיים — מרעיון לדמו עובד.</span></div>
+        <div class="contact-svc"><i data-lucide="briefcase"></i><strong data-i18n="co_svc3_t">פורטלים לעסקים</strong><span data-i18n="co_svc3_d">CRM, Firebase, Netlify Functions וממשק לקוחות — כמו משנת יוסף.</span></div>
+      </div>
       <div class="contact-links">
         <a href="https://wa.me/972547923366?text=%D7%A9%D7%9C%D7%95%D7%9D%20%D7%93%D7%95%D7%93!%20%D7%A8%D7%90%D7%99%D7%AA%D7%99%20%D0%B0%D7%AA%20%D7%94%D7%AA%D7%99%D7%A7%20%D7%A2%D7%91%D7%95%D7%93%D7%95%D7%AA" target="_blank" rel="noopener" class="btn btn-white"><i data-lucide="message-circle"></i><span data-i18n="co_wa">דבר איתי בוואטסאפ</span></a>
         <a href="mailto:susp4514@gmail.com" class="btn btn-ghost"><i data-lucide="mail"></i><span data-i18n="co_email">שלח מייל</span></a>
@@ -1714,10 +1747,10 @@ html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
 <button type="button" class="back-top" id="backTop" aria-label="חזרה למעלה"><i data-lucide="arrow-up"></i></button>
 <nav class="app-dock" id="appDock" aria-label="ניווט אפליקציה">
   <a href="#" class="dock-btn" data-go-home><i data-lucide="home"></i><span data-i18n="dock_home">בית</span></a>
-  <a href="#projects" class="dock-btn" data-dock="projects"><i data-lucide="layout-grid"></i><span data-i18n="dock_apps">אפליקציות</span></a>
+  <a href="#case-studies" class="dock-btn" data-dock="case-studies"><i data-lucide="rocket"></i><span data-i18n="dock_cases">דגל</span></a>
+  <a href="#projects" class="dock-btn" data-dock="projects"><i data-lucide="layout-grid"></i><span data-i18n="dock_apps">פרויקטים</span></a>
   <a href="#live" class="dock-btn" data-dock="live"><i data-lucide="radio"></i><span data-i18n="dock_live">חי</span></a>
-  <a href="#design" class="dock-btn" data-dock="design"><i data-lucide="figma"></i><span data-i18n="dock_design">מעבדה</span></a>
-  <a href="#channels" class="dock-btn" data-dock="channels"><i data-lucide="share-2"></i><span data-i18n="dock_channels">ערוצים</span></a>
+  <a href="#contact" class="dock-btn" data-dock="contact"><i data-lucide="mail"></i><span data-i18n="dock_contact">צור קשר</span></a>
   <button type="button" class="dock-btn theme-orbit is-compact" data-theme-toggle aria-label="מצב יום" aria-pressed="false"></button>
 </nav>
 
@@ -1800,6 +1833,12 @@ Object.assign(T.he,{
   case7_t:'SignalLab — מעבדת אותות',case7_problem:'לימוד מורס וקוד היה מפוזר בכלים נפרדים עם עיצוב שונה — בלי חוויה אחידה לתלמידים.',case7_result:'Hub מאוחד: MorseViz + CodePlayer + מסמך חקירה — עיצוב אחד ו-Web Audio API.',
   trust1:'פרויקטי דגל חיים',trust2:'מוצגים בתיק',trust3:'שפות ממשק',trust4:'קוד פתוח + גרסאות',
   nav_cases:'דגל',b_cases:'פרויקטי דגל לעומק',b1:'כל הפרויקטים',
+  dock_cases:'דגל',dock_contact:'צור קשר',dock_apps:'פרויקטים',
+  fb_title:'7 פרויקטי דגל — עם פירוט מלא למעלה',fb_sub:'בעיה, פתרון, תהליך ותוצאה — לפני שצוללים לארכיון',fb_btn:'לפירוט המלא',
+  co_svc1_t:'פלטפורמות חינוך',co_svc1_d:'קורסים, מבחנים, PWA ותוכן לקהילה — כמו מתמטיקה לחרדים ומסלול רכב.',
+  co_svc2_t:'כלי AI ואוטומציה',co_svc2_d:'סוכנים, OCR, ניתוח תוכן וכלים פנימיים — מרעיון לדמו עובד.',
+  co_svc3_t:'פורטלים לעסקים',co_svc3_d:'CRM, Firebase, Netlify Functions וממשק לקוחות — כמו משנת יוסף.',
+  ft:'מפתח Full Stack · מערכות דיגיטליות לחינוך ועסקים',
   hero_position:'אני בונה מערכות דיגיטליות חכמות לקהילות, חינוך, תוכן ועסקים — משלב הרעיון ועד אתר עובד.',
   co_cta_main:'רוצה שאבנה לך מערכת?',co_wa:'דבר איתי בוואטסאפ',
   faitools:'AI וכלים',flab:'מעבדה',clab:'מעבדת ניסויים',
@@ -1856,6 +1895,12 @@ Object.assign(T.en,{
   case7_t:'SignalLab — Signal Audio Lab',case7_problem:'Morse and code learning was split across tools with different designs — no unified student experience.',case7_result:'Unified hub: MorseViz + CodePlayer + investigation brief — one design and Web Audio API.',
   trust1:'live flagship projects',trust2:'in portfolio',trust3:'UI languages',trust4:'open source + versions',
   nav_cases:'Flagship',b_cases:'Deep-dive flagships',b1:'All projects',
+  dock_cases:'Flagship',dock_contact:'Contact',dock_apps:'Projects',
+  fb_title:'7 flagship projects — full breakdown above',fb_sub:'Problem, solution, process and outcome — before diving into the archive',fb_btn:'Read case studies',
+  co_svc1_t:'Education platforms',co_svc1_d:'Courses, quizzes, PWAs and community content — like Math for Haredim and Car Course.',
+  co_svc2_t:'AI & automation',co_svc2_d:'Agents, OCR, content analysis and internal tools — from idea to working demo.',
+  co_svc3_t:'Business portals',co_svc3_d:'CRM, Firebase, Netlify Functions and customer dashboards — like Mishnat Yosef.',
+  ft:'Full Stack developer · digital systems for education & business',
   hero_position:'I build smart digital systems for communities, education, content and business — from idea to live product.',
   co_cta_main:'Want me to build your system?',co_wa:'Chat on WhatsApp',
   faitools:'AI & Tools',flab:'Lab',clab:'Research Lab',
@@ -1912,6 +1957,12 @@ Object.assign(T.ru,{
   case7_t:'SignalLab — лаборатория сигналов',case7_problem:'Морзе и код изучались в разных инструментах с разным дизайном — без единого опыта.',case7_result:'Единый hub: MorseViz + CodePlayer + документ — один дизайн и Web Audio API.',
   trust1:'живых флагманов',trust2:'в портфолио',trust3:'языка интерфейса',trust4:'открытый код + версии',
   nav_cases:'Флагман',b_cases:'Флагманы подробно',b1:'Все проекты',
+  dock_cases:'Флагман',dock_contact:'Контакт',dock_apps:'Проекты',
+  fb_title:'7 флагманских проектов — подробный разбор выше',fb_sub:'Проблема, решение, процесс и результат — перед архивом',fb_btn:'К case studies',
+  co_svc1_t:'Образовательные платформы',co_svc1_d:'Курсы, тесты, PWA и контент для сообщества — как Математика для харедим.',
+  co_svc2_t:'AI и автоматизация',co_svc2_d:'Агенты, OCR, анализ контента и внутренние инструменты — от идеи до демо.',
+  co_svc3_t:'Бизнес-порталы',co_svc3_d:'CRM, Firebase, Netlify Functions и порталы клиентов — как Мишнат Йосеф.',
+  ft:'Full Stack разработчик · цифровые системы для образования и бизнеса',
   hero_position:'Создаю умные цифровые системы для сообществ, образования, контента и бизнеса — от идеи до рабочего сайта.',
   co_cta_main:'Хотите, чтобы я построил систему?',co_wa:'Написать в WhatsApp',
   faitools:'AI и инструменты',flab:'Лаборатория',clab:'Исслед. лаборатория',
@@ -2494,9 +2545,11 @@ function buildProjectCard(p, t) {
   const cats = (p.cat || []).join(' ');
   const pCat = primaryCat(p);
   const catLabel = CAT_KEYS[pCat] ? (t[CAT_KEYS[pCat]] || '') : '';
+  const flagBadge = p.featured ? `<span class="badge flagship"><i data-lucide="rocket"></i>${t.ff || 'דגל'}</span>` : '';
   const statusBadge = p.status === 'live'
     ? `<span class="badge live"><i data-lucide="globe"></i>${t.fl || 'חי'}</span>`
     : p.status === 'wip' ? `<span class="badge wip"><i data-lucide="hammer"></i>WIP</span>` : '';
+  const badges = (flagBadge || statusBadge) ? `<span class="proj-badges">${flagBadge}${statusBadge}</span>` : '';
   const thumb = previewBlock(p, url, t);
   const isContact = p.contact && !url;
   const demoBtn = url
@@ -2519,7 +2572,7 @@ function buildProjectCard(p, t) {
     ${thumb}
     <div class="proj-head">
       <span class="proj-name"${headStyle}><span class="proj-head-icon">${thumbSvg(p)}</span>${esc(name)}</span>
-      ${statusBadge}
+      ${badges}
     </div>
     <span class="proj-cat">${esc(catLabel)}</span>
     <p class="proj-desc">${esc(desc)}</p>
@@ -2591,7 +2644,7 @@ function setLang(l,btn){
     const k=el.dataset.i18nPreview;
     if(t[k]!==undefined)el.dataset.previewTitle=t[k];
   });
-  document.title={he:'דוד פטלס — מפתח ויוצר',en:'David Patlas — Developer & Creator',ru:'Давид Патлас — Разработчик'}[l];
+  document.title={he:'דוד פטלס — מפתח Full Stack · מערכות דיגיטליות',en:'David Patlas — Full Stack · Digital Systems',ru:'Давид Патлас — Full Stack · Цифровые системы'}[l];
   const flash=document.getElementById('introFlash');
   if(flash&&t.intro_flash)flash.textContent=t.intro_flash;
   renderProjects();
@@ -2625,6 +2678,12 @@ function applyFilters(){
   document.getElementById('emptyState').classList.toggle('show',visible===0);
   updateCount(visible);
   updateFilterBanner();
+  syncFlagshipBanner();
+}
+function syncFlagshipBanner(){
+  const bar=document.getElementById('flagshipBanner');
+  if(!bar)return;
+  bar.hidden=currentCat==='all';
 }
 
 function updateCount(visible){
