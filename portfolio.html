@@ -13,7 +13,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@zeuzonsher">
 <meta name="theme-color" content="#5b4fcf">
+<link rel="canonical" href="https://storied-alfajores-6f10d2.netlify.app/portfolio.html">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://storied-alfajores-6f10d2.netlify.app/portfolio.html#person","name":"David Patlas","alternateName":"דוד פטלס","jobTitle":"Full Stack Developer","url":"https://storied-alfajores-6f10d2.netlify.app/portfolio.html","email":"susp4514@gmail.com","sameAs":["https://github.com/DavidPatlas-AI","https://x.com/zeuzonsher","https://www.youtube.com/channel/UCYg7xpzYX85wh5cptQhYR0g"]},{"@type":"WebSite","@id":"https://storied-alfajores-6f10d2.netlify.app/#website","url":"https://storied-alfajores-6f10d2.netlify.app/","name":"David Patlas Portfolio","inLanguage":["he","en","ru"],"author":{"@id":"https://storied-alfajores-6f10d2.netlify.app/portfolio.html#person"}},{"@type":"ProfilePage","@id":"https://storied-alfajores-6f10d2.netlify.app/portfolio.html","url":"https://storied-alfajores-6f10d2.netlify.app/portfolio.html","name":"דוד פטלס — מפתח Full Stack","description":"46 פרויקטים בתיק · 7 פרויקטי דגל חיים · פלטפורמות חינוך, AI ופורטלים עסקיים","inLanguage":"he","isPartOf":{"@id":"https://storied-alfajores-6f10d2.netlify.app/#website"},"about":{"@id":"https://storied-alfajores-6f10d2.netlify.app/portfolio.html#person"}}]}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Amatic+SC:wght@400;700&family=Rubik:wght@400;500;600;700;800&family=Syne:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -605,8 +607,31 @@ html[dir="ltr"] .case-deep-shot::after{background:linear-gradient(270deg,rgba(5,
 }
 .trust-strip strong{display:block;font-family:var(--display);font-size:1.35rem;color:var(--gold);line-height:1.1;}
 .trust-strip span{font-size:.68rem;color:var(--muted);font-weight:700;}
-@media(max-width:900px){.design-grid{grid-template-columns:1fr}.service-grid{grid-template-columns:1fr}.case-deep-hero{grid-template-columns:1fr}.case-deep-shot{aspect-ratio:16/9;min-height:auto}.case-deep-body{grid-template-columns:1fr}.case-compact-grid{grid-template-columns:1fr}.trust-strip{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:480px){.trust-strip{grid-template-columns:1fr}}
+.proof-outcomes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.7rem;margin-top:1rem;}
+.proof-card{
+  padding:.95rem 1rem;border-radius:14px;text-align:start;
+  background:rgba(14,14,22,.55);border:1.5px solid var(--border);
+}
+[data-theme="light"] .proof-card{background:rgba(255,255,255,.75);}
+.proof-card strong{display:block;font-family:var(--display);font-size:1.05rem;color:var(--accent2);line-height:1.2;margin-bottom:.25rem;}
+.proof-card span{font-size:.72rem;color:var(--muted);line-height:1.45;}
+.proof-card cite{display:block;font-size:.68rem;color:var(--gold);font-style:normal;font-weight:800;margin-top:.45rem;}
+.demo-strip{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.45rem .65rem;
+  margin-top:.85rem;padding:.65rem .9rem;border-radius:12px;
+  background:rgba(124,106,245,.06);border:1px dashed rgba(124,106,245,.22);
+}
+.demo-strip-label{font-size:.72rem;font-weight:800;color:var(--muted);margin-inline-end:.15rem;}
+.demo-chip{
+  display:inline-flex;align-items:center;gap:.3rem;font-size:.72rem;font-weight:800;
+  color:var(--text);background:rgba(124,106,245,.12);border:1px solid rgba(124,106,245,.2);
+  border-radius:99px;padding:.32rem .65rem;text-decoration:none;transition:background .2s,border-color .2s;
+}
+.demo-chip:hover{background:rgba(124,106,245,.22);border-color:var(--accent);}
+.demo-chip svg{width:.9em;height:.9em;}
+.demo-chip.yt{background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.25);}
+@media(max-width:900px){.design-grid{grid-template-columns:1fr}.service-grid{grid-template-columns:1fr}.case-deep-hero{grid-template-columns:1fr}.case-deep-shot{aspect-ratio:16/9;min-height:auto}.case-deep-body{grid-template-columns:1fr}.case-compact-grid{grid-template-columns:1fr}.trust-strip{grid-template-columns:repeat(2,1fr)}.proof-outcomes{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.trust-strip{grid-template-columns:1fr}.proof-outcomes{grid-template-columns:1fr}}
 
 .projects-section{background:var(--bg2);}
 .filter-row{
@@ -614,6 +639,11 @@ html[dir="ltr"] .case-deep-shot::after{background:linear-gradient(270deg,rgba(5,
   position:sticky;top:calc(var(--nav-h) - 2px);z-index:90;
   padding:.65rem 0 1rem;
   background:linear-gradient(var(--bg2) 70%,transparent);
+}
+@media(max-width:720px){
+  .filter-row{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:.4rem;padding-bottom:.85rem;}
+  .filter-row::-webkit-scrollbar{display:none;}
+  .fbtn{flex-shrink:0;}
 }
 
 .fbtn{
@@ -1394,23 +1424,23 @@ html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
   <div class="container reveal">
     <div class="sec-label">✦ <span data-i18n="lv_label">חי ב-Netlify</span></div>
     <p class="sec-title" data-i18n="lv_title">אתרים <span>חיים</span></p>
-    <p class="sec-sub" data-i18n="lv_sub">פרויקטים חיים — לחיצה פותחת בדפדפן</p>
+    <p class="sec-sub" data-i18n="lv_sub">עוד אתרים חיים — הדגלים המפורטים למעלה ב-case studies</p>
     <div class="live-showcase">
-      <a class="live-card" href="#" data-open-preview="https://teshuva-algorithm.netlify.app" data-preview-title="האלגוריתם שחזר בתשובה">
-        <div class="live-thumb"><img src="https://teshuva-algorithm.netlify.app/og-image.png" alt="האלגוריתם שחזר בתשובה" loading="lazy" onerror="thumbFallback(this,'brain')"></div>
-        <div class="live-body"><h4 data-i18n="n3">האלגוריתם שחזר בתשובה</h4><p data-i18n="lv_d3">דף נחיתה עם דמו אינטראקטיבי — שקיפות אלגוריתמית בעברית</p><span class="live-url">teshuva-algorithm.netlify.app</span></div>
-      </a>
-      <a class="live-card" href="#" data-open-preview="https://math-haredim.netlify.app" data-preview-title="מתמטיקה לחרדים">
-        <div class="live-thumb"><img src="https://math-haredim.netlify.app/banners/banner-1.png" alt="מתמטיקה לחרדים" loading="lazy" onerror="thumbFallback(this,'graduation-cap')"></div>
-        <div class="live-body"><h4 data-i18n="n1">מתמטיקה לחרדים</h4><p data-i18n="lv_d1">פלטפורמת מתמטיקה מלאה — 90+ שיעורים ו-PWA</p><span class="live-url">math-haredim.netlify.app</span></div>
-      </a>
-      <a class="live-card" href="#" data-open-preview="https://maslul-rechev-2026.netlify.app" data-preview-title="מסלול רכב">
-        <div class="live-thumb"><img src="https://maslul-rechev-2026.netlify.app/assets/hero-command-center-2026.png" alt="מסלול רכב" loading="lazy" onerror="thumbFallback(this,'wrench')"></div>
-        <div class="live-body"><h4 data-i18n="n2">מסלול רכב</h4><p data-i18n="lv_d2">קורס מכונאות — 19,000+ רכבים, מוסך חי, בוט ווצאפ</p><span class="live-url">maslul-rechev-2026.netlify.app</span></div>
-      </a>
       <a class="live-card" href="#" data-open-preview="https://mishnat-yosef-dashboard.netlify.app" data-preview-title="משנת יוסף">
         <div class="live-thumb"><img src="https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=900&q=80" alt="משנת יוסף" loading="lazy" onerror="thumbFallback(this,'shopping-cart')"></div>
         <div class="live-body"><h4 data-i18n="n4">משנת יוסף</h4><p data-i18n="lv_d4">פורטל לקוחות חי — Firebase, סלים ורשימות קנייה</p><span class="live-url">mishnat-yosef-dashboard.netlify.app</span></div>
+      </a>
+      <a class="live-card" href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/%D7%9E%D7%91%D7%97%D7%9F%20%D7%93%D7%A4%D7%A8/gallery.html" data-preview-title="מבחן דפ״ר">
+        <div class="live-thumb"><img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=900&q=80" alt="מבחן דפ״ר" loading="lazy" onerror="thumbFallback(this,'target')"></div>
+        <div class="live-body"><h4 data-i18n="case5_t">אתר מבחן דפ״ר</h4><p data-i18n="lv_d7">200+ שאלות מבחן — PWA אופליין לטלפון ומחשב</p><span class="live-url">dapor · בתיק</span></div>
+      </a>
+      <a class="live-card" href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/ID%20%D7%9E%D7%A4%D7%A2%D7%A0%D7%97%20%D7%95%D7%91%D7%95%D7%93%D7%A7/index.html" data-preview-title="מרכז הבודק">
+        <div class="live-thumb"><img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=900&q=80" alt="מרכז הבודק" loading="lazy" onerror="thumbFallback(this,'shield')"></div>
+        <div class="live-body"><h4 data-i18n="case6_t">מרכז הבודק המקצועי</h4><p data-i18n="lv_d8">12 כלי ולידציה — ת"ז, טלפון, רכב, OCR</p><span class="live-url">idcheck · בתיק</span></div>
+      </a>
+      <a class="live-card" href="#" data-open-preview="https://davidpatlas-ai.github.io/signal-lab/" data-preview-title="SignalLab">
+        <div class="live-thumb"><img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=900&q=80" alt="SignalLab" loading="lazy" onerror="thumbFallback(this,'radio')"></div>
+        <div class="live-body"><h4 data-i18n="case7_t">SignalLab — מעבדת אותות</h4><p data-i18n="lv_d9">MorseViz + CodePlayer — Web Audio API</p><span class="live-url">signal-lab · GitHub Pages</span></div>
       </a>
       <a class="live-card" href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/adhd_home/" data-preview-title="YomiWidget">
         <div class="live-thumb"><img src="https://images.unsplash.com/photo-1518709268805-4e9042af9b83?auto=format&fit=crop&w=900&q=80" alt="YomiWidget" loading="lazy" onerror="thumbFallback(this,'calendar')"></div>
@@ -1420,7 +1450,6 @@ html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
         <div class="live-thumb"><img src="https://images.unsplash.com/photo-1611162616475-46b635cb6868?auto=format&fit=crop&w=900&q=80" alt="TrendOS" loading="lazy" onerror="thumbFallback(this,'trending-up')"></div>
         <div class="live-body"><h4 data-i18n="lv_n6">TrendOS</h4><p data-i18n="lv_d6">מערכת טרנדים — Google, TikTok, ChatGPT, דוחות</p><span class="live-url">trends · בתיק</span></div>
       </a>
-
     </div>
   </div>
 </section>
@@ -1462,6 +1491,13 @@ html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
       <div class="case-studies-head">
         <h3 data-i18n="cases_title">פרויקטי דגל — לעומק</h3>
         <p data-i18n="cases_sub">בעיה, פתרון, תהליך ותוצאה — לא רעיון בסוף שבוע, מוצר חי עם גרסאות ונתונים.</p>
+        <div class="demo-strip" aria-label="דמו חי">
+          <span class="demo-strip-label" data-i18n="demo_label">דמו אינטראקטיבי חי:</span>
+          <a class="demo-chip" href="https://math-haredim.netlify.app" target="_blank" rel="noopener"><i data-lucide="play"></i><span data-i18n="case1_t">מתמטיקה לחרדים</span></a>
+          <a class="demo-chip" href="https://maslul-rechev-2026.netlify.app" target="_blank" rel="noopener"><i data-lucide="play"></i><span data-i18n="case2_t">מסלול רכב</span></a>
+          <a class="demo-chip" href="https://teshuva-algorithm.netlify.app" target="_blank" rel="noopener"><i data-lucide="play"></i><span data-i18n="case3_t">האלגוריתם שחזר בתשובה</span></a>
+          <a class="demo-chip yt" href="https://www.youtube.com/channel/UCYg7xpzYX85wh5cptQhYR0g" target="_blank" rel="noopener"><i data-lucide="youtube"></i><span data-i18n="demo_yt">סרטונים ביוטיוב</span></a>
+        </div>
       </div>
 
       <article class="case-deep">
@@ -1644,6 +1680,12 @@ html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
         <div><strong>3</strong><span data-i18n="trust3">שפות ממשק</span></div>
         <div><strong>GitHub</strong><span data-i18n="trust4">קוד פתוח + גרסאות</span></div>
       </div>
+      <div class="proof-outcomes" aria-label="תוצאות מדידות">
+        <div class="proof-card"><strong data-i18n="proof1_n">90+ שיעורים</strong><span data-i18n="proof1_d">פלטפורמת מתמטיקה עם PWA אופליין ומבחנים</span><cite data-i18n="proof1_c">math-haredim.netlify.app</cite></div>
+        <div class="proof-card"><strong data-i18n="proof2_n">19,000 רכבים</strong><span data-i18n="proof2_d">קורס מכונאות עם מוסך חי ובוט וואטסאפ</span><cite data-i18n="proof2_c">maslul-rechev-2026.netlify.app</cite></div>
+        <div class="proof-card"><strong data-i18n="proof3_n">200+ שאלות</strong><span data-i18n="proof3_d">סימולטור דפ"ר אופליין — טלפון ומחשב</span><cite data-i18n="proof3_c">דגל · dapor</cite></div>
+        <div class="proof-card"><strong data-i18n="proof4_n">27+ ריפוזיטוריז</strong><span data-i18n="proof4_d">קוד פתוח, גרסאות מתועדות ופרסום ל-Netlify</span><cite>github.com/DavidPatlas-AI</cite></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1661,7 +1703,7 @@ html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
     <p class="filter-count" id="filterCount" aria-live="polite"></p>
     <div class="filter-status" id="filterStatus" hidden>
       <span class="filter-status-text" id="filterStatusText"></span>
-      <button type="button" class="filter-reset" id="filterReset"><i data-lucide="rotate-ccw"></i><span data-i18n="show_all">הצג הכל</span></button>
+      <button type="button" class="filter-reset" id="filterReset"><i data-lucide="rocket"></i><span data-i18n="show_all">חזור לדגל</span></button>
     </div>
     <div class="flagship-banner" id="flagshipBanner">
       <div class="flagship-banner-text">
@@ -1713,7 +1755,7 @@ html[dir="ltr"] .hero-spotlight{justify-content:flex-start;margin-inline:0;}
     </div>
     <div class="empty-state" id="emptyState">
       <p data-i18n="no_results">לא נמצאו פרויקטים — נסה מסנן או חיפוש אחר</p>
-      <button type="button" class="filter-reset empty-reset" id="emptyReset"><i data-lucide="layout-grid"></i><span data-i18n="show_all_n">הצג את כל הפרויקטים</span></button>
+      <button type="button" class="filter-reset empty-reset" id="emptyReset"><i data-lucide="rocket"></i><span data-i18n="show_all_n">חזור לפרויקטי דגל</span></button>
     </div>
   </div>
 </section>
@@ -1850,7 +1892,15 @@ Object.assign(T.he,{
   ab_p3:'אני לא רק מפתח — אני גם בונה ומנהל <strong>נוכחות דיגיטלית</strong> (YouTube, TikTok, אתר) עם תוכן תורני בעברית, רוסית ואנגלית.',
   co_s:'פלטפורמות חינוך, כלי AI, פורטלים ואוטומציה — משלב הרעיון ועד מוצר חי ב-Netlify.',
   pr_sub:'7 פרויקטי דגל · 46 מוצגים בתיק · 60+ בארכיון · <a href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/" data-preview-title="ארכיון פרויקטים" style="color:var(--accent);font-weight:700;">ארכיון →</a>',
-  arch_sub:'46 מוצגים בתיק · 60+ בארכיון — גרסאות, גלריות ומפת סטטוס'
+  arch_sub:'46 מוצגים בתיק · 60+ בארכיון — גרסאות, גלריות ומפת סטטוס',
+  show_all:'חזור לדגל',show_all_n:'חזור לפרויקטי דגל',
+  lv_sub:'עוד אתרים חיים — הדגלים המפורטים למעלה ב-case studies',
+  lv_d7:'200+ שאלות מבחן — PWA אופליין לטלפון ומחשב',lv_d8:'12 כלי ולידציה — ת"ז, טלפון, רכב, OCR',lv_d9:'MorseViz + CodePlayer — Web Audio API',
+  demo_label:'דמו אינטראקטיבי חי:',demo_yt:'סרטונים ביוטיוב',
+  proof1_n:'90+ שיעורים',proof1_d:'פלטפורמת מתמטיקה עם PWA אופליין ומבחנים',proof1_c:'math-haredim.netlify.app',
+  proof2_n:'19,000 רכבים',proof2_d:'קורס מכונאות עם מוסך חי ובוט וואטסאפ',proof2_c:'maslul-rechev-2026.netlify.app',
+  proof3_n:'200+ שאלות',proof3_d:'סימולטור דפ"ר אופליין — טלפון ומחשב',proof3_c:'דגל · dapor',
+  proof4_n:'27+ ריפוזיטוריז',proof4_d:'קוד פתוח, גרסאות מתועדות ופרסום ל-Netlify'
 });
 Object.assign(T.en,{
   nav_design:'Lab',dock_design:'Lab',b_design:'Design Lab',
@@ -1912,7 +1962,15 @@ Object.assign(T.en,{
   ab_p3:'Beyond code, I build and manage a <strong>digital presence</strong> (YouTube, TikTok, website) with Jewish content in Hebrew, Russian and English.',
   co_s:'Education platforms, AI tools, portals and automation — from idea to live product on Netlify.',
   pr_sub:'7 flagship projects · 46 in portfolio · 60+ in archive · <a href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/" data-preview-title="Project Archive" style="color:var(--accent);font-weight:700;">archive →</a>',
-  arch_sub:'46 in portfolio · 60+ in archive — versions, galleries & status map'
+  arch_sub:'46 in portfolio · 60+ in archive — versions, galleries & status map',
+  show_all:'Back to flagships',show_all_n:'Back to flagship projects',
+  lv_sub:'More live sites — flagships detailed above in case studies',
+  lv_d7:'200+ exam questions — offline PWA for phone & desktop',lv_d8:'12 validators — ID, phone, car, OCR',lv_d9:'MorseViz + CodePlayer — Web Audio API',
+  demo_label:'Live interactive demos:',demo_yt:'Videos on YouTube',
+  proof1_n:'90+ lessons',proof1_d:'Math platform with offline PWA and quizzes',proof1_c:'math-haredim.netlify.app',
+  proof2_n:'19,000 cars',proof2_d:'Mechanics course with live garage and WhatsApp bot',proof2_c:'maslul-rechev-2026.netlify.app',
+  proof3_n:'200+ questions',proof3_d:'Offline Dapor simulator — phone and desktop',proof3_c:'flagship · dapor',
+  proof4_n:'27+ repositories',proof4_d:'Open source, documented versions and Netlify deploys'
 });
 Object.assign(T.ru,{
   nav_design:'Лаб',dock_design:'Лаб',b_design:'Дизайн-лаб',
@@ -1975,6 +2033,14 @@ Object.assign(T.ru,{
   co_s:'Образовательные платформы, AI, порталы и автоматизация — от идеи до живого продукта на Netlify.',
   pr_sub:'7 флагманских · 46 в портфолио · 60+ в архиве · <a href="#" data-open-preview="https://storied-alfajores-6f10d2.netlify.app/" data-preview-title="Архив проектов" style="color:var(--accent);font-weight:700;">архив →</a>',
   arch_sub:'46 в портфолио · 60+ в архиве — версии, галереи и карта статусов',
+  show_all:'К флагманам',show_all_n:'К флагманским проектам',
+  lv_sub:'Ещё живые сайты — флагманы подробно выше в case studies',
+  lv_d7:'200+ вопросов экзамена — офлайн PWA',lv_d8:'12 валидаторов — удостоверение, телефон, авто, OCR',lv_d9:'MorseViz + CodePlayer — Web Audio API',
+  demo_label:'Живые интерактивные демо:',demo_yt:'Видео на YouTube',
+  proof1_n:'90+ уроков',proof1_d:'Платформа математики с офлайн PWA и тестами',proof1_c:'math-haredim.netlify.app',
+  proof2_n:'19 000 авто',proof2_d:'Курс механики с живой мастерской и WhatsApp-ботом',proof2_c:'maslul-rechev-2026.netlify.app',
+  proof3_n:'200+ вопросов',proof3_d:'Офлайн-симулятор ЦАХАЛ — телефон и ПК',proof3_c:'флагман · dapor',
+  proof4_n:'27+ репозиториев',proof4_d:'Открытый код, версии и публикация на Netlify',
   tl1d:'46 проектов в портфолио · 60+ на GitHub — AI, образование, инструменты и игры'
 });
 
@@ -2067,9 +2133,9 @@ const PROJECT_CATALOG = [
       {v:'v2.0',date:'יוני 2026',label:'Computer Vision מלא',desc:'זיהוי אוטומטי של פסולים, כתמים, חזזית — דיוק 94%.',url:'בודק אתרוגים/index.html'},
       {v:'v1.0',date:'2025',label:'השקה',desc:'בדיקה בסיסית לפי קטגוריות.',url:'בודק אתרוגים/index.html'}
     ]},
-  { id:'emotion', icon:'😊', cat:['ai'], status:'live', url:'מזהה רגשות/index.html', gh:'https://github.com/DavidPatlas-AI/hebrew-emotion-detector',
-    name:{he:'מזהה רגשות',en:'Emotion Identifier',ru:'Определитель эмоций'},
-    desc:{he:'VibeCheck Pro — זיהוי רגשות בזמן אמת, מצלמה, קול ו-AI.',en:'VibeCheck Pro — real-time emotions, camera, voice and AI.',ru:'VibeCheck Pro — эмоции, камера, голос и AI.'}, tags:['NLP','Camera'],
+  { id:'emotion', icon:'😊', cat:['lab'], status:'live', url:'מזהה רגשות/index.html', gh:'https://github.com/DavidPatlas-AI/hebrew-emotion-detector',
+    name:{he:'מעבדת זיהוי רגשות',en:'Emotion Research Lab',ru:'Лаборатория эмоций'},
+    desc:{he:'מחקר NLP — ניתוח טקסט, קול ומצלמה להדגמה. לא לאבחון קליני.',en:'NLP research — text, voice and camera analysis for demos. Not clinical diagnosis.',ru:'Исследование NLP — текст, голос и камера. Не для клинической диагностики.'}, tags:['Research','NLP'],
     versions:[
       {v:'v3.0',date:'יוני 2026',label:'VibeCheck Pro מאוחד',desc:'גרסה אחת — מצלמה, מיקרופון, ניתוח קול, גלריה ועוזר תוכן.',url:'מזהה רגשות/index.html'},
       {v:'v1.0',date:'2025',label:'השקה',desc:'ניתוח טקסט בסיסי לרגשות.',url:'מזהה רגשות/index.html'}
