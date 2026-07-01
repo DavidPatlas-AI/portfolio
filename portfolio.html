@@ -1559,7 +1559,7 @@ Object.assign(T.he,{
   case2_t:'מסלול רכב',case2_d:'קורס מכונאות עם מאגר רכבים, מוסך חי, חוויית למידה ובוט תומך.',
   case3_t:'האלגוריתם שחזר בתשובה',case3_d:'שקיפות אלגוריתמית בעברית: למה ראית כל פוסט, ואיך מסבירים את זה למשתמש.',
   hero_position:'אני בונה מערכות דיגיטליות חכמות לקהילות, חינוך, תוכן ועסקים — משלב הרעיון ועד אתר עובד.',
-  co_cta_main:'רוצה שאבנה לך מערכת?',
+  co_cta_main:'רוצה שאבנה לך מערכת?',co_wa:'דבר איתי בוואטסאפ',
   faitools:'AI וכלים',flab:'מעבדה',clab:'מעבדת ניסויים',
   ff:'פרויקטי דגל',fa:'ארכיון מלא',fj:'יהדות ותוכן',fl:'אתרים חיים',
   s1:'בארכיון GitHub',s1b:'מוצגים בתיק',intro_projects:'פרויקטים בתיק',
@@ -1589,7 +1589,7 @@ Object.assign(T.en,{
   case2_t:'Car Mechanics Course',case2_d:'A mechanics course with a car database, live garage, learning flow and bot support.',
   case3_t:'The Algorithm That Repented',case3_d:'Algorithmic transparency in Hebrew: why each post appeared and how to explain it.',
   hero_position:'I build smart digital systems for communities, education, content and business — from idea to live product.',
-  co_cta_main:'Want me to build your system?',
+  co_cta_main:'Want me to build your system?',co_wa:'Chat on WhatsApp',
   faitools:'AI & Tools',flab:'Lab',clab:'Research Lab',
   ff:'Flagship',fa:'Full archive',fj:'Jewish content',fl:'Live sites',
   s1:'On GitHub archive',s1b:'In portfolio',intro_projects:'projects in portfolio',
@@ -1619,7 +1619,7 @@ Object.assign(T.ru,{
   case2_t:'Курс автомеханики',case2_d:'Курс с базой автомобилей, живой мастерской, учебным потоком и ботом.',
   case3_t:'Алгоритм раскаяния',case3_d:'Прозрачность алгоритмов на иврите: почему появился каждый пост и как это объяснить.',
   hero_position:'Создаю умные цифровые системы для сообществ, образования, контента и бизнеса — от идеи до рабочего сайта.',
-  co_cta_main:'Хотите, чтобы я построил систему?',
+  co_cta_main:'Хотите, чтобы я построил систему?',co_wa:'Написать в WhatsApp',
   faitools:'AI и инструменты',flab:'Лаборатория',clab:'Исслед. лаборатория',
   ff:'Флагманские',fa:'Полный архив',fj:'Иудаизм и контент',fl:'Живые сайты',
   s1:'В архиве GitHub',s1b:'В портфолио',intro_projects:'проектов в портфолио',
@@ -1961,10 +1961,10 @@ const PROJECT_CATALOG = [
   if (p && !p.preview) p.preview = src.startsWith('http') ? src : picPath(src);
 });
 
-const CAT_ORDER = ['flag','edu','ai','jewish','games','biz','dev'];
-const CAT_KEYS = { flag:'cf', ai:'cai', games:'cg', jewish:'cj', edu:'ce', biz:'cb', dev:'cd' };
-const CAT_FILTER_KEYS = { flag:'ff', ai:'fai', games:'fg', jewish:'fj', edu:'fe', biz:'fb', dev:'fd', live:'fl', all:'fa' };
-const CAT_ICON = { flag:'rocket', edu:'graduation-cap', ai:'brain', jewish:'star', games:'gamepad-2', biz:'briefcase', dev:'wrench' };
+const CAT_ORDER = ['flag','edu','ai','jewish','lab','games','biz','dev'];
+const CAT_KEYS = { flag:'cf', ai:'cai', games:'cg', jewish:'cj', edu:'ce', biz:'cb', dev:'cd', lab:'clab' };
+const CAT_FILTER_KEYS = { flag:'ff', aitools:'faitools', lab:'flab', ai:'fai', games:'fg', jewish:'fj', edu:'fe', biz:'fb', dev:'fd', live:'fl', all:'fa' };
+const CAT_ICON = { flag:'rocket', edu:'graduation-cap', ai:'brain', jewish:'star', games:'gamepad-2', biz:'briefcase', dev:'wrench', lab:'flask-conical' };
 
 function refreshIcons(){
   if(window.lucide)lucide.createIcons();
@@ -1986,8 +1986,16 @@ function resetFilters(){
   searchQuery='';
   const inp=document.getElementById('projSearch');
   if(inp)inp.value='';
-  const allBtn=document.querySelector('.fbtn[data-cat="all"]');
-  if(allBtn)filter('all',allBtn);
+  const flagBtn=document.querySelector('.fbtn[data-cat="flag"]');
+  if(flagBtn)filter('flag',flagBtn);
+}
+function catMatchesFilter(card,cat){
+  const cats=(card.dataset.cat||'').split(' ');
+  if(cat==='flag')return card.dataset.featured==='1';
+  if(cat==='live')return!!card.dataset.demo;
+  if(cat==='aitools')return cats.includes('ai')||cats.includes('dev');
+  if(cat==='all')return true;
+  return cats.includes(cat);
 }
 function updateFilterBanner(){
   const bar=document.getElementById('filterStatus');
@@ -2087,7 +2095,8 @@ const THUMB_SVG = {
 
 const CAT_THUMB_FALLBACK = {
   flag:{h:42,s:70,pattern:'grid'},edu:{h:210,s:68,pattern:'dots'},ai:{h:270,s:72,pattern:'waves'},
-  jewish:{h:38,s:66,pattern:'dots'},games:{h:320,s:74,pattern:'grid'},biz:{h:160,s:70,pattern:'grid'},dev:{h:250,s:72,pattern:'waves'}
+  jewish:{h:38,s:66,pattern:'dots'},games:{h:320,s:74,pattern:'grid'},biz:{h:160,s:70,pattern:'grid'},dev:{h:250,s:72,pattern:'waves'},
+  lab:{h:300,s:64,pattern:'grid'}
 };
 
 function thumbTheme(p) {
@@ -2205,13 +2214,14 @@ function buildProjectCard(p, t) {
   const ghBtn = p.gh ? `<a class="plink gh" href="${esc(p.gh)}" rel="noopener" onclick="event.stopPropagation();event.preventDefault();openInNewTab(this.href);"><i data-lucide="github"></i>GitHub</a>` : '';
   const tags = (p.tags || []).map(tag => `<span class="tag">${esc(tag)}</span>`).join('');
   const featured = p.featured ? ' featured' : '';
+  const featAttr = p.featured ? ' data-featured="1"' : '';
   const demoAttr = url ? ' data-demo="1"' : '';
   const openAttr = url ? ` data-open-preview="${esc(url)}" data-preview-title="${esc(name)}" tabindex="0" role="button"` : '';
   const contactAttr = isContact ? ` data-contact="1" data-contact-name="${esc(name)}" tabindex="0" role="button"` : '';
   const noLinkCls = (!url && !isContact) ? ' no-link' : '';
   const th = thumbTheme(p);
   const headStyle = ` style="--thumb-h:${th.h};--thumb-h2:${th.h2 != null ? th.h2 : (th.h + 35) % 360}"`;
-  return `<article class="proj-card${featured}${noLinkCls}" data-cat="${cats}" data-primary="${pCat}"${demoAttr}${openAttr}${contactAttr}>
+  return `<article class="proj-card${featured}${noLinkCls}" data-cat="${cats}" data-primary="${pCat}"${featAttr}${demoAttr}${openAttr}${contactAttr}>
     ${thumb}
     <div class="proj-head">
       <span class="proj-name"${headStyle}><span class="proj-head-icon">${thumbSvg(p)}</span>${esc(name)}</span>
@@ -2261,7 +2271,7 @@ function renderProjects() {
 }
 
 
-let currentLang='he',currentCat='all',searchQuery='';
+let currentLang='he',currentCat='flag',searchQuery='';
 
 function setLang(l,btn){
   const t=T[l];
@@ -2301,7 +2311,7 @@ function applyFilters(){
   const q=searchQuery.trim().toLowerCase();
   let visible=0;
   document.querySelectorAll('.proj-card').forEach(c=>{
-    const catOk=currentCat==='all'||(currentCat==='live'?!!c.dataset.demo:(c.dataset.cat||'').split(' ').includes(currentCat));
+    const catOk=catMatchesFilter(c,currentCat);
     const text=(c.textContent||'').toLowerCase();
     const searchOk=!q||text.includes(q);
     const show=catOk&&searchOk;
@@ -2418,7 +2428,7 @@ function syncCatalogStat(){
   const el=document.getElementById('statCatalog');
   if(!el)return;
   el.dataset.count=String(PROJECT_CATALOG.length);
-  if(!el.dataset.done)el.textContent='0';
+  if(!el.dataset.done)el.textContent=String(PROJECT_CATALOG.length);
 }
 
 window.addEventListener('scroll',()=>{
@@ -2620,11 +2630,7 @@ document.addEventListener('keydown',e=>{
   }
 });
 
-document.querySelectorAll('.stat .n').forEach(el=>{
-  if(el.id!=='statCatalog')return;
-  const m=el.textContent.match(/(\d+)(\+?)/);
-  if(m){el.dataset.count=m[1];el.dataset.suffix=m[2]||'';el.textContent='0'+(m[2]||'');}
-});
+
 
 (function initPhotoTilt(){
   const stage=document.getElementById('photoStage');
@@ -2686,7 +2692,7 @@ function initIntroCanvas(){
   let w,h,pts=[],raf;
   function resize(){
     w=c.width=c.offsetWidth;h=c.height=c.offsetHeight;
-    pts=Array.from({length:80},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.7,vy:(Math.random()-.5)*.7,r:Math.random()*1.8+.4}));
+    pts=Array.from({length:35},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,r:Math.random()*1.5+.4}));
   }
   resize();
   const mx=w*.5,my=h*.5;
@@ -2718,7 +2724,7 @@ function initHeroParticles(){
   function resize(){
     w=c.width=window.innerWidth;h=c.height=Math.min(window.innerHeight,900);
     c.style.height=h+'px';
-    if(!pts.length)pts=Array.from({length:55},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25,r:Math.random()*1.2+.3}));
+    if(!pts.length)pts=Array.from({length:28},()=>({x:Math.random()*w,y:Math.random()*h,vx:(Math.random()-.5)*.2,vy:(Math.random()-.5)*.2,r:Math.random()*1.1+.3}));
   }
   resize();
   window.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;},{passive:true});
@@ -2773,7 +2779,7 @@ function initWowIntro(){
   stopIntroCanvas=initIntroCanvas();
   animateIntroCount(PROJECT_CATALOG.length);
   document.getElementById('introSkip')?.addEventListener('click',()=>finishIntro());
-  setTimeout(finishIntro,2600);
+  setTimeout(finishIntro,2000);
 }
 
 (function init(){
