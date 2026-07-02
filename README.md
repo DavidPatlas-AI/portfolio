@@ -1,6 +1,20 @@
-# תיק עבודות דיגיטלי — David Patlas Portfolio
+<div align="center">
 
-קטלוג אינטראקטיבי של 60+ פרויקטים: פלטפורמות חינוכיות, כלי AI, משחקי HTML5, ויג'טים לשולחן עבודה ומערכות עסקיות — בעברית, רוסית ואנגלית.
+# 🗂️ תיק עבודות דיגיטלי | David Patlas Portfolio
+
+### תיק עבודות נבחר + ארכיון מלא של המעבדה הטכנית
+
+![Status](https://img.shields.io/badge/Status-Production-22c55e?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-blue?style=flat-square)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-7c6af5?style=flat-square&logo=netlify&logoColor=white)](https://storied-alfajores-6f10d2.netlify.app/portfolio.html)
+
+</div>
+
+---
+
+## 🎯 מה זה
+
+חלון הראווה של דוד פטלס — נקודת הכניסה למוצרים הנבחרים (מתמטיקה לחרדים, מסלול רכב, האלגוריתם שחזר בתשובה ועוד), עם ארכיון מלא של 60+ פרויקטי מעבדה בעברית, רוסית ואנגלית.
 
 **🔗 חי:** [storied-alfajores-6f10d2.netlify.app/portfolio.html](https://storied-alfajores-6f10d2.netlify.app/portfolio.html)
 **🗺️ מפת סטטוס:** [status-dashboard.html](https://storied-alfajores-6f10d2.netlify.app/status-dashboard.html) — בדיקת זמינות בזמן אמת לכל האתרים
